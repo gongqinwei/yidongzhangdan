@@ -8,8 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+#define UIAppDelegate       ((BDCAppDelegate *)[UIApplication sharedApplication].delegate)
+
 @interface BDCAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+
+@property (nonatomic, assign) int numNetworkActivities;
+
+- (void)incrNetworkActivities;
+- (void)decrNetworkActivities;
 
 @end

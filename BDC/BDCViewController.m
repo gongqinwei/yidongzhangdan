@@ -7,6 +7,12 @@
 //
 
 #import "BDCViewController.h"
+#import "Constants.h"
+//#import "APIHandler.h"
+//#import "Invoice.h"
+#import "Customer.h"
+#import "Item.h"
+#import "Util.h"
 
 @interface BDCViewController ()
 
@@ -14,10 +20,38 @@
 
 @implementation BDCViewController
 
+//@synthesize bills;
+//@synthesize customers;
+//@synthesize paymentStatus;
+
+@synthesize items;
+
+//
+//- (NSArray *)invoices {
+//    return invoices;
+//}
+//
+//- (void)setInvoices:(NSArray *)invoiceList {
+//    invoices = invoiceList;
+//
+////    __weak BDCViewController *weakSelf = self;
+////    int invCnt = [invoices count];
+////    dispatch_async(dispatch_get_main_queue(), ^{
+////        [[[weakSelf.viewControllers objectAtIndex:0] tabBarItem] setBadgeValue: [NSString stringWithFormat:@"%u", invCnt]];
+////    });
+//}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [self.navigationController setNavigationBarHidden:YES];
+    [super viewWillAppear:animated];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    
+    [Customer retrieveList];
+    [Item retrieveList];
 }
 
 - (void)viewDidUnload
@@ -34,5 +68,12 @@
         return YES;
     }
 }
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"LogOut"]) {
+        [Util logout];
+    }
+}
+
 
 @end

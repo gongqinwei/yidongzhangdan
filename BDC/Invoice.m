@@ -1,0 +1,346 @@
+//
+//  Invoice.m
+//  BDC
+//
+//  Created by Qinwei Gong on 8/27/12.
+//
+//
+
+#import "Invoice.h"
+#import "Constants.h"
+#import "APIHandler.h"
+#import "InvoiceDetailsViewController.h"
+#import "Util.h"
+#import "Customer.h"
+#import "Item.h"
+#import "UIHelper.h"
+#import "BDCAppDelegate.h"
+
+#define LIST_ACTIVE_INV_FILTER      @"{ \"start\" : 0, \
+                                        \"max\" : 999, \
+                                        \"filters\" : [{\"field\" : \"isActive\", \"op\" : \"=\", \"value\" : \"1\"}, {\"field\" : \"paymentStatus\", \"op\" : \"!=\", \"value\" : \"0\"}] \
+                                      }"
+
+#define LIST_INACTIVE_INV_FILTER    @"{ \"start\" : 0, \
+                                        \"max\" : 999, \
+                                        \"filters\" : [{\"field\" : \"isActive\", \"op\" : \"=\", \"value\" : \"2\"}, {\"field\" : \"paymentStatus\", \"op\" : \"!=\", \"value\" : \"0\"}] \
+                                      }"
+
+
+@implementation Invoice
+
+static id<InvoiceListDelegate> ARDelegate = nil;
+static id<InvoiceListDelegate> ListDelegate = nil;
+static NSMutableArray *invoices = nil;
+static NSMutableArray *inactiveInvoices = nil;
+
+//@synthesize objectId;
+@synthesize orgId;
+@synthesize customerId;
+@synthesize customerName;
+@synthesize invoiceNumber;
+@synthesize invoiceDate;
+@synthesize dueDate;
+@synthesize amount;
+@synthesize amountDue;
+@synthesize paymentStatus;
+//@synthesize createdDate;
+//@synthesize updatedDate;
+//@synthesize desc;
+//@synthesize discountInfo;
+//@synthesize tax;
+//@synthesize netBillId;
+//@synthesize netOrgId;
+//@synthesize creditAmount;
+//@synthesize jobId;
+//@synthesize poNumber;
+//@synthesize isToBePrinted;
+//@synthesize isToBeMailed;
+//@synthesize itemSalesTax;
+//@synthesize salesTaxPercentage;
+//@synthesize salesTaxTotal;
+//@synthesize customerMsg;
+//@synthesize terms;
+////@synthesize emailTemplate; //?
+//@synthesize salesRep;
+//@synthesize fob;
+//@synthesize shipDate;
+//@synthesize shipMethod;
+//@synthesize deptId;
+//@synthesize invoiceTemplateId;
+//@synthesize nextReminder;
+//@synthesize paymentTermId;
+//@synthesize externalId;
+//@synthesize estPaymentDate;
+//@synthesize cashflowDate;
+//@synthesize firstPaymentDate;
+//@synthesize fullPaymentDate;
+//@synthesize lastSentDate;
+//@synthesize expectedPayDate;
+@synthesize lineItems;
+@synthesize attachments;
+@synthesize editDelegate;
+@synthesize detailsDelegate;
+
++ (void)setARDelegate:(id<InvoiceListDelegate>)delegate {
+    ARDelegate = delegate;
+}
+
++ (void)setListDelegate:(id<InvoiceListDelegate>)delegate {
+    ListDelegate = delegate;
+}
+
+- (NSString *)name {
+    return self.invoiceNumber;
+}
+
+- (id)init {
+    if (self = [super init]) {
+        self.lineItems = [NSMutableArray array];
+        self.attachments = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
+
+- (void)saveFor:(NSString *)action {
+    NSString *theAction = [NSString stringWithString:action];
+    
+    action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, action, INVOICE_API];
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    
+    NSMutableString *objStr = [NSMutableString string];
+    [objStr appendString:@"{"];
+    [objStr appendString:OBJ];
+    [objStr appendString:@": {"];
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", ENTITY, INVOICE];
+    if ([theAction isEqualToString:UPDATE]) {
+        [objStr appendFormat:@"\"%@\" : \"%@\", ", ID, self.objectId];
+    }
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", INV_CUSTOMER_ID, self.customerId];
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", INV_NUMBER, self.invoiceNumber];
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", INV_DATE, [Util formatDate:self.invoiceDate format:@"yyyy-MM-dd"]];
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", INV_DUE_DATE, [Util formatDate:self.dueDate format:@"yyyy-MM-dd"]];
+    [objStr appendFormat:@"\"%@\" : [", INV_LINE_ITEMS];
+    int total = [self.lineItems count];
+    int i = 0;
+    for (Item* item in self.lineItems) {
+        [objStr appendString:@"{"];
+        [objStr appendFormat:@"\"%@\" : \"%@\", ", ENTITY, INV_LINE_ITEM];
+        [objStr appendFormat:@"\"%@\" : \"%@\", ", INV_ITEM_ID, item.objectId];
+        [objStr appendFormat:@"\"%@\" : %d, ", INV_ITEM_QUANTITY, item.qty];
+        [objStr appendFormat:@"\"%@\" : %@", INV_ITEM_PRICE, item.price];
+        [objStr appendString:@"}"];
+        if (i < total - 1) {
+            [objStr appendString:@", "];
+        }
+        i++;
+    }
+    [objStr appendString:@"]"];
+    [objStr appendString:@"}"];
+    [objStr appendString:@"}"];
+    
+    [params setObject:DATA forKey:objStr];
+    
+    __weak Invoice *weakSelf = self;
+    
+    [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        NSInteger response_status;
+        NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        
+        if(response_status == RESPONSE_SUCCESS) {
+            NSString *invId = [info objectForKey:ID];
+            self.objectId = invId;
+            
+            if ([theAction isEqual:CREATE] || self.isActive) {
+                [Invoice retrieveListForActive:YES];
+            } else {
+                [Invoice retrieveListForActive:NO];
+            }
+            
+            if ([theAction isEqualToString:UPDATE]) {
+                [weakSelf.editDelegate didUpdateInvoice];
+                [weakSelf.detailsDelegate didUpdateInvoice];
+            } else {
+                [weakSelf.editDelegate didCreateInvoice:invId];
+            }
+        } else {
+            [weakSelf.editDelegate failedToSaveInvoice];
+            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            
+            if ([theAction isEqualToString:UPDATE]) {
+                NSLog(@"Failed to update invoice %@: %@", self.objectId, [err localizedDescription]);
+            } else {
+                NSLog(@"Failed to create invoice: %@", [err localizedDescription]);
+            }
+        }
+    }];
+}
+
+- (void)toggleActive:(Boolean)isActive {
+    NSString *act = isActive ? UNDELETE : DELETE;
+    NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, act, INVOICE_API];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+    
+    __weak Invoice *weakSelf = self;
+    
+    [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        NSInteger response_status;
+        [APIHandler getResponse:response data:data error:&err status:&response_status];
+        
+        if(response_status == RESPONSE_SUCCESS) {
+            self.isActive = isActive;
+            
+//            if (isActive) {
+//                [Invoice retrieveListForActive:YES reload:NO];
+//                [Invoice retrieveListForActive:NO reload:YES];
+//            } else {
+//                [Invoice retrieveListForActive:YES reload:YES];
+//                [Invoice retrieveListForActive:NO reload:NO];
+//            }
+            
+            if (isActive) {
+                [inactiveInvoices removeObject:self];
+                [invoices addObject:self];
+            } else {
+                [invoices removeObject:self];
+                [inactiveInvoices addObject:self];
+            }
+
+            [weakSelf.editDelegate didDeleteInvoice]; //TODO: need another delegate?
+        } else {
+            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            NSLog(@"Failed to %@ invoice %@: %@", act, self.objectId, [err localizedDescription]);
+        }
+    }];
+}
+
++ (id)list:(NSArray *)invArr orderBy:(NSString *)attribue ascending:(Boolean)isAscending {
+    if ([attribue isEqualToString:INV_CUSTOMER_NAME]) {
+        for (Invoice *inv in invArr) {
+            inv.customerName = [Customer objectForKey:inv.customerId].name;
+        }
+    }
+    
+    NSSortDescriptor *firstOrder = [[NSSortDescriptor alloc] initWithKey:attribue ascending:isAscending];
+    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:@"invoiceNumber" ascending:YES];
+    return [NSMutableArray arrayWithArray:[invArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, secondOrder, nil]]];
+}
+
++ (id)listOrderBy:(NSString *)attribue ascending:(Boolean)isAscending active:(Boolean)isActive {
+    NSArray *invArr = isActive ? invoices : inactiveInvoices;
+    return [[self class] list:invArr orderBy:attribue ascending:isAscending];
+}
+
++ (id)list {
+    return invoices;
+}
+
++ (id)listInactive {
+    return inactiveInvoices;
+}
+
+//+ (void)setInvoices:(NSArray *)invoiceList active:(Boolean)isActive {
+//    if (isActive) {
+//        invoices = invoiceList;
+//    } else {
+//        inactiveInvoices = invoiceList;
+//    }
+//}
+
++ (void)retrieveListForActive:(BOOL)isActive reload:(BOOL)needReload {
+    [UIAppDelegate incrNetworkActivities];
+    
+    NSString *filter = isActive ? LIST_ACTIVE_INV_FILTER : LIST_INACTIVE_INV_FILTER;
+    NSString *action = [LIST_API stringByAppendingString: INVOICE_API];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, filter, nil];
+
+    [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        NSInteger response_status;
+        NSArray *jsonInvs = [APIHandler getResponse:response data:data error:&err status:&response_status];
+
+        [UIAppDelegate decrNetworkActivities];
+        
+        if(response_status == RESPONSE_SUCCESS) {
+            NSMutableArray *invArr;
+            if (isActive) {
+                invoices = [NSMutableArray array];
+                invArr = invoices;
+            } else {
+                inactiveInvoices = [NSMutableArray array];
+                invArr = inactiveInvoices;
+            }
+            
+            for (id item in jsonInvs) {
+                NSDictionary *dict = (NSDictionary*)item;
+                Invoice *inv = [[Invoice alloc] init];
+                inv.objectId = [dict objectForKey:ID];
+                inv.invoiceNumber = [dict objectForKey:INV_NUMBER];
+                inv.paymentStatus = [dict objectForKey:INV_PAYMENT_STATUS];
+                inv.amount = [Util id2Decimal:[dict objectForKey:INV_AMOUNT]];
+                inv.amountDue = [Util id2Decimal:[dict objectForKey:INV_AMOUNT_DUE]];
+                inv.customerId = [dict objectForKey:INV_CUSTOMER_ID];
+                inv.invoiceDate = [Util getDate:[dict objectForKey:INV_DATE] format:nil];
+                inv.dueDate = [Util getDate:[dict objectForKey:INV_DUE_DATE] format:nil];
+                inv.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
+                
+                inv.lineItems = [NSMutableArray array];
+                NSArray *jsonItems = [dict objectForKey:INV_LINE_ITEMS];
+                for (id lineItem in jsonItems) {
+                    Item *item = [[Item alloc] init];
+                    item.objectId = [lineItem objectForKey:INV_ITEM_ID];
+                    item.qty = [[lineItem objectForKey:INV_ITEM_QUANTITY] integerValue];
+                    item.price = [Util id2Decimal:[lineItem objectForKey:INV_ITEM_PRICE]];
+                    [inv.lineItems addObject:item];
+                }
+                
+                [invArr addObject:inv];
+            }
+
+//            [Invoice setInvoices:invArr active:isActive];
+
+            if (needReload) {
+//                [ARDelegate didGetInvoices:[NSArray arrayWithArray:invArr]];
+                [ListDelegate didGetInvoices:[NSArray arrayWithArray:invArr]];
+            }
+        } else if (response_status == RESPONSE_TIMEOUT) {
+            [ListDelegate failedToGetInvoices];
+            [UIHelper showInfo:SysTimeOut withStatus:kError];
+            NSLog(@"Time out when retrieving list of invoice for %@!", isActive ? @"active" : @"inactive");
+        } else {
+            [ListDelegate failedToGetInvoices];
+            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            NSLog(@"Failed to retrieve list of invoice for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
+        }
+    }];
+}
+
++ (void)clone:(Invoice *)source to:(Invoice *)target {
+    [super clone:source to:target];
+    
+    target.customerId = source.customerId;
+    target.invoiceNumber = source.invoiceNumber;
+    target.invoiceDate = source.invoiceDate;
+    target.dueDate = source.dueDate;
+    target.editDelegate = source.editDelegate;
+    target.detailsDelegate = source.detailsDelegate;
+    
+    if (source.lineItems != nil) {
+        target.lineItems = [NSMutableArray array];
+        for (int i = 0; i < [source.lineItems count]; i++) {
+            Item *item = [[Item alloc] init];
+            [Item clone:[source.lineItems objectAtIndex:i] to:item];
+            [target.lineItems addObject:item];
+        }
+    }
+    
+    if (source.attachments != nil) {
+        target.attachments = nil;
+        target.attachments = [NSMutableDictionary dictionary];
+        for (NSString *name in source.attachments) {
+            [target.attachments setObject:[source.attachments objectForKey:name] forKey:name];
+        }
+    }
+}
+
+@end

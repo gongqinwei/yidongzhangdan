@@ -8,6 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
-@interface BDCViewController : UIViewController
+@interface BDCViewController : UITabBarController {
+//    NSArray *invoices;
+}
+
+//@property (nonatomic, strong) NSArray *bills;
+//@property (nonatomic, strong) NSArray *invoices;
+//@property (nonatomic, strong) NSDictionary *customers;
+//@property (nonatomic, strong) NSDictionary *paymentStatus;
+
+@property (nonatomic, strong) NSArray *items;
 
 @end

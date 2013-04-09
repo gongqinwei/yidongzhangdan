@@ -7,14 +7,27 @@
 //
 
 #import "BDCAppDelegate.h"
+#import "Invoice.h"
+#import "Customer.h"
+#import "Item.h"
+
+@interface BDCAppDelegate ()
+
+@property (nonatomic, assign) BOOL isFirstLaunch;
+
+@end
 
 @implementation BDCAppDelegate
 
 @synthesize window = _window;
+@synthesize numNetworkActivities = _numNetworkActivities;
+@synthesize isFirstLaunch;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    self.isFirstLaunch = YES;
+    self.numNetworkActivities = 0;
+    
     return YES;
 }
 							
@@ -37,12 +50,35 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    if (self.isFirstLaunch) {
+        self.isFirstLaunch = NO;
+    } else {        
+        [Invoice retrieveList];
+        [Item retrieveList];
+        [Customer retrieveList];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+// increment numNetworkActivities
+// always set networkActivityIndicatorVisible to YES
+- (void)incrNetworkActivities {
+    @synchronized(self) {
+        self.numNetworkActivities++;
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    }
+}
+
+// decrement numNetworkActivities
+// set networkActivityIndicatorVisible to NO if numNetworkActivities becomes 0
+- (void)decrNetworkActivities {
+    @synchronized(self) {
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = --self.numNetworkActivities > 0;
+    }
 }
 
 @end
