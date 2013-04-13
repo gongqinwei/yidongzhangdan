@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "BDCBusinessObject.h"
+#import "SlidingDetailsTableViewController.h"
+#import "SlidingListTableViewController.h"
 
 #define INV_CUSTOMER_ID             @"customerId"
 #define INV_CUSTOMER_NAME           @"customerName"
@@ -32,28 +34,19 @@
                                     @"Amount Due", INV_AMOUNT_DUE, \
                         nil]
 
-@protocol InvoiceDelegate <NSObject>
-
+@protocol InvoiceDelegate <DetailsViewDelegate>
 @optional
 - (void)didCreateInvoice:(NSString *)newInvoiceId;
-- (void)didUpdateInvoice;
-- (void)didDeleteInvoice;
-
-- (void)failedToSaveInvoice;
-
 @end
 
-@protocol InvoiceListDelegate <NSObject>
-
+@protocol InvoiceListDelegate <ListViewDelegate>
 @optional
 - (void)didGetInvoices:(NSArray *)invoiceList;
 - (void)failedToGetInvoices;
-
 @end
 
 @interface Invoice : BDCBusinessObject
 
-//@property (nonatomic, strong) NSString *objectId;
 @property (nonatomic, strong) NSString *orgId;
 @property (nonatomic, strong) NSString *invoiceNumber;
 @property (nonatomic, strong) NSString *customerId;

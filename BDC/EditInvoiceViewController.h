@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SlidingTableViewController.h"
+#import "SlidingDetailsTableViewController.h"
 #import "Invoice.h"
 
-@interface EditInvoiceViewController : SlidingTableViewController
+@interface EditInvoiceViewController : SlidingDetailsTableViewController
 
 @property (nonatomic, strong) Invoice *invoice;
 

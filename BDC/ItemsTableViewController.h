@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SlidingTableViewController.h"
+#import "SlidingListTableViewController.h"
 
 @protocol ItemSelectDelegate <NSObject>
 
@@ -16,7 +16,7 @@
 
 @end
 
-@interface ItemsTableViewController : SlidingTableViewController
+@interface ItemsTableViewController : SlidingListTableViewController
 
 @property (nonatomic, strong) NSMutableArray *items;
 @property (nonatomic, weak) id<ItemSelectDelegate> selectDelegate;

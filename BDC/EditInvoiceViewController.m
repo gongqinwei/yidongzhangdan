@@ -83,7 +83,7 @@ typedef enum {
 @property (nonatomic, strong) UIDatePicker *invoiceDatePicker;
 @property (nonatomic, strong) UIDatePicker *dueDatePicker;
 
-@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
+//@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 
 @property (nonatomic, strong) UITextField *invoiceNumTextField;
 @property (nonatomic, strong) UITextField *invoiceDateTextField;
@@ -104,7 +104,6 @@ typedef enum {
 
 //@property (nonatomic, weak) id<InvoiceDelegate> 
 
-- (void)navigateBack;
 - (void)addMoreItems;
 - (void)addMorePhoto;
 - (void)layoutScrollImages:(BOOL)needChangePage;
@@ -122,7 +121,6 @@ typedef enum {
 @synthesize invoiceNumTextField;
 @synthesize invoiceDateTextField;
 @synthesize invoiceDueDateTextField;
-@synthesize activityIndicator;
 //@synthesize photos;
 @synthesize photoNames;
 @synthesize attachmentScrollView;
@@ -250,20 +248,12 @@ typedef enum {
     [self updateLineItems];
 }
 
-- (void)navigateBack {
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
 - (void)addMoreItems {
-//    [self.editingField resignFirstResponder];
-//    self.editingField = nil;
     [self.view findAndResignFirstResponder];
     [self performSegueWithIdentifier:INV_SELECT_ITEMS_SEGUE sender:self];
 }
 
 - (void)addMorePhoto {
-//    [self.editingField resignFirstResponder];
-//    self.editingField = nil;
     [self.view findAndResignFirstResponder];
     [self performSegueWithIdentifier:INV_SCAN_PHOTO_SEGUE sender:self];
 }
@@ -303,29 +293,35 @@ typedef enum {
 }
 
 - (void)pdfTapped:(UITapGestureRecognizer *)gestureRecognizer {
-    UIImageView *imageView = (UIImageView *)gestureRecognizer.view;
-    [self selectAttachment:imageView];
-    [self performSegueWithIdentifier:INV_VIEW_PDF_SEGUE sender:self.invoice];
+    if ([self tryTap]) {
+        UIImageView *imageView = (UIImageView *)gestureRecognizer.view;
+        [self selectAttachment:imageView];
+        [self performSegueWithIdentifier:INV_VIEW_PDF_SEGUE sender:self.invoice];
+    }
 }
 
-- (void)imageTapped:(UITapGestureRecognizer *)gestureRecognizer {    
-    UIImageView *imageView = (UIImageView *)gestureRecognizer.view;
-    [self selectAttachment:imageView];
-    [self performSegueWithIdentifier:INV_PREVIEW_ATTACHMENT_SEGUE sender:imageView];
+- (void)imageTapped:(UITapGestureRecognizer *)gestureRecognizer {
+    if ([self tryTap]) {
+        UIImageView *imageView = (UIImageView *)gestureRecognizer.view;
+        [self selectAttachment:imageView];
+        [self performSegueWithIdentifier:INV_PREVIEW_ATTACHMENT_SEGUE sender:imageView];
+    }
 }
 
 - (void)imagePressed:(UILongPressGestureRecognizer *)gestureRecognizer {
-    [self selectAttachment:(UIImageView *)gestureRecognizer.view];
-    
-    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        UIAlertView *alert = [[UIAlertView alloc]
-                              initWithTitle: @"Delete Confirmation"
-                              message: @"Are you sure to delete this attachment?"
-                              delegate: self
-                              cancelButtonTitle:@"No"
-                              otherButtonTitles:@"Yes", nil];
-        alert.tag = REMOVE_ATTACHMENT_ALERT_TAG;
-        [alert show];
+    if ([self tryTap]) {
+        [self selectAttachment:(UIImageView *)gestureRecognizer.view];
+        
+        if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+            UIAlertView *alert = [[UIAlertView alloc]
+                                  initWithTitle: @"Delete Confirmation"
+                                  message: @"Are you sure to delete this attachment?"
+                                  delegate: self
+                                  cancelButtonTitle:@"No"
+                                  otherButtonTitles:@"Yes", nil];
+            alert.tag = REMOVE_ATTACHMENT_ALERT_TAG;
+            [alert show];
+        }
     }
 }
 
@@ -366,8 +362,6 @@ typedef enum {
             [self.invoiceDueDateTextField resignFirstResponder];
             break;
         default:
-//            [self.editingField resignFirstResponder];
-//            self.editingField = nil;
             break;
     }
 }
@@ -395,9 +389,6 @@ typedef enum {
     self.navigationItem.rightBarButtonItem.customView = self.activityIndicator;
     [self.activityIndicator startAnimating];
     [self.view findAndResignFirstResponder];
-    
-//    [self.editingField resignFirstResponder];
-//    self.editingField = nil;
     
 //    [Invoice clone:self.shaddowInvoice to:self.invoice];
     
@@ -455,8 +446,6 @@ typedef enum {
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    
     if (self.mode == kViewMode) {
         self.modeChanged = NO;
     }
@@ -469,6 +458,10 @@ typedef enum {
         self.invoice = [[Invoice alloc] init];
         self.shaddowInvoice = [[Invoice alloc] init];
     }
+    
+    self.busObj = self.invoice;
+    
+    [super viewDidLoad];
     
 //    if (!self.lineItems) {
 //        self.lineItems = [NSArray array];
@@ -1101,9 +1094,6 @@ typedef enum {
 
 // private
 - (void)textFieldDoneEditing:(UITextField *)textField {
-//    [self.editingField resignFirstResponder];
-//    self.editingField = nil;
-    
     if (textField.tag == kInvoiceNumber * TAG_BASE) {
         self.shaddowInvoice.invoiceNumber = [Util trim:textField.text];
     } else {
@@ -1111,7 +1101,7 @@ typedef enum {
         int qty = textField.text.intValue;
         NSNumber *quantity = [NSNumber numberWithInt:qty];
         Item *item = [self.shaddowInvoice.lineItems objectAtIndex: textField.tag - [InvoiceInfo count] * TAG_BASE];
-        item.qty = quantity;
+        item.qty = [quantity intValue];
         
         [self updateLineItems];
 //        NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:1];
@@ -1122,10 +1112,6 @@ typedef enum {
 - (BOOL)textFieldShouldReturn:(UITextField*)textField {
     [self textFieldDoneEditing:textField];
     return YES;
-}
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
-//    self.editingField = textField;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
@@ -1280,8 +1266,7 @@ typedef enum {
 
 #pragma mark - model delegate
 
-// private
-- (void)doneSaveInvoice {
+- (void)doneSaveObject {
 //    [Invoice retrieveList];
 
     if (self.photoNames != nil && [self.photoNames count] > 0) {
@@ -1315,27 +1300,27 @@ typedef enum {
 - (void)didCreateInvoice:(NSString *)newInvoiceId {
     self.invoice.objectId = newInvoiceId;
     self.shaddowInvoice.objectId = newInvoiceId;
-    [self doneSaveInvoice];
+    [self doneSaveObject];
 }
 
-- (void)didUpdateInvoice {
-    [self doneSaveInvoice];
-}
-
-- (void)didDeleteInvoice {
-    __weak EditInvoiceViewController *weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [weakSelf.navigationController popViewControllerAnimated:YES];
-    });
-}
-
-- (void)failedToSaveInvoice {
-    __weak EditInvoiceViewController *weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [weakSelf.activityIndicator stopAnimating];
-        self.navigationItem.rightBarButtonItem.customView = nil;
-    });
-}
+//- (void)didUpdateInvoice {
+//    [self doneSaveObject];
+//}
+//
+//- (void)didDeleteInvoice {
+//    __weak EditInvoiceViewController *weakSelf = self;
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [weakSelf.navigationController popViewControllerAnimated:YES];
+//    });
+//}
+//
+//- (void)failedToSaveInvoice {
+//    __weak EditInvoiceViewController *weakSelf = self;
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [weakSelf.activityIndicator stopAnimating];
+//        self.navigationItem.rightBarButtonItem.customView = nil;
+//    });
+//}
 
 - (void)didSelectCustomer:(NSString *)customerId {
     self.shaddowInvoice.customerId = customerId;

@@ -50,16 +50,12 @@ enum CustomerInfoType {
 @property (nonatomic, strong) UITextField *customerPhoneTextField;
 @property (nonatomic, strong) UITextField *customerEmailTextField;
 
-@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
-//@property (nonatomic, strong) UITextField *editingField;
-
 @end
 
 @implementation EditCustomerViewController
 
 @synthesize customer = _customer;
 @synthesize shaddowCustomer;
-//@synthesize mode = _mode;
 @synthesize modeChanged;
 @synthesize customerStatePickerView;
 @synthesize customerCountryPickerView;
@@ -74,8 +70,7 @@ enum CustomerInfoType {
 @synthesize customerZipTextField;
 @synthesize customerPhoneTextField;
 @synthesize customerEmailTextField;
-@synthesize activityIndicator;
-//@synthesize editingField;
+
 
 - (void)setCustomer:(Customer *)customer {
     _customer = customer;
@@ -92,7 +87,8 @@ enum CustomerInfoType {
     self.modeChanged = YES;
     
     if (mode == kViewMode) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editCustomer:)];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
+        self.navigationItem.rightBarButtonItem.tag = 1;
         self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
     } else {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveCustomer:)];
@@ -102,41 +98,41 @@ enum CustomerInfoType {
     [self.tableView reloadData];
 }
 
+#pragma mark - Depricated: this method is no longer needed as the edit bar button will be moved to action menu
 - (void)editCustomer:(UIBarButtonItem *)sender {
-    self.mode = kUpdateMode;
+    if ([self tryTap]) {
+        self.mode = kUpdateMode;
+    }
 }
 
 - (IBAction)saveCustomer:(UIBarButtonItem *)sender {
-    self.navigationItem.rightBarButtonItem.customView = self.activityIndicator;
-    [activityIndicator startAnimating];
-    [self.view findAndResignFirstResponder];
-    
-//    [self.editingField resignFirstResponder];
-//    self.editingField = nil;
-    
-    if (self.shaddowCustomer.name == nil || [self.shaddowCustomer.name length] == 0) {
-        [UIHelper showInfo:@"Missing name!" withStatus:kError];
-//        self.navigationItem.rightBarButtonItem.customView = nil;
-        return;
+    if ([self tryTap]) {
+        self.navigationItem.rightBarButtonItem.customView = self.activityIndicator;
+        [self.activityIndicator startAnimating];
+        [self.view findAndResignFirstResponder];
+        
+        if (self.shaddowCustomer.name == nil || [self.shaddowCustomer.name length] == 0) {
+            [UIHelper showInfo:@"Missing name!" withStatus:kError];
+            self.navigationItem.rightBarButtonItem.customView = nil;
+            return;
+        }
+        
+        if (self.mode == kCreateMode) {
+            [self.shaddowCustomer create];
+        } else if (self.mode == kUpdateMode){
+            [self.shaddowCustomer update];
+        }
     }
-    
-    if (self.mode == kCreateMode) {
-        [self.shaddowCustomer create];
-    } else if (self.mode == kUpdateMode){
-        [self.shaddowCustomer update];
-    }
-}
-
-- (void)navigateBack {
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)cancelEdit:(UIBarButtonItem *)sender {
-    if (self.mode == kCreateMode) {
-        [self navigateBack];
-    } else {
-        [self setCustomer:self.customer];
-        self.mode = kViewMode;
+    if ([self tryTap]) {
+        if (self.mode == kCreateMode) {
+            [self navigateBack];
+        } else {
+            [self setCustomer:self.customer];
+            self.mode = kViewMode;
+        }
     }
 }
 
@@ -153,8 +149,6 @@ enum CustomerInfoType {
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    
     if (!self.customer) {
         self.customer = [[Customer alloc] init];
         self.shaddowCustomer = [[Customer alloc] init];
@@ -162,10 +156,18 @@ enum CustomerInfoType {
         self.shaddowCustomer.billCountry = INVALID_OPTION;
     }
     
+    self.busObj = self.customer;
+    
+    [super viewDidLoad];
+    
     if (self.mode == kViewMode) {
         self.modeChanged = NO;
-    } else if (self.mode == kCreateMode) {
-        self.title = @"New Customer";
+    } else {
+        self.crudActions = nil;
+        
+        if (self.mode == kCreateMode) {
+            self.title = @"New Customer";
+        }
     }
         
     self.customer.editDelegate = self;
@@ -504,12 +506,11 @@ enum CustomerInfoType {
 }
 
 
-//// Override to support conditional editing of the table view.
-//- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    return YES;
-//}
-//
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return NO;
+}
+
 //// Override to support editing the table view.
 //- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 //{
@@ -663,8 +664,7 @@ enum CustomerInfoType {
 
 #pragma mark - model delegate
 
-// private
-- (void)doneSaveCustomer {
+- (void)doneSaveObject {
 //    [Customer retrieveList];
     
     [Customer clone:self.shaddowCustomer to:self.customer];
@@ -680,20 +680,9 @@ enum CustomerInfoType {
     self.customer.objectId = newCustomerId;
     self.shaddowCustomer.objectId = newCustomerId;
     self.title = self.customerNameTextField.text;
-    [self doneSaveCustomer];
+    [self doneSaveObject];
 }
 
-- (void)didUpdateCustomer {
-    [self doneSaveCustomer];
-}
-
-- (void)failedToSaveCustomer {
-    __weak EditCustomerViewController *weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [weakSelf.activityIndicator stopAnimating];
-//        self.navigationItem.rightBarButtonItem.customView = nil;
-    });
-}
 
 @end
 

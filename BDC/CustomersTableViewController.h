@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SlidingTableViewController.h"
+#import "SlidingListTableViewController.h"
 
 @protocol CustomerSelectDelegate <NSObject>
 
@@ -16,7 +16,7 @@
 
 @end
 
-@interface CustomersTableViewController : SlidingTableViewController
+@interface CustomersTableViewController : SlidingListTableViewController
 
 @property (nonatomic, strong) NSMutableArray *customers;
 

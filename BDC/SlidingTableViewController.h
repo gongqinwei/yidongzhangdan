@@ -12,8 +12,4 @@
 
 @interface SlidingTableViewController : UITableViewController
 
-@property (nonatomic, strong) NSString *createNewSegue;
-
-- (void)didSelectCrudAction:(NSString *)action;
-
 @end

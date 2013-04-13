@@ -6,7 +6,7 @@
 //
 //
 
-#import "SlidingTableViewController.h"
+#import "SlidingDetailsTableViewController.h"
 #import "Item.h"
 
 @protocol LineItemDelegate <NSObject>
@@ -15,7 +15,7 @@
 
 @end
 
-@interface EditItemViewController : SlidingTableViewController
+@interface EditItemViewController : SlidingDetailsTableViewController
 
 @property (nonatomic, strong) Item *item;
 @property (nonatomic, assign) int lineItemIndex;

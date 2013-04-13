@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SlidingTableViewController.h"
+#import "SlidingListTableViewController.h"
 
-@interface InvoicesTableViewController : SlidingTableViewController
+@interface InvoicesTableViewController : SlidingListTableViewController
 
 @property (nonatomic, strong) NSMutableArray *invoices;
 

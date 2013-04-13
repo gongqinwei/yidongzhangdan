@@ -19,6 +19,8 @@
 		0E7DCAC11603A1DD00D0B35E /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7DCAC016030FCD00D0B35E /* KeychainItemWrapper.m */; };
 		0E7DCAC41603CCC400D0B35E /* UIHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7DCAC31603CCC400D0B35E /* UIHelper.m */; };
 		0E847CE9170E203C00C7FA53 /* MenuIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E847CE8170E203C00C7FA53 /* MenuIcon.png */; };
+		0E847CEE171785C400C7FA53 /* SlidingListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E847CED171785C300C7FA53 /* SlidingListTableViewController.m */; };
+		0E847CF11717862A00C7FA53 /* SlidingDetailsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E847CF01717862A00C7FA53 /* SlidingDetailsTableViewController.m */; };
 		0E874A5416216E6600877991 /* pdf_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E874A5316216E6600877991 /* pdf_icon.png */; };
 		0E8ED1071619731900BFBDD0 /* AttachmentPreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E8ED1061619731900BFBDD0 /* AttachmentPreviewViewController.m */; };
 		0E8FBAD2160D10B00074C01B /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FBAD1160D10B00074C01B /* Item.m */; };
@@ -98,6 +100,10 @@
 		0E7DCAC21603CCC400D0B35E /* UIHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIHelper.h; sourceTree = "<group>"; };
 		0E7DCAC31603CCC400D0B35E /* UIHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIHelper.m; sourceTree = "<group>"; };
 		0E847CE8170E203C00C7FA53 /* MenuIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIcon.png; sourceTree = "<group>"; };
+		0E847CEC171785C300C7FA53 /* SlidingListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlidingListTableViewController.h; sourceTree = "<group>"; };
+		0E847CED171785C300C7FA53 /* SlidingListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlidingListTableViewController.m; sourceTree = "<group>"; };
+		0E847CEF1717862A00C7FA53 /* SlidingDetailsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlidingDetailsTableViewController.h; sourceTree = "<group>"; };
+		0E847CF01717862A00C7FA53 /* SlidingDetailsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlidingDetailsTableViewController.m; sourceTree = "<group>"; };
 		0E874A5316216E6600877991 /* pdf_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pdf_icon.png; path = BDC/pdf_icon.png; sourceTree = "<group>"; };
 		0E8ED1051619731900BFBDD0 /* AttachmentPreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentPreviewViewController.h; sourceTree = "<group>"; };
 		0E8ED1061619731900BFBDD0 /* AttachmentPreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentPreviewViewController.m; sourceTree = "<group>"; };
@@ -311,6 +317,10 @@
 				0ED59D4E162DFD4E008DE1C9 /* SlidingViewController.m */,
 				0EE2C137162D231600BB00DA /* SlidingTableViewController.h */,
 				0EE2C138162D231600BB00DA /* SlidingTableViewController.m */,
+				0E847CEC171785C300C7FA53 /* SlidingListTableViewController.h */,
+				0E847CED171785C300C7FA53 /* SlidingListTableViewController.m */,
+				0E847CEF1717862A00C7FA53 /* SlidingDetailsTableViewController.h */,
+				0E847CF01717862A00C7FA53 /* SlidingDetailsTableViewController.m */,
 			);
 			name = Sliding;
 			sourceTree = "<group>";
@@ -534,7 +544,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = BDC;
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = 7E91E3E515927C15005104AF /* Build configuration list for PBXProject "BDC" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -630,6 +640,8 @@
 				0E999E0F16DE5E8E00F1E39F /* UIView+FindAndResignFirstResponder.m in Sources */,
 				0E967EA416F2DC0600882B10 /* ActionMenuViewController.m in Sources */,
 				0EAE1BAA170B9B780091B7FC /* UIViewController+Sliding.m in Sources */,
+				0E847CEE171785C400C7FA53 /* SlidingListTableViewController.m in Sources */,
+				0E847CF11717862A00C7FA53 /* SlidingDetailsTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -669,6 +681,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -695,6 +711,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;

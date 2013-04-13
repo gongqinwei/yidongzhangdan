@@ -69,7 +69,10 @@
 
 @property (nonatomic, strong) NSMutableArray *invoiceListsCopy;
 
+//@property (nonatomic, strong) id<InvoiceListDelegate> deleteDelegate;
+
 @end
+
 
 @implementation InvoicesTableViewController
 
@@ -99,6 +102,8 @@
 @synthesize customerSectionLabels;
 
 @synthesize invoiceListsCopy;
+
+//@synthesize deleteDelegate;
 
 
 - (void)setInvoices:(NSArray *)invoices {
@@ -179,6 +184,7 @@
     
     if (self.mode != kSelectMode) {
         [Invoice setListDelegate:self];
+//        self.deleteDelegate = self;
         
         UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
         [refresh addTarget:self action:@selector(refreshView) forControlEvents:UIControlEventValueChanged];
@@ -532,6 +538,14 @@
     });    
 }
 
+- (void)didDeleteObject {
+    self.invoices = [Invoice listOrderBy:INV_NUMBER ascending:YES active:self.isActive];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
+}
+
 #pragma mark - Action Menu delegate
 
 - (void)didSelectSortAttribute:(NSString *)attribute ascending:(BOOL)ascending active:(BOOL)active {
@@ -576,24 +590,26 @@
 #pragma mark - private methods
 
 - (void)toggleSection:(UIButton *)sender {
-    NSInteger section = sender.tag;
-    NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:section];
-    
-    if ([self.sortAttribute isEqualToString:INV_CUSTOMER_NAME]) {
-        if ([self.tableView numberOfRowsInSection:section] > 0) {
-            [self.customerInvoices replaceObjectAtIndex:section withObject:[NSMutableArray array]];
-            [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-        } else {
-            [self.customerInvoices replaceObjectAtIndex:section withObject:[self.invoiceListsCopy objectAtIndex:section]];
-            [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-        }
-    } else if ([self.sortAttribute isEqualToString:INV_DUE_DATE]) {
-        if ([self.tableView numberOfRowsInSection:section] > 0) {
-            [self.dueDateInvoices replaceObjectAtIndex:section withObject:[NSMutableArray array]];
-            [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-        } else {
-            [self.dueDateInvoices replaceObjectAtIndex:section withObject:[self.invoiceListsCopy objectAtIndex:section]];
-            [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+    if ([self tryTap]) {
+        NSInteger section = sender.tag;
+        NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:section];
+        
+        if ([self.sortAttribute isEqualToString:INV_CUSTOMER_NAME]) {
+            if ([self.tableView numberOfRowsInSection:section] > 0) {
+                [self.customerInvoices replaceObjectAtIndex:section withObject:[NSMutableArray array]];
+                [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+            } else {
+                [self.customerInvoices replaceObjectAtIndex:section withObject:[self.invoiceListsCopy objectAtIndex:section]];
+                [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+            }
+        } else if ([self.sortAttribute isEqualToString:INV_DUE_DATE]) {
+            if ([self.tableView numberOfRowsInSection:section] > 0) {
+                [self.dueDateInvoices replaceObjectAtIndex:section withObject:[NSMutableArray array]];
+                [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+            } else {
+                [self.dueDateInvoices replaceObjectAtIndex:section withObject:[self.invoiceListsCopy objectAtIndex:section]];
+                [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+            }
         }
     }
 }

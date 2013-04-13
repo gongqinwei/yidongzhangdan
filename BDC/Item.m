@@ -81,13 +81,13 @@ static NSMutableDictionary *inactiveItems = nil;
             }
             
             if ([theAction isEqualToString:UPDATE]) {
-                [weakSelf.editDelegate didUpdateItem];
+                [weakSelf.editDelegate didUpdateObject];
             } else {
                 [weakSelf.editDelegate didCreateItem:itemId];
                 [ListDelegate didAddItem:self];
             }
         } else {
-            [weakSelf.editDelegate failedToSaveItem];
+            [weakSelf.editDelegate failedToSaveObject];
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             
             if ([theAction isEqualToString:UPDATE]) {
@@ -105,13 +105,15 @@ static NSMutableDictionary *inactiveItems = nil;
     NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
-//    __weak Item *weakSelf = self;
+    __weak Item *weakSelf = self;
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
         [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         if(response_status == RESPONSE_SUCCESS) {
+            [weakSelf.editDelegate didDeleteObject];
+            
             // manually update model
             self.isActive = isActive;
             
@@ -122,9 +124,8 @@ static NSMutableDictionary *inactiveItems = nil;
                 [items removeObjectForKey:self.objectId];
                 [inactiveItems setObject:self forKey:self.objectId];
             }
-//            [Item retrieveListForActive:isActive reload:NO]; // manually update model above instead
             
-//            [weakSelf.editDelegate didDeleteItem];
+            [ListDelegate didDeleteObject];
         } else {
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             NSLog(@"Failed to %@ item %@: %@", act, self.objectId, [err localizedDescription]);

@@ -259,13 +259,13 @@ static NSMutableDictionary * inactiveCustomers = nil;
             }
             
             if ([theAction isEqualToString:UPDATE]) {
-                [weakSelf.editDelegate didUpdateCustomer];
-                [weakSelf.editInvoiceDelegate didUpdateCustomer];
+                [weakSelf.editDelegate didUpdateObject];
+                [weakSelf.editInvoiceDelegate didUpdateObject];
             } else {
                 [weakSelf.editDelegate didCreateCustomer:customerId];
             }
         } else {
-            [weakSelf.editDelegate failedToSaveCustomer];
+            [weakSelf.editDelegate failedToSaveObject];
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             
             if ([theAction isEqualToString:UPDATE]) {
@@ -283,13 +283,15 @@ static NSMutableDictionary * inactiveCustomers = nil;
     NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
-//    __weak Customer *weakSelf = self;
+    __weak Customer *weakSelf = self;
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
         [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         if(response_status == RESPONSE_SUCCESS) {
+            [weakSelf.editDelegate didDeleteObject];
+            
             // manually update model
             self.isActive = isActive;
             
@@ -300,9 +302,8 @@ static NSMutableDictionary * inactiveCustomers = nil;
                 [customers removeObjectForKey:self.objectId];
                 [inactiveCustomers setObject:self forKey:self.objectId];
             }
-//            [Customer retrieveListForActive:isActive reload:NO]; // manually update model above instead
             
-//            [weakSelf.editDelegate didDeleteCustomer]; //TODO: need another delegate?
+            [ListDelegate didDeleteObject];
         } else {
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             NSLog(@"Failed to %@ customer %@: %@", act, self.objectId, [err localizedDescription]);

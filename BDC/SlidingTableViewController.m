@@ -12,22 +12,6 @@
 
 @implementation SlidingTableViewController
 
-@synthesize createNewSegue;
-
-#pragma mark - Overriding methods
-
-- (void)enterEditMode {
-    [super enterEditMode];
-    
-    [self.tableView setEditing:YES animated:YES];
-}
-
-- (void)exitEditMode {
-    [super exitEditMode];
-    
-    [self.tableView setEditing:NO animated:YES];
-}
-
 #pragma mark - life cycle methods
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -88,15 +72,15 @@
     }
 }
 
-#pragma mark - Action Menu delegate
-
-- (void)didSelectCrudAction:(NSString *)action {
-    if ([action isEqualToString:ACTION_CREATE]) {
-        [self.view removeGestureRecognizer:self.tapRecognizer];
-        [self performSegueWithIdentifier:self.createNewSegue sender:nil];
-    } else if ([action isEqualToString:ACTION_DELETE] || [action isEqualToString:ACTION_UNDELETE]) {
-        [self enterEditMode];
-    }
-}
+//#pragma mark - Action Menu delegate
+//
+//- (void)didSelectCrudAction:(NSString *)action {
+//    if ([action isEqualToString:ACTION_CREATE]) {
+//        [self.view removeGestureRecognizer:self.tapRecognizer];
+//        [self performSegueWithIdentifier:self.createNewSegue sender:nil];
+//    } else if ([action isEqualToString:ACTION_UPDATE] || [action isEqualToString:ACTION_DELETE] || [action isEqualToString:ACTION_UNDELETE]) {
+//        [self enterEditMode];
+//    }
+//}
 
 @end

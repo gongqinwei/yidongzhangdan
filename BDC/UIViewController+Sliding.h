@@ -17,7 +17,7 @@
 #define ACTION_UNDELETE         @"Undelete..."
 #define ACTION_LIST             @"List For"
 #define ACTION_ORDER            @"Order By"
-#define ACTION_CRUD             @"Operations"
+#define ACTION_CRUD             @"Actions"
 
 @protocol SlideDelegate <NSObject>
 
@@ -62,8 +62,9 @@
 - (void)slideIn;
 - (void)slideOut;
 - (IBAction)toggleMenu:(id)sender;
-- (void)removeTapGesture;
+//- (void)removeTapGesture;
 - (void)enterEditMode;
 - (void)exitEditMode;
+- (BOOL)tryTap;
 
 @end

@@ -254,7 +254,6 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         [self.searchDisplayController setActive:NO animated:YES];
-//        [self restoreActivenessSwitch];
         [self.targetViewController slideOut];
         
         BDCBusinessObject * obj = (BDCBusinessObject *)[[self.searchResults objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
@@ -262,9 +261,6 @@
         if ([obj isKindOfClass:[Invoice class]]) {            
             InvoicesTableViewController *listVC = (InvoicesTableViewController *)[self slideInListViewIdentifier:MENU_INVOICES];
             self.actionDelegate = listVC;
-//            [self.sortDelegate didSelectSortAttribute:[self.targetViewController.sortAttributes objectAtIndex:self.lastSortAttribute.row]
-//                                            ascending:self.ascSwitch.on
-//                                               active:!self.activenessSwitch.selectedSegmentIndex];
 
             [self.actionDelegate didSelectSortAttribute:[listVC.actionMenuVC.sortAttributes objectAtIndex:listVC.actionMenuVC.lastSortAttribute.row]
                                             ascending:listVC.actionMenuVC.ascSwitch.on

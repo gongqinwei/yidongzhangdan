@@ -17,7 +17,7 @@
 
 #define ALL_INACTIVE_CUSTOMERS              @"All Deleted Customers"
 
-@interface CustomersTableViewController () <CustomerListDelegate>
+@interface CustomersTableViewController () <CustomerListDelegate, ListViewDelegate>
 
 @property (nonatomic, strong) NSIndexPath *lastSelected;
 
@@ -61,22 +61,18 @@
 }
 
 - (void)navigateDone {
-//    NSLog(@"%u", [self.tableView.indexPathsForSelectedRows count]);
-//    NSMutableArray *custIds = [NSMutableArray array];
-//    for (NSIndexPath *path in self.tableView.indexPathsForSelectedRows) {
-//        [custIds addObject:((Customer *)[self.customers objectAtIndex:path.row]).objectId];
-//    }
-//    [selectDelegate didSelectCustomers:custIds];
-//    NSLog(@"%u", [custIds count]);
-    
-    NSIndexPath *path = self.lastSelected; //self.tableView.indexPathForSelectedRow; //same
-    [self.selectDelegate didSelectCustomer:((Customer *)[self.customers objectAtIndex:path.row]).objectId];
-    
-    [self.navigationController popViewControllerAnimated:YES];
+    if ([self tryTap]) {
+        NSIndexPath *path = self.lastSelected; //self.tableView.indexPathForSelectedRow; //same
+        [self.selectDelegate didSelectCustomer:((Customer *)[self.customers objectAtIndex:path.row]).objectId];
+        
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (void)navigateCancel {
-    [self.navigationController popViewControllerAnimated:YES];
+    if ([self tryTap]) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -124,9 +120,7 @@
     self.customers = [Customer listOrderBy:CUSTOMER_NAME ascending:YES active:YES];
     [Customer setListDelegate:self];
     
-    if (self.mode != kSelectMode) {
-//        [Customer setListDelegate:self];
-        
+    if (self.mode != kSelectMode) {        
         UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
         [refresh addTarget:self action:@selector(refreshView) forControlEvents:UIControlEventValueChanged];
         refresh.attributedTitle = PULL_TO_REFRESH;
@@ -222,10 +216,8 @@
             [customer revive];
         }
         
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-//        self.tableView.editing = NO;
-//        [self restoreEditButton:self.navigationItem.rightBarButtonItem];
-//        [self.tableView reloadData];
+        [self.listViewDelegate didDeleteObject:indexPath];
+//        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];      //TODO: move this to a delegate call
     }
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
@@ -293,7 +285,9 @@
 }
 
 - (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    [self performSegueWithIdentifier:CUSTOMER_VIEW_CUSTOMER_SEGUE sender:[self.customers objectAtIndex:indexPath.row]];
+    if ([self tryTap]) {
+        [self performSegueWithIdentifier:CUSTOMER_VIEW_CUSTOMER_SEGUE sender:[self.customers objectAtIndex:indexPath.row]];
+    }
 }
 
 #pragma mark - model delegate
@@ -312,6 +306,14 @@
 - (void)failedToGetCustomers {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.refreshControl endRefreshing];
+    });
+}
+
+- (void)didDeleteObject {
+    self.customers = [Customer listOrderBy:CUSTOMER_NAME ascending:YES active:self.isActive];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
     });
 }
 
@@ -335,13 +337,5 @@
     self.customers = customerList;
 }
 
-//- (void)didSelectCrudAction:(NSString *)action {
-//    if ([action isEqualToString:ACTION_CREATE]) {
-//        [self.view removeGestureRecognizer:self.tapRecognizer];
-//        [self performSegueWithIdentifier:CUSTOMER_CREATE_CUSTOMER_SEGUE sender:nil];
-//    } else if ([action isEqualToString:ACTION_DELETE] || [action isEqualToString:ACTION_UNDELETE]) {
-//        [self enterEditMode];
-//    }
-//}
 
 @end

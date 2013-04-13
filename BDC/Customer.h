@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "BDCBusinessObject.h"
+#import "SlidingDetailsTableViewController.h"
+#import "SlidingListTableViewController.h"
 
 #define CUSTOMER            @"Customer"
 #define CUSTOMER_NAME       @"name"
@@ -23,28 +25,19 @@
 #define CUSTOMER_PHONE      @"phone"
 
 
-@protocol CustomerDelegate <NSObject>
-
+@protocol CustomerDelegate <DetailsViewDelegate>
 @optional
 - (void)didCreateCustomer:(NSString *)newCustomerId;
-- (void)didUpdateCustomer;
-- (void)didDeleteCustomer;
-
-- (void)failedToSaveCustomer;
-
 @end
 
-@protocol CustomerListDelegate <NSObject>
-
+@protocol CustomerListDelegate <ListViewDelegate>
 @optional
 - (void)didGetCustomers;
 - (void)failedToGetCustomers;
-
 @end
 
 @interface Customer : BDCBusinessObject
 
-//@property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *billAddr1;
 @property (nonatomic, strong) NSString *billAddr2;
 @property (nonatomic, strong) NSString *billAddr3;

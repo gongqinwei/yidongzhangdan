@@ -54,12 +54,21 @@ static char const * const TapRecognizerKey = "tapRecognizer";
 @dynamic tapRecognizer;
 
 
-- (void)removeTapGesture {
-    UIViewController *vc = [self.navigationController.childViewControllers objectAtIndex:0];
-//    UIViewController * vc = self.navigationController.topViewController;
-    if ([vc respondsToSelector:@selector(slideIn)]) {
-        [vc.view removeGestureRecognizer:vc.tapRecognizer];
+//- (void)removeTapGesture {
+//    UIViewController *vc = [self.navigationController.childViewControllers objectAtIndex:0];
+////    UIViewController * vc = self.navigationController.topViewController;
+//    if ([vc respondsToSelector:@selector(slideIn)]) {
+//        [vc.view removeGestureRecognizer:vc.tapRecognizer];
+//    }
+//}
+
+- (BOOL)tryTap {
+    if ([self.view.gestureRecognizers containsObject:self.tapRecognizer]) {
+        [self toggleMenu:nil];
+        return NO;
     }
+
+    return YES;
 }
 
 - (void)slideTo:(CGRect)destination completion:completionHandler {
@@ -70,15 +79,15 @@ static char const * const TapRecognizerKey = "tapRecognizer";
 
 - (IBAction)toggleMenu:(id)sender {
     CGRect destination = self.navigationController.view.frame;
-    if (destination.origin.x == 0) {
+    if (destination.origin.x == 0) {        
         if (([sender isKindOfClass:[UIBarButtonItem class]] && ((UIBarButtonItem*)sender).tag == 0) || ([sender isKindOfClass:[UISwipeGestureRecognizer class]] && ((UISwipeGestureRecognizer *)sender).direction == UISwipeGestureRecognizerDirectionRight)) {
             destination.origin.x += SLIDING_DISTANCE;
             [self.view findAndResignFirstResponder];
             [self slideTo:destination completion:^(BOOL finished) {
                 [UIHelper addShaddowForView:self.navigationController.view];
+                self.navigationItem.hidesBackButton = YES;
+                [self.view addGestureRecognizer:self.tapRecognizer];
             }];
-            [self.view addGestureRecognizer:self.tapRecognizer];
-            
         } else { //if ([sender isKindOfClass:[UISwipeGestureRecognizer class]] && ((UISwipeGestureRecognizer *)sender).direction == UISwipeGestureRecognizerDirectionLeft) {
             if (self.actionMenuVC == nil) {
                 self.actionMenuVC = [self.storyboard instantiateViewControllerWithIdentifier:@"ActionMenu"];
@@ -92,9 +101,8 @@ static char const * const TapRecognizerKey = "tapRecognizer";
             [self.view findAndResignFirstResponder];
             [self slideTo:destination completion:^(BOOL finished) {
                 [UIHelper addShaddowForView:self.navigationController.view];
+                [self.view addGestureRecognizer:self.tapRecognizer];
             }];
-            [self.view addGestureRecognizer:self.tapRecognizer];
-            
         }
     } else {
         CGFloat x = destination.origin.x;
@@ -113,8 +121,10 @@ static char const * const TapRecognizerKey = "tapRecognizer";
                     [self.slidingInDelegate viewDidSlideIn];
                 });
             }
+            
+            self.navigationItem.hidesBackButton = NO;
+            [self.view removeGestureRecognizer:self.tapRecognizer];
         }];
-        [self removeTapGesture];
     }
 }
 
@@ -126,11 +136,17 @@ static char const * const TapRecognizerKey = "tapRecognizer";
     self.navigationController.view.frame = selfFrame;
     
     selfFrame.origin.x = 0;
-    [self slideTo:selfFrame completion:nil];
-    [self removeTapGesture];
+    [self slideTo:selfFrame completion:^{
+        
+    }];
 }
 
 - (void)slideOut {
+    [self.actionMenuVC.view removeFromSuperview];
+    
+    self.navigationItem.hidesBackButton = NO;
+    [self.view removeGestureRecognizer:self.tapRecognizer];
+    
     CGRect destination = self.navigationController.view.frame;
     if (destination.origin.x > 0) {
         destination.origin.x = [UIScreen mainScreen].bounds.size.width;
@@ -139,23 +155,25 @@ static char const * const TapRecognizerKey = "tapRecognizer";
     }
     
     [self slideTo:destination completion:^(BOOL finished) {
+        UIViewController *topVC = self.navigationController.topViewController;
+        [topVC.view removeGestureRecognizer:topVC.tapRecognizer];
+        topVC.navigationItem.hidesBackButton = NO;
+        
         [self.navigationController removeFromParentViewController];
         [self.slidingOutDelegate viewDidSlideOut];
+        [UIHelper removeShaddowForView:self.navigationController.view];
     }];
-    
-    [self.actionMenuVC.view removeFromSuperview];
-    [UIHelper removeShaddowForView:self.navigationController.view];
 }
 
 - (void)enterEditMode {
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(exitEditMode)];
-    [self.navigationItem setRightBarButtonItem:doneButton];
+//    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(exitEditMode)];
+//    [self.navigationItem setRightBarButtonItem:doneButton];
 }
 
 - (void)exitEditMode {
-    UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
-    actionButton.tag = 1;
-    [self.navigationItem setRightBarButtonItem:actionButton];
+//    UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
+//    actionButton.tag = 1;
+//    [self.navigationItem setRightBarButtonItem:actionButton];
 }
 
 #pragma mark - Sliding Table View Controller delegate

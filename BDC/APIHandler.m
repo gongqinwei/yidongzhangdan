@@ -61,7 +61,7 @@
             NSMutableDictionary* details = [NSMutableDictionary dictionary];
             [details setValue:[[json objectForKey:RESPONSE_DATA_KEY] objectForKey:RESPONSE_ERROR_MSG] forKey:NSLocalizedDescriptionKey];
             
-            *err = [NSError errorWithDomain:ERR_DOMAIN code:[[json objectForKey:RESPONSE_DATA_KEY] objectForKey:RESPONSE_ERROR_CODE] userInfo:details];
+            *err = [NSError errorWithDomain:ERR_DOMAIN code:[[[json objectForKey:RESPONSE_DATA_KEY] objectForKey:RESPONSE_ERROR_CODE] intValue] userInfo:details];
         }
     }
     

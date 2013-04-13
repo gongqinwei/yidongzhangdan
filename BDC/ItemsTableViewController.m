@@ -35,17 +35,21 @@
 }
 
 - (void)navigateDone {
-    NSMutableArray *items = [NSMutableArray array];
-    for (NSIndexPath *path in self.tableView.indexPathsForSelectedRows) {
-        [items addObject:[self.items objectAtIndex:path.row]];
+    if ([self tryTap]) {
+        NSMutableArray *items = [NSMutableArray array];
+        for (NSIndexPath *path in self.tableView.indexPathsForSelectedRows) {
+            [items addObject:[self.items objectAtIndex:path.row]];
+        }
+        [self.selectDelegate didSelectItems:items];
+        
+        [self.navigationController popViewControllerAnimated:YES];
     }
-    [self.selectDelegate didSelectItems:items];
-    
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)navigateCancel {
-    [self.navigationController popViewControllerAnimated:YES];
+    if ([self tryTap]) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -120,7 +124,6 @@
         self.items = arr;
         self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
     } else {
-//        [Item setListDelegate:self];
         self.items = [Item listOrderBy:ITEM_NAME ascending:YES active:YES];
         
         UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
@@ -215,10 +218,8 @@
             [item revive];
         }
 
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-//        self.tableView.editing = NO;
-//        [self restoreEditButton:self.navigationItem.rightBarButtonItem];
-//        [self.tableView reloadData];
+        [self.listViewDelegate didDeleteObject:indexPath];
+//        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
@@ -288,7 +289,9 @@
 }
 
 - (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    [self performSegueWithIdentifier:ITEM_MODIFY_ITEM_SEGUE sender:[NSNumber numberWithInt:indexPath.row]];
+    if ([self tryTap]) {
+        [self performSegueWithIdentifier:ITEM_MODIFY_ITEM_SEGUE sender:[NSNumber numberWithInt:indexPath.row]];
+    }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -333,6 +336,14 @@
     NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
+    });
+}
+
+- (void)didDeleteObject {
+    self.items = [Item listOrderBy:ITEM_NAME ascending:YES active:self.isActive];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
     });
 }
 

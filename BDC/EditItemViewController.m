@@ -33,8 +33,7 @@ enum ItemInfoType {
 @property (nonatomic, strong) UITextField *itemPriceTextField;
 @property (nonatomic, strong) UITextField *itemQtyTextField;
 
-@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
-//@property (nonatomic, strong) UITextField *editingField;
+//@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 
 @end
 
@@ -43,15 +42,12 @@ enum ItemInfoType {
 @synthesize item = _item;
 @synthesize lineItemIndex;
 @synthesize shaddowItem;
-//@synthesize mode = _mode;
 @synthesize modeChanged;
 @synthesize itemTypePickerView;
 @synthesize itemTypeTextField;
 @synthesize itemNameTextField;
 @synthesize itemPriceTextField;
 @synthesize itemQtyTextField;
-@synthesize activityIndicator;
-//@synthesize editingField;
 
 @synthesize lineItemDelegate;
 
@@ -71,7 +67,8 @@ enum ItemInfoType {
     
     if (mode == kViewMode) {
         NSLog(@"%@", self); //TODO: will crash at next line if w/o this NSLog!!! why???
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editItem:)];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
+        self.navigationItem.rightBarButtonItem.tag = 1;
         self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
     } else {
         //TODO: in modify mode, make right button (temp) "Preserve" instead of "Save"
@@ -82,56 +79,56 @@ enum ItemInfoType {
     [self.tableView reloadData];
 }
 
+#pragma mark - Depricated: this method is no longer needed as the edit bar button will be moved to action menu
 - (void)editItem:(UIBarButtonItem *)sender {
-    self.mode = kUpdateMode;
-}
-
-- (void)navigateBack {
-    [self.navigationController popViewControllerAnimated:YES];
+    if ([self tryTap]) {
+        self.mode = kUpdateMode;
+    }
 }
 
 - (IBAction)saveItem:(UIBarButtonItem *)sender {
-    self.navigationItem.rightBarButtonItem.customView = self.activityIndicator;
-    [activityIndicator startAnimating];
-    [self.view findAndResignFirstResponder];
-    
-//    [self.editingField resignFirstResponder];
-//    self.editingField = nil;
-    
-    if (self.shaddowItem.type == INVALID_ITEM_TYPE) {
-        [UIHelper showInfo:@"Missing type!" withStatus:kError];
-//        self.navigationItem.rightBarButtonItem.customView = nil;
-        return;
-    }
-
-    if (self.shaddowItem.name == nil || [self.shaddowItem.name length] == 0) {
-        [UIHelper showInfo:@"Missing name!" withStatus:kError];
-//        self.navigationItem.rightBarButtonItem.customView = nil;
-        return;
-    }
-
-    if (self.shaddowItem.price == nil) {
-        [UIHelper showInfo:@"Missing price!" withStatus:kError];
-//        self.navigationItem.rightBarButtonItem.customView = nil;
-        return;
-    }
-    
-    if (self.mode == kCreateMode) {
-        [self.shaddowItem create];
-    } else if (self.mode == kUpdateMode){
-        [self.shaddowItem update];
-    } else if (self.mode == kModifyMode) {
-        [self.lineItemDelegate didModifyItem:self.shaddowItem forIndex:self.lineItemIndex];
-        [self navigateBack];
+    if ([self tryTap]) {
+        self.navigationItem.rightBarButtonItem.customView = self.activityIndicator;
+        [self.activityIndicator startAnimating];
+        [self.view findAndResignFirstResponder];
+        
+        if (self.shaddowItem.type == INVALID_ITEM_TYPE) {
+            [UIHelper showInfo:@"Missing type!" withStatus:kError];
+            //        self.navigationItem.rightBarButtonItem.customView = nil;
+            return;
+        }
+        
+        if (self.shaddowItem.name == nil || [self.shaddowItem.name length] == 0) {
+            [UIHelper showInfo:@"Missing name!" withStatus:kError];
+            //        self.navigationItem.rightBarButtonItem.customView = nil;
+            return;
+        }
+        
+        if (self.shaddowItem.price == nil) {
+            [UIHelper showInfo:@"Missing price!" withStatus:kError];
+            //        self.navigationItem.rightBarButtonItem.customView = nil;
+            return;
+        }
+        
+        if (self.mode == kCreateMode) {
+            [self.shaddowItem create];
+        } else if (self.mode == kUpdateMode){
+            [self.shaddowItem update];
+        } else if (self.mode == kModifyMode) {
+            [self.lineItemDelegate didModifyItem:self.shaddowItem forIndex:self.lineItemIndex];
+            [self navigateBack];
+        }
     }
 }
 
 - (void)cancelEdit:(UIBarButtonItem *)sender {
-    if (self.mode == kCreateMode || self.mode == kModifyMode) {
-        [self navigateBack];
-    } else {
-        [self setItem:self.item];        
-        self.mode = kViewMode;
+    if ([self tryTap]) {
+        if (self.mode == kCreateMode || self.mode == kModifyMode) {
+            [self navigateBack];
+        } else {
+            [self setItem:self.item];
+            self.mode = kViewMode;
+        }
     }
 }
 
@@ -148,13 +145,15 @@ enum ItemInfoType {
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    
     if (!self.item) {
         self.item = [[Item alloc] init];
         self.shaddowItem = [[Item alloc] init];
         self.shaddowItem.type = INVALID_ITEM_TYPE;
     }
+    
+    self.busObj = self.item;
+    
+    [super viewDidLoad];
     
     if (self.mode == kViewMode) {
         self.modeChanged = NO;
@@ -322,12 +321,11 @@ enum ItemInfoType {
 }
 
 
-//// Override to support conditional editing of the table view.
-//- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    return YES;
-//}
-//
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return NO;
+}
+
 //// Override to support editing the table view.
 //- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 //{
@@ -352,10 +350,7 @@ enum ItemInfoType {
 #pragma mark - Text Field delegate
 
 // private
-- (void)textFieldDoneEditing:(UITextField *)textField {
-//    [self.editingField resignFirstResponder];
-//    self.editingField = nil;
-    
+- (void)textFieldDoneEditing:(UITextField *)textField {    
     NSString *txt = [Util trim:textField.text];
 //    if ([txt length] > 0) {
         if (textField.tag == kItemName * TAG_BASE) {
@@ -382,15 +377,6 @@ enum ItemInfoType {
     [self textFieldDoneEditing:textField];
     return YES;
 }
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
-//    self.editingField = textField;
-}
-
-//- (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
-//    [self textFieldDoneEditing:textField];
-//    return YES;
-//}
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     [self textFieldDoneEditing:textField];
@@ -428,8 +414,7 @@ enum ItemInfoType {
 
 #pragma mark - model delegate
 
-// private
-- (void)doneSaveItem {
+- (void)doneSaveObject {
 //    [Item retrieveList];
     
     [Item clone:self.shaddowItem to:self.item];
@@ -445,19 +430,25 @@ enum ItemInfoType {
     self.item.objectId = newItemId;
     self.shaddowItem.objectId = newItemId;
     self.title = self.itemNameTextField.text;
-    [self doneSaveItem];
+    [self doneSaveObject];
 }
 
-- (void)didUpdateItem {
-    [self doneSaveItem];
-}
-
-- (void)failedToSaveItem {
-    __weak EditItemViewController *weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [weakSelf.activityIndicator stopAnimating];
-//        self.navigationItem.rightBarButtonItem.customView = nil;
-    });
-}
+//- (void)didUpdateItem {
+//    [self doneSaveObject];
+//}
+//
+//- (void)didDeleteItem {
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [self.navigationController popViewControllerAnimated:YES];
+//    });
+//}
+//
+//- (void)failedToSaveItem {
+//    __weak EditItemViewController *weakSelf = self;
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [weakSelf.activityIndicator stopAnimating];
+////        self.navigationItem.rightBarButtonItem.customView = nil;
+//    });
+//}
 
 @end

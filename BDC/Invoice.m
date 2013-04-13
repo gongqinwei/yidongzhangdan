@@ -158,13 +158,13 @@ static NSMutableArray *inactiveInvoices = nil;
             }
             
             if ([theAction isEqualToString:UPDATE]) {
-                [weakSelf.editDelegate didUpdateInvoice];
-                [weakSelf.detailsDelegate didUpdateInvoice];
+                [weakSelf.editDelegate didUpdateObject];
+                [weakSelf.detailsDelegate didUpdateObject];
             } else {
                 [weakSelf.editDelegate didCreateInvoice:invId];
             }
         } else {
-            [weakSelf.editDelegate failedToSaveInvoice];
+            [weakSelf.editDelegate failedToSaveObject];
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             
             if ([theAction isEqualToString:UPDATE]) {
@@ -189,15 +189,9 @@ static NSMutableArray *inactiveInvoices = nil;
         [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         if(response_status == RESPONSE_SUCCESS) {
-            self.isActive = isActive;
+            [weakSelf.editDelegate didDeleteObject];
             
-//            if (isActive) {
-//                [Invoice retrieveListForActive:YES reload:NO];
-//                [Invoice retrieveListForActive:NO reload:YES];
-//            } else {
-//                [Invoice retrieveListForActive:YES reload:YES];
-//                [Invoice retrieveListForActive:NO reload:NO];
-//            }
+            self.isActive = isActive;
             
             if (isActive) {
                 [inactiveInvoices removeObject:self];
@@ -207,7 +201,7 @@ static NSMutableArray *inactiveInvoices = nil;
                 [inactiveInvoices addObject:self];
             }
 
-            [weakSelf.editDelegate didDeleteInvoice]; //TODO: need another delegate?
+            [ListDelegate didDeleteObject];
         } else {
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             NSLog(@"Failed to %@ invoice %@: %@", act, self.objectId, [err localizedDescription]);
