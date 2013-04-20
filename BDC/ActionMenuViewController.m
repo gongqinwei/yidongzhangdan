@@ -248,6 +248,8 @@
     
     [vc.view removeGestureRecognizer:vc.tapRecognizer];
     
+    [navVC popToRootViewControllerAnimated:NO];
+    
     return vc;
 }
 
