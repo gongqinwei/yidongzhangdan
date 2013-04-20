@@ -19,7 +19,7 @@
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
 //#define DOMAIN_URL          @"http://10.1.10.203"
-#define DOMAIN_URL          @"http://192.168.1.12"
+#define DOMAIN_URL          @"http://192.168.1.35"
 #define APP_KEY             @"devKey"
 #endif
 
