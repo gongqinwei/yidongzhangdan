@@ -82,7 +82,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0E01C34E172214FF00184702 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = .gitignore; path = ../.gitignore; sourceTree = "<group>"; };
+		0E01C34E172214FF00184702 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		0E08029F15F13FF400A22C4F /* InboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InboxViewController.h; sourceTree = "<group>"; };
 		0E0802A015F13FF400A22C4F /* InboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InboxViewController.m; sourceTree = "<group>"; };
 		0E14EC5E1603ED960098EB03 /* warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = warning.png; sourceTree = "<group>"; };
@@ -437,6 +437,7 @@
 		7E91E3E015927C15005104AF = {
 			isa = PBXGroup;
 			children = (
+				0E01C34E172214FF00184702 /* .gitignore */,
 				0EE9B10B160A6D83002A5950 /* Default-568h@2x.png */,
 				0E7DCABA16030BD700D0B35E /* Security.framework */,
 				0E56F3F41600047B0066B355 /* MessageUI.framework */,
@@ -473,7 +474,6 @@
 		7E91E3F515927C15005104AF /* BDC */ = {
 			isa = PBXGroup;
 			children = (
-				0E01C34E172214FF00184702 /* .gitignore */,
 				0E999E0C16DE5E6B00F1E39F /* Categories */,
 				7E579F5F15A37CFF009D1455 /* Models */,
 				7E579F6115A37DD3009D1455 /* Views */,
