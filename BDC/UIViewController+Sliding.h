@@ -11,13 +11,14 @@
 #import "ActionMenuViewController.h"
 #import "UIView+FindAndResignFirstResponder.h"
 
+#define ACTION_CRUD             @"Actions"
 #define ACTION_CREATE           @"Create New"
 #define ACTION_UPDATE           @"Edit"
 #define ACTION_DELETE           @"Delete..."
 #define ACTION_UNDELETE         @"Undelete..."
 #define ACTION_LIST             @"List For"
 #define ACTION_ORDER            @"Order By"
-#define ACTION_CRUD             @"Actions"
+
 
 @protocol SlideDelegate <NSObject>
 

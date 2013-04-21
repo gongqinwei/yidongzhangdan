@@ -540,6 +540,7 @@
 
 - (void)didDeleteObject {
     self.invoices = [Invoice listOrderBy:INV_NUMBER ascending:YES active:self.isActive];
+    self.invoices = [self sortInvoices:self.invoices];
 
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];

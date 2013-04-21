@@ -159,7 +159,7 @@ static RootMenuViewController * _sharedInstance = nil;
 
         dispatch_async(dispatch_get_global_queue(0,0), ^{
             NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100", DOMAIN_URL, ORG_LOGO_API]]];
-            NSLog(@"%d", [data length]);
+
             if (data != nil) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     cell.imageView.image = [UIImage imageWithData: data];
@@ -171,6 +171,11 @@ static RootMenuViewController * _sharedInstance = nil;
         cell.textLabel.text = [[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
         NSString *imageName = [[[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] stringByAppendingString:@"Icon.png"];
         cell.imageView.image = [UIImage imageNamed:imageName];
+        
+        UIView *bgColorView = [[UIView alloc] init];
+        [bgColorView setBackgroundColor:[UIColor colorWithRed:100/255.f green:100/255.f blue:100/255.f alpha:0.6]];
+        [cell setSelectedBackgroundView:bgColorView];
+        cell.selectedBackgroundView = bgColorView;
     }
     
     return cell;

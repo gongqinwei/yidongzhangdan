@@ -55,6 +55,21 @@
     return self;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    if (self.targetViewController.isActive) {
+        self.crudActions = self.targetViewController.crudActions;
+    } else {
+        self.crudActions = self.targetViewController.inactiveCrudActions;
+    }
+    
+    if ((self.targetViewController.sortAttributes == nil || self.targetViewController.sortAttributes.count == 0)
+        && (self.crudActions == nil || self.crudActions.count == 0)) {
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    } else {
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -86,6 +101,8 @@
         && (self.crudActions == nil || self.crudActions.count == 0)) {
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     } else {
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        
         self.actionDelegate = self.targetViewController;
         
         self.ascSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(SLIDING_DISTANCE - 108.0, 1.0, 40.0, ACTION_MENU_SECTION_HEADER_HEIGHT)];
@@ -231,6 +248,8 @@
         } else {
             cell.textLabel.text = [self.crudActions objectAtIndex:indexPath.row];
         }
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
     return cell;

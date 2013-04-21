@@ -17,7 +17,7 @@
 @end
 
 
-@interface SlidingDetailsTableViewController : SlidingTableViewController
+@interface SlidingDetailsTableViewController : SlidingTableViewController <UIAlertViewDelegate>
 
 @property (nonatomic, strong) BDCBusinessObject *busObj;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;

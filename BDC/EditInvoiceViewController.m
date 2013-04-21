@@ -43,6 +43,7 @@ typedef enum {
 } InvoiceActionIndice;
 
 #define INVOICE_ACTIONS     [NSArray arrayWithObjects:@"Edit invoice", @"Email Invoice", @"Delete invoice", @"Cancel", nil]
+#define ACTION_EMAIL        @"Email Invoice"
 
 #define TAG_BASE                        100
 #define CELL_WIDTH                      300
@@ -164,8 +165,8 @@ typedef enum {
     self.modeChanged = YES;
     
     if (mode == kViewMode) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(invoiceActions:)];
-        
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
+        self.navigationItem.rightBarButtonItem.tag = 1;
         self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;        
     } else {
 //        self.tableView.allowsSelectionDuringEditing = YES;
@@ -414,6 +415,7 @@ typedef enum {
     }
 }
 
+#pragma mark - Deprecated: action sheet replaced by action menu view
 - (void)invoiceActions:(UIBarButtonItem *)sender {
     UIActionSheet *actions = [[UIActionSheet alloc] init];
     actions.title = @"Select an Action";
@@ -421,7 +423,6 @@ typedef enum {
     
     [actions addButtonWithTitle:[INVOICE_ACTIONS objectAtIndex:kEditInvoice]];
     [actions addButtonWithTitle:[INVOICE_ACTIONS objectAtIndex:kEmailInvoice]];
-//    [actions addButtonWithTitle:[INVOICE_ACTIONS objectAtIndex:kNote]];
     [actions addButtonWithTitle:[INVOICE_ACTIONS objectAtIndex:kDeleteInvoice]];
     [actions addButtonWithTitle:[INVOICE_ACTIONS objectAtIndex:kCancelInvoiceAction]];
     
@@ -446,22 +447,27 @@ typedef enum {
 
 - (void)viewDidLoad
 {
-    if (self.mode == kViewMode) {
-        self.modeChanged = NO;
-    }
-    
-    self.pdfReady = NO;
-    
-    self.totalAmount = [NSDecimalNumber zero];
-    
     if (!self.invoice) {
         self.invoice = [[Invoice alloc] init];
         self.shaddowInvoice = [[Invoice alloc] init];
     }
     
     self.busObj = self.invoice;
-    
     [super viewDidLoad];
+    
+    if (self.mode == kViewMode) {
+        self.modeChanged = NO;
+    } else {
+        self.crudActions = nil;
+        
+        if (self.mode == kCreateMode) {
+            self.title = @"New Invoice";
+        }
+    }
+    
+    self.pdfReady = NO;
+    
+    self.totalAmount = [NSDecimalNumber zero];
     
 //    if (!self.lineItems) {
 //        self.lineItems = [NSArray array];
@@ -1171,6 +1177,7 @@ typedef enum {
                 }
             }
         default:
+            [super alertView:alertView clickedButtonAtIndex:buttonIndex];
             break;
     }
 }
@@ -1229,6 +1236,8 @@ typedef enum {
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     self.pdfReady = YES;
+    
+    self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];
     
     NSLog(@"Succeeded! Received %d bytes of data for PDF",[self.invoicePDFData length]);
 }
@@ -1363,6 +1372,16 @@ typedef enum {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self updateLineItems];
     });
+}
+
+#pragma mark - Action Menu delegate
+
+- (void)didSelectCrudAction:(NSString *)action {
+    [super didSelectCrudAction:action];
+    
+    if ([action isEqualToString:ACTION_EMAIL]) {
+        [self sendInvoiceEmail];
+    }
 }
 
 @end
