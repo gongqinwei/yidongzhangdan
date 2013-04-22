@@ -95,6 +95,9 @@ static RootMenuViewController * _sharedInstance = nil;
     self.currVC = [navVC.childViewControllers objectAtIndex:0];
     self.currVC.navigation = navVC;
     self.currVC.navigationId = startingVCId;
+    
+    NSIndexPath * initIndexPath = [NSIndexPath indexPathForRow:0 inSection:2];
+    [self.menuTableView selectRowAtIndexPath:initIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
             
 //    [Invoice setARDelegate:(AROverViewController *)self.currVC];  //assumption: currVC is AROverViewController.
     
@@ -150,6 +153,8 @@ static RootMenuViewController * _sharedInstance = nil;
     if (indexPath.section == 0 && indexPath.row == 0) {
         cell.textLabel.text = [Organization getSelectedOrg].name;
         cell.textLabel.font = [UIFont boldSystemFontOfSize:20.0];
+        cell.selectionStyle = UITableViewCellEditingStyleNone;
+        cell.userInteractionEnabled = NO;
         
         NSString *imageName = @"ProfileIcon.png";               //TODO: use a default org icon to replace
         cell.imageView.image = [UIImage imageNamed:imageName];
@@ -173,7 +178,7 @@ static RootMenuViewController * _sharedInstance = nil;
         cell.imageView.image = [UIImage imageNamed:imageName];
         
         UIView *bgColorView = [[UIView alloc] init];
-        [bgColorView setBackgroundColor:[UIColor colorWithRed:100/255.f green:100/255.f blue:100/255.f alpha:0.6]];
+        [bgColorView setBackgroundColor:[UIColor colorWithRed:100/255.f green:100/255.f blue:100/255.f alpha:0.75]];
         [cell setSelectedBackgroundView:bgColorView];
         cell.selectedBackgroundView = bgColorView;
     }
