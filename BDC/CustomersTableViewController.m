@@ -119,6 +119,7 @@
     
     self.customers = [Customer listOrderBy:CUSTOMER_NAME ascending:YES active:YES];
     [Customer setListDelegate:self];
+//    [Customer retrieveList];
     
     if (self.mode != kSelectMode) {        
         UIRefreshControl *refresh = [[UIRefreshControl alloc] init];

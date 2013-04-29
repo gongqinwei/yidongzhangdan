@@ -7,150 +7,388 @@
 //
 
 #import "Bill.h"
+#import "Vendor.h"
+#import "APLineItem.h"
 #import "Constants.h"
 #import "APIHandler.h"
 #import "Util.h"
 #import "Uploader.h"
 #import "UIHelper.h"
+//#import "BillDetailsViewController.h"
+#import "BDCAppDelegate.h"
 
-@interface Bill()
+#define LIST_ACTIVE_BILL_FILTER     @"{ \"start\" : 0, \
+                                        \"max\" : 999, \
+                                        \"filters\" : [{\"field\" : \"isActive\", \"op\" : \"=\", \"value\" : \"1\"}, {\"field\" : \"paymentStatus\", \"op\" : \"!=\", \"value\" : \"0\"}] \
+                                    }"
 
-//- (NSString *)formatDate:(NSDate *)date;
-- (void) attachDocs;
+#define LIST_INACTIVE_BILL_FILTER   @"{ \"start\" : 0, \
+                                        \"max\" : 999, \
+                                        \"filters\" : [{\"field\" : \"isActive\", \"op\" : \"=\", \"value\" : \"2\"}, {\"field\" : \"paymentStatus\", \"op\" : \"!=\", \"value\" : \"0\"}] \
+                                    }"
 
-@end
 
 @implementation Bill
 
-@synthesize billId;
-@synthesize orgId;
-@synthesize vendorId;
-@synthesize createdDate;
-@synthesize updatedDate;
-@synthesize invNum;
-@synthesize desc;
-@synthesize status;
-@synthesize paymentstatus;
-@synthesize dueDate;
-@synthesize invDate;
-@synthesize paymentScheduledByDate;
-@synthesize deptId;
-@synthesize quickbooksId;
-@synthesize exportedDate;
-@synthesize firstPaymentDate;
-@synthesize lastPaymentDate;
-@synthesize fullPamentDate;
-@synthesize expectedPayDate;
-@synthesize allowExport;
-@synthesize amount;
-@synthesize discountAmount;
-@synthesize approvedAmount;
-@synthesize paidAmount;
-@synthesize paymentTermId;
-@synthesize lastSyncTime;
-@synthesize sentSyncTime;
-@synthesize updateSyncTime;
-@synthesize isOneChainMode;
-@synthesize isSplit;
+static id<BillListDelegate> APDelegate = nil;
+static id<BillListDelegate> ListDelegate = nil;
+static NSMutableArray *bills = nil;
+static NSMutableArray *inactiveBills = nil;
 
+@synthesize vendorId;
+@synthesize vendorName;
+@synthesize invoiceNumber;
+@synthesize dueDate;
+@synthesize invoiceDate;
+@synthesize amount;
+@synthesize paidAmount;
+@synthesize approvalStatus;
+@synthesize paymentStatus;
+
+@synthesize lineItems;
 @synthesize docs;
 
+@synthesize editDelegate;
+@synthesize detailsDelegate;
+
+
++ (void)setAPDelegate:(id<BillListDelegate>)delegate {
+    APDelegate = delegate;
+}
+
++ (void)setListDelegate:(id<BillListDelegate>)delegate {
+    ListDelegate = delegate;
+}
+
 - (NSString *)name {
-    return self.invNum;
+    return self.invoiceNumber;
 }
 
 - (id) init {
     if (self = [super init]) {
-        self.docs = [[NSMutableSet alloc] init];
+        self.lineItems = [NSMutableArray array];
+        self.docs = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
 
-- (void) create {
-    NSString * action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, CREATE, BILL_API];
+- (void)saveFor:(NSString *)action {
+    NSString *theAction = [NSString stringWithString:action];
     
-    NSMutableDictionary *info = [NSMutableDictionary dictionary];
-////    [info setObject:APP_KEY_VALUE forKey:APP_KEY];
-//    [info setObject:APP_KEY forKey:APP_KEY_VALUE];
+    action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, action, BILL_API];
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
     
     NSMutableString *objStr = [NSMutableString string];
     [objStr appendString:@"{"];
     [objStr appendString:OBJ];
     [objStr appendString:@": {"];
-    [objStr appendString:@"\"entity\" : \"Bill\","];
-    [objStr appendFormat:@"\"vendorId\" : \"%@\",", @"00901LJFXVBTKIUXUZ8e"];  //self.vendorId];
-    [objStr appendFormat:@"\"invoiceNumber\" : \"%@\",", self.invNum];
-    [objStr appendFormat:@"\"invoiceDate\" : \"%@\",", [Util formatDate:self.invDate format:@"yyyy-MM-dd"]];
-    [objStr appendFormat:@"\"dueDate\" : \"%@\",", [Util formatDate:self.dueDate format:@"yyyy-MM-dd"]];
-    [objStr appendString:@"\"paymentStatus\" : \"1\","];
-    [objStr appendString:@"\"billLineItems\" : ["];
-    [objStr appendString:@"{"];
-    [objStr appendString:@"\"entity\" : \"BillLineItem\","];
-    [objStr appendFormat:@"\"amount\" : %.2f", [[NSDecimalNumber decimalNumberWithDecimal:self.amount] doubleValue] ];
-    [objStr appendString:@"}"];
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", ENTITY, BILL];
+    if ([theAction isEqualToString:UPDATE]) {
+        [objStr appendFormat:@"\"%@\" : \"%@\", ", ID, self.objectId];
+    }
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", BILL_VENDOR_ID, self.vendorId];
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", BILL_NUMBER, self.invoiceNumber];
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", BILL_DATE, [Util formatDate:self.invoiceDate format:@"yyyy-MM-dd"]];
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", BILL_DUE_DATE, [Util formatDate:self.dueDate format:@"yyyy-MM-dd"]];
+    [objStr appendFormat:@"\"%@\" : [", BILL_LINE_ITEMS];
+    int total = [self.lineItems count];
+    int i = 0;
+    for (APLineItem *lineItem in self.lineItems) {
+        [objStr appendString:@"{"];
+        [objStr appendFormat:@"\"%@\" : \"%@\", ", ENTITY, BILL_LINE_ITEM];
+        if ([theAction isEqualToString:UPDATE]) {
+            [objStr appendFormat:@"\"%@\" : \"%@\", ", ID, lineItem.objectId];
+        }
+        if (lineItem.account.objectId) {
+            [objStr appendFormat:@"\"%@\" : \"%@\", ", BILL_LINE_ITEM_ACCOUNT, lineItem.account.objectId];
+        }
+        [objStr appendFormat:@"\"%@\" : %@", BILL_LINE_ITEM_AMOUNT, lineItem.amount];
+        [objStr appendString:@"}"];
+        if (i < total - 1) {
+            [objStr appendString:@", "];
+        }
+        i++;
+    }
     [objStr appendString:@"]"];
     [objStr appendString:@"}"];
     [objStr appendString:@"}"];
-    [info setObject:DATA forKey:objStr];
-//    NSLog(@"%@", objStr);
     
-    [APIHandler asyncCallWithAction:action Info:info AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+    [params setObject:DATA forKey:objStr];
+    
+    __weak Bill *weakSelf = self;
+    
+    [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
-
         NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        
         if(response_status == RESPONSE_SUCCESS) {
-            NSString *bId = [info objectForKey:ID];
-            NSLog(@"New bill's id: %@", bId);
-            self.billId = bId;
+            NSString *billId = [info objectForKey:ID];
+            self.objectId = billId;
             
-            // TODO: need to change server code to return DocumentPg id instead of Document id here
-            // assotiate documents(photos) to this newly created bill object
-//            [self attachDoc];
-            [self.delegate didCreateBill];
+            if ([theAction isEqual:CREATE] || self.isActive) {
+                [Bill retrieveListForActive:YES];
+            } else {
+                [Bill retrieveListForActive:NO];
+            }
             
+            if ([theAction isEqualToString:UPDATE]) {
+                [weakSelf.editDelegate didUpdateObject];
+                [weakSelf.detailsDelegate didUpdateObject];
+            } else {
+                [weakSelf.editDelegate didCreateBill:billId];
+            }
         } else {
-            NSString * msg = @"Failed to create new bill! ";
-            [UIHelper showInfo:[msg stringByAppendingString:[err localizedDescription]] withStatus:kFailure];
-            NSLog(@"%@ %@", msg, [err localizedDescription]);
+            [weakSelf.editDelegate failedToSaveObject];
+            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            
+            if ([theAction isEqualToString:UPDATE]) {
+                NSLog(@"Failed to update bill %@: %@", self.name, [err localizedDescription]);
+            } else {
+                NSLog(@"Failed to create bill: %@", [err localizedDescription]);
+            }
         }
     }];
-    
 }
 
-// currently not used...
-- (void) attachDocs {
-    NSString * action = [NSString stringWithFormat:@"%@", UPLOAD_API];
+- (void)toggleActive:(Boolean)isActive {
+    NSString *act = isActive ? UNDELETE : DELETE;
+    NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, act, BILL_API];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
-    NSMutableDictionary *info = [NSMutableDictionary dictionary];
-//    [info setObject:self.billId forKey:BILL_ID];
-//    [info setObject:[[self.docs allObjects] componentsJoinedByString:@","] forKey:DOC_PG_IDS];
-
-    [info setObject:ID forKey:self.billId];
-
-    for (NSString *doc in self.docs) {
-        [info setObject:DOC_PG_ID forKey:doc];
-    }
+    __weak Bill *weakSelf = self;
     
-    [APIHandler asyncCallWithAction:action Info:info AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
-//        NSError *error;
-//        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
-//        
-//        int response_status = [[json objectForKey:RESPONSE_STATUS_KEY] intValue];
-        
+    [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
         [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         if(response_status == RESPONSE_SUCCESS) {
-            //TODO: display overlay here?
-            NSLog(@"Succeeded in attaching photo to bill");
+            [weakSelf.editDelegate didDeleteObject];
+            
+            self.isActive = isActive;
+            
+            if (isActive) {
+                [inactiveBills removeObject:self];
+                [bills addObject:self];
+            } else {
+                [bills removeObject:self];
+                [inactiveBills addObject:self];
+            }
+            
+            [ListDelegate didDeleteObject];
         } else {
-            NSLog(@"Failed to attaching photo to bill");
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"Failed to attaching photo to bill: %@", [err localizedDescription]);
+            NSLog(@"Failed to %@ bill %@: %@", act, self.objectId, [err localizedDescription]);
         }
     }];
 }
-     
+
++ (id)list:(NSArray *)arr orderBy:(NSString *)attribue ascending:(Boolean)isAscending {
+    if ([attribue isEqualToString:BILL_VENDOR_NAME]) {
+        for (Bill *bill in arr) {
+            bill.vendorName = [Vendor objectForKey:bill.vendorId].name;
+        }
+    }
+    
+    NSSortDescriptor *firstOrder;
+    if ([attribue isEqualToString:BILL_NUMBER] || [attribue isEqualToString:BILL_VENDOR_NAME] || [attribue isEqualToString:APPROVAL_STATUSES]) {
+        firstOrder = [[NSSortDescriptor alloc] initWithKey:attribue ascending:isAscending selector:@selector(localizedCaseInsensitiveCompare:)];
+    } else {
+        firstOrder = [[NSSortDescriptor alloc] initWithKey:attribue ascending:isAscending];
+    }
+    
+    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:BILL_NUMBER ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+    return [NSMutableArray arrayWithArray:[arr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, secondOrder, nil]]];
+}
+
++ (id)listOrderBy:(NSString *)attribue ascending:(Boolean)isAscending active:(Boolean)isActive {
+    NSArray *arr = isActive ? bills : inactiveBills;
+    return [[self class] list:arr orderBy:attribue ascending:isAscending];
+}
+
++ (id)list {
+    return bills;
+}
+
++ (id)listInactive {
+    return inactiveBills;
+}
+
++ (void)retrieveListForActive:(BOOL)isActive reload:(BOOL)needReload {
+    [UIAppDelegate incrNetworkActivities];
+    
+    NSString *filter = isActive ? LIST_ACTIVE_BILL_FILTER : LIST_INACTIVE_BILL_FILTER;
+    NSString *action = [LIST_API stringByAppendingString: BILL_API];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, filter, nil];
+    
+    [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        NSInteger response_status;
+        NSArray *jsonBills = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        
+        [UIAppDelegate decrNetworkActivities];
+        
+        if(response_status == RESPONSE_SUCCESS) {
+            NSMutableArray *billArr;
+            if (isActive) {
+                bills = [NSMutableArray array];
+                billArr = bills;
+            } else {
+                inactiveBills = [NSMutableArray array];
+                billArr = inactiveBills;
+            }
+            
+            for (id item in jsonBills) {
+                NSDictionary *dict = (NSDictionary*)item;
+                Bill *bill = [[Bill alloc] init];
+                bill.objectId = [dict objectForKey:ID];
+                bill.invoiceNumber = [dict objectForKey:BILL_NUMBER];
+                bill.amount = [Util id2Decimal:[dict objectForKey:BILL_AMOUNT]];
+                bill.paidAmount = [Util id2Decimal:[dict objectForKey:BILL_AMOUNT_PAID]];
+                bill.vendorId = [dict objectForKey:BILL_VENDOR_ID];
+                bill.invoiceDate = [Util getDate:[dict objectForKey:BILL_DATE] format:nil];
+                bill.dueDate = [Util getDate:[dict objectForKey:BILL_DUE_DATE] format:nil];
+                bill.approvalStatus = [dict objectForKey:BILL_APPROVAL_STATUS];
+                bill.paymentStatus = [dict objectForKey:BILL_PAYMENT_STATUS];
+                bill.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
+                
+                bill.lineItems = [NSMutableArray array];
+                NSArray *jsonItems = [dict objectForKey:BILL_LINE_ITEMS];
+                for (id lineItem in jsonItems) {
+                    APLineItem *item = [[APLineItem alloc] init];
+                    item.objectId = [lineItem objectForKey:ID];
+                    item.account = [ChartOfAccount objectForKey:[lineItem objectForKey:LINE_ITEM_ACCOUNT]];                    
+                    item.amount = [Util id2Decimal:[lineItem objectForKey:LINE_ITEM_AMOUNT]];
+                    [bill.lineItems addObject:item];
+                }
+                
+                [billArr addObject:bill];
+            }
+                        
+            if (needReload) {
+//                [APDelegate didGetInvoices:[NSArray arrayWithArray:invArr]];
+                [ListDelegate didGetBills:[NSArray arrayWithArray:billArr]];
+            }
+        } else if (response_status == RESPONSE_TIMEOUT) {
+            [ListDelegate failedToGetBills];
+            [UIHelper showInfo:SysTimeOut withStatus:kError];
+            NSLog(@"Time out when retrieving list of bill for %@!", isActive ? @"active" : @"inactive");
+        } else {
+            [ListDelegate failedToGetBills];
+            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            NSLog(@"Failed to retrieve list of bill for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
+        }
+    }];
+}
+
++ (void)clone:(Bill *)source to:(Bill *)target {
+    [super clone:source to:target];
+    
+    target.vendorId = source.vendorId;
+    target.invoiceNumber = source.invoiceNumber;
+    target.invoiceDate = source.invoiceDate;
+    target.dueDate = source.dueDate;
+    target.approvalStatus = source.approvalStatus;
+    target.paymentStatus = source.paymentStatus;
+    target.paidAmount = source.paidAmount;
+    target.editDelegate = source.editDelegate;
+    target.detailsDelegate = source.detailsDelegate;
+    
+    if (source.lineItems != nil) {
+        target.lineItems = [NSMutableArray array];
+        for (int i = 0; i < [source.lineItems count]; i++) {
+            APLineItem *item = [[APLineItem alloc] init];
+            [APLineItem clone:[source.lineItems objectAtIndex:i] to:item];
+            [target.lineItems addObject:item];
+        }
+    }
+    
+    if (source.docs != nil) {
+        target.docs = nil;
+        target.docs = [NSMutableDictionary dictionary];
+        for (NSString *name in source.docs) {
+            [target.docs setObject:[source.docs objectForKey:name] forKey:name];
+        }
+    }
+}
+
+
+//- (void) create {
+//    NSString * action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, CREATE, BILL_API];
+//
+//    NSMutableDictionary *info = [NSMutableDictionary dictionary];
+//
+//    NSMutableString *objStr = [NSMutableString string];
+//    [objStr appendString:@"{"];
+//    [objStr appendString:OBJ];
+//    [objStr appendString:@": {"];
+//    [objStr appendString:@"\"entity\" : \"Bill\","];
+//    [objStr appendFormat:@"\"vendorId\" : \"%@\",", @"00901LJFXVBTKIUXUZ8e"];  //self.vendorId];
+//    [objStr appendFormat:@"\"invoiceNumber\" : \"%@\",", self.invNum];
+//    [objStr appendFormat:@"\"invoiceDate\" : \"%@\",", [Util formatDate:self.invDate format:@"yyyy-MM-dd"]];
+//    [objStr appendFormat:@"\"dueDate\" : \"%@\",", [Util formatDate:self.dueDate format:@"yyyy-MM-dd"]];
+//    [objStr appendString:@"\"paymentStatus\" : \"1\","];
+//    [objStr appendString:@"\"billLineItems\" : ["];
+//    [objStr appendString:@"{"];
+//    [objStr appendString:@"\"entity\" : \"BillLineItem\","];
+//    [objStr appendFormat:@"\"amount\" : %.2f", [[NSDecimalNumber decimalNumberWithDecimal:self.amount] doubleValue] ];
+//    [objStr appendString:@"}"];
+//    [objStr appendString:@"]"];
+//    [objStr appendString:@"}"];
+//    [objStr appendString:@"}"];
+//    [info setObject:DATA forKey:objStr];
+//    [APIHandler asyncCallWithAction:action Info:info AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+//        NSInteger response_status;
+//        NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
+//        if(response_status == RESPONSE_SUCCESS) {
+//            NSString *bId = [info objectForKey:ID];
+//            self.objectId = bId;
+//            // TODO: need to change server code to return DocumentPg id instead of Document id here
+//            // assotiate documents(photos) to this newly created bill object
+////            [self attachDoc];
+//            [self.delegate didCreateBill:self.objectId];
+//        } else {
+//            NSString * msg = @"Failed to create new bill! ";
+//            [UIHelper showInfo:[msg stringByAppendingString:[err localizedDescription]] withStatus:kFailure];
+//            NSLog(@"%@ %@", msg, [err localizedDescription]);
+//        }
+//    }];
+//}
+
+
+//// currently not used...
+//- (void) attachDocs {
+//    NSString * action = [NSString stringWithFormat:@"%@", UPLOAD_API];
+//    
+//    NSMutableDictionary *info = [NSMutableDictionary dictionary];
+////    [info setObject:self.billId forKey:BILL_ID];
+////    [info setObject:[[self.docs allObjects] componentsJoinedByString:@","] forKey:DOC_PG_IDS];
+//
+//    [info setObject:ID forKey:self.objectId];
+//
+//    for (NSString *doc in self.docs) {
+//        [info setObject:DOC_PG_ID forKey:doc];
+//    }
+//    
+//    [APIHandler asyncCallWithAction:action Info:info AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+////        NSError *error;
+////        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+////        
+////        int response_status = [[json objectForKey:RESPONSE_STATUS_KEY] intValue];
+//        
+//        NSInteger response_status;
+//        [APIHandler getResponse:response data:data error:&err status:&response_status];
+//        
+//        if(response_status == RESPONSE_SUCCESS) {
+//            //TODO: display overlay here?
+//            NSLog(@"Succeeded in attaching photo to bill");
+//        } else {
+//            NSLog(@"Failed to attaching photo to bill");
+//            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+//            NSLog(@"Failed to attaching photo to bill: %@", [err localizedDescription]);
+//        }
+//    }];
+//}
+
 
 
 @end

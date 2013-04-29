@@ -47,7 +47,6 @@
 
 @interface Invoice : BDCBusinessObject
 
-@property (nonatomic, strong) NSString *orgId;
 @property (nonatomic, strong) NSString *invoiceNumber;
 @property (nonatomic, strong) NSString *customerId;
 @property (nonatomic, strong) NSString *customerName;
@@ -93,7 +92,7 @@
 @property (nonatomic, strong) NSMutableDictionary *attachments;     // map filename => data
 //@property (nonatomic, strong) NSMutableSet *attachments;            //set of Attachment id
 
-+ (void)clone:(Invoice *)source to:(Invoice *)target;
+//+ (void)clone:(Invoice *)source to:(Invoice *)target;
 
 // delegates
 + (void)setARDelegate:(id<InvoiceListDelegate>)delegate;

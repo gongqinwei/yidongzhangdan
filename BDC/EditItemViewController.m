@@ -172,21 +172,21 @@ enum ItemInfoType {
     self.itemTypePickerView.showsSelectionIndicator = YES;
     
     self.itemTypeTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
-    [UIHelper initializeTextField:itemTypeTextField];
+    [self initializeTextField:itemTypeTextField];
     self.itemTypeTextField.tag = kItemType * TAG_BASE;
     self.itemTypeTextField.inputView = self.itemTypePickerView;
     self.itemTypeTextField.rightViewMode = UITextFieldViewModeAlways;
     self.itemTypeTextField.delegate = self;
     
     self.itemNameTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
-    [UIHelper initializeTextField:self.itemNameTextField];
+    [self initializeTextField:self.itemNameTextField];
     self.itemNameTextField.tag = kItemName * TAG_BASE;
     self.itemNameTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.itemNameTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
     self.itemNameTextField.delegate = self;
     
     self.itemPriceTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
-    [UIHelper initializeTextField:self.itemPriceTextField];
+    [self initializeTextField:self.itemPriceTextField];
     self.itemPriceTextField.tag = kItemPrice * TAG_BASE;
     self.itemPriceTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.itemPriceTextField.keyboardType = UIKeyboardTypeDecimalPad;
@@ -194,7 +194,7 @@ enum ItemInfoType {
     self.itemPriceTextField.delegate = self;
     
     self.itemQtyTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
-    [UIHelper initializeTextField:self.itemQtyTextField];
+    [self initializeTextField:self.itemQtyTextField];
     self.itemQtyTextField.tag = kItemQuantity * TAG_BASE;
     self.itemQtyTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.itemQtyTextField.keyboardType = UIKeyboardTypeNumberPad;
@@ -205,9 +205,9 @@ enum ItemInfoType {
     self.activityIndicator.hidesWhenStopped = YES;    
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [self.view removeGestureRecognizer:self.tapRecognizer];
-}
+//- (void)viewWillAppear:(BOOL)animated {
+//    [self.view removeGestureRecognizer:self.tapRecognizer];
+//}
 
 - (void)didReceiveMemoryWarning
 {
@@ -421,6 +421,7 @@ enum ItemInfoType {
     
     dispatch_async(dispatch_get_main_queue(), ^{
         self.mode = kViewMode;
+        self.title = self.shaddowItem.name;
     });
     
 //    self.navigationItem.rightBarButtonItem.customView = nil;

@@ -112,6 +112,7 @@
     self.clearsSelectionOnViewWillAppear = NO;
     
     [Item setListDelegate:self];
+//    [Item retrieveList];
     
     if (self.mode == kSelectMode) {
         // get a fresh copy

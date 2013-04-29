@@ -11,7 +11,7 @@
 #import "EditInvoiceViewController.h"
 #import "ScannerViewController.h"
 #import "Invoice.h"
-#import "BDCViewController.h"
+//#import "BDCViewController.h"
 #import "Customer.h"
 #import "Constants.h"
 #import "Util.h"
@@ -68,8 +68,6 @@
 @property (nonatomic, strong) NSMutableArray *customerSectionLabels;
 
 @property (nonatomic, strong) NSMutableArray *invoiceListsCopy;
-
-//@property (nonatomic, strong) id<InvoiceListDelegate> deleteDelegate;
 
 @end
 
@@ -233,7 +231,7 @@
     if ([segue.identifier isEqualToString:VIEW_INVOICE_SEGUE]) {
         [segue.destinationViewController setInvoice:sender];
         [(EditInvoiceViewController *)segue.destinationViewController setMode:kViewMode];
-        [segue.destinationViewController setTitle:[@"Inv. " stringByAppendingString:sender.invoiceNumber]];
+        [segue.destinationViewController setTitle:sender.invoiceNumber];
     } else if ([segue.identifier isEqualToString:CREATE_INVOICE_SEGUE]) {
         [segue.destinationViewController setTitle:@"New Invoice"];
         [segue.destinationViewController setMode:kCreateMode];
@@ -659,12 +657,12 @@
             self.dueDateInvoices = [NSMutableArray arrayWithObjects:self.overDueInvoices, self.dueIn7DaysInvoices, self.dueOver7DaysInvoices, nil];
             self.dueDateAmounts = [NSArray arrayWithObjects:self.overDueInvoiceAmount, self.dueIn7DaysInvoiceAmount, self.dueOver7DaysInvoiceAmount, nil];
             self.dueDateSectionButtons = @[self.overDueSectionButton, self.dueIn7DaysSectionButton, self.dueOver7DaysSectionButton];
-            self.dueDateSectionLabels = @[OVERDUE_INVS, DUE_IN_7_INVS, DUE_OVER_7_INVS];
+            self.dueDateSectionLabels = @[OVERDUE, DUE_IN_7, DUE_OVER_7];
         } else {
             self.dueDateInvoices = [NSMutableArray arrayWithObjects:self.dueOver7DaysInvoices, self.dueIn7DaysInvoices, self.overDueInvoices, nil];
             self.dueDateAmounts = [NSArray arrayWithObjects:self.dueOver7DaysInvoiceAmount, self.dueIn7DaysInvoiceAmount, self.overDueInvoiceAmount, nil];
             self.dueDateSectionButtons = @[self.dueOver7DaysSectionButton, self.dueIn7DaysSectionButton, self.overDueSectionButton];
-            self.dueDateSectionLabels = @[DUE_OVER_7_INVS, DUE_IN_7_INVS, OVERDUE_INVS];
+            self.dueDateSectionLabels = @[DUE_OVER_7, DUE_IN_7, OVERDUE];
         }
         
         self.invoiceListsCopy = [NSMutableArray array];

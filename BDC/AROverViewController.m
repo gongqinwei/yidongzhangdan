@@ -170,13 +170,13 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
 //    if([segue.identifier isEqualToString:OVERDUE_INVOICES_SEGUE]) {
-//        [segue.destinationViewController setHeaderTitle:OVERDUE_INVS];
+//        [segue.destinationViewController setHeaderTitle:OVERDUE];
 //        [segue.destinationViewController setInvoices:self.overDueInvoices];
 //    } else if ([segue.identifier isEqualToString:DUE_IN_7_INVOICES_SEGUE]) {
-//        [segue.destinationViewController setHeaderTitle:DUE_IN_7_INVS];
+//        [segue.destinationViewController setHeaderTitle:DUE_IN_7];
 //        [segue.destinationViewController setInvoices:self.dueIn7DaysInvoices];
 //    } else if ([segue.identifier isEqualToString:DUE_OVER_7_INVOICES_SEGUE]) {
-//        [segue.destinationViewController setHeaderTitle:DUE_OVER_7_INVS];
+//        [segue.destinationViewController setHeaderTitle:DUE_OVER_7];
 //        [segue.destinationViewController setInvoices:self.dueOver7DaysInvoices];
 //    } else if ([segue.identifier isEqualToString:TOTAL_INVOICES_SEGUE]) {
 //        [segue.destinationViewController setHeaderTitle:ALL_OPEN_INVS];

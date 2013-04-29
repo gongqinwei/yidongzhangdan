@@ -21,8 +21,11 @@
 
 @property (nonatomic, strong) BDCBusinessObject *busObj;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
+@property (nonatomic, strong) UIToolbar *inputAccessoryView;
 
 - (void)navigateBack;
 - (void)didSelectCrudAction:(NSString *)action;
+- (void)initializeTextField:(UITextField *)textField;
+- (void)inputAccessoryDoneAction:(UIBarButtonItem *)button;
 
 @end

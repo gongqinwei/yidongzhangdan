@@ -136,8 +136,9 @@ static NSMutableDictionary *inactiveItems = nil;
 + (id)listOrderBy:(NSString *)attribue ascending:(Boolean)isAscending active:(Boolean)isActive {
     NSDictionary *itemList = isActive ? items : inactiveItems;
     NSArray *itemArr = [itemList allValues];
-    NSSortDescriptor *firstOrder = [[NSSortDescriptor alloc] initWithKey:attribue ascending:isAscending];
-    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    
+    NSSortDescriptor *firstOrder = [[NSSortDescriptor alloc] initWithKey:ITEM_NAME ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:ID ascending:NO];
     itemArr = [itemArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, secondOrder, nil]];
     
     for (Item *item in itemArr) {
@@ -197,10 +198,10 @@ static NSMutableDictionary *inactiveItems = nil;
             for (id item in jsonItems) {
                 NSDictionary *dict = (NSDictionary*)item;
                 Item *item = [[Item alloc] init];
-                item.objectId = [dict objectForKey:@"id"];
-                item.name = [dict objectForKey:@"name"];
-                item.type = [ItemTypes indexOfObject:[NSNumber numberWithInt: [[dict objectForKey:@"type"] intValue]]];
-                item.price = [Util id2Decimal:[dict objectForKey:@"price"]];
+                item.objectId = [dict objectForKey:ID];
+                item.name = [dict objectForKey:ITEM_NAME];
+                item.type = [ItemTypes indexOfObject:[NSNumber numberWithInt: [[dict objectForKey:ITEM_TYPE] intValue]]];
+                item.price = [Util id2Decimal:[dict objectForKey:ITEM_PRICE]];
                 item.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
                 
                 [itemDict setObject:item forKey:item.objectId];

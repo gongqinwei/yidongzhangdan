@@ -10,6 +10,10 @@
 
 @interface UIView (FindAndResignFirstResponder)
 
+@property (nonatomic, retain) id objectTag;
+
+- (UIView *)viewWithObjectTag:(id)object;
+
 - (BOOL) findAndResignFirstResponder;
 
 @end

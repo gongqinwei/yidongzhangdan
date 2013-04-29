@@ -63,8 +63,9 @@ static NSMutableDictionary * inactiveCustomers = nil;
 + (id)listOrderBy:(NSString *)attribue ascending:(Boolean)isAscending active:(Boolean)isActive {
     NSDictionary *custList = isActive ? customers : inactiveCustomers;
     NSArray *customerArr = [custList allValues];
-    NSSortDescriptor *firstOrder = [[NSSortDescriptor alloc] initWithKey:attribue ascending:isAscending];
-    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    
+    NSSortDescriptor *firstOrder = [[NSSortDescriptor alloc] initWithKey:CUSTOMER_NAME ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:ID ascending:NO];
     customerArr = [customerArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, secondOrder, nil]];
     
     return [NSMutableArray arrayWithArray:customerArr];
@@ -121,18 +122,18 @@ static NSMutableDictionary * inactiveCustomers = nil;
                 NSDictionary *dict = (NSDictionary*)item;
                 Customer *customer = [[Customer alloc] init];
                 customer.objectId = [dict objectForKey:ID];
-                customer.name = [dict objectForKey:@"name"];
+                customer.name = [dict objectForKey:CUSTOMER_NAME];
                 
-                NSString *addr1 = [dict objectForKey:@"billAddress1"];
-                NSString *addr2 = [dict objectForKey:@"billAddress2"];
-                NSString *addr3 = [dict objectForKey:@"billAddress3"];
-                NSString *addr4 = [dict objectForKey:@"billAddress4"];
-                NSString *city = [dict objectForKey:@"billAddressCity"];
-                NSString *state = [dict objectForKey:@"billAddressState"];
-                NSString *country = [dict objectForKey:@"billAddressCountry"];
-                NSString *zip = [dict objectForKey:@"billAddressZip"];
-                NSString *email = [dict objectForKey:@"email"];
-                NSString *phone = [dict objectForKey:@"phone"];
+                NSString *addr1 = [dict objectForKey:CUSTOMER_ADDR1];
+                NSString *addr2 = [dict objectForKey:CUSTOMER_ADDR2];
+                NSString *addr3 = [dict objectForKey:CUSTOMER_ADDR3];
+                NSString *addr4 = [dict objectForKey:CUSTOMER_ADDR4];
+                NSString *city = [dict objectForKey:CUSTOMER_CITY];
+                NSString *state = [dict objectForKey:CUSTOMER_STATE];
+                NSString *country = [dict objectForKey:CUSTOMER_COUNTRY];
+                NSString *zip = [dict objectForKey:CUSTOMER_ZIP];
+                NSString *email = [dict objectForKey:CUSTOMER_EMAIL];
+                NSString *phone = [dict objectForKey:CUSTOMER_PHONE];
 
                 customer.billAddr1 = (addr1 == (id)[NSNull null]) ? nil : addr1;
                 customer.billAddr2 = (addr2 == (id)[NSNull null]) ? nil : addr2;

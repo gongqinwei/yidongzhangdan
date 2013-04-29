@@ -15,9 +15,13 @@
 #import "Constants.h"
 #import "UIHelper.h"
 
-#define RESET_SCANNER_FROM_BO_SELECT_SEGUE         @"ResetScanner"
-#define ATTACH_TO_NEW_INVOICE_SEGUE                @"AttachToNewInvoice"
-#define ATTACH_TO_EXISTING_INVOICE_SEGUE           @"AttachToExistingInvoice"
+#define RESET_SCANNER_FROM_BO_SELECT_SEGUE          @"ResetScanner"
+#define ATTACH_TO_NEW_INVOICE_SEGUE                 @"AttachToNewInvoice"
+#define ATTACH_TO_EXISTING_INVOICE_SEGUE            @"AttachToExistingInvoice"
+#define ATTACH_TO_NEW_BILL_SEGUE                    @"AttachToNewBill"
+#define ATTACH_TO_EXISTING_BILL_SEGUE               @"AttachToExistingBill"
+#define ATTACH_TO_NEW_VENDCREDIT_SEGUE              @"AttachToNewVendorCredit"
+#define ATTACH_TO_EXISTING_VENDCREDIT_SEGUE         @"AttachToExistingVendorCredit"
 
 @interface BOSelectorViewController ()
 
@@ -68,12 +72,12 @@
         [segue.destinationViewController setPhotoData:self.photoData];
     }
     
-    if ([segue.identifier isEqualToString:ATTACH_TO_NEW_INVOICE_SEGUE]) {
+    if ([segue.identifier isEqualToString:ATTACH_TO_NEW_INVOICE_SEGUE] || [segue.identifier isEqualToString:ATTACH_TO_NEW_BILL_SEGUE] || [segue.identifier isEqualToString:ATTACH_TO_NEW_VENDCREDIT_SEGUE]) {
         [segue.destinationViewController addPhotoData:self.photoData name:self.photoName];
-        [(EditInvoiceViewController *)segue.destinationViewController setMode:kAttachMode];
-    } else if ([segue.identifier isEqualToString:ATTACH_TO_EXISTING_INVOICE_SEGUE]) {
-        [(InvoicesTableViewController *)segue.destinationViewController setMode:kSelectMode];
-        [(InvoicesTableViewController *)segue.destinationViewController setInvoices:[Invoice list]];
+        [segue.destinationViewController setMode:kAttachMode];
+    } else if ([segue.identifier isEqualToString:ATTACH_TO_EXISTING_INVOICE_SEGUE] || [segue.identifier isEqualToString:ATTACH_TO_EXISTING_BILL_SEGUE] || [segue.identifier isEqualToString:ATTACH_TO_EXISTING_VENDCREDIT_SEGUE]) {
+        [segue.destinationViewController setMode:kSelectMode];
+        [segue.destinationViewController setInvoices:[Invoice list]];
     }
 }
 

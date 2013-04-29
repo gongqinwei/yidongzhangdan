@@ -13,7 +13,7 @@
 
 #define INFO_VIEW_POSITION_Y     150
 #define INFO_VIEW_WIDTH          170
-#define INFO_VIEW_HEIGHT         80
+#define INFO_VIEW_HEIGHT         100
 #define INFO_VIEW_MARGIN         20
 #define INFO_VIEW_PADDING        5
 
@@ -190,21 +190,6 @@
                             }
                         }];
     }
-}
-
-+ (void)initializeTextField:(UITextField *)textField {
-    textField.font = [UIFont fontWithName:APP_FONT size:APP_LABEL_FONT_SIZE];
-    textField.textColor = APP_LABEL_BLUE_COLOR;
-    textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    textField.autocorrectionType = UITextAutocorrectionTypeNo; // no auto correction support
-    textField.autocapitalizationType = UITextAutocapitalizationTypeNone; // no auto capitalization support
-    textField.textAlignment = UITextAlignmentRight;
-    textField.enabled = YES;
-    textField.layer.cornerRadius = 8.0f;
-    textField.layer.masksToBounds = YES;
-    textField.layer.borderColor = [[UIColor grayColor]CGColor];
-    textField.layer.borderWidth = 0.5f;
-    textField.rightView = [[UIView alloc] initWithFrame:TEXT_FIELD_RIGHT_PADDING_RECT];
 }
 
 + (void)initializeHeaderLabel:(UILabel *)label {

@@ -18,8 +18,8 @@
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
-//#define DOMAIN_URL          @"http://10.1.10.203"
-#define DOMAIN_URL          @"http://192.168.1.35"
+//#define DOMAIN_URL          @"http://10.1.10.177"
+#define DOMAIN_URL          @"http://192.168.1.17"
 #define APP_KEY             @"devKey"
 #endif
 
@@ -74,7 +74,9 @@
 #define BILL_API            @"Bill.json"
 #define INVOICE_API         @"Invoice.json"
 #define CUSTOMER_API        @"Customer.json"
+#define VENDOR_API          @"Vendor.json"
 #define ITEM_API            @"Item.json"
+#define ACCOUNT_API         @"ChartOfAccount.json"
 #define ENUM_API            @"Enum.json"
 
 #define ENTITY              @"entity"
@@ -147,6 +149,7 @@ typedef void(^completionHandler)(BOOL);
 #define TEXT_FIELD_RIGHT_PADDING_RECT   CGRectMake(0, 0, 10, 30)
 
 // Bill info
+#define BILL                @"Bill"
 #define VENDOR              @"Vendor"
 #define InvoiceNumber       @"Invoice #"
 #define PaymentTerms        @"Payment Terms"
@@ -154,13 +157,17 @@ typedef void(^completionHandler)(BOOL);
 #define DueDate             @"Due Date"
 #define Amount              @"Amount"
 #define Account             @"Account"
+#define ChartAccount        @"ChartOfAccount"
+#define ALL_INACTIVE_BILLS  @"All Deleted Bills"
+#define ALL_OPEN_BILLS       @"All Open Bills"
+#define ALL_INACTIVE_VCS    @"All Deleted Vendor Credits"
 
 // Invoice info
 #define INVOICE             @"Invoice"
 #define ALL_OPEN_INVS       @"All Open Invoices"
-#define OVERDUE_INVS        @"Overdue"
-#define DUE_IN_7_INVS       @"Due in Next 7 Days"
-#define DUE_OVER_7_INVS     @"Due in 7+ Days"
+#define OVERDUE             @"Overdue"
+#define DUE_IN_7            @"Due in Next 7 Days"
+#define DUE_OVER_7          @"Due in 7+ Days"
 #define ALL_INACTIVE_INVS   @"All Deleted Invoices"
 
 #define INVOICE_EMAIL_TEMPLATE  @"\
@@ -183,8 +190,22 @@ Due Date: %@<br> \
 <br> \
 A PDF version of this invoice is also attached for your records.<br>"
 
+
+// Approval Status
+#define APPROVAL_UNASSIGNED     @"0"
+#define APPROVAL_ASSIGNED       @"1"
+#define APPROVAL_APPROVED       @"3"
+#define APPROVAL_APPROVING      @"4"
+#define APPROVAL_DENIED         @"5"
+#define APPROVAL_STATUSES       [NSDictionary dictionaryWithObjectsAndKeys:@"Unassigned", APPROVAL_UNASSIGNED, @"Assigned", APPROVAL_ASSIGNED, @"Approved", APPROVAL_APPROVED, @"Approving", APPROVAL_APPROVING, @"Denied", APPROVAL_DENIED, nil]
+
 // Payment Status
-#define PAYMENT_STATUSES    [NSDictionary dictionaryWithObjectsAndKeys:@"Paid", @"0", @"Unpaid", @"1", @"Partially Paid", @"2", @"Scheduled", @"4", @"Pending", @"5", nil]
+#define PAYMENT_PAID            @"0"
+#define PAYMENT_UNPAID          @"1"
+#define PAYMENT_PARTIAL         @"2"
+#define PAYMENT_SCHEDULED       @"4"
+#define PAYMENT_PENDING         @"5"
+#define PAYMENT_STATUSES        [NSDictionary dictionaryWithObjectsAndKeys:@"Paid", PAYMENT_PAID, @"Unpaid", PAYMENT_UNPAID, @"Partially Paid", PAYMENT_PARTIAL, @"Scheduled", PAYMENT_SCHEDULED, @"Pending", PAYMENT_PENDING, nil]
 
 typedef enum {
     kSucceedLogin, kFailLogin, kFailListOrgs

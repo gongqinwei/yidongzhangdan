@@ -192,59 +192,59 @@ enum CustomerInfoType {
     }
     
     self.customerNameTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
-    [UIHelper initializeTextField:customerNameTextField];
+    [self initializeTextField:customerNameTextField];
     self.customerNameTextField.tag = kCustomerName * TAG_BASE;
     self.customerNameTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.customerNameTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
     self.customerNameTextField.delegate = self;
     
     self.customerAddr1TextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
-    [UIHelper initializeTextField:self.customerAddr1TextField];
+    [self initializeTextField:self.customerAddr1TextField];
     self.customerAddr1TextField.tag = kCustomerAddr1 * TAG_BASE;
     self.customerAddr1TextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.customerAddr1TextField.rightViewMode = UITextFieldViewModeUnlessEditing;
     self.customerAddr1TextField.delegate = self;
     
     self.customerAddr2TextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
-    [UIHelper initializeTextField:self.customerAddr2TextField];
+    [self initializeTextField:self.customerAddr2TextField];
     self.customerAddr2TextField.tag = kCustomerAddr2 * TAG_BASE;
     self.customerAddr2TextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.customerAddr2TextField.rightViewMode = UITextFieldViewModeUnlessEditing;
     self.customerAddr2TextField.delegate = self;
     
     self.customerAddr3TextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
-    [UIHelper initializeTextField:self.customerAddr3TextField];
+    [self initializeTextField:self.customerAddr3TextField];
     self.customerAddr3TextField.tag = kCustomerAddr3 * TAG_BASE;
     self.customerAddr3TextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.customerAddr3TextField.rightViewMode = UITextFieldViewModeUnlessEditing;
     self.customerAddr3TextField.delegate = self;
     
     self.customerAddr4TextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
-    [UIHelper initializeTextField:self.customerAddr4TextField];
+    [self initializeTextField:self.customerAddr4TextField];
     self.customerAddr4TextField.tag = kCustomerAddr4 * TAG_BASE;
     self.customerAddr4TextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.customerAddr4TextField.rightViewMode = UITextFieldViewModeUnlessEditing;
     self.customerAddr4TextField.delegate = self;
     
     self.customerCityTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
-    [UIHelper initializeTextField:self.customerCityTextField];
+    [self initializeTextField:self.customerCityTextField];
     self.customerCityTextField.tag = kCustomerCity * TAG_BASE;
     self.customerCityTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.customerCityTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
     self.customerCityTextField.delegate = self;
     
     self.customerStateTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
-    [UIHelper initializeTextField:self.customerStateTextField];
+    [self initializeTextField:self.customerStateTextField];
     self.customerStateTextField.tag = kCustomerState * TAG_BASE;
     
     self.customerCountryTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
-    [UIHelper initializeTextField:self.customerCountryTextField];
+    [self initializeTextField:self.customerCountryTextField];
     self.customerCountryTextField.tag = kCustomerCountry * TAG_BASE;
     self.customerCountryTextField.rightViewMode = UITextFieldViewModeAlways;
     self.customerCountryTextField.inputView = self.customerCountryPickerView;
     
     self.customerZipTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
-    [UIHelper initializeTextField:self.customerZipTextField];
+    [self initializeTextField:self.customerZipTextField];
     self.customerZipTextField.tag = kCustomerZip * TAG_BASE;
     self.customerZipTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.customerZipTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
@@ -252,7 +252,7 @@ enum CustomerInfoType {
     self.customerZipTextField.delegate = self;
     
     self.customerEmailTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
-    [UIHelper initializeTextField:self.customerEmailTextField];
+    [self initializeTextField:self.customerEmailTextField];
     self.customerEmailTextField.tag = kCustomerEmail * TAG_BASE;
     self.customerEmailTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.customerEmailTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
@@ -260,7 +260,7 @@ enum CustomerInfoType {
     self.customerEmailTextField.delegate = self;
     
     self.customerPhoneTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
-    [UIHelper initializeTextField:self.customerPhoneTextField];
+    [self initializeTextField:self.customerPhoneTextField];
     self.customerPhoneTextField.tag = kCustomerPhone* TAG_BASE;
     self.customerPhoneTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.customerPhoneTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
@@ -271,9 +271,9 @@ enum CustomerInfoType {
     self.activityIndicator.hidesWhenStopped = YES;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [self.view removeGestureRecognizer:self.tapRecognizer];
-}
+//- (void)viewWillAppear:(BOOL)animated {
+//    [self.view removeGestureRecognizer:self.tapRecognizer];
+//}
 
 - (void)didReceiveMemoryWarning
 {
@@ -671,6 +671,7 @@ enum CustomerInfoType {
     
     dispatch_async(dispatch_get_main_queue(), ^{
         self.mode = kViewMode;
+        self.title = self.shaddowCustomer.name;
     });
     
 //    self.navigationItem.rightBarButtonItem.customView = nil;

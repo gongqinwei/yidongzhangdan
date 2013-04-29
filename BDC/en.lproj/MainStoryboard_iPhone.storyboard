@@ -33,7 +33,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fpp-A2-HOF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="368" y="-1163"/>
+            <point key="canvasLocation" x="-3055" y="31"/>
         </scene>
         <!--Root Menu View Controller-->
         <scene sceneID="iob-eV-Fz6">
@@ -82,7 +82,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4fb-cg-7eP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-922" y="-646"/>
+            <point key="canvasLocation" x="-1442" y="-578"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="ZaF-Bb-1gd">
@@ -98,7 +98,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f08-pw-gLq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3007" y="-1352"/>
+            <point key="canvasLocation" x="-3527" y="-1284"/>
         </scene>
         <!--Inbox View Controller - Inbox (unfinished)-->
         <scene sceneID="oLy-Wg-UbD">
@@ -134,7 +134,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qbd-a4-tfU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="368" y="-447"/>
+            <point key="canvasLocation" x="202" y="-1268"/>
         </scene>
         <!--Over View Controller - Receivables-->
         <scene sceneID="hCe-uk-LhR">
@@ -380,7 +380,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="35n-1K-K4u" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2535" y="1369"/>
+            <point key="canvasLocation" x="-3055" y="3285"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="PWz-kq-3K8">
@@ -395,14 +395,14 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2gH-wy-Xol" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1993" y="1369"/>
+            <point key="canvasLocation" x="-2513" y="3285"/>
         </scene>
         <!--Invoices Table View Controller - Invoices-->
         <scene sceneID="IiF-m0-ebb">
             <objects>
                 <tableViewController id="Auy-Fb-tfc" customClass="InvoicesTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="ehn-4V-GTC">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -444,7 +444,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cPE-5q-v5J" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1464" y="1369"/>
+            <point key="canvasLocation" x="-1984" y="3285"/>
         </scene>
         <!--Invoice Details View Controller-->
         <scene sceneID="WOb-At-p7N">
@@ -486,7 +486,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vhl-He-AOJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="123" y="1520"/>
+            <point key="canvasLocation" x="-397" y="3436"/>
         </scene>
         <!--Attachment Preview View Controller-->
         <scene sceneID="o6j-oY-slq">
@@ -523,14 +523,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Gd-aq-HZW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="123" y="921"/>
+            <point key="canvasLocation" x="-397" y="2837"/>
         </scene>
         <!--Edit Invoice View Controller - Invoice-->
         <scene sceneID="izX-i6-Jr4">
             <objects>
                 <tableViewController storyboardIdentifier="InvoiceDetails" id="W2n-Tn-iyx" customClass="EditInvoiceViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" allowsSelectionDuringEditing="YES" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="xUL-EA-whL">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
@@ -618,9 +618,9 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ahy-h8-07w" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-922" y="1369"/>
+            <point key="canvasLocation" x="-1442" y="3285"/>
         </scene>
-        <!--Vendors Table View Controller - Vendors (unfinished)-->
+        <!--Vendors Table View Controller - Vendors-->
         <scene sceneID="2FU-ac-bBd">
             <objects>
                 <tableViewController id="cTU-5g-PB7" customClass="VendorsTableViewController" sceneMemberID="viewController">
@@ -629,12 +629,28 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="VendorItem" id="dhn-uJ-Iua">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="VendorItem" editingAccessoryType="disclosureIndicator" textLabel="NNU-Nf-XQV" detailTextLabel="rxX-yR-R8K" style="IBUITableViewCellStyleValue1" id="dhn-uJ-Iua">
                                 <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NNU-Nf-XQV">
+                                            <rect key="frame" x="10" y="11" width="35" height="21"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="rxX-yR-R8K">
+                                            <rect key="frame" x="246" y="11" width="44" height="21"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.2196078431372549" green="0.32941176470588235" blue="0.52941176470588236" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </label>
+                                    </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                             </tableViewCell>
@@ -644,24 +660,85 @@
                             <outlet property="delegate" destination="cTU-5g-PB7" id="SjI-Ne-h3w"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Vendors (unfinished)" id="Csr-9e-BQC">
+                    <navigationItem key="navigationItem" title="Vendors" id="Csr-9e-BQC">
                         <barButtonItem key="leftBarButtonItem" image="MenuIcon.png" id="Lb7-a5-1QJ">
                             <connections>
                                 <action selector="toggleMenu:" destination="cTU-5g-PB7" id="rFb-Pm-KW2"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" tag="1" systemItem="action" id="aT5-zx-NCl">
+                            <connections>
+                                <action selector="toggleMenu:" destination="cTU-5g-PB7" id="FLG-Bx-9rU"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="Crd-D4-0GL" kind="push" identifier="ViewVendor" id="xP7-Be-EUo"/>
+                        <segue destination="Crd-D4-0GL" kind="push" identifier="CreateVendor" id="JXm-NR-eW3"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2aM-XL-kjz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1419" y="-1163"/>
+            <point key="canvasLocation" x="-1977" y="1049"/>
+        </scene>
+        <!--Edit Vendor View Controller - Vendor-->
+        <scene sceneID="GFp-tt-Yj3">
+            <objects>
+                <tableViewController id="Crd-D4-0GL" customClass="EditVendorViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="nCB-GN-ea5">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="VendorInfoItem" textLabel="ABL-yU-CEB" detailTextLabel="gAh-Jg-9B6" style="IBUITableViewCellStyleValue2" id="FZh-Tl-X7S">
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ABL-yU-CEB">
+                                            <rect key="frame" x="10" y="15" width="91" height="15"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                            <color key="textColor" red="0.32156862745098042" green="0.40000000000000002" blue="0.56862745098039214" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Detail" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="gAh-Jg-9B6">
+                                            <rect key="frame" x="107" y="12" width="41" height="19"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Crd-D4-0GL" id="tAa-99-YCM"/>
+                            <outlet property="delegate" destination="Crd-D4-0GL" id="01Y-ld-coB"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Vendor" id="un7-PJ-Izn">
+                        <barButtonItem key="rightBarButtonItem" tag="1" systemItem="action" id="iRo-Af-WmE">
+                            <connections>
+                                <action selector="toggleMenu:" destination="Crd-D4-0GL" id="o7S-W2-S8d"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="leZ-WS-5k9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1442" y="1049"/>
         </scene>
         <!--Customers Table View Controller - Customers-->
         <scene sceneID="9ui-aC-wlV">
             <objects>
                 <tableViewController id="3zY-p5-ksg" customClass="CustomersTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="yRU-ey-91V">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -715,14 +792,14 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5C1-rL-uMe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1999" y="2136"/>
+            <point key="canvasLocation" x="-2519" y="4052"/>
         </scene>
         <!--Items Table View Controller - Items-->
         <scene sceneID="SgH-qK-E23">
             <objects>
                 <tableViewController id="ejF-hn-A7T" customClass="ItemsTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" allowsSelectionDuringEditing="YES" allowsMultipleSelection="YES" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="YeT-eY-NTb">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -777,14 +854,14 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NEq-UL-eyt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="123" y="2136"/>
+            <point key="canvasLocation" x="-397" y="4052"/>
         </scene>
         <!--Edit Item View Controller - Item Details-->
         <scene sceneID="ENW-yd-bLw">
             <objects>
                 <tableViewController storyboardIdentifier="ItemDetails" id="Huj-sl-FUL" customClass="EditItemViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="WPR-uN-vFR">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -829,7 +906,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gFE-wn-eUV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="603" y="2136"/>
+            <point key="canvasLocation" x="83" y="4052"/>
         </scene>
         <!--User Profile View Controller - Profile (unfinished)-->
         <scene sceneID="80Y-0i-q8F">
@@ -850,7 +927,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XM0-lV-J7A" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1419" y="-447"/>
+            <point key="canvasLocation" x="1253" y="-1268"/>
         </scene>
         <!--Select Org View Controller - Select a company-->
         <scene sceneID="4lA-et-BqB">
@@ -902,7 +979,7 @@
                     </connections>
                 </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="-1457" y="-1268"/>
+            <point key="canvasLocation" x="-1977" y="-1200"/>
         </scene>
         <!--Splash View Controller-->
         <scene sceneID="b99-qa-gE7">
@@ -927,7 +1004,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nv6-Hh-yMU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2535" y="-646"/>
+            <point key="canvasLocation" x="-3055" y="-578"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="elw-go-I60">
@@ -994,7 +1071,139 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4E2-of-HEy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1993" y="-1023"/>
+            <point key="canvasLocation" x="-2513" y="-955"/>
+        </scene>
+        <!--Bills Table View Controller - Bills-->
+        <scene sceneID="SFB-nA-DNU">
+            <objects>
+                <tableViewController id="k1G-B2-MSF" customClass="BillsTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="WAv-O9-wKs">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BillDetails" id="dDu-gc-PaD">
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="k1G-B2-MSF" id="nhT-H4-dZE"/>
+                            <outlet property="delegate" destination="k1G-B2-MSF" id="4Wn-mX-I4H"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Bills" id="E4V-X9-eEx">
+                        <barButtonItem key="leftBarButtonItem" image="MenuIcon.png" id="aZ7-eM-q58">
+                            <connections>
+                                <action selector="toggleMenu:" destination="k1G-B2-MSF" id="x2n-JA-KEp"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" tag="1" systemItem="action" id="lZe-5r-9vd">
+                            <connections>
+                                <action selector="toggleMenu:" destination="k1G-B2-MSF" id="fLu-Rv-tmX"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="WEK-Fn-naN" kind="push" identifier="ViewBill" id="0I6-iw-p0z"/>
+                        <segue destination="WEK-Fn-naN" kind="push" identifier="CreateNewBill" id="3HC-XA-11p"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LNY-sr-TeQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3055" y="1757"/>
+        </scene>
+        <!--Edit Bill View Controller - Bill-->
+        <scene sceneID="KOg-QU-rMP">
+            <objects>
+                <tableViewController storyboardIdentifier="BillDetails" id="WEK-Fn-naN" customClass="EditBillViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" allowsSelectionDuringEditing="YES" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="MXo-Ms-VD6">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BillInfo" textLabel="SXJ-ri-qAS" detailTextLabel="ifK-uP-2Ox" style="IBUITableViewCellStyleValue2" id="vlX-cw-Rqg">
+                                <rect key="frame" x="0.0" y="46" width="320" height="45"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="10" y="1" width="300" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="SXJ-ri-qAS">
+                                            <rect key="frame" x="10" y="15" width="67" height="15"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                            <color key="textColor" red="0.32156862745098042" green="0.40000000000000002" blue="0.56862745098039214" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Detail" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ifK-uP-2Ox">
+                                            <rect key="frame" x="83" y="12" width="41" height="19"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BillLineItem" editingAccessoryType="disclosureIndicator" textLabel="aPH-Qw-Ujc" detailTextLabel="Zcl-nc-nUA" style="IBUITableViewCellStyleValue2" id="riO-yb-b3L">
+                                <rect key="frame" x="0.0" y="91" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="10" y="0.0" width="300" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="aPH-Qw-Ujc">
+                                            <rect key="frame" x="10" y="15" width="67" height="15"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                            <color key="textColor" red="0.32156862745098042" green="0.40000000000000002" blue="0.56862745098039214" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Detail" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Zcl-nc-nUA">
+                                            <rect key="frame" x="83" y="12" width="41" height="19"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BillDoc" id="i0V-4m-gCJ">
+                                <rect key="frame" x="0.0" y="135" width="320" height="45"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="10" y="0.0" width="300" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="WEK-Fn-naN" id="35T-hh-VUI"/>
+                            <outlet property="delegate" destination="WEK-Fn-naN" id="zqi-II-ZNW"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Bill" id="Ezx-bx-R8n">
+                        <barButtonItem key="rightBarButtonItem" tag="1" systemItem="action" id="1Jn-kZ-COQ"/>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="X9Q-mH-q7t" kind="modal" identifier="ScanMoreBillPhoto" id="WRK-Bd-AdY"/>
+                        <segue destination="cTU-5g-PB7" kind="push" identifier="SelectVendorForBill" id="Vyp-zG-ZzN"/>
+                        <segue destination="Crd-D4-0GL" kind="push" identifier="ViewVendorDetails" id="dP9-hw-whd"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="j3c-Mt-KhE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2513" y="1757"/>
         </scene>
         <!--Create Bill View Controller - New Bill-->
         <scene sceneID="7YK-bK-BfQ">
@@ -1040,7 +1249,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZx-gV-cAt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1999" y="163"/>
+            <point key="canvasLocation" x="-4054" y="2009"/>
         </scene>
         <!--Scanner View Controller - Scan-->
         <scene sceneID="Akx-QF-4HO">
@@ -1107,7 +1316,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vDp-xN-4hZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2535" y="628"/>
+            <point key="canvasLocation" x="-3055" y="2544"/>
         </scene>
         <!--Selector View Controller - Select Action-->
         <scene sceneID="Dd3-Ob-Q0l">
@@ -1128,9 +1337,6 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <segue destination="xgg-fy-UQX" kind="push" identifier="AttachToNewBill" id="CjV-6W-f1q"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="hFE-Vp-1ye">
                                 <rect key="frame" x="57" y="181" width="206" height="37"/>
@@ -1216,11 +1422,13 @@
                         <outlet property="uploadError" destination="eWu-2r-dgD" id="JzR-wk-GUZ"/>
                         <outlet property="uploadIndicator" destination="CIp-wA-xuC" id="mfv-qF-V44"/>
                         <segue destination="X9Q-mH-q7t" kind="push" identifier="ResetScanner" id="FWz-Rx-QQc"/>
+                        <segue destination="WEK-Fn-naN" kind="push" identifier="AttachToNewBill" id="g7L-M9-6Tb"/>
+                        <segue destination="k1G-B2-MSF" kind="push" identifier="AttachToExistingBill" id="Rya-x6-ipz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qzN-xB-t4J" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1464" y="628"/>
+            <point key="canvasLocation" x="-1984" y="2544"/>
         </scene>
         <!--Navigation Controller - Profile-->
         <scene sceneID="SAk-R7-7uX">
@@ -1239,7 +1447,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZWC-mf-Wlq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="937" y="-447"/>
+            <point key="canvasLocation" x="771" y="-1268"/>
         </scene>
         <!--Navigation Controller - Receivables-->
         <scene sceneID="etu-dQ-ihS">
@@ -1259,7 +1467,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QhE-QS-pPh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3007" y="1369"/>
+            <point key="canvasLocation" x="-3527" y="3285"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="EkH-Ra-gSI">
@@ -1277,7 +1485,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Yx-DX-cJr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3007" y="-646"/>
+            <point key="canvasLocation" x="-3527" y="-578"/>
         </scene>
         <!--Action Menu View Controller-->
         <scene sceneID="jSH-Kq-FQu">
@@ -1354,7 +1562,7 @@
                     </connections>
                 </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="-922" y="163"/>
+            <point key="canvasLocation" x="-800" y="-578"/>
         </scene>
         <!--Navigation Controller - Inbox-->
         <scene sceneID="5fH-q4-lyh">
@@ -1373,7 +1581,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="60d-ed-t6n" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-158" y="-447"/>
+            <point key="canvasLocation" x="-324" y="-1268"/>
         </scene>
         <!--Navigation Controller - Customers-->
         <scene sceneID="INZ-lA-ULg">
@@ -1393,14 +1601,14 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xTo-93-dti" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2535" y="2136"/>
+            <point key="canvasLocation" x="-3055" y="4052"/>
         </scene>
         <!--Edit Customer View Controller-->
         <scene sceneID="oXo-Uv-UhE">
             <objects>
                 <tableViewController storyboardIdentifier="CustomerDetails" id="eKR-Kb-X4l" customClass="EditCustomerViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Lsr-xU-2Be">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -1445,7 +1653,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="37g-1I-aE9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1464" y="2136"/>
+            <point key="canvasLocation" x="-1984" y="4052"/>
         </scene>
         <!--Navigation Controller - Items-->
         <scene sceneID="jS2-je-OoM">
@@ -1465,7 +1673,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nnq-lu-fU0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-353" y="2136"/>
+            <point key="canvasLocation" x="-873" y="4052"/>
         </scene>
         <!--Navigation Controller - Scan-->
         <scene sceneID="dpr-VK-pCS">
@@ -1485,12 +1693,12 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UjH-Mq-SpW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3007" y="628"/>
+            <point key="canvasLocation" x="-3527" y="2544"/>
         </scene>
         <!--Navigation Controller - Payables-->
         <scene sceneID="ii7-d0-2gf">
             <objects>
-                <navigationController storyboardIdentifier="Bills" useStoryboardIdentifierAsRestorationIdentifier="YES" id="uqQ-Ra-DvA" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="APOverview" useStoryboardIdentifierAsRestorationIdentifier="YES" id="uqQ-Ra-DvA" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Payables" image="bill.png" id="xKK-eS-eaE"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="h19-3U-cVY">
@@ -1504,7 +1712,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9hQ-q0-OuY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-158" y="-1163"/>
+            <point key="canvasLocation" x="-3527" y="31"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="cYA-RG-aET">
@@ -1522,7 +1730,25 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0fs-WR-7a5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="937" y="-1163"/>
+            <point key="canvasLocation" x="-2513" y="1049"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="CPa-sZ-91L">
+            <objects>
+                <navigationController storyboardIdentifier="Bills" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Uhw-UG-WcX" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="UjA-0I-C6K">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="k1G-B2-MSF" kind="relationship" relationship="rootViewController" id="jip-NJ-HyG"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Z3U-JT-HfQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3527" y="1757"/>
         </scene>
     </scenes>
     <resources>
@@ -1574,6 +1800,9 @@
                 <relationship kind="outlet" name="uploadIndicator" candidateClass="UIActivityIndicatorView"/>
             </relationships>
         </class>
+        <class className="BillsTableViewController" superclassName="SlidingListTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BillsTableViewController.h"/>
+        </class>
         <class className="CreateBillViewController" superclassName="SlidingViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CreateBillViewController.h"/>
             <relationships>
@@ -1583,24 +1812,21 @@
         </class>
         <class className="CustomersTableViewController" superclassName="SlidingListTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CustomersTableViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="editCustomers:" candidateClass="UIBarButtonItem"/>
-            </relationships>
+        </class>
+        <class className="EditBillViewController" superclassName="SlidingDetailsTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EditBillViewController.h"/>
         </class>
         <class className="EditCustomerViewController" superclassName="SlidingDetailsTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EditCustomerViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="saveCustomer:" candidateClass="UIBarButtonItem"/>
-            </relationships>
         </class>
         <class className="EditInvoiceViewController" superclassName="SlidingDetailsTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EditInvoiceViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="saveInvoice:" candidateClass="UIBarButtonItem"/>
-            </relationships>
         </class>
         <class className="EditItemViewController" superclassName="SlidingDetailsTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EditItemViewController.h"/>
+        </class>
+        <class className="EditVendorViewController" superclassName="SlidingDetailsTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EditVendorViewController.h"/>
         </class>
         <class className="InboxViewController" superclassName="SlidingTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/InboxViewController.h"/>
@@ -1608,7 +1834,6 @@
         <class className="InvoiceDetailsViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/InvoiceDetailsViewController.h"/>
             <relationships>
-                <relationship kind="action" name="donePreview:" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="InvoicePDFView" candidateClass="UIWebView"/>
                 <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationBar"/>
             </relationships>
@@ -1671,12 +1896,8 @@
         </class>
         <class className="UserProfileViewController" superclassName="SlidingViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/UserProfileViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="signOut:"/>
-                <relationship kind="action" name="switchOrg:" candidateClass="UIBarButtonItem"/>
-            </relationships>
         </class>
-        <class className="VendorsTableViewController" superclassName="SlidingTableViewController">
+        <class className="VendorsTableViewController" superclassName="SlidingListTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/VendorsTableViewController.h"/>
         </class>
     </classes>
@@ -1686,14 +1907,18 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="exA-eZ-tGx"/>
-        <segue reference="O1o-bR-GAE"/>
-        <segue reference="jJm-5t-hI9"/>
-        <segue reference="fqJ-Rf-CsZ"/>
-        <segue reference="e1N-Gr-piF"/>
+        <segue reference="Vyp-zG-ZzN"/>
+        <segue reference="3HC-XA-11p"/>
+        <segue reference="jip-NJ-HyG"/>
+        <segue reference="WRK-Bd-AdY"/>
+        <segue reference="dP9-hw-whd"/>
+        <segue reference="7wn-8N-nWk"/>
+        <segue reference="l6U-YN-Eoq"/>
         <segue reference="fR5-hZ-eeX"/>
-        <segue reference="rn3-5G-Kbh"/>
+        <segue reference="fqJ-Rf-CsZ"/>
         <segue reference="qdh-4f-Obl"/>
+        <segue reference="jJm-5t-hI9"/>
+        <segue reference="h3l-fG-uY0"/>
         <segue reference="bXR-G1-eqB"/>
         <segue reference="5Ki-uI-G54"/>
         <segue reference="9ui-O5-Z9f"/>

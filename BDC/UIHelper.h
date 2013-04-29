@@ -32,7 +32,6 @@ typedef enum {
 
 + (void)switchViewController:(UIViewController *)vc toTab:(int)tabIndex withSegue:(NSString *)segueId animated:(BOOL)animated;
 
-+ (void)initializeTextField:(UITextField *)textField;
 + (void)initializeHeaderLabel:(UILabel *)label;
 + (void)addGradientForView:(UIView *)view;
 

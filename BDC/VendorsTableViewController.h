@@ -7,8 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SlidingTableViewController.h"
+#import "SlidingListTableViewController.h"
 
-@interface VendorsTableViewController : SlidingTableViewController
+@protocol VendorSelectDelegate <NSObject>
+
+@required
+- (void)didSelectVendor:(NSString *)vendorId;
+
+@end
+
+@interface VendorsTableViewController : SlidingListTableViewController
+
+@property (nonatomic, strong) NSMutableArray *vendors;
+
+@property (nonatomic, weak) id<VendorSelectDelegate> selectDelegate;
 
 @end

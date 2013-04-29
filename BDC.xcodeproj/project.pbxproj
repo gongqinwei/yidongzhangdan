@@ -19,6 +19,9 @@
 		0E7DCABB16030BD700D0B35E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E7DCABA16030BD700D0B35E /* Security.framework */; };
 		0E7DCAC11603A1DD00D0B35E /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7DCAC016030FCD00D0B35E /* KeychainItemWrapper.m */; };
 		0E7DCAC41603CCC400D0B35E /* UIHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7DCAC31603CCC400D0B35E /* UIHelper.m */; };
+		0E7F8B3F1727B3920090464C /* EditBillViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7F8B3E1727B3920090464C /* EditBillViewController.m */; };
+		0E7F8B42172860B00090464C /* Vendor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7F8B41172860B00090464C /* Vendor.m */; };
+		0E7F8B47172C2B5C0090464C /* EditVendorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7F8B46172C2B5C0090464C /* EditVendorViewController.m */; };
 		0E847CE9170E203C00C7FA53 /* MenuIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E847CE8170E203C00C7FA53 /* MenuIcon.png */; };
 		0E847CEE171785C400C7FA53 /* SlidingListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E847CED171785C300C7FA53 /* SlidingListTableViewController.m */; };
 		0E847CF11717862A00C7FA53 /* SlidingDetailsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E847CF01717862A00C7FA53 /* SlidingDetailsTableViewController.m */; };
@@ -36,6 +39,9 @@
 		0EA09F1915FAAD0100BBD180 /* Customer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA09F1815FAAD0100BBD180 /* Customer.m */; };
 		0EA09F1F15FC792800BBD180 /* InvoiceDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA09F1E15FC792700BBD180 /* InvoiceDetailsViewController.m */; };
 		0EA29AAC16D2E6FA00386617 /* EditCustomerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA29AAB16D2E6FA00386617 /* EditCustomerViewController.m */; };
+		0EA33397172733AC00FB92F3 /* APBusinessObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA33396172733AC00FB92F3 /* APBusinessObject.m */; };
+		0EA3339A172754D100FB92F3 /* APLineItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA33399172754D100FB92F3 /* APLineItem.m */; };
+		0EA3339D172755F800FB92F3 /* ChartOfAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3339C172755F800FB92F3 /* ChartOfAccount.m */; };
 		0EAE1BAA170B9B780091B7FC /* UIViewController+Sliding.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EAE1BA9170B9B780091B7FC /* UIViewController+Sliding.m */; };
 		0EC88C9715F1374900A490EE /* AROverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EC88C9615F1374900A490EE /* AROverViewController.m */; };
 		0EC88C9A15F139C100A490EE /* CustomersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EC88C9915F139C100A490EE /* CustomersTableViewController.m */; };
@@ -43,6 +49,7 @@
 		0ED59D4F162DFD4F008DE1C9 /* SlidingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ED59D4E162DFD4E008DE1C9 /* SlidingViewController.m */; };
 		0ED59D52162E1BA3008DE1C9 /* LogOutIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ED59D50162E1BA3008DE1C9 /* LogOutIcon.png */; };
 		0ED59D53162E1BA3008DE1C9 /* OrganizationsIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ED59D51162E1BA3008DE1C9 /* OrganizationsIcon.png */; };
+		0EE1186017266650001AF86E /* BillsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1185F17266650001AF86E /* BillsTableViewController.m */; };
 		0EE2C12A162CEB9100BB00DA /* ItemsIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EE2C124162CEB9100BB00DA /* ItemsIcon.png */; };
 		0EE2C12B162CEB9100BB00DA /* CustomersIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EE2C125162CEB9100BB00DA /* CustomersIcon.png */; };
 		0EE2C12C162CEB9100BB00DA /* InvoicesIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EE2C126162CEB9100BB00DA /* InvoicesIcon.png */; };
@@ -101,6 +108,12 @@
 		0E7DCAC016030FCD00D0B35E /* KeychainItemWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		0E7DCAC21603CCC400D0B35E /* UIHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIHelper.h; sourceTree = "<group>"; };
 		0E7DCAC31603CCC400D0B35E /* UIHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIHelper.m; sourceTree = "<group>"; };
+		0E7F8B3D1727B3920090464C /* EditBillViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditBillViewController.h; sourceTree = "<group>"; };
+		0E7F8B3E1727B3920090464C /* EditBillViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditBillViewController.m; sourceTree = "<group>"; };
+		0E7F8B40172860AF0090464C /* Vendor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vendor.h; sourceTree = "<group>"; };
+		0E7F8B41172860B00090464C /* Vendor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Vendor.m; sourceTree = "<group>"; };
+		0E7F8B45172C2B5C0090464C /* EditVendorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditVendorViewController.h; sourceTree = "<group>"; };
+		0E7F8B46172C2B5C0090464C /* EditVendorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditVendorViewController.m; sourceTree = "<group>"; };
 		0E847CE8170E203C00C7FA53 /* MenuIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIcon.png; sourceTree = "<group>"; };
 		0E847CEC171785C300C7FA53 /* SlidingListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlidingListTableViewController.h; sourceTree = "<group>"; };
 		0E847CED171785C300C7FA53 /* SlidingListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlidingListTableViewController.m; sourceTree = "<group>"; };
@@ -134,6 +147,12 @@
 		0EA29AAA16D2E6FA00386617 /* EditCustomerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditCustomerViewController.h; sourceTree = "<group>"; };
 		0EA29AAB16D2E6FA00386617 /* EditCustomerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditCustomerViewController.m; sourceTree = "<group>"; };
 		0EA29AAE16D4B69300386617 /* Geo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Geo.h; sourceTree = "<group>"; };
+		0EA33395172733AC00FB92F3 /* APBusinessObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBusinessObject.h; sourceTree = "<group>"; };
+		0EA33396172733AC00FB92F3 /* APBusinessObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBusinessObject.m; sourceTree = "<group>"; };
+		0EA33398172754D100FB92F3 /* APLineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APLineItem.h; sourceTree = "<group>"; };
+		0EA33399172754D100FB92F3 /* APLineItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APLineItem.m; sourceTree = "<group>"; };
+		0EA3339B172755F800FB92F3 /* ChartOfAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartOfAccount.h; sourceTree = "<group>"; };
+		0EA3339C172755F800FB92F3 /* ChartOfAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChartOfAccount.m; sourceTree = "<group>"; };
 		0EAE1BA8170B9B780091B7FC /* UIViewController+Sliding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Sliding.h"; sourceTree = "<group>"; };
 		0EAE1BA9170B9B780091B7FC /* UIViewController+Sliding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIViewController+Sliding.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		0EC88C9515F1374900A490EE /* AROverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AROverViewController.h; sourceTree = "<group>"; };
@@ -146,6 +165,8 @@
 		0ED59D4E162DFD4E008DE1C9 /* SlidingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlidingViewController.m; sourceTree = "<group>"; };
 		0ED59D50162E1BA3008DE1C9 /* LogOutIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LogOutIcon.png; sourceTree = "<group>"; };
 		0ED59D51162E1BA3008DE1C9 /* OrganizationsIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OrganizationsIcon.png; sourceTree = "<group>"; };
+		0EE1185E17266650001AF86E /* BillsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BillsTableViewController.h; sourceTree = "<group>"; };
+		0EE1185F17266650001AF86E /* BillsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BillsTableViewController.m; sourceTree = "<group>"; };
 		0EE2C124162CEB9100BB00DA /* ItemsIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ItemsIcon.png; sourceTree = "<group>"; };
 		0EE2C125162CEB9100BB00DA /* CustomersIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CustomersIcon.png; sourceTree = "<group>"; };
 		0EE2C126162CEB9100BB00DA /* InvoicesIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = InvoicesIcon.png; sourceTree = "<group>"; };
@@ -237,6 +258,28 @@
 			name = TabBarImages;
 			sourceTree = "<group>";
 		};
+		0E7F8B43172A5B8F0090464C /* Bill */ = {
+			isa = PBXGroup;
+			children = (
+				0EE1185E17266650001AF86E /* BillsTableViewController.h */,
+				0EE1185F17266650001AF86E /* BillsTableViewController.m */,
+				0E7F8B3D1727B3920090464C /* EditBillViewController.h */,
+				0E7F8B3E1727B3920090464C /* EditBillViewController.m */,
+			);
+			name = Bill;
+			sourceTree = "<group>";
+		};
+		0E7F8B44172A5B9F0090464C /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				0E95DA2215F13C2C006D9752 /* VendorsTableViewController.h */,
+				0E95DA2315F13C2C006D9752 /* VendorsTableViewController.m */,
+				0E7F8B45172C2B5C0090464C /* EditVendorViewController.h */,
+				0E7F8B46172C2B5C0090464C /* EditVendorViewController.m */,
+			);
+			name = Vendor;
+			sourceTree = "<group>";
+		};
 		0E999E0C16DE5E6B00F1E39F /* Categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -302,8 +345,8 @@
 			children = (
 				7E91E416159394C4005104AF /* APViewController.h */,
 				7E91E417159394C4005104AF /* APViewController.m */,
-				0E95DA2215F13C2C006D9752 /* VendorsTableViewController.h */,
-				0E95DA2315F13C2C006D9752 /* VendorsTableViewController.m */,
+				0E7F8B43172A5B8F0090464C /* Bill */,
+				0E7F8B44172A5B9F0090464C /* Vendor */,
 				7E91E42C15993E6D005104AF /* BOSelectorViewController.h */,
 				7E91E42D15993E6D005104AF /* BOSelectorViewController.m */,
 				7E91E441159BCC2F005104AF /* CreateBillViewController.h */,
@@ -365,8 +408,16 @@
 				0E8FBADA160D94840074C01B /* BDCBusinessObject.m */,
 				7E579F8515ABA91A009D1455 /* Organization.h */,
 				7E579F8615ABA91A009D1455 /* Organization.m */,
+				0EA33395172733AC00FB92F3 /* APBusinessObject.h */,
+				0EA33396172733AC00FB92F3 /* APBusinessObject.m */,
 				7E579F5815A21F1E009D1455 /* Bill.h */,
 				7E579F5915A21F1E009D1455 /* Bill.m */,
+				0E7F8B40172860AF0090464C /* Vendor.h */,
+				0E7F8B41172860B00090464C /* Vendor.m */,
+				0EA33398172754D100FB92F3 /* APLineItem.h */,
+				0EA33399172754D100FB92F3 /* APLineItem.m */,
+				0EA3339B172755F800FB92F3 /* ChartOfAccount.h */,
+				0EA3339C172755F800FB92F3 /* ChartOfAccount.m */,
 				0E2C0AC115EC44390059C739 /* Invoice.h */,
 				0E2C0AC215EC44390059C739 /* Invoice.m */,
 				0EA09F1715FAAD0100BBD180 /* Customer.h */,
@@ -646,6 +697,13 @@
 				0EAE1BAA170B9B780091B7FC /* UIViewController+Sliding.m in Sources */,
 				0E847CEE171785C400C7FA53 /* SlidingListTableViewController.m in Sources */,
 				0E847CF11717862A00C7FA53 /* SlidingDetailsTableViewController.m in Sources */,
+				0EE1186017266650001AF86E /* BillsTableViewController.m in Sources */,
+				0EA33397172733AC00FB92F3 /* APBusinessObject.m in Sources */,
+				0EA3339A172754D100FB92F3 /* APLineItem.m in Sources */,
+				0EA3339D172755F800FB92F3 /* ChartOfAccount.m in Sources */,
+				0E7F8B3F1727B3920090464C /* EditBillViewController.m in Sources */,
+				0E7F8B42172860B00090464C /* Vendor.m in Sources */,
+				0E7F8B47172C2B5C0090464C /* EditVendorViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -27,6 +27,7 @@
 + (NSDate *)getDate:(NSString *)date format:(NSString *)format;
 + (NSString *)formatDate:(NSDate *)date format:(NSString *)format;
 + (NSString *)formatCurrency:(NSDecimalNumber *)amount;
++ (NSDecimalNumber *)parseCurrency:(NSString *)str;
 
 + (NSDecimalNumber *)id2Decimal:(id)number;
 

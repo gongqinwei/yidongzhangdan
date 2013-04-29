@@ -14,6 +14,9 @@
 #import "Invoice.h"
 #import "Customer.h"
 #import "Item.h"
+#import "Bill.h"
+#import "Vendor.h"
+#import "ChartOfAccount.h"
 #import "Util.h"
 #import "UIHelper.h"
 
@@ -104,6 +107,10 @@ static RootMenuViewController * _sharedInstance = nil;
     [Invoice retrieveListForActive:YES];
     [Customer retrieveList];
     [Item retrieveList];
+    
+//    [Bill retrieveList];
+//    [Vendor retrieveList];
+//    [ChartOfAccount retrieveList];
     
     _sharedInstance = self;
     

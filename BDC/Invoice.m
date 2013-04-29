@@ -35,7 +35,6 @@ static NSMutableArray *invoices = nil;
 static NSMutableArray *inactiveInvoices = nil;
 
 //@synthesize objectId;
-@synthesize orgId;
 @synthesize customerId;
 @synthesize customerName;
 @synthesize invoiceNumber;
@@ -216,8 +215,13 @@ static NSMutableArray *inactiveInvoices = nil;
         }
     }
     
-    NSSortDescriptor *firstOrder = [[NSSortDescriptor alloc] initWithKey:attribue ascending:isAscending];
-    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:@"invoiceNumber" ascending:YES];
+    NSSortDescriptor *firstOrder;
+    if ([attribue isEqualToString:INV_NUMBER] || [attribue isEqualToString:INV_CUSTOMER_NAME]) {
+        firstOrder = [[NSSortDescriptor alloc] initWithKey:attribue ascending:isAscending selector:@selector(localizedCaseInsensitiveCompare:)];
+    } else {
+        firstOrder = [[NSSortDescriptor alloc] initWithKey:attribue ascending:isAscending];
+    }
+    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:INV_NUMBER ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
     return [NSMutableArray arrayWithArray:[invArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, secondOrder, nil]]];
 }
 

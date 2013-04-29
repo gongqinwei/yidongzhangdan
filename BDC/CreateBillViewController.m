@@ -20,8 +20,10 @@ enum InfoType {
     kBillPaymentTerms,
     kBillDate,
     kBillDueDate,
+    kBillApprovalStatus,
+    kBillPaidAmount,
     kBillAmount,
-    kBillAccount,
+    kBillAccount
 };
 
 #define RESET_SCANNER_FROM_NEW_BILL_SEGUE   @"Reset_Scan"
@@ -70,7 +72,7 @@ enum InfoType {
     if (!self.bill) {
         self.bill = [[Bill alloc] init];
     }
-    [self.bill.docs addObject:_photoId];
+//    [self.bill.docs addObject:_photoId];
 }
 
 - (IBAction)saveBill:(UIBarButtonItem *)sender {
@@ -314,8 +316,8 @@ enum InfoType {
     [UIView commitAnimations];
     
     switch (textField.tag) {
-        case kBillNumber: self.bill.invNum = textField.text; break;
-        case kBillAmount: self.bill.amount = [[NSDecimalNumber decimalNumberWithString:textField.text] decimalValue];
+        case kBillNumber: self.bill.invoiceNumber = textField.text; break;
+//        case kBillAmount: self.bill.amount = [[NSDecimalNumber decimalNumberWithString:textField.text] decimalValue];
         default: break;
     }
     
@@ -361,7 +363,7 @@ enum InfoType {
 - (void)inputAccessoryDoneAction:(UIBarButtonItem *)button {
     switch (button.tag) {
         case kBillDate: {
-            self.bill.invDate = self.invoiceDatePicker.date;
+            self.bill.invoiceDate = self.invoiceDatePicker.date;
             self.currentField.text = [self shortLocalDateStringFromDate:self.invoiceDatePicker.date];
             break;
         }
@@ -410,17 +412,17 @@ enum InfoType {
 
 #pragma mark - model delegate
 - (void)didCreateBill {
-    [Uploader uploadFile:self.photoName data:self.photoData objectId:self.bill.billId handler:^(NSURLResponse * response, NSData * data, NSError * err) {
-        NSInteger status;
-        [APIHandler getResponse:response data:data error:&err status:&status];
-        
-        if(status == RESPONSE_SUCCESS) {
-            [UIHelper showInfo:@"Attachment saved." withStatus:kSuccess];
-        } else {
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"Failed to save attachment: %@", [err localizedDescription]);
-        }
-    }];
+//    [Uploader uploadFile:self.photoName data:self.photoData objectId:self.bill.billId handler:^(NSURLResponse * response, NSData * data, NSError * err) {
+//        NSInteger status;
+//        [APIHandler getResponse:response data:data error:&err status:&status];
+//        
+//        if(status == RESPONSE_SUCCESS) {
+//            [UIHelper showInfo:@"Attachment saved." withStatus:kSuccess];
+//        } else {
+//            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+//            NSLog(@"Failed to save attachment: %@", [err localizedDescription]);
+//        }
+//    }];
 }
 
 

@@ -109,9 +109,17 @@
 //    }
 }
 
++ (NSDecimalNumber *)parseCurrency:(NSString *)str {
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+    
+    NSNumber *number = [formatter numberFromString:str];
+    return [NSDecimalNumber decimalNumberWithDecimal:[number decimalValue]];
+}
+
 + (NSString *)formatCurrency:(NSDecimalNumber *)amount {
     if (!amount) {
-        return @"0.00";
+        return @"$0.00";
     }
     
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];

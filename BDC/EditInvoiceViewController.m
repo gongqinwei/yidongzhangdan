@@ -66,7 +66,7 @@ typedef enum {
 #define INV_LABEL_FONT_SIZE             13
 #define InvoiceInfo             [NSArray arrayWithObjects:@"Customer", @"Invoice #", @"Issue Date", @"Due Date", nil]
 //#define INV_INFO_INPUT_RECT     CGRectMake(93, 5, CELL_WIDTH - 100, CELL_HEIGHT - 10)
-#define INV_INFO_INPUT_RECT     CGRectMake(CELL_WIDTH - 210, 5, 190, CELL_HEIGHT - 10)
+#define INV_INFO_INPUT_RECT     CGRectMake(CELL_WIDTH - 190, 5, 190, CELL_HEIGHT - 10)
 #define INV_ITEM_AMOUNT_RECT    CGRectMake(cell.viewForBaselineLayout.bounds.size.width - 130, 5, 90, cell.viewForBaselineLayout.bounds.size.height-10)
 #define INV_ITEM_QTY_RECT       CGRectMake(cell.viewForBaselineLayout.bounds.size.width - 180, 10, 60, cell.viewForBaselineLayout.bounds.size.height-20)
 #define INV_ATTACHMENT_RECT     CGRectMake(5, 0, CELL_WIDTH, IMG_HEIGHT)
@@ -210,7 +210,6 @@ typedef enum {
 - (void)sendInvoiceEmail {
     if ([MFMailComposeViewController canSendMail]) {
         self.mailer = [[MFMailComposeViewController alloc] init];
-        
         self.mailer.mailComposeDelegate = self;
         
         Organization *org = [Organization getSelectedOrg];
@@ -354,18 +353,18 @@ typedef enum {
     [self.attachmentScrollView addSubview:imageView];
 }
 
-- (void)inputAccessoryDoneAction:(UIBarButtonItem *)button {
-    switch (button.tag) {
-        case kInvoiceDate * TAG_BASE:
-            [self.invoiceDateTextField resignFirstResponder];
-            break;
-        case kInvoiceDueDate * TAG_BASE:
-            [self.invoiceDueDateTextField resignFirstResponder];
-            break;
-        default:
-            break;
-    }
-}
+//- (void)inputAccessoryDoneAction:(UIBarButtonItem *)button {
+//    switch (button.tag) {
+//        case kInvoiceDate * TAG_BASE:
+//            [self.invoiceDateTextField resignFirstResponder];
+//            break;
+//        case kInvoiceDueDate * TAG_BASE:
+//            [self.invoiceDueDateTextField resignFirstResponder];
+//            break;
+//        default:
+//            break;
+//    }
+//}
 
 - (UIToolbar *)inputAccessoryViewForTag:(NSInteger)tag {
     UIToolbar *tlbControls = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, ToolbarHeight)];
@@ -485,43 +484,22 @@ typedef enum {
     [self.dueDatePicker addTarget:self action:@selector(selectDueDateFromPicker:) forControlEvents:UIControlEventValueChanged];
 
     self.invoiceNumTextField = [[UITextField alloc] initWithFrame:INV_INFO_INPUT_RECT];
-    self.invoiceNumTextField.font = [UIFont fontWithName:APP_FONT size:INV_LABEL_FONT_SIZE];
-    self.invoiceNumTextField.textColor = APP_LABEL_BLUE_COLOR;
-    self.invoiceNumTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    self.invoiceNumTextField.autocorrectionType = UITextAutocorrectionTypeNo; // no auto correction support
-    self.invoiceNumTextField.autocapitalizationType = UITextAutocapitalizationTypeNone; // no auto capitalization support
-    self.invoiceNumTextField.textAlignment = UITextAlignmentRight;
+    [self initializeTextField:self.invoiceNumTextField];
     self.invoiceNumTextField.tag = kInvoiceNumber * TAG_BASE;
     self.invoiceNumTextField.delegate = self;
     self.invoiceNumTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    self.invoiceNumTextField.enabled = YES;
-    self.invoiceNumTextField.borderStyle = UITextBorderStyleNone;
     
     self.invoiceDateTextField = [[UITextField alloc] initWithFrame:INV_INFO_INPUT_RECT];
-    self.invoiceDateTextField.font = [UIFont fontWithName:APP_FONT size:INV_LABEL_FONT_SIZE];
-    self.invoiceDateTextField.textColor = APP_LABEL_BLUE_COLOR;
-    self.invoiceDateTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    self.invoiceDateTextField.autocorrectionType = UITextAutocorrectionTypeNo; // no auto correction support
-    self.invoiceDateTextField.autocapitalizationType = UITextAutocapitalizationTypeNone; // no auto capitalization support
-    self.invoiceDateTextField.textAlignment = UITextAlignmentRight;
+    [self initializeTextField:self.invoiceDateTextField];
     self.invoiceDateTextField.tag = kInvoiceDate * TAG_BASE;
     self.invoiceDateTextField.clearButtonMode = UITextFieldViewModeNever;
-    self.invoiceDateTextField.enabled = YES;
-    self.invoiceDateTextField.borderStyle = UITextBorderStyleNone;
     self.invoiceDateTextField.inputView = self.invoiceDatePicker;
     self.invoiceDateTextField.inputAccessoryView = [self inputAccessoryViewForTag:kInvoiceDate];
     
     self.invoiceDueDateTextField = [[UITextField alloc] initWithFrame:INV_INFO_INPUT_RECT];
-    self.invoiceDueDateTextField.font = [UIFont fontWithName:APP_FONT size:INV_LABEL_FONT_SIZE];
-    self.invoiceDueDateTextField.textColor = APP_LABEL_BLUE_COLOR;
-    self.invoiceDueDateTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    self.invoiceDueDateTextField.autocorrectionType = UITextAutocorrectionTypeNo; // no auto correction support
-    self.invoiceDueDateTextField.autocapitalizationType = UITextAutocapitalizationTypeNone; // no auto capitalization support
-    self.invoiceDueDateTextField.textAlignment = UITextAlignmentRight;
+    [self initializeTextField:self.invoiceDueDateTextField];
     self.invoiceDueDateTextField.tag = kInvoiceDueDate * TAG_BASE;
     self.invoiceDueDateTextField.clearButtonMode = UITextFieldViewModeNever;
-    self.invoiceDueDateTextField.enabled = YES;
-    self.invoiceDueDateTextField.borderStyle = UITextBorderStyleNone;
     self.invoiceDueDateTextField.inputView = self.dueDatePicker;
     self.invoiceDueDateTextField.inputAccessoryView = [self inputAccessoryViewForTag:kInvoiceDueDate];
         
@@ -556,9 +534,9 @@ typedef enum {
     }    
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [self.view removeGestureRecognizer:self.tapRecognizer];
-}
+//- (void)viewWillAppear:(BOOL)animated {
+//    [self.view removeGestureRecognizer:self.tapRecognizer];
+//}
 
 - (void)viewDidUnload {
     [super viewDidUnload];
@@ -920,7 +898,7 @@ typedef enum {
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     if (section == kInvoiceInfo) {
         return 20;
-    } else if (section == kInvoiceLineItems && [self.shaddowInvoice.lineItems count] > 0) {
+    } else if (section == kInvoiceLineItems) { // && [self.shaddowInvoice.lineItems count] > 0) {
         return 35;
     } else {
         return 0;
@@ -990,7 +968,7 @@ typedef enum {
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    if (section == kInvoiceLineItems && [self.shaddowInvoice.lineItems count] > 0) {
+    if (section == kInvoiceLineItems) { // && [self.shaddowInvoice.lineItems count] > 0) {
         UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 360, 30)];
         footerView.backgroundColor = [UIColor clearColor];
         
@@ -1301,6 +1279,7 @@ typedef enum {
     
     dispatch_async(dispatch_get_main_queue(), ^{
         self.mode = kViewMode;
+        self.title = self.shaddowInvoice.name;
     });
 
 //    self.navigationItem.rightBarButtonItem.customView = nil;

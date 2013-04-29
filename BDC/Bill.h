@@ -8,49 +8,71 @@
 
 #import <Foundation/Foundation.h>
 #import "BDCBusinessObject.h"
+#import "SlidingDetailsTableViewController.h"
+#import "SlidingListTableViewController.h"
 
-@protocol BillDelegate <NSObject>
+#define BILL_VENDOR_ID              @"vendorId"
+#define BILL_VENDOR_NAME            @"vendorName"
+#define BILL_NUMBER                 @"invoiceNumber"
+#define BILL_DATE                   @"invoiceDate"
+#define BILL_DUE_DATE               @"dueDate"
+#define BILL_AMOUNT                 @"amount"
+#define BILL_AMOUNT_PAID            @"paidAmount"
+#define BILL_APPROVAL_STATUS        @"approvalStatus"
+#define BILL_PAYMENT_STATUS         @"paymentStatus"
+#define BILL_LINE_ITEMS             @"billLineItems"
+#define BILL_LINE_ITEM              @"BillLineItem"
+#define BILL_LINE_ITEM_AMOUNT       @"amount"
+#define BILL_LINE_ITEM_ACCOUNT      @"chartOfAccountId"
 
+#define BILL_LABELS     [NSDictionary dictionaryWithObjectsAndKeys: \
+                            @"Vendor", BILL_VENDOR_NAME, \
+                            @"Invoice Number", BILL_NUMBER, \
+                            @"Invoice Date", BILL_DATE, \
+                            @"Due Date", BILL_DUE_DATE, \
+                            @"Amount", BILL_AMOUNT, \
+                            @"Amount Paid", BILL_AMOUNT_PAID, \
+                            @"Approval Status", BILL_APPROVAL_STATUS, \
+                            @"Payment Status", BILL_PAYMENT_STATUS, \
+                        nil]
+
+
+@protocol BillDelegate <DetailsViewDelegate>
 @optional
-- (void)didCreateBill;
+- (void)didCreateBill:(NSString *)newBillId;
+@end
 
+@protocol BillListDelegate <ListViewDelegate>
+@optional
+- (void)didGetBills:(NSArray *)billList;
+- (void)failedToGetBills;
 @end
 
 @interface Bill : BDCBusinessObject
 
 @property (nonatomic, weak) id<BillDelegate> delegate;
 
-@property (nonatomic, strong) NSString *billId;
-@property (nonatomic, strong) NSString *orgId;
 @property (nonatomic, strong) NSString *vendorId;
-@property (nonatomic, strong) NSDate *createdDate;
-@property (nonatomic, strong) NSDate *updatedDate;
-@property (nonatomic, strong) NSString *invNum;
-@property (nonatomic, strong) NSString *desc;
-@property (nonatomic, assign) int *status;
-@property (nonatomic, assign) int *paymentstatus;
+@property (nonatomic, strong) NSString *vendorName;
+@property (nonatomic, strong) NSString *invoiceNumber;
 @property (nonatomic, strong) NSDate *dueDate;
-@property (nonatomic, strong) NSDate *invDate;
-@property (nonatomic, strong) NSDate *paymentScheduledByDate;
-@property (nonatomic, strong) NSString *deptId;
-@property (nonatomic, strong) NSString *quickbooksId;
-@property (nonatomic, strong) NSDate *exportedDate;
-@property (nonatomic, strong) NSDate *firstPaymentDate;
-@property (nonatomic, strong) NSDate *lastPaymentDate;
-@property (nonatomic, strong) NSDate *fullPamentDate;
-@property (nonatomic, strong) NSDate *expectedPayDate;
-@property (nonatomic, assign) bool allowExport;
-@property (nonatomic, assign) NSDecimal amount;
-@property (nonatomic, assign) NSDecimal discountAmount;
-@property (nonatomic, assign) NSDecimal approvedAmount;
-@property (nonatomic, assign) NSDecimal paidAmount;
-@property (nonatomic, strong) NSString *paymentTermId;
-@property (nonatomic, strong) NSDate *lastSyncTime;
-@property (nonatomic, strong) NSDate *sentSyncTime;
-@property (nonatomic, strong) NSDate *updateSyncTime;
-@property (nonatomic, assign) bool isOneChainMode;
-@property (nonatomic, assign) bool isSplit;
+@property (nonatomic, strong) NSDate *invoiceDate;
+@property (nonatomic, strong) NSDecimalNumber *amount;
+@property (nonatomic, strong) NSDecimalNumber *paidAmount;
+@property (nonatomic, strong) NSString *approvalStatus;
+@property (nonatomic, strong) NSString *paymentStatus;
 
-@property (nonatomic, strong) NSMutableSet *docs; //set of DocumentPg id
+@property (nonatomic, strong) NSMutableArray *lineItems;
+@property (nonatomic, strong) NSMutableDictionary *docs;     // map filename => data
+//@property (nonatomic, strong) NSMutableSet *docs; //set of DocumentPg id
+
+// delegates
++ (void)setAPDelegate:(id<BillListDelegate>)delegate;
++ (void)setListDelegate:(id<BillListDelegate>)delegate;
+
++ (id)list:(NSArray *)invArr orderBy:(NSString *)attribue ascending:(Boolean)isAscending;
+
+@property (nonatomic, weak) id<BillDelegate> editDelegate;
+@property (nonatomic, weak) id<BillDelegate> detailsDelegate;
 
 @end
