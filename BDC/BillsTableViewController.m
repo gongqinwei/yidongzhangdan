@@ -176,9 +176,9 @@
 {
     [super viewDidLoad];
     
-//    self.bills = [Bill listOrderBy:BILL_NUMBER ascending:YES active:YES];
+    self.bills = [Bill listOrderBy:BILL_NUMBER ascending:YES active:YES];
     [Bill setListDelegate:self];
-    [Bill retrieveListForActive:YES];
+//    [Bill retrieveListForActive:YES];
     
     if (self.mode != kSelectMode) {        
         UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
@@ -192,10 +192,10 @@
         self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
         self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
         
-        // retrieve inactive bill list in the background
-        [Bill retrieveListForActive:NO reload:NO];
-        [Vendor retrieveList];
-        [ChartOfAccount retrieveList];
+//        // retrieve inactive bill list in the background
+//        [Bill retrieveListForActive:NO reload:NO];
+//        [Vendor retrieveList];
+//        [ChartOfAccount retrieveList];
 //        [ChartOfAccount retrieveListForActive:YES reload:NO];
     } else {
         self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];

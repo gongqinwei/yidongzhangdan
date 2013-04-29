@@ -134,7 +134,7 @@ static NSMutableDictionary * inactiveVendors = nil;
                 vendor.zip = (zip == (id)[NSNull null]) ? nil : zip;
                 vendor.email = (email == (id)[NSNull null]) ? nil : email;
                 vendor.phone = (phone == (id)[NSNull null]) ? nil : phone;
-                vendor.payBy = [VendorPaymentTypes indexOfObject:[NSNumber numberWithInt:[payBy intValue]]];
+                vendor.payBy = payBy; //[VendorPaymentTypes indexOfObject:[NSNumber numberWithInt:[payBy intValue]]];
                 
                 vendor.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
                 

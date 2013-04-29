@@ -207,6 +207,12 @@ A PDF version of this invoice is also attached for your records.<br>"
 #define PAYMENT_PENDING         @"5"
 #define PAYMENT_STATUSES        [NSDictionary dictionaryWithObjectsAndKeys:@"Paid", PAYMENT_PAID, @"Unpaid", PAYMENT_UNPAID, @"Partially Paid", PAYMENT_PARTIAL, @"Scheduled", PAYMENT_SCHEDULED, @"Pending", PAYMENT_PENDING, nil]
 
+// Vendor Payment Type
+#define VENDOR_PAYMENT_CHECK    @"0"
+#define VENDOR_PAYMENT_ACH      @"1"
+#define VENDOR_PAYMENT_RPPS     @"2"
+#define VENDOR_PAYMENT_TYPES    [NSDictionary dictionaryWithObjectsAndKeys:@"Check", VENDOR_PAYMENT_CHECK, @"ACH", VENDOR_PAYMENT_ACH, @"RPPS", VENDOR_PAYMENT_RPPS, nil]
+
 typedef enum {
     kSucceedLogin, kFailLogin, kFailListOrgs
 } LoginStatus;

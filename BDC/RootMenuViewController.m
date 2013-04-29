@@ -108,9 +108,9 @@ static RootMenuViewController * _sharedInstance = nil;
     [Customer retrieveList];
     [Item retrieveList];
     
-//    [Bill retrieveList];
-//    [Vendor retrieveList];
-//    [ChartOfAccount retrieveList];
+    [Bill retrieveList];
+    [Vendor retrieveList];
+    [ChartOfAccount retrieveList];
     
     _sharedInstance = self;
     

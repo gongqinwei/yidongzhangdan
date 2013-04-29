@@ -334,6 +334,9 @@ enum VendorInfoType {
             }
         }
             break;
+        case kVendorPayBy:
+            cell.detailTextLabel.text = [VENDOR_PAYMENT_TYPES objectForKey:self.shaddowVendor.payBy];
+            break;
         case kVendorAddr1:
         {
             if (self.mode == kViewMode) {

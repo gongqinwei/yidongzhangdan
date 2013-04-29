@@ -12,7 +12,11 @@
 #import "Invoice.h"
 #import "Customer.h"
 #import "Item.h"
+#import "Bill.h"
+#import "Vendor.h"
+#import "ChartOfAccount.h"
 #import "InvoicesTableViewController.h"
+#import "BillsTableViewController.h"
 #import "RootMenuViewController.h"
 
 
@@ -288,10 +292,21 @@
                                                active:!listVC.actionMenuVC.activenessSwitch.selectedSegmentIndex];
             
             [listVC performSegueWithIdentifier:@"ViewInvoice" sender:(Invoice *)obj];
+        } else if ([obj isKindOfClass:[Bill class]]) {
+            BillsTableViewController *listVC = (BillsTableViewController *)[self slideInListViewIdentifier:MENU_BILLS];
+            self.actionDelegate = listVC;
+            
+            [self.actionDelegate didSelectSortAttribute:[listVC.actionMenuVC.sortAttributes objectAtIndex:listVC.actionMenuVC.lastSortAttribute.row]
+                                              ascending:listVC.actionMenuVC.ascSwitch.on
+                                                 active:!listVC.actionMenuVC.activenessSwitch.selectedSegmentIndex];
+            
+            [listVC performSegueWithIdentifier:@"ViewBill" sender:(Bill *)obj];
         } else if ([obj isKindOfClass:[Customer class]]) {
             [[self slideInListViewIdentifier:MENU_CUSTOMERS] performSegueWithIdentifier:@"ViewCustomer" sender:(Customer *)obj];
         } else if ([obj isKindOfClass:[Item class]]) {
             [[self slideInListViewIdentifier:MENU_ITEMS] performSegueWithIdentifier:@"ViewItem" sender:(Item *)obj];
+        } else if ([obj isKindOfClass:[Vendor class]]) {
+            [[self slideInListViewIdentifier:MENU_VENDORS] performSegueWithIdentifier:@"ViewVendor" sender:(Vendor *)obj];
         }
     } else {
         if (self.targetViewController.sortAttributes) {
@@ -377,15 +392,21 @@
     NSArray *filteredInvs;
     NSArray *filteredCustomers;
     NSArray *filteredItems;
+    NSArray *filteredBills;
+    NSArray *filteredVendors;
     
     if (scope == 0) {
         filteredInvs = [[Invoice list] filteredArrayUsingPredicate:resultPredicate];
         filteredCustomers = [[Customer list] filteredArrayUsingPredicate:resultPredicate];
         filteredItems = [[Item list] filteredArrayUsingPredicate:resultPredicate];
+        filteredBills = [[Bill list] filteredArrayUsingPredicate:resultPredicate];
+        filteredVendors = [[Vendor list] filteredArrayUsingPredicate:resultPredicate];
     } else {
         filteredInvs = [[Invoice listInactive] filteredArrayUsingPredicate:resultPredicate];
         filteredCustomers = [[Customer listInactive] filteredArrayUsingPredicate:resultPredicate];
         filteredItems = [[Item listInactive] filteredArrayUsingPredicate:resultPredicate];
+        filteredBills = [[Bill listInactive] filteredArrayUsingPredicate:resultPredicate];
+        filteredVendors = [[Vendor listInactive] filteredArrayUsingPredicate:resultPredicate];
     }
     
     self.searchResults = [NSMutableArray array];
@@ -395,6 +416,10 @@
         [self.searchResults addObject:filteredInvs];
         [self.searchResultTypes addObject:@"Invoices"];
     }
+    if ([filteredBills count]) {
+        [self.searchResults addObject:filteredBills];
+        [self.searchResultTypes addObject:@"Bills"];
+    }
     if ([filteredCustomers count]) {
         [self.searchResults addObject:filteredCustomers];
         [self.searchResultTypes addObject:@"Customers"];
@@ -402,6 +427,10 @@
     if ([filteredItems count]) {
         [self.searchResults addObject:filteredItems];
         [self.searchResultTypes addObject:@"Items"];
+    }
+    if ([filteredVendors count]) {
+        [self.searchResults addObject:filteredVendors];
+        [self.searchResultTypes addObject:@"Vendors"];
     }
 }
 

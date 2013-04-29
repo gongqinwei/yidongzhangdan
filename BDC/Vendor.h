@@ -55,7 +55,7 @@ typedef enum {
 @property (nonatomic, strong) NSString *zip;
 @property (nonatomic, strong) NSString *email;
 @property (nonatomic, strong) NSString *phone;
-@property (nonatomic, assign) int payBy;
+@property (nonatomic, strong) NSString *payBy;
 
 @property (nonatomic, weak) id<VendorDelegate> editDelegate;
 @property (nonatomic, weak) id<VendorDelegate> editBillDelegate;
