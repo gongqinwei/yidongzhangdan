@@ -9,14 +9,17 @@
 #import "ActionMenuViewController.h"
 #import "Constants.h"
 #import "UIHelper.h"
+#import "Util.h"
 #import "Invoice.h"
 #import "Customer.h"
 #import "Item.h"
 #import "Bill.h"
 #import "Vendor.h"
 #import "ChartOfAccount.h"
+#import "BankAccount.h"
 #import "InvoicesTableViewController.h"
 #import "BillsTableViewController.h"
+#import "EditBillViewController.h"
 #import "RootMenuViewController.h"
 
 
@@ -250,7 +253,53 @@
                 }
             }
         } else {
-            cell.textLabel.text = [self.crudActions objectAtIndex:indexPath.row];
+            NSString *action = [self.crudActions objectAtIndex:indexPath.row];
+            cell.textLabel.text = action;
+            
+            if ([action isEqualToString:ACTION_PAY]) {
+//                UITextField *payAmountTextField = [[UITextField alloc] initWithFrame:CGRectMake(120, 5, 100, cell.viewForBaselineLayout.bounds.size.height - 12)];
+//                payAmountTextField.text = @"100"; // [Util formatCurrency:item.amount];
+//                payAmountTextField.keyboardType = UIKeyboardTypeDecimalPad;
+//              itemAmountTextField.objectTag = item;
+//              itemAmountTextField.delegate = self;
+//              itemAmountTextField.tag = [BillInfo count] * TAG_BASE + indexPath.row * 2 + 1;
+                
+//                payAmountTextField.font = [UIFont fontWithName:APP_FONT size:16];
+//                payAmountTextField.textColor = APP_SYSTEM_BLUE_COLOR;
+//                payAmountTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+//                payAmountTextField.textAlignment = UITextAlignmentRight;
+//                payAmountTextField.enabled = YES;
+//                payAmountTextField.layer.cornerRadius = 8.0f;
+//                payAmountTextField.layer.masksToBounds = NO;
+//                payAmountTextField.layer.borderColor = [[UIColor whiteColor]CGColor];
+//                payAmountTextField.layer.borderWidth = 0.5f;
+//                payAmountTextField.backgroundColor = [UIColor lightGrayColor];
+//                payAmountTextField.rightView = [[UIView alloc] initWithFrame:TEXT_FIELD_RIGHT_PADDING_RECT];
+                
+                UILabel *payAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 7, 170, cell.viewForBaselineLayout.bounds.size.height - 12)];
+                payAmountLabel.textAlignment = UITextAlignmentRight;
+                
+                if ([((NSArray *)[BankAccount list]) count]) {
+                    Bill *bill = ((EditBillViewController *)self.targetViewController).bill;
+                    NSDecimalNumber *payAmount = [bill.amount decimalNumberBySubtracting:bill.paidAmount];
+                    payAmountLabel.text = [Util formatCurrency:payAmount];
+                    payAmountLabel.textColor = [UIColor whiteColor];
+                    payAmountLabel.font = [UIFont fontWithName:APP_FONT size:16];
+                    
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                } else {
+                    payAmountLabel.text = @"No bank account for Paybles";
+                    payAmountLabel.font = [UIFont systemFontOfSize:13.0f];
+                    payAmountLabel.textColor = [UIColor orangeColor];
+                    
+                    cell.textLabel.textColor = [UIColor lightGrayColor];
+                }
+                
+                payAmountLabel.backgroundColor = [UIColor clearColor];
+                
+                [cell addSubview:payAmountLabel];
+                
+            }
         }
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;

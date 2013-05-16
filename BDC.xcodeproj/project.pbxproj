@@ -14,8 +14,14 @@
 		0E1A79171633790D001B24BF /* EditItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E1A79161633790C001B24BF /* EditItemViewController.m */; };
 		0E2C0AC315EC44390059C739 /* Invoice.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2C0AC215EC44390059C739 /* Invoice.m */; };
 		0E2C0ACB15F12D9B0059C739 /* InvoicesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2C0ACA15F12D9B0059C739 /* InvoicesTableViewController.m */; };
+		0E3A156E173F753B007F2DC6 /* BankAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E3A156D173F753B007F2DC6 /* BankAccount.m */; };
+		0E3A15711742F958007F2DC6 /* Document.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E3A15701742F958007F2DC6 /* Document.m */; };
+		0E3A157317444D41007F2DC6 /* excel_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E3A157217444D41007F2DC6 /* excel_icon.png */; };
+		0E3A157717445390007F2DC6 /* word_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E3A157617445390007F2DC6 /* word_icon.png */; };
+		0E3A157B1744563C007F2DC6 /* txt_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E3A157A1744563C007F2DC6 /* txt_icon.png */; };
 		0E56F3F51600047B0066B355 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E56F3F41600047B0066B355 /* MessageUI.framework */; };
 		0E68460F1609863C00716412 /* SplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E68460E1609863C00716412 /* SplashViewController.m */; };
+		0E761CFD1731EF310041292A /* PayBillViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E761CFC1731EF310041292A /* PayBillViewController.m */; };
 		0E7DCABB16030BD700D0B35E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E7DCABA16030BD700D0B35E /* Security.framework */; };
 		0E7DCAC11603A1DD00D0B35E /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7DCAC016030FCD00D0B35E /* KeychainItemWrapper.m */; };
 		0E7DCAC41603CCC400D0B35E /* UIHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7DCAC31603CCC400D0B35E /* UIHelper.m */; };
@@ -100,9 +106,18 @@
 		0E2C0AC215EC44390059C739 /* Invoice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Invoice.m; sourceTree = "<group>"; };
 		0E2C0AC915F12D9A0059C739 /* InvoicesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InvoicesTableViewController.h; sourceTree = "<group>"; };
 		0E2C0ACA15F12D9B0059C739 /* InvoicesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InvoicesTableViewController.m; sourceTree = "<group>"; };
+		0E3A156C173F753B007F2DC6 /* BankAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BankAccount.h; sourceTree = "<group>"; };
+		0E3A156D173F753B007F2DC6 /* BankAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BankAccount.m; sourceTree = "<group>"; };
+		0E3A156F1742F958007F2DC6 /* Document.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Document.h; sourceTree = "<group>"; };
+		0E3A15701742F958007F2DC6 /* Document.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Document.m; sourceTree = "<group>"; };
+		0E3A157217444D41007F2DC6 /* excel_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = excel_icon.png; sourceTree = "<group>"; };
+		0E3A157617445390007F2DC6 /* word_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = word_icon.png; sourceTree = "<group>"; };
+		0E3A157A1744563C007F2DC6 /* txt_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = txt_icon.png; sourceTree = "<group>"; };
 		0E56F3F41600047B0066B355 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		0E68460D1609863B00716412 /* SplashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashViewController.h; sourceTree = "<group>"; };
 		0E68460E1609863C00716412 /* SplashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplashViewController.m; sourceTree = "<group>"; };
+		0E761CFB1731EF310041292A /* PayBillViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayBillViewController.h; sourceTree = "<group>"; };
+		0E761CFC1731EF310041292A /* PayBillViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PayBillViewController.m; sourceTree = "<group>"; };
 		0E7DCABA16030BD700D0B35E /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		0E7DCABF16030FCD00D0B35E /* KeychainItemWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		0E7DCAC016030FCD00D0B35E /* KeychainItemWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
@@ -119,7 +134,7 @@
 		0E847CED171785C300C7FA53 /* SlidingListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlidingListTableViewController.m; sourceTree = "<group>"; };
 		0E847CEF1717862A00C7FA53 /* SlidingDetailsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlidingDetailsTableViewController.h; sourceTree = "<group>"; };
 		0E847CF01717862A00C7FA53 /* SlidingDetailsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlidingDetailsTableViewController.m; sourceTree = "<group>"; };
-		0E874A5316216E6600877991 /* pdf_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pdf_icon.png; path = BDC/pdf_icon.png; sourceTree = "<group>"; };
+		0E874A5316216E6600877991 /* pdf_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pdf_icon.png; sourceTree = "<group>"; };
 		0E8ED1051619731900BFBDD0 /* AttachmentPreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentPreviewViewController.h; sourceTree = "<group>"; };
 		0E8ED1061619731900BFBDD0 /* AttachmentPreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentPreviewViewController.m; sourceTree = "<group>"; };
 		0E8FBAD0160D10B00074C01B /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
@@ -265,6 +280,8 @@
 				0EE1185F17266650001AF86E /* BillsTableViewController.m */,
 				0E7F8B3D1727B3920090464C /* EditBillViewController.h */,
 				0E7F8B3E1727B3920090464C /* EditBillViewController.m */,
+				0E761CFB1731EF310041292A /* PayBillViewController.h */,
+				0E761CFC1731EF310041292A /* PayBillViewController.m */,
 			);
 			name = Bill;
 			sourceTree = "<group>";
@@ -424,6 +441,10 @@
 				0EA09F1815FAAD0100BBD180 /* Customer.m */,
 				0E8FBAD0160D10B00074C01B /* Item.h */,
 				0E8FBAD1160D10B00074C01B /* Item.m */,
+				0E3A156C173F753B007F2DC6 /* BankAccount.h */,
+				0E3A156D173F753B007F2DC6 /* BankAccount.m */,
+				0E3A156F1742F958007F2DC6 /* Document.h */,
+				0E3A15701742F958007F2DC6 /* Document.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -495,7 +516,6 @@
 				7E579F8015A97262009D1455 /* billcom.png */,
 				7E579F7A15A96B71009D1455 /* BDC-icon-big.png */,
 				7E579F7815A969A5009D1455 /* BDC-icon.png */,
-				0E874A5316216E6600877991 /* pdf_icon.png */,
 				7E91E448159D2E1E005104AF /* QuartzCore.framework */,
 				7E91E4221593FA34005104AF /* MobileCoreServices.framework */,
 				7E91E3F515927C15005104AF /* BDC */,
@@ -567,6 +587,10 @@
 				0E847CE8170E203C00C7FA53 /* MenuIcon.png */,
 				0E14EC5E1603ED960098EB03 /* warning.png */,
 				0E14EC5F1603ED960098EB03 /* success.png */,
+				0E3A157617445390007F2DC6 /* word_icon.png */,
+				0E3A157217444D41007F2DC6 /* excel_icon.png */,
+				0E3A157A1744563C007F2DC6 /* txt_icon.png */,
+				0E874A5316216E6600877991 /* pdf_icon.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -646,6 +670,9 @@
 				0ED59D53162E1BA3008DE1C9 /* OrganizationsIcon.png in Resources */,
 				0E847CE9170E203C00C7FA53 /* MenuIcon.png in Resources */,
 				0E01C34F172214FF00184702 /* .gitignore in Resources */,
+				0E3A157317444D41007F2DC6 /* excel_icon.png in Resources */,
+				0E3A157717445390007F2DC6 /* word_icon.png in Resources */,
+				0E3A157B1744563C007F2DC6 /* txt_icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -704,6 +731,9 @@
 				0E7F8B3F1727B3920090464C /* EditBillViewController.m in Sources */,
 				0E7F8B42172860B00090464C /* Vendor.m in Sources */,
 				0E7F8B47172C2B5C0090464C /* EditVendorViewController.m in Sources */,
+				0E761CFD1731EF310041292A /* PayBillViewController.m in Sources */,
+				0E3A156E173F753B007F2DC6 /* BankAccount.m in Sources */,
+				0E3A15711742F958007F2DC6 /* Document.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

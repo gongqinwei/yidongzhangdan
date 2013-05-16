@@ -14,6 +14,6 @@
 
 @property (nonatomic, strong) Invoice *invoice;
 
-- (void)addPhotoData:(NSData *)photoData name:(NSString *)photoName;
+- (void)addAttachmentData:(NSData *)attachmentData name:(NSString *)attachmentName;
 
 @end

@@ -18,6 +18,7 @@
 #define ACTION_UNDELETE         @"Undelete..."
 #define ACTION_LIST             @"List For"
 #define ACTION_ORDER            @"Order By"
+#define ACTION_PAY              @"Pay"
 
 
 @protocol SlideDelegate <NSObject>

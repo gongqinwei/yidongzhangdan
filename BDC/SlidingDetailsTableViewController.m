@@ -102,7 +102,7 @@
 //        alert.tag = DELETE_INV_ALERT_TAG;
         [alert show];
     } else if ([action isEqualToString:ACTION_UNDELETE]) {
-        [self toggleActiveness];
+        [self toggleActiveness];        
     }
 }
 

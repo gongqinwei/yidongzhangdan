@@ -89,8 +89,8 @@
 //@property (nonatomic, strong) NSDate *lastSentDate;
 //@property (nonatomic, strong) NSDate *expectedPayDate;
 @property (nonatomic, strong) NSMutableArray *lineItems;
-@property (nonatomic, strong) NSMutableDictionary *attachments;     // map filename => data
-//@property (nonatomic, strong) NSMutableSet *attachments;            //set of Attachment id
+//@property (nonatomic, strong) NSMutableDictionary *attachments;     // map filename => data
+@property (nonatomic, strong) NSMutableArray *attachments;            // array of Documents
 
 //+ (void)clone:(Invoice *)source to:(Invoice *)target;
 

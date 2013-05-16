@@ -13,6 +13,7 @@
 #import "Bill.h"
 #import "Vendor.h"
 #import "ChartOfAccount.h"
+#import "BankAccount.h"
 #import "Constants.h"
 #import "Util.h"
 #import "Uploader.h"
@@ -202,6 +203,8 @@
     }
     
     self.createNewSegue = CREATE_BILL_SEGUE;
+    
+    [BankAccount retrieveListForActive:YES];
 }
 
 - (void)refreshView {

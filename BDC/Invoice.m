@@ -96,7 +96,8 @@ static NSMutableArray *inactiveInvoices = nil;
 - (id)init {
     if (self = [super init]) {
         self.lineItems = [NSMutableArray array];
-        self.attachments = [NSMutableDictionary dictionary];
+//        self.attachments = [NSMutableDictionary dictionary];
+        self.attachments = [NSMutableArray array];
     }
     return self;
 }
@@ -334,9 +335,15 @@ static NSMutableArray *inactiveInvoices = nil;
     
     if (source.attachments != nil) {
         target.attachments = nil;
-        target.attachments = [NSMutableDictionary dictionary];
-        for (NSString *name in source.attachments) {
-            [target.attachments setObject:[source.attachments objectForKey:name] forKey:name];
+//        target.attachments = [NSMutableDictionary dictionary];
+//        for (NSString *name in source.attachments) {
+//            [target.attachments setObject:[source.attachments objectForKey:name] forKey:name];
+//        }
+        
+        target.attachments = [NSMutableArray array];
+        //TODO: need deep copy?
+        for (id item in source.attachments) {
+            [target.attachments addObject:item];
         }
     }
 }

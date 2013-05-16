@@ -73,7 +73,7 @@
     }
     
     if ([segue.identifier isEqualToString:ATTACH_TO_NEW_INVOICE_SEGUE] || [segue.identifier isEqualToString:ATTACH_TO_NEW_BILL_SEGUE] || [segue.identifier isEqualToString:ATTACH_TO_NEW_VENDCREDIT_SEGUE]) {
-        [segue.destinationViewController addPhotoData:self.photoData name:self.photoName];
+        [segue.destinationViewController addAttachmentData:self.photoData name:self.photoName];
         [segue.destinationViewController setMode:kAttachMode];
     } else if ([segue.identifier isEqualToString:ATTACH_TO_EXISTING_INVOICE_SEGUE] || [segue.identifier isEqualToString:ATTACH_TO_EXISTING_BILL_SEGUE] || [segue.identifier isEqualToString:ATTACH_TO_EXISTING_VENDCREDIT_SEGUE]) {
         [segue.destinationViewController setMode:kSelectMode];

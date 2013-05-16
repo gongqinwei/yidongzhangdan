@@ -18,6 +18,7 @@
 #import "Constants.h"
 #import "UIHelper.h"
 #import "Vendor.h"
+#import "BankAccount.h"
 #import "Organization.h"
 #import "Uploader.h"
 #import "APIHandler.h"
@@ -45,7 +46,6 @@ typedef enum {
 } BillActionIndice;
 
 #define BILL_ACTIONS                    [NSArray arrayWithObjects:@"Pay bill", @"Edit Bill", @"Delete bill", @"Cancel", nil]
-#define ACTION_PAY                      @"Pay Bill"
 
 #define TAG_BASE                        100
 #define CELL_WIDTH                      300
@@ -60,6 +60,7 @@ typedef enum {
 #define BILL_SCAN_PHOTO_SEGUE           @"ScanMoreBillPhoto"
 #define BILL_PREVIEW_ATTACHMENT_SEGUE   @"PreviewBillDoc"
 #define BILL_VIEW_VENDOR_DETAILS_SEGUE  @"ViewVendorDetails"
+#define BILL_PAY_BILL_SEGUE             @"PayBill"
 
 #define BILL_LABEL_FONT_SIZE            13
 #define BillInfo                 [NSArray arrayWithObjects:@"Vendor", @"Invoice #", @"Inv Date", @"Due Date", @"Approval Status", @"Payment Status", nil]
@@ -148,7 +149,7 @@ typedef enum {
     [Bill clone:bill to:self.shaddowBill];
 }
 
-- (void)addPhotoData:(NSData *)photoData name:(NSString *)photoName {
+- (void)addAttachmentData:(NSData *)attachmentData name:(NSString *)attachmentName {
     if (self.shaddowBill == nil) {
         self.shaddowBill = [[Bill alloc] init];
     }
@@ -161,8 +162,8 @@ typedef enum {
         self.photoNames = [NSMutableArray array];
     }
     
-    [self.shaddowBill.docs setObject:photoData forKey:photoName];
-    [self.photoNames addObject:photoName];
+    [self.shaddowBill.docs setObject:attachmentData forKey:attachmentName];
+    [self.photoNames addObject:attachmentName];
 }
 
 - (void)setMode:(ViewMode)mode {
@@ -362,6 +363,22 @@ typedef enum {
     [self.attachmentScrollView addSubview:imageView];
 }
 
+- (void)retrieveDocAttachments {
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.bill.objectId];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+        
+    [APIHandler asyncCallWithAction:RETRIEVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        NSInteger response_status;
+        NSArray *jsonBills = [APIHandler getResponse:response data:data error:&err status:&response_status];
+                
+        if(response_status == RESPONSE_SUCCESS) {
+            NSLog(@"%@", jsonBills);
+        } else {
+            NSLog(@"Failed to retrieve documents/attachments for bill %@: %@", self.bill.name, [err localizedDescription]);
+        }
+    }];
+}
+
 //- (void)inputAccessoryDoneAction:(UIBarButtonItem *)button {
 //    [self.view findAndResignFirstResponder];
 //    
@@ -539,6 +556,8 @@ typedef enum {
     self.accountPickerView.dataSource = self;
     self.accountPickerView.showsSelectionIndicator = YES;
     
+    [self retrieveDocAttachments];
+    
     self.chartOfAccounts = [ChartOfAccount listOrderBy:ACCOUNT_NAME ascending:YES active:YES];
 
 }
@@ -576,6 +595,8 @@ typedef enum {
     } else if ([segue.identifier isEqualToString:BILL_VIEW_VENDOR_DETAILS_SEGUE]) {
         [segue.destinationViewController setVendor:sender];
         [segue.destinationViewController setMode:kViewMode];
+    } else if ([segue.identifier isEqualToString:BILL_PAY_BILL_SEGUE]) {
+        [segue.destinationViewController setBill:self.shaddowBill];
     }
 }
 
@@ -1288,7 +1309,7 @@ typedef enum {
 }
 
 - (void)didScanPhoto:(NSData *)photoData name:(NSString *)photoName {
-    [self addPhotoData:photoData name:photoName];
+    [self addAttachmentData:photoData name:photoName];
     [self addNewAttachment:photoData];
     [self layoutScrollImages:YES];
 }
@@ -1314,7 +1335,11 @@ typedef enum {
     [super didSelectCrudAction:action];
     
     if ([action isEqualToString:ACTION_PAY]) {
-//        [self sendBillEmail];
+//        if ([((NSArray *)[BankAccount list]) count]) {
+            [self performSegueWithIdentifier:BILL_PAY_BILL_SEGUE sender:self];
+//        } else {
+//            [UIHelper showInfo:@"You haven't set up bank account in Bill.com!" withStatus:kInfo];
+//        }
     }
 }
 

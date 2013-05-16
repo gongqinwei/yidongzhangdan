@@ -13,6 +13,6 @@
 
 @property (nonatomic, strong) Bill *bill;
 
-- (void)addPhotoData:(NSData *)photoData name:(NSString *)photoName;
+- (void)addAttachmentData:(NSData *)attachmentData name:(NSString *)attachmentName;
 
 @end

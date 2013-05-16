@@ -18,8 +18,8 @@
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
-//#define DOMAIN_URL          @"http://10.1.10.177"
-#define DOMAIN_URL          @"http://192.168.1.17"
+//#define DOMAIN_URL          @"http://10.1.10.168"
+#define DOMAIN_URL          @"http://192.168.1.13"
 #define APP_KEY             @"devKey"
 #endif
 
@@ -66,17 +66,22 @@
 #define UNDELETE            @"Undelete"
 
 #define INV_2_PDF_API       @"Invoice2PdfServlet"
+#define ATTACH_DOWNLOAD_API @"AttachDownload"
+#define DOC_DOWNLOAD_API    @"FileServlet"
 #define ORG_LOGO_API        @"InvoiceLogoImage"
 #define LOGIN_API           @"Login.json"
 #define LIST_ORG_API        @"ListOrgs.json"
 #define UPLOAD_API          @"UploadAttachment.json"
+#define RETRIEVE_DOCS_API   @"RetrieveAttachment.json" 
 #define LIST_API            @"List/"
 #define BILL_API            @"Bill.json"
+#define PAY_BILL_API        @"PayBill.json"
 #define INVOICE_API         @"Invoice.json"
 #define CUSTOMER_API        @"Customer.json"
 #define VENDOR_API          @"Vendor.json"
 #define ITEM_API            @"Item.json"
 #define ACCOUNT_API         @"ChartOfAccount.json"
+#define BANK_ACCOUNT_API    @"BankAccount.json"
 #define ENUM_API            @"Enum.json"
 
 #define ENTITY              @"entity"
@@ -234,6 +239,15 @@ typedef enum {
     kModifyMode,    // only used for modifying invoice line item's price and qty
     kAttachMode
 } ViewMode;
+
+typedef enum {
+    kImage,
+    kPDF,
+    kWord,
+    kExcel,
+    kTxt,
+    kOther
+} FileType;
 
 // font
 #define APP_BOLD_FONT          @"Arial-BoldMT"
