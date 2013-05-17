@@ -78,6 +78,7 @@ static NSMutableArray *inactiveInvoices = nil;
 //@synthesize expectedPayDate;
 @synthesize lineItems;
 @synthesize attachments;
+@synthesize attachmentSet;
 @synthesize editDelegate;
 @synthesize detailsDelegate;
 
@@ -98,6 +99,7 @@ static NSMutableArray *inactiveInvoices = nil;
         self.lineItems = [NSMutableArray array];
 //        self.attachments = [NSMutableDictionary dictionary];
         self.attachments = [NSMutableArray array];
+//        self.attachmentSet = [NSMutableSet set];
     }
     return self;
 }

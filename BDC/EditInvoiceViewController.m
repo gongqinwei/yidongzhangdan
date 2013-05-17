@@ -25,6 +25,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import <MessageUI/MessageUI.h>
+#import <QuickLook/QuickLook.h>
 
 enum InvoiceSections {
     kInvoiceInfo,
@@ -77,7 +78,7 @@ typedef enum {
 #define REMOVE_ATTACHMENT_ALERT_TAG     2
 
 
-@interface EditInvoiceViewController () <InvoiceDelegate, CustomerDelegate, CustomerSelectDelegate, ItemSelectDelegate, ScannerDelegate, LineItemDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate>
+@interface EditInvoiceViewController () <InvoiceDelegate, CustomerDelegate, CustomerSelectDelegate, ItemSelectDelegate, ScannerDelegate, LineItemDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
 
 @property (nonatomic, strong) Invoice *shaddowInvoice;
 @property (nonatomic, strong) NSDecimalNumber *totalAmount;
@@ -88,7 +89,7 @@ typedef enum {
 @property (nonatomic, strong) UITextField *invoiceDateTextField;
 @property (nonatomic, strong) UITextField *invoiceDueDateTextField;
 
-@property (nonatomic, strong) NSMutableSet *originalAttachmentSet;
+//@property (nonatomic, strong) NSMutableSet *originalAttachmentSet;
 @property (nonatomic, strong) NSMutableSet *attachmentSet;
 
 @property (nonatomic, strong) UIScrollView *attachmentScrollView;
@@ -100,6 +101,8 @@ typedef enum {
 
 @property (nonatomic, assign) BOOL modeChanged;
 @property (nonatomic, assign) BOOL pdfReady;
+
+@property (nonatomic, strong) QLPreviewController *previewController;
 
 @end
 
@@ -114,6 +117,8 @@ typedef enum {
 @synthesize invoiceNumTextField;
 @synthesize invoiceDateTextField;
 @synthesize invoiceDueDateTextField;
+//@synthesize originalAttachmentSet;
+@synthesize attachmentSet;
 @synthesize attachmentScrollView;
 @synthesize attachmentPageControl;
 @synthesize currAttachment;
@@ -121,6 +126,7 @@ typedef enum {
 @synthesize mailer;
 @synthesize modeChanged;
 @synthesize pdfReady;
+@synthesize previewController;
 
 #pragma mark - public methods
 
@@ -262,8 +268,12 @@ typedef enum {
 - (void)imageTapped:(UITapGestureRecognizer *)gestureRecognizer {
     if ([self tryTap]) {
         UIImageView *imageView = (UIImageView *)gestureRecognizer.view;
+        
+        self.previewController.currentPreviewItemIndex = imageView.tag - 1;
+        [self presentModalViewController:self.previewController animated:YES];
+        
         [self selectAttachment:imageView];
-        [self performSegueWithIdentifier:INV_PREVIEW_ATTACHMENT_SEGUE sender:imageView];
+//        [self performSegueWithIdentifier:INV_PREVIEW_ATTACHMENT_SEGUE sender:imageView];
     }
 }
 
@@ -272,9 +282,11 @@ typedef enum {
         [self selectAttachment:(UIImageView *)gestureRecognizer.view];
         
         if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+            int idx = self.currAttachment.tag - 1;
+            Document *doc = [self.shaddowInvoice.attachments objectAtIndex:idx];
             UIAlertView *alert = [[UIAlertView alloc]
                                   initWithTitle: @"Delete Confirmation"
-                                  message: @"Are you sure to delete this attachment?"
+                                  message: [NSString stringWithFormat:@"Are you sure to delete %@?", doc.name]
                                   delegate: self
                                   cancelButtonTitle:@"No"
                                   otherButtonTitles:@"Yes", nil];
@@ -557,6 +569,10 @@ typedef enum {
         
         // retrieve attachments
         [self retrieveDocAttachments];
+        
+        self.previewController = [[QLPreviewController alloc] init];
+        self.previewController.delegate = self;
+        self.previewController.dataSource = self;
     }
 }
 
@@ -569,53 +585,57 @@ typedef enum {
         NSArray *jsonDocs = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         if(response_status == RESPONSE_SUCCESS) {
-            self.originalAttachmentSet = [NSMutableSet set];
-            self.attachmentSet = [NSMutableSet set];
+            if (!self.invoice.attachmentSet) {
+                self.invoice.attachmentSet = [NSMutableSet set];
+            }
             
-            for (int i = 0; i < [jsonDocs count]; i++) {
-                NSDictionary *dict = (NSDictionary*)[jsonDocs objectAtIndex:i];
+            self.attachmentSet = [NSMutableSet set]; //reset
+            
+            for (NSString *docId in self.invoice.attachmentSet) {
+                [self.attachmentSet addObject:docId];
+            }
+            
+//            self.invoice.attachments = [NSMutableArray array];
+            int i = 0;
+            for (NSDictionary *dict in jsonDocs) {
                 NSString *docId = [dict objectForKey:ID];
-                NSString *docName = [dict objectForKey:@"fileName"];
                 
-                Document *doc = [[Document alloc] init];                
-                NSString *fileExt = [docName pathExtension];
-                
-                if ([fileExt caseInsensitiveCompare:@"jpg"] == NSOrderedSame
-                    || [fileExt caseInsensitiveCompare:@"jpeg"] == NSOrderedSame
-                    || [fileExt caseInsensitiveCompare:@"png"] == NSOrderedSame
-                    || [fileExt caseInsensitiveCompare:@"gif"] == NSOrderedSame) {
-                    doc.type = kImage;
-                } else if ([fileExt caseInsensitiveCompare:@"pdf"] == NSOrderedSame) {
-                    doc.type = kPDF;
-                } else if ([fileExt caseInsensitiveCompare:@"doc"] == NSOrderedSame
-                        || [fileExt caseInsensitiveCompare:@"docx"] == NSOrderedSame) {
-                    doc.type = kWord;
-                } else if ([fileExt caseInsensitiveCompare:@"xls"] == NSOrderedSame
-                        || [fileExt caseInsensitiveCompare:@"xlsx"] == NSOrderedSame) {
-                    doc.type = kExcel;
-                } else if ([fileExt caseInsensitiveCompare:@"txt"] == NSOrderedSame
-                        || [fileExt caseInsensitiveCompare:@"rtf"] == NSOrderedSame) {
-                    doc.type = kTxt;
-                } else {
-                    continue;
+                if (![self.attachmentSet containsObject:docId]) {
+                    NSString *docName = [dict objectForKey:@"fileName"];
+                                        
+                    Document *doc = [[Document alloc] init];
+                    NSString *fileExt = [docName pathExtension];
+                    
+                    if ([fileExt caseInsensitiveCompare:@"jpg"] == NSOrderedSame
+                        || [fileExt caseInsensitiveCompare:@"jpeg"] == NSOrderedSame
+                        || [fileExt caseInsensitiveCompare:@"png"] == NSOrderedSame
+                        || [fileExt caseInsensitiveCompare:@"gif"] == NSOrderedSame) {
+                        doc.type = kImage;
+                    } else if ([fileExt caseInsensitiveCompare:@"pdf"] == NSOrderedSame) {
+                        doc.type = kPDF;
+                    } else if ([fileExt caseInsensitiveCompare:@"doc"] == NSOrderedSame
+                               || [fileExt caseInsensitiveCompare:@"docx"] == NSOrderedSame) {
+                        doc.type = kWord;
+                    } else if ([fileExt caseInsensitiveCompare:@"xls"] == NSOrderedSame
+                               || [fileExt caseInsensitiveCompare:@"xlsx"] == NSOrderedSame) {
+                        doc.type = kExcel;
+                    } else if ([fileExt caseInsensitiveCompare:@"txt"] == NSOrderedSame
+                               || [fileExt caseInsensitiveCompare:@"rtf"] == NSOrderedSame) {
+                        doc.type = kTxt;
+                    } else {
+                        continue;
+                    }
+
+                    doc.objectId = docId;
+                    doc.name = docName;
+                    
+                    [self.invoice.attachmentSet addObject:docId];
+                    [self.attachmentSet addObject:docId];
+                    [self.invoice.attachments addObject:doc];
+                    [self.shaddowInvoice.attachments addObject:doc];
+                    
+                    [self downloadDocument:docId type:doc.type index:i++];
                 }
-                
-                doc.objectId = docId;
-                doc.name = docName;
-                
-                [self.originalAttachmentSet addObject:docId];
-                [self.shaddowInvoice.attachments addObject:doc];
-                [self downloadDocument:docId type:doc.type index:i];
-            }
-            
-            // clone to self.invoice's attachments
-            for (Document *doc in self.shaddowInvoice.attachments) {
-                //TODO: NEED DEEP COPY?
-                [self.invoice.attachments addObject:doc];
-            }
-            
-            for (Document *doc in self.originalAttachmentSet) {
-                [self.attachmentSet addObject:doc];
             }
             
             NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:kInvoiceAttachment];
@@ -628,7 +648,7 @@ typedef enum {
     }];
 }
 
-- (void)downloadDocument:(NSString *)docId type:(FileType)docType index:(int)idx {
+- (void)downloadDocument:(NSString *)docId type:(FileType)docType index:(int)idx {    
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@=%@", DOMAIN_URL, ATTACH_DOWNLOAD_API, ID, docId]];
     NSURLRequest *req = [NSURLRequest  requestWithURL:url
                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -1386,6 +1406,27 @@ typedef enum {
     // Remove the mail view
     [self dismissModalViewControllerAnimated:YES];
 }
+
+#pragma mark - QuickLook Preview Controller Data Source
+
+- (NSInteger) numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller {
+    return [self.shaddowInvoice.attachments count];
+}
+
+- (id<QLPreviewItem>) previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index {
+    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsDir = [dirPaths objectAtIndex:0];
+    
+    Document *doc = self.shaddowInvoice.attachments[index];
+    
+    NSString *filePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent:doc.name]];
+    [doc.data writeToFile:filePath atomically:YES];
+    
+    return [NSURL fileURLWithPath:filePath];
+}
+
+#pragma mark - QuickLook Preview Controller Delegate
+
 
 #pragma mark - model delegate
 

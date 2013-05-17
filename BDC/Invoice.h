@@ -91,6 +91,7 @@
 @property (nonatomic, strong) NSMutableArray *lineItems;
 //@property (nonatomic, strong) NSMutableDictionary *attachments;     // map filename => data
 @property (nonatomic, strong) NSMutableArray *attachments;            // array of Documents
+@property (nonatomic, strong) NSMutableSet *attachmentSet;            // set of doc id's
 
 //+ (void)clone:(Invoice *)source to:(Invoice *)target;
 
