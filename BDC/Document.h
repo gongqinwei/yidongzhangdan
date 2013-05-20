@@ -12,7 +12,7 @@
 @interface Document : BDCBusinessObject
 
 @property (nonatomic, strong) NSData *data;
-@property (nonatomic, assign) FileType type;
-@property (nonatomic, strong) NSString *attachedTo;
+@property (nonatomic, strong) NSString *fileUrl;
+@property (nonatomic, assign) BOOL isPublic;
 
 @end

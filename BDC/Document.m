@@ -11,7 +11,7 @@
 @implementation Document
 
 @synthesize data;
-@synthesize type;
-@synthesize attachedTo;
+@synthesize fileUrl;
+@synthesize isPublic;
 
 @end

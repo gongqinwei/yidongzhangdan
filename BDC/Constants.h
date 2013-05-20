@@ -18,8 +18,8 @@
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
-#define DOMAIN_URL          @"http://10.1.10.167"
-//#define DOMAIN_URL          @"http://192.168.1.13"
+#define DOMAIN_URL          @"http://10.1.10.161"
+//#define DOMAIN_URL          @"http://192.168.1.15"
 #define APP_KEY             @"devKey"
 #endif
 
@@ -66,8 +66,8 @@
 #define UNDELETE            @"Undelete"
 
 #define INV_2_PDF_API       @"Invoice2PdfServlet"
-#define ATTACH_DOWNLOAD_API @"AttachDownload"
-#define DOC_DOWNLOAD_API    @"FileServlet"
+#define ATTACH_DOWNLOAD_API @"AttachDownload"       // not used any more
+#define DOC_DOWNLOAD_API    @"FileServlet"          // not used any more
 #define ORG_LOGO_API        @"InvoiceLogoImage"
 #define LOGIN_API           @"Login.json"
 #define LIST_ORG_API        @"ListOrgs.json"
@@ -222,8 +222,8 @@ typedef enum {
     kSucceedLogin, kFailLogin, kFailListOrgs
 } LoginStatus;
 
-#define EMAIL_SENT          @"Email sent successfully"
-#define EMAIL_FAILED        @"Failed to send email! Please try again."
+#define EMAIL_SENT              @"Email sent successfully"
+#define EMAIL_FAILED            @"Failed to send email! Please try again."
 
 
 typedef enum {
@@ -240,14 +240,30 @@ typedef enum {
     kAttachMode
 } ViewMode;
 
-typedef enum {
-    kImage,
-    kPDF,
-    kWord,
-    kExcel,
-    kTxt,
-    kOther
-} FileType;
+#define IMAGE_TYPE_SET      [NSSet setWithObjects:@"jpg", @"jpeg", @"png", @"gif", @"tiff", nil]
+#define MIME_TYPE_DICT      [NSDictionary dictionaryWithObjectsAndKeys: @"csv", @"text/csv", \
+                                                                        @"doc", @"application/msword", \
+                                                                        @"docx", @"application/vnd.openxmlformats-officedocument.wordprocessingml.document", \
+                                                                        @"ext", @"application/exe", \
+                                                                        @"gif", @"image/gif", \
+                                                                        @"jpg", @"image/jpeg", \
+                                                                        @"jpeg", @"image/jpeg", \
+                                                                        @"mov", @"image/mov", \
+                                                                        @"mp3", @"audio/mpeg", \
+                                                                        @"pdf", @"application/pdf", \
+                                                                        @"png", @"image/png", \
+                                                                        @"ppt", @"application/vnd.ms-powerpoint", \
+                                                                        @"pptx", @"application/vnd.openxmlformats-officedocument.presentationml.presentation", \
+                                                                        @"rar", @"application/x-rar-compressed", \
+                                                                        @"tiff", @"image/tiff", \
+                                                                        @"txt", @"text/plain", \
+                                                                        @"wav", @"audio/vnd.wave", \
+                                                                        @"wma", @"audio/x-ms-wma", \
+                                                                        @"wmv", @"video/x-ms-wmv", \
+                                                                        @"xls", @"application/vnd.ms-excel", \
+                                                                        @"xlsx", @"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", \
+                                                                        @"zip", @"application/zip", \
+                                                                        nil]
 
 // font
 #define APP_BOLD_FONT          @"Arial-BoldMT"

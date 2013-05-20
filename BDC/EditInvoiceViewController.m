@@ -89,7 +89,6 @@ typedef enum {
 @property (nonatomic, strong) UITextField *invoiceDateTextField;
 @property (nonatomic, strong) UITextField *invoiceDueDateTextField;
 
-//@property (nonatomic, strong) NSMutableSet *originalAttachmentSet;
 @property (nonatomic, strong) NSMutableSet *attachmentSet;
 
 @property (nonatomic, strong) UIScrollView *attachmentScrollView;
@@ -117,7 +116,6 @@ typedef enum {
 @synthesize invoiceNumTextField;
 @synthesize invoiceDateTextField;
 @synthesize invoiceDueDateTextField;
-//@synthesize originalAttachmentSet;
 @synthesize attachmentSet;
 @synthesize attachmentScrollView;
 @synthesize attachmentPageControl;
@@ -136,6 +134,11 @@ typedef enum {
     self.shaddowInvoice = nil;
     self.shaddowInvoice = [[Invoice alloc] init];
     [Invoice clone:invoice to:self.shaddowInvoice];
+    
+    self.attachmentSet = [NSMutableSet set];
+    for (NSString *docId in self.invoice.attachmentSet) {
+        [self.attachmentSet addObject:docId];
+    }
 }
 
 - (void)addAttachmentData:(NSData *)attachmentData name:(NSString *)attachmentName {
@@ -150,6 +153,7 @@ typedef enum {
     Document *doc = [[Document alloc] init];
     doc.name = attachmentName;
     doc.data = attachmentData;
+    
     [self.shaddowInvoice.attachments addObject:doc];
 }
 
@@ -208,19 +212,24 @@ typedef enum {
         NSArray *toRecipients = [NSArray arrayWithObjects:customer.email, nil];
         [self.mailer setToRecipients:toRecipients];
         
-        //TODO: add attachment to email!
-//        UIImage *myImage = [UIImage imageNamed:@"mobiletuts-logo.png"];
-//        NSData *imageData = UIImagePNGRepresentation(myImage);
-//        [self.mailer addAttachmentData:imageData mimeType:@"image/png" fileName:@"mobiletutsImage"];
-        
         NSString *encodedEmail = [Util URLEncode:customer.email];
         NSString *linkUrl = [NSString stringWithFormat:@"%@/%@/%@?email=%@&id=%@", DOMAIN_URL, PAGE_BASE, org.objectId, encodedEmail, customer.objectId];
         NSString *invLink = [NSString stringWithFormat:@"<a href='%@'>%@</a>", linkUrl, linkUrl];
         
         NSString *emailBody = [NSString stringWithFormat:INVOICE_EMAIL_TEMPLATE, customer.name, invLink, org.name, self.invoice.invoiceNumber, [Util formatCurrency:self.invoice.amountDue], [Util formatDate:self.invoice.dueDate format:nil], nil];
         [self.mailer setMessageBody:emailBody isHTML:YES];
-        
+        NSLog(@"pdf size: %d", [self.invoicePDFData length]);
         [self.mailer addAttachmentData:self.invoicePDFData mimeType:@"application/pdf" fileName:[NSString stringWithFormat:@"Invoice %@.pdf", self.invoice.invoiceNumber]];
+        
+        for (Document *attachment in self.invoice.attachments) {
+            if (attachment.isPublic) {
+                NSString *ext = [[attachment.name pathExtension] lowercaseString];
+                if (![ext isEqualToString:@"exe"]) {
+                    [self.mailer addAttachmentData:attachment.data mimeType:[MIME_TYPE_DICT objectForKey:ext] fileName:attachment.name];
+                }
+            }
+        }
+        
         [self presentModalViewController:self.mailer animated:YES];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure"
@@ -281,17 +290,42 @@ typedef enum {
     if ([self tryTap]) {
         [self selectAttachment:(UIImageView *)gestureRecognizer.view];
         
+//        if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+//            int idx = self.currAttachment.tag - 1;
+//            Document *doc = [self.shaddowInvoice.attachments objectAtIndex:idx];
+//            UIAlertView *alert = [[UIAlertView alloc]
+//                                  initWithTitle: @"Delete Confirmation"
+//                                  message: [NSString stringWithFormat:@"Are you sure to delete %@?", doc.name]
+//                                  delegate: self
+//                                  cancelButtonTitle:@"No"
+//                                  otherButtonTitles:@"Yes", nil];
+//            alert.tag = REMOVE_ATTACHMENT_ALERT_TAG;
+//            [alert show];
+//        }
+        
         if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
             int idx = self.currAttachment.tag - 1;
             Document *doc = [self.shaddowInvoice.attachments objectAtIndex:idx];
-            UIAlertView *alert = [[UIAlertView alloc]
-                                  initWithTitle: @"Delete Confirmation"
-                                  message: [NSString stringWithFormat:@"Are you sure to delete %@?", doc.name]
-                                  delegate: self
-                                  cancelButtonTitle:@"No"
-                                  otherButtonTitles:@"Yes", nil];
-            alert.tag = REMOVE_ATTACHMENT_ALERT_TAG;
-            [alert show];
+            
+            [UIView animateWithDuration:1.0
+                             animations:^{
+                                 self.currAttachment.alpha = 0.0;
+                             }
+                             completion:^ (BOOL finished) {
+                                 if (finished) {
+                                      NSLog(@"before invoice: %d", [self.invoice.attachments count]);
+                                     NSLog(@"before shaddow: %d", [self.shaddowInvoice.attachments count]);
+                                     [self.shaddowInvoice.attachments removeObjectAtIndex:idx];
+                                       NSLog(@"after invoice: %d", [self.invoice.attachments count]);
+                                      NSLog(@"after: %d", [self.shaddowInvoice.attachments count]);
+                                     if (doc.objectId) {
+                                         [self.attachmentSet removeObject:doc.objectId];
+                                     }
+                                     [self.currAttachment removeFromSuperview];
+                                     [self layoutScrollImages:NO];
+                                     self.currAttachment = nil;
+                                 }
+                             }];
         }
     }
 }
@@ -318,27 +352,44 @@ typedef enum {
     [self.attachmentScrollView addSubview:imageView];
 }
 
-- (void)addAttachment:(FileType)type data:(NSData *)attachmentData {
+//- (void)addAttachment1:(FileType)type data:(NSData *)attachmentData {
+//    QLPreviewController* preview = [[QLPreviewController alloc] init];
+//    preview.dataSource = self;
+//    preview.delegate = self;
+//    preview.view.tag = [self.shaddowInvoice.attachments count];
+//    [self addChildViewController:preview];
+//        
+//    //set the frame from the parent view
+//    CGRect rect = preview.view.frame;
+//    rect.size.height = IMG_HEIGHT;
+//    rect.size.width = IMG_WIDTH - IMG_PADDING;
+//    preview.view.frame = rect;
+//    [self.attachmentScrollView addSubview:preview.view];
+//    [preview didMoveToParentViewController:self];
+//    
+//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTapped:)];
+//    [preview.view addGestureRecognizer:tap];
+//    
+//    if (self.mode != kViewMode) {
+//        UILongPressGestureRecognizer *press = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(imagePressed:)];
+//        press.minimumPressDuration = 1.0;
+//        [preview.view
+//         addGestureRecognizer:press];
+//    }
+//}
+
+- (void)addAttachment:(NSString *)ext data:(NSData *)attachmentData {
     UIImage *image;
     
-    switch (type) {
-        case kImage:
-            image = [UIImage imageWithData:attachmentData];
-            break;
-        case kPDF:
-            image = [UIImage imageNamed:@"pdf_icon.png"];
-            break;
-        case kWord:
-            image = [UIImage imageNamed:@"word_icon.png"];
-            break;
-        case kExcel:
-            image = [UIImage imageNamed:@"excel_icon.png"];
-            break;
-        case kTxt:
-            image = [UIImage imageNamed:@"txt_icon.png"];
-            break;
-        default:
-            break;
+    if (attachmentData && [IMAGE_TYPE_SET containsObject:ext]) {
+        image = [UIImage imageWithData:attachmentData];
+    } else {
+        NSString *iconFileName = [NSString stringWithFormat:@"%@_icon.png", ext];
+        image = [UIImage imageNamed:iconFileName];
+        
+        if (!image) {
+            image = [UIImage imageNamed:@"unknown_file_icon.png"];
+        }
     }
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
@@ -595,7 +646,6 @@ typedef enum {
                 [self.attachmentSet addObject:docId];
             }
             
-//            self.invoice.attachments = [NSMutableArray array];
             int i = 0;
             for (NSDictionary *dict in jsonDocs) {
                 NSString *docId = [dict objectForKey:ID];
@@ -604,38 +654,20 @@ typedef enum {
                     NSString *docName = [dict objectForKey:@"fileName"];
                                         
                     Document *doc = [[Document alloc] init];
-                    NSString *fileExt = [docName pathExtension];
-                    
-                    if ([fileExt caseInsensitiveCompare:@"jpg"] == NSOrderedSame
-                        || [fileExt caseInsensitiveCompare:@"jpeg"] == NSOrderedSame
-                        || [fileExt caseInsensitiveCompare:@"png"] == NSOrderedSame
-                        || [fileExt caseInsensitiveCompare:@"gif"] == NSOrderedSame) {
-                        doc.type = kImage;
-                    } else if ([fileExt caseInsensitiveCompare:@"pdf"] == NSOrderedSame) {
-                        doc.type = kPDF;
-                    } else if ([fileExt caseInsensitiveCompare:@"doc"] == NSOrderedSame
-                               || [fileExt caseInsensitiveCompare:@"docx"] == NSOrderedSame) {
-                        doc.type = kWord;
-                    } else if ([fileExt caseInsensitiveCompare:@"xls"] == NSOrderedSame
-                               || [fileExt caseInsensitiveCompare:@"xlsx"] == NSOrderedSame) {
-                        doc.type = kExcel;
-                    } else if ([fileExt caseInsensitiveCompare:@"txt"] == NSOrderedSame
-                               || [fileExt caseInsensitiveCompare:@"rtf"] == NSOrderedSame) {
-                        doc.type = kTxt;
-                    } else {
-                        continue;
-                    }
-
                     doc.objectId = docId;
                     doc.name = docName;
+                    doc.fileUrl = [dict objectForKey:@"fileUrl"];
+                    doc.isPublic = [[dict objectForKey:@"isPublic"] intValue];
                     
                     [self.invoice.attachmentSet addObject:docId];
                     [self.attachmentSet addObject:docId];
-                    [self.invoice.attachments addObject:doc];
-                    [self.shaddowInvoice.attachments addObject:doc];
+                    [self.invoice.attachments insertObject:doc atIndex:i];
                     
-                    [self downloadDocument:docId type:doc.type index:i++];
+                    [self.shaddowInvoice.attachments insertObject:doc atIndex:i];
+                                        
+                    [self downloadDocument:doc forAttachmentAtIndex:i];
                 }
+                i++;
             }
             
             NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:kInvoiceAttachment];
@@ -648,8 +680,8 @@ typedef enum {
     }];
 }
 
-- (void)downloadDocument:(NSString *)docId type:(FileType)docType index:(int)idx {    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@=%@", DOMAIN_URL, ATTACH_DOWNLOAD_API, ID, docId]];
+- (void)downloadDocument:(Document *)doc forAttachmentAtIndex:(int)idx {
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", DOMAIN_URL, doc.fileUrl]];
     NSURLRequest *req = [NSURLRequest  requestWithURL:url
                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
                                       timeoutInterval:API_TIMEOUT];
@@ -657,36 +689,15 @@ typedef enum {
     [NSURLConnection sendAsynchronousRequest:req
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-                               Document *doc = [self.shaddowInvoice.attachments objectAtIndex:idx];
-                               doc.data = data;
-                               doc = [self.invoice.attachments objectAtIndex:idx];
                                doc.data = data;
                                
                                UIImageView *img = [self.attachmentScrollView.subviews objectAtIndex: idx + 1];
+                               NSString *ext = [[doc.name pathExtension] lowercaseString];
                                
-                               UIImage *image;
-                               
-                               switch (docType) {
-                                   case kImage:
-                                       image = [UIImage imageWithData:data];
-                                       break;
-                                   case kPDF:
-                                       image = [UIImage imageNamed:@"pdf_icon.png"];
-                                       break;
-                                   case kWord:
-                                       image = [UIImage imageNamed:@"word_icon.png"];
-                                       break;
-                                   case kExcel:
-                                       image = [UIImage imageNamed:@"excel_icon.png"];
-                                       break;
-                                   case kTxt:
-                                       image = [UIImage imageNamed:@"txt_icon.png"];
-                                       break;
-                                   default:
-                                       break;
+                               if ([IMAGE_TYPE_SET containsObject:ext]) {
+                                   UIImage *image = [UIImage imageWithData:data];
+                                   img.image = image;
                                }
-                               
-                               img.image = image;
                            }];
 }
 
@@ -714,7 +725,7 @@ typedef enum {
     } else if ([segue.identifier isEqualToString:INV_SCAN_PHOTO_SEGUE]) {
         ((ScannerViewController *)segue.destinationViewController).delegate = self;
         [segue.destinationViewController setMode:kAttachMode];
-    } else if ([segue.identifier isEqualToString:INV_PREVIEW_ATTACHMENT_SEGUE]) {
+    } else if ([segue.identifier isEqualToString:INV_PREVIEW_ATTACHMENT_SEGUE]) {   //deprecated
         NSInteger idx = ((UIImageView *)sender).tag;
         if (self.mode != kCreateMode && self.mode != kAttachMode) {
             idx--;
@@ -976,9 +987,9 @@ typedef enum {
                 [self addPDFAttachment];
             }
             
-            for (id item in self.shaddowInvoice.attachments) {
-                Document *doc = (Document *)item;
-                [self addAttachment:doc.type data:doc.data];
+            for (Document * doc in self.shaddowInvoice.attachments) {
+                NSString *ext = [[doc.name pathExtension] lowercaseString];
+                [self addAttachment:ext data:doc.data];
             }
             
             [self layoutScrollImages:NO];
@@ -1006,14 +1017,14 @@ typedef enum {
     CGFloat curXLoc = 0;
     NSInteger tag = 0;
     for (view in subviews) {
-        if ([view isKindOfClass:[UIImageView class]]) {
+//        if ([view isKindOfClass:[UIImageView class]]) {
             CGRect frame = view.frame;
             frame.origin = CGPointMake(curXLoc, 0);
             view.frame = frame;
             view.tag = tag;
             tag++;
             curXLoc += IMG_WIDTH;
-        }
+//        }
     }
     
 //    int numPages = ceil((float)[self.attachmentNames count] / INV_NUM_ATTACHMENT_PER_PAGE);
@@ -1290,7 +1301,7 @@ typedef enum {
                 [self.invoice remove];
             }
             break;
-        case REMOVE_ATTACHMENT_ALERT_TAG:
+        case REMOVE_ATTACHMENT_ALERT_TAG:   // deprecated
             if (buttonIndex == 1) {
                 UIImageView *imageView = self.currAttachment;
                 if (imageView != nil) {
@@ -1410,7 +1421,11 @@ typedef enum {
 #pragma mark - QuickLook Preview Controller Data Source
 
 - (NSInteger) numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller {
-    return [self.shaddowInvoice.attachments count];
+    if (controller == self.previewController) {
+        return [self.shaddowInvoice.attachments count];
+    } else {
+        return 1;
+    }
 }
 
 - (id<QLPreviewItem>) previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index {
@@ -1427,27 +1442,43 @@ typedef enum {
 
 #pragma mark - QuickLook Preview Controller Delegate
 
+- (CGRect)previewController:(QLPreviewController *)controller frameForPreviewItem:(id <QLPreviewItem>)item inSourceView:(UIView **)view {
+    *view = self.currAttachment;    //TODO: not called at all?
+    return self.currAttachment.bounds;
+}
 
 #pragma mark - model delegate
 
 - (void)doneSaveObject {
-//    for (Document *doc in self.shaddowInvoice.attachments) {
-//        if ([self.invoice.attachments objectForKey:attachmentName] == nil) {
-//            NSData *attachmentData = [self.shaddowInvoice.attachments objectForKey:attachmentName];
-//            
-//            [Uploader uploadFile:attachmentName data:attachmentData objectId:self.shaddowInvoice.objectId handler:^(NSURLResponse * response, NSData * data, NSError * err) {
-//                NSInteger status;
-//                [APIHandler getResponse:response data:data error:&err status:&status];
-//                
-//                if(status == RESPONSE_SUCCESS) {
-//                    [UIHelper showInfo:[NSString stringWithFormat:@"Attachment %@ saved", attachmentName] withStatus:kSuccess];
-//                } else {
-//                    [UIHelper showInfo:[NSString stringWithFormat:@"Failed to save %@", attachmentName] withStatus:kFailure];
-//                }
-//            }];
-//        }
-//    }
-//    
+    // 1. remove deleted attachments
+    for (NSString *docId in self.invoice.attachmentSet) {
+        if (![self.attachmentSet containsObject:docId]) {
+            NSLog(@"Deleting attachment: %@", docId);
+            //TODO: need API to unassociate attachment, i.e. set isActive to false
+        }
+    }
+    
+    // 2. add new attachments
+    for (Document *doc in self.shaddowInvoice.attachments) {
+        if (doc.objectId == nil) {
+            NSLog(@"Adding new attachment: %@", doc.name);
+                        
+            [Uploader uploadFile:doc.name data:doc.data objectId:self.shaddowInvoice.objectId handler:^(NSURLResponse * response, NSData * data, NSError * err) {
+                NSInteger response_status;
+                NSString *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
+                
+                if(response_status == RESPONSE_SUCCESS) {
+                    doc.objectId = info;
+//                    [self.invoice.attachments addObject:doc];     //attachments already cloned synchronously!
+                    [self.invoice.attachmentSet addObject:doc.objectId];
+//                    [UIHelper showInfo:[NSString stringWithFormat:@"Attachment %@ saved", doc.name] withStatus:kSuccess];
+                } else {
+                    [UIHelper showInfo:[NSString stringWithFormat:@"Failed to save %@", doc.name] withStatus:kFailure];
+                }
+            }];
+        }
+    }
+    
     [Invoice clone:self.shaddowInvoice to:self.invoice];
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1500,7 +1531,7 @@ typedef enum {
 
 - (void)didScanPhoto:(NSData *)photoData name:(NSString *)photoName {
     [self addAttachmentData:photoData name:photoName];
-    [self addAttachment:kImage data:photoData];
+    [self addAttachment:@"jpg" data:photoData];
     [self layoutScrollImages:YES];
 }
 

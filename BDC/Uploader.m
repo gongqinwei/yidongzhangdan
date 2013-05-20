@@ -28,9 +28,7 @@
     file = [file stringByAppendingString:@".jpg"];
     
     NSString *urlStr = [NSString stringWithFormat:@"%@/%@/%@?%@=%@&%@=%@", DOMAIN_URL, API_BASE, UPLOAD_API, APP_KEY, APP_KEY_VALUE, FILE_NAME, file];
-    if (objId != nil) {
-        urlStr = [urlStr stringByAppendingFormat:@"&%@=%@", ID, objId];
-    }
+    
     [request setURL:[NSURL URLWithString:urlStr]];
     [request setHTTPMethod:@"POST"];
     
@@ -41,6 +39,11 @@
     
     // create the body of the request.
     NSMutableData *body = [NSMutableData data];
+    
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];    
+    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"data\"\r\n\r\n"]  dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"{\"id\":\"%@\", \"fileName\":\"%@\"}\r\n", objId, file] dataUsingEncoding:NSUTF8StringEncoding]];
+    
     [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"Filedata\"; filename=\"%@\"\r\n", file] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
