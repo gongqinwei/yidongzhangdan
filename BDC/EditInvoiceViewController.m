@@ -607,7 +607,7 @@ typedef enum {
         // retrieve PDF in view mode
         self.invoicePDFData = [NSMutableData data];
         
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@=%@&%@=%@", DOMAIN_URL, INV_2_PDF_API, ID, self.invoice.objectId, PRESENT_TYPE, PDF_TYPE]];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@=%@&%@=%@", DOMAIN_URL, INV_2_PDF_API, Id, self.invoice.objectId, PRESENT_TYPE, PDF_TYPE]];
         NSURLRequest *req = [NSURLRequest  requestWithURL:url
                                               cachePolicy:NSURLRequestUseProtocolCachePolicy
                                           timeoutInterval:API_TIMEOUT];
