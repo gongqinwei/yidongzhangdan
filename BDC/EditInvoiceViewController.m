@@ -218,7 +218,6 @@ typedef enum {
         
         NSString *emailBody = [NSString stringWithFormat:INVOICE_EMAIL_TEMPLATE, customer.name, invLink, org.name, self.invoice.invoiceNumber, [Util formatCurrency:self.invoice.amountDue], [Util formatDate:self.invoice.dueDate format:nil], nil];
         [self.mailer setMessageBody:emailBody isHTML:YES];
-        NSLog(@"pdf size: %d", [self.invoicePDFData length]);
         [self.mailer addAttachmentData:self.invoicePDFData mimeType:@"application/pdf" fileName:[NSString stringWithFormat:@"Invoice %@.pdf", self.invoice.invoiceNumber]];
         
         for (Document *attachment in self.invoice.attachments) {
@@ -313,11 +312,8 @@ typedef enum {
                              }
                              completion:^ (BOOL finished) {
                                  if (finished) {
-                                      NSLog(@"before invoice: %d", [self.invoice.attachments count]);
-                                     NSLog(@"before shaddow: %d", [self.shaddowInvoice.attachments count]);
                                      [self.shaddowInvoice.attachments removeObjectAtIndex:idx];
-                                       NSLog(@"after invoice: %d", [self.invoice.attachments count]);
-                                      NSLog(@"after: %d", [self.shaddowInvoice.attachments count]);
+                                    
                                      if (doc.objectId) {
                                          [self.attachmentSet removeObject:doc.objectId];
                                      }
@@ -697,6 +693,9 @@ typedef enum {
                                if ([IMAGE_TYPE_SET containsObject:ext]) {
                                    UIImage *image = [UIImage imageWithData:data];
                                    img.image = image;
+                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                      [img setNeedsDisplay]; 
+                                   });
                                }
                            }];
 }
@@ -1454,15 +1453,28 @@ typedef enum {
     for (NSString *docId in self.invoice.attachmentSet) {
         if (![self.attachmentSet containsObject:docId]) {
             NSLog(@"Deleting attachment: %@", docId);
-            //TODO: need API to unassociate attachment, i.e. set isActive to false
+            
+//            NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"objId\" : \"%@\"}", ID, docId, self.objectId];
+            NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, docId];
+            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+                        
+            [APIHandler asyncCallWithAction:REMOVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+                NSInteger response_status;
+                [APIHandler getResponse:response data:data error:&err status:&response_status];
+                
+                if(response_status == RESPONSE_SUCCESS) {
+                
+                } else {
+                    [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+                    NSLog(@"Failed to delete attachment %@: %@", docId, [err localizedDescription]);
+                }
+            }];
         }
     }
     
     // 2. add new attachments
     for (Document *doc in self.shaddowInvoice.attachments) {
-        if (doc.objectId == nil) {
-            NSLog(@"Adding new attachment: %@", doc.name);
-                        
+        if (doc.objectId == nil) {                        
             [Uploader uploadFile:doc.name data:doc.data objectId:self.shaddowInvoice.objectId handler:^(NSURLResponse * response, NSData * data, NSError * err) {
                 NSInteger response_status;
                 NSString *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
