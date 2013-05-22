@@ -13,5 +13,6 @@
 @synthesize data;
 @synthesize fileUrl;
 @synthesize isPublic;
+@synthesize page;
 
 @end

@@ -77,8 +77,6 @@ static NSMutableArray *inactiveInvoices = nil;
 //@synthesize lastSentDate;
 //@synthesize expectedPayDate;
 @synthesize lineItems;
-@synthesize attachments;
-@synthesize attachmentSet;
 @synthesize editDelegate;
 @synthesize detailsDelegate;
 
@@ -97,9 +95,7 @@ static NSMutableArray *inactiveInvoices = nil;
 - (id)init {
     if (self = [super init]) {
         self.lineItems = [NSMutableArray array];
-//        self.attachments = [NSMutableDictionary dictionary];
         self.attachments = [NSMutableArray array];
-//        self.attachmentSet = [NSMutableSet set];
     }
     return self;
 }
@@ -241,14 +237,6 @@ static NSMutableArray *inactiveInvoices = nil;
     return inactiveInvoices;
 }
 
-//+ (void)setInvoices:(NSArray *)invoiceList active:(Boolean)isActive {
-//    if (isActive) {
-//        invoices = invoiceList;
-//    } else {
-//        inactiveInvoices = invoiceList;
-//    }
-//}
-
 + (void)retrieveListForActive:(BOOL)isActive reload:(BOOL)needReload {
     [UIAppDelegate incrNetworkActivities];
     
@@ -298,8 +286,6 @@ static NSMutableArray *inactiveInvoices = nil;
                 [invArr addObject:inv];
             }
 
-//            [Invoice setInvoices:invArr active:isActive];
-
             if (needReload) {
 //                [ARDelegate didGetInvoices:[NSArray arrayWithArray:invArr]];
                 [ListDelegate didGetInvoices:[NSArray arrayWithArray:invArr]];
@@ -337,11 +323,6 @@ static NSMutableArray *inactiveInvoices = nil;
     
     if (source.attachments != nil) {
         target.attachments = nil;
-//        target.attachments = [NSMutableDictionary dictionary];
-//        for (NSString *name in source.attachments) {
-//            [target.attachments setObject:[source.attachments objectForKey:name] forKey:name];
-//        }
-        
         target.attachments = [NSMutableArray array];
         //TODO: need deep copy?
         for (id item in source.attachments) {

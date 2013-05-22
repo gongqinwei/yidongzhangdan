@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BDCBusinessObject.h"
+#import "BDCBusinessObjectWithAttachments.h"
 #import "SlidingDetailsTableViewController.h"
 #import "SlidingListTableViewController.h"
 
@@ -36,7 +36,7 @@
 - (void)failedToGetCustomers;
 @end
 
-@interface Customer : BDCBusinessObject
+@interface Customer : BDCBusinessObjectWithAttachments
 
 @property (nonatomic, strong) NSString *billAddr1;
 @property (nonatomic, strong) NSString *billAddr2;

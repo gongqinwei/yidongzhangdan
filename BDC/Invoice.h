@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BDCBusinessObject.h"
+#import "BDCBusinessObjectWithAttachments.h"
 #import "SlidingDetailsTableViewController.h"
 #import "SlidingListTableViewController.h"
 
@@ -45,7 +45,7 @@
 - (void)failedToGetInvoices;
 @end
 
-@interface Invoice : BDCBusinessObject
+@interface Invoice : BDCBusinessObjectWithAttachments
 
 @property (nonatomic, strong) NSString *invoiceNumber;
 @property (nonatomic, strong) NSString *customerId;
@@ -90,8 +90,9 @@
 //@property (nonatomic, strong) NSDate *expectedPayDate;
 @property (nonatomic, strong) NSMutableArray *lineItems;
 //@property (nonatomic, strong) NSMutableDictionary *attachments;     // map filename => data
-@property (nonatomic, strong) NSMutableArray *attachments;            // array of Documents
-@property (nonatomic, strong) NSMutableSet *attachmentSet;            // set of doc id's
+
+//@property (nonatomic, strong) NSMutableArray *attachments;            // array of Documents
+//@property (nonatomic, strong) NSMutableSet *attachmentSet;            // set of doc id's
 
 //+ (void)clone:(Invoice *)source to:(Invoice *)target;
 

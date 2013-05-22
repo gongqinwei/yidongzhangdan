@@ -6,7 +6,7 @@
 //
 //
 
-#import "BDCBusinessObject.h"
+#import "BDCBusinessObjectWithAttachments.h"
 #import "SlidingDetailsTableViewController.h"
 #import "SlidingListTableViewController.h"
 
@@ -29,7 +29,7 @@
 @end
 
 
-@interface ChartOfAccount : BDCBusinessObject
+@interface ChartOfAccount : BDCBusinessObjectWithAttachments
 
 @property (nonatomic, assign) int type;
 

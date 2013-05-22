@@ -14,5 +14,6 @@
 @property (nonatomic, strong) NSData *data;
 @property (nonatomic, strong) NSString *fileUrl;
 @property (nonatomic, assign) BOOL isPublic;
+@property (nonatomic, assign) NSInteger page;
 
 @end

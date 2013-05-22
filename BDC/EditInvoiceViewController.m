@@ -89,7 +89,7 @@ typedef enum {
 @property (nonatomic, strong) UITextField *invoiceDateTextField;
 @property (nonatomic, strong) UITextField *invoiceDueDateTextField;
 
-@property (nonatomic, strong) NSMutableSet *attachmentSet;
+@property (nonatomic, strong) NSMutableDictionary *attachmentDict;
 
 @property (nonatomic, strong) UIScrollView *attachmentScrollView;
 @property (nonatomic, strong) UIPageControl *attachmentPageControl;
@@ -116,7 +116,7 @@ typedef enum {
 @synthesize invoiceNumTextField;
 @synthesize invoiceDateTextField;
 @synthesize invoiceDueDateTextField;
-@synthesize attachmentSet;
+@synthesize attachmentDict;
 @synthesize attachmentScrollView;
 @synthesize attachmentPageControl;
 @synthesize currAttachment;
@@ -135,10 +135,11 @@ typedef enum {
     self.shaddowInvoice = [[Invoice alloc] init];
     [Invoice clone:invoice to:self.shaddowInvoice];
     
-    self.attachmentSet = [NSMutableSet set];
-    for (NSString *docId in self.invoice.attachmentSet) {
-        [self.attachmentSet addObject:docId];
-    }
+    self.attachmentDict = [NSMutableDictionary dictionaryWithDictionary:self.invoice.attachmentDict];
+    
+//    for (NSString *docId in self.invoice.attachmentSet) {
+//        [self.attachmentSet addObject:docId];
+//    }
 }
 
 - (void)addAttachmentData:(NSData *)attachmentData name:(NSString *)attachmentName {
@@ -315,7 +316,8 @@ typedef enum {
                                      [self.shaddowInvoice.attachments removeObjectAtIndex:idx];
                                     
                                      if (doc.objectId) {
-                                         [self.attachmentSet removeObject:doc.objectId];
+                                         [self.attachmentDict removeObjectForKey:doc.objectId];
+//                                         [self.attachmentSet removeObject:doc.objectId];
                                      }
                                      [self.currAttachment removeFromSuperview];
                                      [self layoutScrollImages:NO];
@@ -632,21 +634,18 @@ typedef enum {
         NSArray *jsonDocs = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         if(response_status == RESPONSE_SUCCESS) {
-            if (!self.invoice.attachmentSet) {
-                self.invoice.attachmentSet = [NSMutableSet set];
+            if (!self.invoice.attachmentDict) {
+                self.invoice.attachmentDict = [NSMutableDictionary dictionary];
             }
             
-            self.attachmentSet = [NSMutableSet set]; //reset
-            
-            for (NSString *docId in self.invoice.attachmentSet) {
-                [self.attachmentSet addObject:docId];
-            }
+            self.attachmentDict = [NSMutableDictionary dictionaryWithDictionary:self.invoice.attachmentDict];
             
             int i = 0;
             for (NSDictionary *dict in jsonDocs) {
                 NSString *docId = [dict objectForKey:ID];
                 
-                if (![self.attachmentSet containsObject:docId]) {
+                if (![self.attachmentDict objectForKey:docId]) {
+//                if (![self.attachmentDict containsObject:docId]) {
                     NSString *docName = [dict objectForKey:@"fileName"];
                                         
                     Document *doc = [[Document alloc] init];
@@ -654,9 +653,10 @@ typedef enum {
                     doc.name = docName;
                     doc.fileUrl = [dict objectForKey:@"fileUrl"];
                     doc.isPublic = [[dict objectForKey:@"isPublic"] intValue];
+                    doc.page = [[dict objectForKey:@"page"] intValue];
                     
-                    [self.invoice.attachmentSet addObject:docId];
-                    [self.attachmentSet addObject:docId];
+                    [self.invoice.attachmentDict setObject:doc forKey:docId];
+                    [self.attachmentDict setObject:doc forKey:docId];
                     [self.invoice.attachments insertObject:doc atIndex:i];
                     
                     [self.shaddowInvoice.attachments insertObject:doc atIndex:i];
@@ -1450,12 +1450,11 @@ typedef enum {
 
 - (void)doneSaveObject {
     // 1. remove deleted attachments
-    for (NSString *docId in self.invoice.attachmentSet) {
-        if (![self.attachmentSet containsObject:docId]) {
-            NSLog(@"Deleting attachment: %@", docId);
-            
+    for (NSString *docId in [self.invoice.attachmentDict allKeys]) {
+        if (![self.attachmentDict objectForKey:docId]) {
+            Document *doc = [self.invoice.attachmentDict objectForKey:docId];
 //            NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"objId\" : \"%@\"}", ID, docId, self.objectId];
-            NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, docId];
+            NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"page\" : %d}", ID, docId, doc.page];
             NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
                         
             [APIHandler asyncCallWithAction:REMOVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
@@ -1463,7 +1462,7 @@ typedef enum {
                 [APIHandler getResponse:response data:data error:&err status:&response_status];
                 
                 if(response_status == RESPONSE_SUCCESS) {
-                
+
                 } else {
                     [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
                     NSLog(@"Failed to delete attachment %@: %@", docId, [err localizedDescription]);
@@ -1482,7 +1481,7 @@ typedef enum {
                 if(response_status == RESPONSE_SUCCESS) {
                     doc.objectId = info;
 //                    [self.invoice.attachments addObject:doc];     //attachments already cloned synchronously!
-                    [self.invoice.attachmentSet addObject:doc.objectId];
+                    [self.invoice.attachmentDict setObject:doc forKey:doc.objectId];
 //                    [UIHelper showInfo:[NSString stringWithFormat:@"Attachment %@ saved", doc.name] withStatus:kSuccess];
                 } else {
                     [UIHelper showInfo:[NSString stringWithFormat:@"Failed to save %@", doc.name] withStatus:kFailure];

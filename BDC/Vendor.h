@@ -6,7 +6,7 @@
 //
 //
 
-#import "BDCBusinessObject.h"
+#import "BDCBusinessObjectWithAttachments.h"
 #import "SlidingDetailsTableViewController.h"
 #import "SlidingListTableViewController.h"
 
@@ -43,7 +43,7 @@ typedef enum {
 - (void)failedToGetVendors;
 @end
 
-@interface Vendor : BDCBusinessObject
+@interface Vendor : BDCBusinessObjectWithAttachments
 
 @property (nonatomic, strong) NSString *addr1;
 @property (nonatomic, strong) NSString *addr2;

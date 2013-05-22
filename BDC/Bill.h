@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BDCBusinessObject.h"
+#import "BDCBusinessObjectWithAttachments.h"
 #import "SlidingDetailsTableViewController.h"
 #import "SlidingListTableViewController.h"
 
@@ -48,7 +48,7 @@
 - (void)failedToGetBills;
 @end
 
-@interface Bill : BDCBusinessObject
+@interface Bill : BDCBusinessObjectWithAttachments
 
 @property (nonatomic, weak) id<BillDelegate> delegate;
 

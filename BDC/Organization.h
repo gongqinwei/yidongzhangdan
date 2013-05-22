@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Constants.h"
-#import "BDCBusinessObject.h"
+#import "BDCBusinessObjectWithAttachments.h"
 
 @protocol OrgDelegate <NSObject>
 
@@ -18,7 +18,7 @@
 @end
 
 
-@interface Organization : BDCBusinessObject
+@interface Organization : BDCBusinessObjectWithAttachments
 
 + (void)setDelegate:(id<OrgDelegate>)theDelegate;
 

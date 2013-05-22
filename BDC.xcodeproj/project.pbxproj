@@ -69,6 +69,7 @@
 		0EB2192F17472F1200382C44 /* xls_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EB2192E17472F1200382C44 /* xls_icon.png */; };
 		0EB2193117472F2C00382C44 /* xlsx_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EB2193017472F2C00382C44 /* xlsx_icon.png */; };
 		0EB219331747482E00382C44 /* jpg_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EB219321747482E00382C44 /* jpg_icon.png */; };
+		0EB21936174B3B2300382C44 /* BDCBusinessObjectWithAttachments.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB21935174B3B2300382C44 /* BDCBusinessObjectWithAttachments.m */; };
 		0EC88C9715F1374900A490EE /* AROverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EC88C9615F1374900A490EE /* AROverViewController.m */; };
 		0EC88C9A15F139C100A490EE /* CustomersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EC88C9915F139C100A490EE /* CustomersTableViewController.m */; };
 		0ED59D4C162DDFB9008DE1C9 /* RootMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ED59D4B162DDFB9008DE1C9 /* RootMenuViewController.m */; };
@@ -210,6 +211,8 @@
 		0EB2192E17472F1200382C44 /* xls_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xls_icon.png; sourceTree = "<group>"; };
 		0EB2193017472F2C00382C44 /* xlsx_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xlsx_icon.png; sourceTree = "<group>"; };
 		0EB219321747482E00382C44 /* jpg_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jpg_icon.png; sourceTree = "<group>"; };
+		0EB21934174B3B2300382C44 /* BDCBusinessObjectWithAttachments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDCBusinessObjectWithAttachments.h; sourceTree = "<group>"; };
+		0EB21935174B3B2300382C44 /* BDCBusinessObjectWithAttachments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDCBusinessObjectWithAttachments.m; sourceTree = "<group>"; };
 		0EC88C9515F1374900A490EE /* AROverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AROverViewController.h; sourceTree = "<group>"; };
 		0EC88C9615F1374900A490EE /* AROverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AROverViewController.m; sourceTree = "<group>"; };
 		0EC88C9815F139C100A490EE /* CustomersTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomersTableViewController.h; sourceTree = "<group>"; };
@@ -516,6 +519,8 @@
 				0E3A156D173F753B007F2DC6 /* BankAccount.m */,
 				0E3A156F1742F958007F2DC6 /* Document.h */,
 				0E3A15701742F958007F2DC6 /* Document.m */,
+				0EB21934174B3B2300382C44 /* BDCBusinessObjectWithAttachments.h */,
+				0EB21935174B3B2300382C44 /* BDCBusinessObjectWithAttachments.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -822,6 +827,7 @@
 				0E761CFD1731EF310041292A /* PayBillViewController.m in Sources */,
 				0E3A156E173F753B007F2DC6 /* BankAccount.m in Sources */,
 				0E3A15711742F958007F2DC6 /* Document.m in Sources */,
+				0EB21936174B3B2300382C44 /* BDCBusinessObjectWithAttachments.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
