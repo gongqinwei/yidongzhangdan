@@ -46,7 +46,6 @@ static NSMutableArray *inactiveBills = nil;
 @synthesize paymentStatus;
 
 @synthesize lineItems;
-@synthesize docs;
 
 @synthesize editDelegate;
 @synthesize detailsDelegate;
@@ -67,7 +66,7 @@ static NSMutableArray *inactiveBills = nil;
 - (id) init {
     if (self = [super init]) {
         self.lineItems = [NSMutableArray array];
-        self.docs = [[NSMutableDictionary alloc] init];
+        self.attachments = [NSMutableArray array];
     }
     return self;
 }
@@ -302,11 +301,12 @@ static NSMutableArray *inactiveBills = nil;
         }
     }
     
-    if (source.docs != nil) {
-        target.docs = nil;
-        target.docs = [NSMutableDictionary dictionary];
-        for (NSString *name in source.docs) {
-            [target.docs setObject:[source.docs objectForKey:name] forKey:name];
+    if (source.attachments != nil) {
+        target.attachments = nil;
+        target.attachments = [NSMutableArray array];
+
+        for (id item in source.attachments) {
+            [target.attachments addObject:item];
         }
     }
 }

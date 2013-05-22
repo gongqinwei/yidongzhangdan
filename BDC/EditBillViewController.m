@@ -20,11 +20,13 @@
 #import "Vendor.h"
 #import "BankAccount.h"
 #import "Organization.h"
+#import "Document.h"
 #import "Uploader.h"
 #import "APIHandler.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <MessageUI/MessageUI.h>
+#import <QuickLook/QuickLook.h>
 
 enum BillSections {
     kBillInfo,
@@ -75,7 +77,7 @@ typedef enum {
 #define DELETE_BILL_ALERT_TAG           1
 #define REMOVE_ATTACHMENT_ALERT_TAG     2
 
-@interface EditBillViewController () <BillDelegate, VendorDelegate, VendorSelectDelegate, ScannerDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIScrollViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate>
+@interface EditBillViewController () <BillDelegate, VendorDelegate, VendorSelectDelegate, ScannerDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIScrollViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
 
 @property (nonatomic, strong) Bill *shaddowBill;
 @property (nonatomic, strong) NSDecimalNumber *totalAmount;
@@ -90,7 +92,7 @@ typedef enum {
 @property (nonatomic, strong) UILabel *billPaidAmountLabel;
 @property (nonatomic, strong) UILabel *billAmountLabel;
 
-@property (nonatomic, strong) NSMutableArray *photoNames;
+@property (nonatomic, strong) NSMutableDictionary *attachmentDict;
 
 @property (nonatomic, strong) UIScrollView *attachmentScrollView;
 @property (nonatomic, strong) UIPageControl *attachmentPageControl;
@@ -106,11 +108,7 @@ typedef enum {
 
 @property (nonatomic, strong) UITextField *currentField;
 
-
-- (void)addMoreItems;
-- (void)addMorePhoto;
-- (void)layoutScrollImages:(BOOL)needChangePage;
-- (void)addNewAttachment:(NSData *)photoData;
+@property (nonatomic, strong) QLPreviewController *previewController;
 
 @end
 
@@ -128,7 +126,7 @@ typedef enum {
 //@synthesize billPaymentStatusLabel;
 @synthesize billPaidAmountLabel;
 @synthesize billAmountLabel;
-@synthesize photoNames;
+@synthesize attachmentDict;
 @synthesize attachmentScrollView;
 @synthesize attachmentPageControl;
 @synthesize currAttachment;
@@ -137,6 +135,7 @@ typedef enum {
 @synthesize modeChanged;
 @synthesize chartOfAccounts;
 @synthesize currentField;
+@synthesize previewController;
 
 
 #pragma mark - public methods
@@ -147,6 +146,8 @@ typedef enum {
     self.shaddowBill = nil;
     self.shaddowBill = [[Bill alloc] init];
     [Bill clone:bill to:self.shaddowBill];
+    
+    self.attachmentDict = [NSMutableDictionary dictionaryWithDictionary:self.bill.attachmentDict];
 }
 
 - (void)addAttachmentData:(NSData *)attachmentData name:(NSString *)attachmentName {
@@ -158,12 +159,11 @@ typedef enum {
         self.bill = [[Bill alloc] init];
     }
     
-    if (self.photoNames == nil) {
-        self.photoNames = [NSMutableArray array];
-    }
+    Document *doc = [[Document alloc] init];
+    doc.name = attachmentName;
+    doc.data = attachmentData;
     
-    [self.shaddowBill.docs setObject:attachmentData forKey:attachmentName];
-    [self.photoNames addObject:attachmentName];
+    [self.shaddowBill.attachments addObject:doc];
 }
 
 - (void)setMode:(ViewMode)mode {
@@ -186,9 +186,7 @@ typedef enum {
             [subview removeFromSuperview];
         }
     }
-    
-    self.photoNames = [NSMutableArray arrayWithArray:[self.shaddowBill.docs allKeys]];
-    
+        
     [self.tableView reloadData];
 }
 
@@ -205,47 +203,10 @@ typedef enum {
     if (self.mode == kCreateMode || self.mode == kAttachMode) {
         [self navigateBack];
     } else {
-        [self setBill:self.bill];
-        [self.photoNames removeAllObjects];
-        
+        [self setBill:self.bill];        
         self.mode = kViewMode;
     }
 }
-
-//- (void)sendBillEmail {
-//    if ([MFMailComposeViewController canSendMail]) {
-//        self.mailer = [[MFMailComposeViewController alloc] init];
-//        self.mailer.mailComposeDelegate = self;
-//        
-//        Organization *org = [Organization getSelectedOrg];
-//        [self.mailer setSubject:[NSString stringWithFormat:@"You have an bill from %@ due on %@", org.name, [Util formatDate:self.bill.dueDate format:nil]]];
-//        
-//        Vendor *vendor = [Vendor objectForKey:self.bill.vendorId];
-//        NSArray *toRecipients = [NSArray arrayWithObjects:vendor.email, nil];
-//        [self.mailer setToRecipients:toRecipients];
-//        
-//        //        UIImage *myImage = [UIImage imageNamed:@"mobiletuts-logo.png"];
-//        //        NSData *imageData = UIImagePNGRepresentation(myImage);
-//        //        [self.mailer addAttachmentData:imageData mimeType:@"image/png" fileName:@"mobiletutsImage"];
-//        
-//        NSString *encodedEmail = [Util URLEncode:vendor.email];
-//        NSString *linkUrl = [NSString stringWithFormat:@"%@/%@/%@?email=%@&id=%@", DOMAIN_URL, PAGE_BASE, org.objectId, encodedEmail, vendor.objectId];
-//        NSString *billLink = [NSString stringWithFormat:@"<a href='%@'>%@</a>", linkUrl, linkUrl];
-//        
-//        NSString *emailBody = [NSString stringWithFormat:BILL_EMAIL_TEMPLATE, vendor.name, billLink, org.name, self.bill.billNumber, [Util formatCurrency:self.bill.amountDue], [Util formatDate:self.bill.dueDate format:nil], nil];
-//        [self.mailer setMessageBody:emailBody isHTML:YES];
-//        
-//        [self.mailer addAttachmentData:self.billPDFData mimeType:@"application/pdf" fileName:[NSString stringWithFormat:@"Bill %@.pdf", self.bill.billNumber]];
-//        [self presentModalViewController:self.mailer animated:YES];
-//    } else {
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure"
-//                                                        message:@"Your device doesn't support the composer sheet"
-//                                                       delegate:nil
-//                                              cancelButtonTitle:@"OK"
-//                                              otherButtonTitles: nil];
-//        [alert show];
-//    }
-//}
 
 - (void)setLineItems:(NSArray *)lineItems {    
     [self updateLineItems];
@@ -263,7 +224,7 @@ typedef enum {
     [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
-- (void)addMorePhoto {
+- (void)addMoreAttachment {
     [self.view findAndResignFirstResponder];
     [self performSegueWithIdentifier:BILL_SCAN_PHOTO_SEGUE sender:self];
 }
@@ -277,44 +238,15 @@ typedef enum {
     self.currAttachment = imageView;
 }
 
-//- (void)addPDFAttachment {
-//    //    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@=%@&%@=%@", DOMAIN_URL, BILL_2_PDF_API, Id, self.bill.objectId, PRESENT_TYPE, PNG_TYPE]];
-//    //    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-//    
-//    UIImage *image = [UIImage imageNamed:@"pdf_icon.png"];
-//    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-//    
-//    CGRect rect = imageView.frame;
-//    rect.size.height = IMG_HEIGHT;
-//    rect.size.width = IMG_WIDTH - IMG_PADDING;
-//    imageView.frame = rect;
-//    imageView.tag = 0;
-//    imageView.layer.cornerRadius = 8.0f;
-//    imageView.layer.masksToBounds = YES;
-//    imageView.layer.borderColor = [[UIColor clearColor]CGColor];
-//    imageView.layer.borderWidth = 1.0f;
-//    
-//    imageView.userInteractionEnabled = YES;
-//    
-//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pdfTapped:)];
-//    [imageView addGestureRecognizer:tap];
-//    
-//    [self.attachmentScrollView addSubview:imageView];
-//}
-//
-//- (void)pdfTapped:(UITapGestureRecognizer *)gestureRecognizer {
-//    if ([self tryTap]) {
-//        UIImageView *imageView = (UIImageView *)gestureRecognizer.view;
-//        [self selectAttachment:imageView];
-//        [self performSegueWithIdentifier:BILL_VIEW_PDF_SEGUE sender:self.bill];
-//    }
-//}
-
 - (void)imageTapped:(UITapGestureRecognizer *)gestureRecognizer {
     if ([self tryTap]) {
         UIImageView *imageView = (UIImageView *)gestureRecognizer.view;
+        
+        self.previewController.currentPreviewItemIndex = imageView.tag;
+        [self presentModalViewController:self.previewController animated:YES];
+        
         [self selectAttachment:imageView];
-        [self performSegueWithIdentifier:BILL_PREVIEW_ATTACHMENT_SEGUE sender:imageView];
+//        [self performSegueWithIdentifier:BILL_PREVIEW_ATTACHMENT_SEGUE sender:imageView];
     }
 }
 
@@ -323,27 +255,50 @@ typedef enum {
         [self selectAttachment:(UIImageView *)gestureRecognizer.view];
         
         if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-            UIAlertView *alert = [[UIAlertView alloc]
-                                  initWithTitle: @"Unassociate Confirmation"
-                                  message: @"Are you sure to unassociate this page?"
-                                  delegate: self
-                                  cancelButtonTitle:@"No"
-                                  otherButtonTitles:@"Yes", nil];
-            alert.tag = REMOVE_ATTACHMENT_ALERT_TAG;
-            [alert show];
+            int idx = self.currAttachment.tag;
+            Document *doc = [self.shaddowBill.attachments objectAtIndex:idx];
+            
+            [UIView animateWithDuration:1.0
+                             animations:^{
+                                 self.currAttachment.alpha = 0.0;
+                             }
+                             completion:^ (BOOL finished) {
+                                 if (finished) {
+                                     [self.shaddowBill.attachments removeObjectAtIndex:idx];
+                                     
+                                     if (doc.objectId) {
+                                         [self.attachmentDict removeObjectForKey:doc.objectId];
+                                     }
+                                     [self.currAttachment removeFromSuperview];
+                                     [self layoutScrollImages:NO];
+                                     self.currAttachment = nil;
+                                 }
+                             }];
         }
     }
 }
 
-- (void)addNewAttachment:(NSData *)photoData {
-    UIImage *image = [UIImage imageWithData:photoData];
+- (void)addAttachment:(NSString *)ext data:(NSData *)attachmentData {
+    UIImage *image;
+    
+    if (attachmentData && [IMAGE_TYPE_SET containsObject:ext]) {
+        image = [UIImage imageWithData:attachmentData];
+    } else {
+        NSString *iconFileName = [NSString stringWithFormat:@"%@_icon.png", ext];
+        image = [UIImage imageNamed:iconFileName];
+        
+        if (!image) {
+            image = [UIImage imageNamed:@"unknown_file_icon.png"];
+        }
+    }
+    
     UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
     
     CGRect rect = imageView.frame;
     rect.size.height = IMG_HEIGHT;
     rect.size.width = IMG_WIDTH - IMG_PADDING;
     imageView.frame = rect;
-    imageView.tag = [self.shaddowBill.docs count] - 1;
+    imageView.tag = [self.shaddowBill.attachments count];
     imageView.layer.cornerRadius = 8.0f;
     imageView.layer.masksToBounds = YES;
     imageView.layer.borderColor = [[UIColor clearColor]CGColor];
@@ -363,53 +318,22 @@ typedef enum {
     [self.attachmentScrollView addSubview:imageView];
 }
 
-- (void)retrieveDocAttachments {
-    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.bill.objectId];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
-        
-    [APIHandler asyncCallWithAction:RETRIEVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
-        NSInteger response_status;
-        NSArray *jsonBills = [APIHandler getResponse:response data:data error:&err status:&response_status];
-                
-        if(response_status == RESPONSE_SUCCESS) {
-            NSLog(@"%@", jsonBills);
-        } else {
-            NSLog(@"Failed to retrieve documents/attachments for bill %@: %@", self.bill.name, [err localizedDescription]);
-        }
-    }];
-}
-
-//- (void)inputAccessoryDoneAction:(UIBarButtonItem *)button {
-//    [self.view findAndResignFirstResponder];
-//    
-////    switch (button.tag) {
-////        case kBillDate * TAG_BASE:
-////            [self.billDateTextField resignFirstResponder];
-////            break;
-////        case kBillDueDate * TAG_BASE:
-////            [self.billDueDateTextField resignFirstResponder];
-////            break;
-////        default:
-////            break;
-////    }
+//- (void)retrieveDocAttachments {
+//    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.bill.objectId];
+//    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+//        
+//    [APIHandler asyncCallWithAction:RETRIEVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+//        NSInteger response_status;
+//        NSArray *jsonBills = [APIHandler getResponse:response data:data error:&err status:&response_status];
+//                
+//        if(response_status == RESPONSE_SUCCESS) {
+//            NSLog(@"%@", jsonBills);
+//        } else {
+//            NSLog(@"Failed to retrieve documents/attachments for bill %@: %@", self.bill.name, [err localizedDescription]);
+//        }
+//    }];
 //}
 
-//- (UIToolbar *)inputAccessoryViewForTag:(NSInteger)tag {
-//    UIToolbar *tlbControls = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, ToolbarHeight)];
-//    tlbControls.barStyle = UIBarStyleBlackTranslucent;
-//    
-//    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-//                                                                                   target:nil
-//                                                                                   action:nil];
-//    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:StrDone
-//                                                                   style:UIBarButtonItemStyleDone
-//                                                                  target:self
-//                                                                  action:@selector(inputAccessoryDoneAction:)];
-//    doneButton.tag = tag * TAG_BASE;
-//    tlbControls.items = [NSArray arrayWithObjects:flexibleSpace, doneButton, nil];
-//    
-//    return tlbControls;
-//}
 
 #pragma mark - Target Action
 
@@ -555,16 +479,104 @@ typedef enum {
     self.accountPickerView.delegate = self;
     self.accountPickerView.dataSource = self;
     self.accountPickerView.showsSelectionIndicator = YES;
-    
-    [self retrieveDocAttachments];
-    
+        
     self.chartOfAccounts = [ChartOfAccount listOrderBy:ACCOUNT_NAME ascending:YES active:YES];
-
+    
+    if (self.mode == kViewMode) {
+        // retrieve attachments
+        [self retrieveDocAttachments];
+        
+        self.previewController = [[QLPreviewController alloc] init];
+        self.previewController.delegate = self;
+        self.previewController.dataSource = self;
+    }
 }
 
-//- (void)viewWillAppear:(BOOL)animated {
-//    [self.view removeGestureRecognizer:self.tapRecognizer];
-//}
+- (void)retrieveDocAttachments {
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.bill.objectId];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+    
+    [APIHandler asyncCallWithAction:RETRIEVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        NSInteger response_status;
+        NSArray *jsonDocs = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        
+        if(response_status == RESPONSE_SUCCESS) {
+            if (!self.bill.attachmentDict) {
+                self.bill.attachmentDict = [NSMutableDictionary dictionary];
+            }
+            
+            self.attachmentDict = [NSMutableDictionary dictionaryWithDictionary:self.bill.attachmentDict];
+            
+            int i = 0;
+            for (NSDictionary *dict in jsonDocs) {
+                NSString *docId = [dict objectForKey:ID];
+                
+                if (![self.attachmentDict objectForKey:docId]) {
+                    NSString *docName = [dict objectForKey:@"fileName"];
+                    
+                    Document *doc = [[Document alloc] init];
+                    doc.objectId = docId;
+                    doc.name = docName;
+                    doc.fileUrl = [dict objectForKey:@"fileUrl"];
+                    doc.isPublic = [[dict objectForKey:@"isPublic"] intValue];
+                    doc.page = [[dict objectForKey:@"page"] intValue];
+                    NSLog(@"name: %@", docName);
+                    NSLog(@"page: %d", doc.page);
+                    
+                    [self.bill.attachmentDict setObject:doc forKey:docId];
+                    [self.attachmentDict setObject:doc forKey:docId];
+                    [self.bill.attachments insertObject:doc atIndex:i];
+                    
+                    [self.shaddowBill.attachments insertObject:doc atIndex:i];
+                    
+                    [self downloadDocument:doc forAttachmentAtIndex:i];
+                }
+                i++;
+            }
+            
+            NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:kBillDocs];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+            });
+        } else {
+            NSLog(@"Failed to retrieve attachments for %@: %@", self.bill.name, [err localizedDescription]);
+        }
+    }];
+}
+
+- (void)downloadDocument:(Document *)doc forAttachmentAtIndex:(int)idx {
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", DOMAIN_URL, doc.fileUrl]];
+    NSURLRequest *req = [NSURLRequest  requestWithURL:url
+                                          cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                      timeoutInterval:API_TIMEOUT];
+    
+    [NSURLConnection sendAsynchronousRequest:req
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                               doc.data = data;
+                               
+                               UIImageView *img = [self.attachmentScrollView.subviews objectAtIndex: idx];
+                               NSString *ext = [[doc.name pathExtension] lowercaseString];
+                               
+                               if ([IMAGE_TYPE_SET containsObject:ext]) {
+                                   UIImage *image = [UIImage imageWithData:data];
+                                   
+                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                       img.alpha = 0.0;
+                                       img.image = image;
+                                       [img setNeedsDisplay];
+                                       
+                                       [UIView animateWithDuration:2.0
+                                                        animations:^{
+                                                            img.alpha = 1.0;
+                                                        }
+                                                        completion:^ (BOOL finished) {
+                                                        }];
+                                   });
+                               }
+                           }];
+}
+
 
 - (void)viewDidUnload {
     [super viewDidUnload];
@@ -588,10 +600,10 @@ typedef enum {
         if (self.mode != kCreateMode && self.mode != kAttachMode) {
             idx--;
         }
-        NSString *photoName = [self.photoNames objectAtIndex:idx];
-        NSData *photoData = [self.shaddowBill.docs objectForKey:photoName];
-        [segue.destinationViewController setPhotoName:photoName];
-        [segue.destinationViewController setPhotoData:photoData];
+        NSString *attachmentName = ((Document *)[self.shaddowBill.attachments objectAtIndex:idx]).name;
+        NSData *attachmentData = ((Document *)[self.shaddowBill.attachments objectAtIndex:idx]).data;
+        [segue.destinationViewController setPhotoName:attachmentName];
+        [segue.destinationViewController setPhotoData:attachmentData];
     } else if ([segue.identifier isEqualToString:BILL_VIEW_VENDOR_DETAILS_SEGUE]) {
         [segue.destinationViewController setVendor:sender];
         [segue.destinationViewController setMode:kViewMode];
@@ -833,13 +845,9 @@ typedef enum {
                 }
             }
             
-            if (self.mode != kCreateMode && self.mode != kAttachMode) {
-//                [self addPDFAttachment];
-            }
-            
-            for (NSString * photoName in self.photoNames) {
-                NSData *photoData = [self.shaddowBill.docs objectForKey:photoName];
-                [self addNewAttachment:photoData];
+            for (Document * doc in self.shaddowBill.attachments) {
+                NSString *ext = [[doc.name pathExtension] lowercaseString];
+                [self addAttachment:ext data:doc.data];
             }
             
             [self layoutScrollImages:NO];
@@ -867,24 +875,23 @@ typedef enum {
     CGFloat curXLoc = 0;
     NSInteger tag = 0;
     for (view in subviews) {
-        if ([view isKindOfClass:[UIImageView class]]) {
-            CGRect frame = view.frame;
-            frame.origin = CGPointMake(curXLoc, 0);
-            view.frame = frame;
-            view.tag = tag;
-            tag++;
-            curXLoc += IMG_WIDTH;
-        }
+        CGRect frame = view.frame;
+        frame.origin = CGPointMake(curXLoc, 0);
+        view.frame = frame;
+        view.tag = tag;
+        tag++;
+        curXLoc += IMG_WIDTH;
     }
     
-    //    int numPages = ceil((float)[self.photoNames count] / BILL_NUM_ATTACHMENT_PER_PAGE);
+//    int numPages = ceil((float)[self.photoNames count] / BILL_NUM_ATTACHMENT_PER_PAGE);
     int numPages = ceil((float)tag / BILL_NUM_ATTACHMENT_PER_PAGE);
     
     self.attachmentPageControl.numberOfPages = numPages;
     
-    if (needChangePage || self.attachmentPageControl.currentPage == numPages-1) {
-        int spaces = numPages * BILL_NUM_ATTACHMENT_PER_PAGE;
-        [self.attachmentScrollView setContentSize:CGSizeMake(spaces * IMG_WIDTH, [self.attachmentScrollView bounds].size.height)];
+    int spaces = numPages * BILL_NUM_ATTACHMENT_PER_PAGE;
+    [self.attachmentScrollView setContentSize:CGSizeMake(spaces * IMG_WIDTH, [self.attachmentScrollView bounds].size.height)];
+    
+    if (needChangePage || self.attachmentPageControl.currentPage == numPages - 1) {
         self.attachmentPageControl.currentPage = numPages - 1;
         
         CGPoint offset = CGPointMake(self.attachmentPageControl.currentPage * BILL_NUM_ATTACHMENT_PER_PAGE * IMG_WIDTH, 0);
@@ -954,8 +961,8 @@ typedef enum {
         UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 360, 30)];
         headerView.backgroundColor = [UIColor clearColor];
         
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 100, 20)];
-        label.text = @"Attachment";
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 200, 20)];
+        label.text = @"Document & Attachment";
         label.font = [UIFont fontWithName:@"Helvetica-Bold" size:17];
         label.backgroundColor = [UIColor clearColor];
         label.textColor = APP_SYSTEM_BLUE_COLOR;
@@ -983,8 +990,8 @@ typedef enum {
         UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 360, 30)];
         footerView.backgroundColor = [UIColor clearColor];
         
-        UILabel *amoutLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 3, 80, 20)];
-        amoutLabel.text = @"Bill Amount";
+        UILabel *amoutLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 3, 85, 20)];
+        amoutLabel.text = @"Bill Amount:";
         amoutLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:14];
         amoutLabel.backgroundColor = [UIColor clearColor];
         amoutLabel.textColor = APP_LABEL_BLUE_COLOR;
@@ -995,8 +1002,8 @@ typedef enum {
         self.shaddowBill.amount = self.totalAmount;
         [footerView addSubview:self.billAmountLabel];
         
-        UILabel *paidAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 24, 80, 20)];
-        paidAmountLabel.text = @"Paid";
+        UILabel *paidAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 24, 85, 20)];
+        paidAmountLabel.text = @"Paid:";
         paidAmountLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:13];
         paidAmountLabel.backgroundColor = [UIColor clearColor];
         paidAmountLabel.textColor = APP_LABEL_BLUE_COLOR;
@@ -1149,9 +1156,8 @@ typedef enum {
                     if (self.mode != kCreateMode || self.mode != kAttachMode) {
                         idx--;
                     }
-                    NSString *photoName = [self.photoNames objectAtIndex:idx];
-                    [self.photoNames removeObjectAtIndex:idx];
-                    [self.shaddowBill.docs removeObjectForKey:photoName];
+                    
+                    [self.shaddowBill.attachments removeObjectAtIndex:idx];
                     [imageView removeFromSuperview];
                     [self layoutScrollImages:NO];
                     
@@ -1163,71 +1169,6 @@ typedef enum {
             break;
     }
 }
-
-//#pragma mark - Action sheet delegate
-//
-//- (void)willPresentActionSheet:(UIActionSheet *)actionSheet {
-//    for (UIView* view in [actionSheet subviews]) {
-//        if ([view respondsToSelector:@selector(title)]) {
-//            NSString* title = [view performSelector:@selector(title)];
-//            if ([title isEqualToString:[BILL_ACTIONS objectAtIndex:kEmailBill]] && [view respondsToSelector:@selector(setEnabled:)]) {
-//                if (self.pdfReady) {
-//                    [view performSelector:@selector(setEnabled:) withObject:[NSNumber numberWithBool:YES]];
-//                } else {
-//                    [view performSelector:@selector(setEnabled:) withObject:NO];
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-//    switch (buttonIndex) {
-//        case kDeleteBill:
-//        {
-//            UIAlertView *alert = [[UIAlertView alloc]
-//                                  initWithTitle: @"Delete Confirmation"
-//                                  message: @"Are you sure to delete this bill?"
-//                                  delegate: self
-//                                  cancelButtonTitle:@"No"
-//                                  otherButtonTitles:@"Yes", nil];
-//            alert.tag = DELETE_BILL_ALERT_TAG;
-//            [alert show];
-//        }
-//            break;
-//        case kEmailBill:
-////            [self sendBillEmail];
-//            break;
-//        case kEditBill:
-//            self.mode = kUpdateMode;
-//            break;
-//        default:
-//            break;
-//    }
-//}
-
-//#pragma mark - MailComposer delegate
-//
-//- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
-//    switch (result){
-//        case MFMailComposeResultSent:
-//            [UIHelper showInfo: EMAIL_SENT withStatus:kSuccess];
-//            break;
-//        case MFMailComposeResultCancelled:
-//            break;
-//        case MFMailComposeResultSaved:
-//            break;
-//        case MFMailComposeResultFailed:
-//            [UIHelper showInfo: EMAIL_FAILED withStatus:kFailure];
-//            break;
-//        default:
-//            [UIHelper showInfo: EMAIL_FAILED withStatus:kError];
-//            break;
-//    }
-//    
-//    // Remove the mail view
-//    [self dismissModalViewControllerAnimated:YES];
-//}
 
 #pragma mark - UIPickerView Datascource
 
@@ -1253,27 +1194,66 @@ typedef enum {
     item.account = [self.chartOfAccounts objectAtIndex:row];
 }
 
+#pragma mark - QuickLook Preview Controller Data Source
+
+- (NSInteger) numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller {
+    if (controller == self.previewController) {
+        return [self.shaddowBill.attachments count];
+    } else {
+        return 1;
+    }
+}
+
+- (id<QLPreviewItem>) previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index {
+    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsDir = [dirPaths objectAtIndex:0];
+    
+    Document *doc = self.shaddowBill.attachments[index];
+    
+    NSString *filePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent:doc.name]];
+    [doc.data writeToFile:filePath atomically:YES];
+    
+    return [NSURL fileURLWithPath:filePath];
+}
+
 #pragma mark - model delegate
 
 - (void)doneSaveObject {
-    //    [Bill retrieveList];
-    
-    if (self.photoNames != nil && [self.photoNames count] > 0) {
-        for (NSString *photoName in self.photoNames) {
-            if ([self.bill.docs objectForKey:photoName] == nil) {
-                NSData *photoData = [self.shaddowBill.docs objectForKey:photoName];
+    // 1. remove deleted attachments
+    for (NSString *docId in [self.bill.attachmentDict allKeys]) {
+        if (![self.attachmentDict objectForKey:docId]) {
+            Document *doc = [self.bill.attachmentDict objectForKey:docId];
+            NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"objId\" : \"%@\", \"page\" : %d}", ID, docId, self.bill.objectId, doc.page];
+            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+            
+            [APIHandler asyncCallWithAction:REMOVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+                NSInteger response_status;
+                [APIHandler getResponse:response data:data error:&err status:&response_status];
                 
-                [Uploader uploadFile:photoName data:photoData objectId:self.shaddowBill.objectId handler:^(NSURLResponse * response, NSData * data, NSError * err) {
-                    NSInteger status;
-                    [APIHandler getResponse:response data:data error:&err status:&status];
+                if(response_status == RESPONSE_SUCCESS) {
                     
-                    if(status == RESPONSE_SUCCESS) {
-                        [UIHelper showInfo:[NSString stringWithFormat:@"Pages %@ saved", photoName] withStatus:kSuccess];
-                    } else {
-                        [UIHelper showInfo:[NSString stringWithFormat:@"Failed to save %@", photoName] withStatus:kFailure];
-                    }
-                }];
-            }
+                } else {
+                    [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+                    NSLog(@"Failed to delete attachment %@: %@", docId, [err localizedDescription]);
+                }
+            }];
+        }
+    }
+    
+    // 2. add new attachments
+    for (Document *doc in self.shaddowBill.attachments) {
+        if (doc.objectId == nil) {
+            [Uploader uploadFile:doc.name data:doc.data objectId:self.shaddowBill.objectId handler:^(NSURLResponse * response, NSData * data, NSError * err) {
+                NSInteger response_status;
+                NSString *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
+                
+                if(response_status == RESPONSE_SUCCESS) {
+                    doc.objectId = info;
+                    [self.bill.attachmentDict setObject:doc forKey:doc.objectId];
+                } else {
+                    [UIHelper showInfo:[NSString stringWithFormat:@"Failed to save %@", doc.name] withStatus:kFailure];
+                }
+            }];
         }
     }
     
@@ -1310,7 +1290,7 @@ typedef enum {
 
 - (void)didScanPhoto:(NSData *)photoData name:(NSString *)photoName {
     [self addAttachmentData:photoData name:photoName];
-    [self addNewAttachment:photoData];
+    [self addAttachment:@"jpg" data:photoData];
     [self layoutScrollImages:YES];
 }
 

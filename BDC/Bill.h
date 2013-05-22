@@ -63,8 +63,6 @@
 @property (nonatomic, strong) NSString *paymentStatus;
 
 @property (nonatomic, strong) NSMutableArray *lineItems;
-@property (nonatomic, strong) NSMutableDictionary *docs;     // map filename => data
-//@property (nonatomic, strong) NSMutableSet *docs; //set of DocumentPg id
 
 // delegates
 + (void)setAPDelegate:(id<BillListDelegate>)delegate;

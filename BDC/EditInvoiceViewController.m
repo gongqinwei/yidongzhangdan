@@ -136,10 +136,6 @@ typedef enum {
     [Invoice clone:invoice to:self.shaddowInvoice];
     
     self.attachmentDict = [NSMutableDictionary dictionaryWithDictionary:self.invoice.attachmentDict];
-    
-//    for (NSString *docId in self.invoice.attachmentSet) {
-//        [self.attachmentSet addObject:docId];
-//    }
 }
 
 - (void)addAttachmentData:(NSData *)attachmentData name:(NSString *)attachmentName {
@@ -167,7 +163,6 @@ typedef enum {
         self.navigationItem.rightBarButtonItem.tag = 1;
         self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;        
     } else {
-//        self.tableView.allowsSelectionDuringEditing = YES;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveInvoice:)];
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelEdit:)];
     }
@@ -317,7 +312,6 @@ typedef enum {
                                     
                                      if (doc.objectId) {
                                          [self.attachmentDict removeObjectForKey:doc.objectId];
-//                                         [self.attachmentSet removeObject:doc.objectId];
                                      }
                                      [self.currAttachment removeFromSuperview];
                                      [self layoutScrollImages:NO];
@@ -481,9 +475,7 @@ typedef enum {
     self.navigationItem.rightBarButtonItem.customView = self.activityIndicator;
     [self.activityIndicator startAnimating];
     [self.view findAndResignFirstResponder];
-    
-//    [Invoice clone:self.shaddowInvoice to:self.invoice];
-    
+        
     if (self.shaddowInvoice.customerId == nil) {
         [UIHelper showInfo:@"No customer chosen" withStatus:kError];
         return;
@@ -671,7 +663,7 @@ typedef enum {
                [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic]; 
             });
         } else {
-            NSLog(@"Failed to retrieve attachments for invoice %@: %@", self.invoice.name, [err localizedDescription]);
+            NSLog(@"Failed to retrieve attachments for %@: %@", self.invoice.name, [err localizedDescription]);
         }
     }];
 }
@@ -692,9 +684,18 @@ typedef enum {
                                
                                if ([IMAGE_TYPE_SET containsObject:ext]) {
                                    UIImage *image = [UIImage imageWithData:data];
-                                   img.image = image;
+                                   
                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                      [img setNeedsDisplay]; 
+                                       img.alpha = 0.0;
+                                       img.image = image;
+                                       [img setNeedsDisplay];
+                                       
+                                       [UIView animateWithDuration:2.0
+                                                        animations:^{
+                                                            img.alpha = 1.0;
+                                                        }
+                                                        completion:^ (BOOL finished) {
+                                                        }];
                                    });
                                }
                            }];
@@ -1016,14 +1017,12 @@ typedef enum {
     CGFloat curXLoc = 0;
     NSInteger tag = 0;
     for (view in subviews) {
-//        if ([view isKindOfClass:[UIImageView class]]) {
-            CGRect frame = view.frame;
-            frame.origin = CGPointMake(curXLoc, 0);
-            view.frame = frame;
-            view.tag = tag;
-            tag++;
-            curXLoc += IMG_WIDTH;
-//        }
+        CGRect frame = view.frame;
+        frame.origin = CGPointMake(curXLoc, 0);
+        view.frame = frame;
+        view.tag = tag;
+        tag++;
+        curXLoc += IMG_WIDTH;
     }
     
 //    int numPages = ceil((float)[self.attachmentNames count] / INV_NUM_ATTACHMENT_PER_PAGE);
@@ -1312,6 +1311,7 @@ typedef enum {
                     if (self.mode != kCreateMode || self.mode != kAttachMode) {
                         idx--;
                     }
+                    
                     [self.shaddowInvoice.attachments removeObjectAtIndex:idx];
                     [imageView removeFromSuperview];
                     [self layoutScrollImages:NO];

@@ -75,11 +75,15 @@
     } else {
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     }
+    
+    [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.clearsSelectionOnViewWillAppear = YES;
 
     self.view.frame = CGRectMake(self.view.frame.size.width - SLIDING_DISTANCE,
                                  self.view.frame.origin.y,
@@ -196,6 +200,12 @@
     }
 }
 
+- (void)addSelectedBackGroundForCell:(UITableViewCell *)cell {
+    UIView *bgColorView = [[UIView alloc] init];
+    [bgColorView setBackgroundColor:[UIColor colorWithRed:100/255.f green:100/255.f blue:100/255.f alpha:0.75]];
+    cell.selectedBackgroundView = bgColorView;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier1 = @"ActionMenuActivenessItem";
@@ -237,6 +247,7 @@
         if (self.targetViewController.sortAttributes) {
             if (indexPath.section == 0) {
                 [cell addSubview:self.activenessSwitch];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
             } else {
                 if (indexPath.section == 1) {
                     if (self.targetViewController.sortAttributes.count > 0) {
@@ -245,16 +256,20 @@
                         if ([indexPath isEqual:self.lastSortAttribute]) {
                             cell.accessoryType = UITableViewCellAccessoryCheckmark;
                         }
+                        cell.selectionStyle = UITableViewCellSelectionStyleNone;
                     } else {
                         cell.textLabel.text = [self.crudActions objectAtIndex:indexPath.row];
+                        [self addSelectedBackGroundForCell:cell];
                     }
                 } else {
                     cell.textLabel.text = [self.crudActions objectAtIndex:indexPath.row];
+                    [self addSelectedBackGroundForCell:cell];
                 }
             }
         } else {
             NSString *action = [self.crudActions objectAtIndex:indexPath.row];
             cell.textLabel.text = action;
+            [self addSelectedBackGroundForCell:cell];
             
             if ([action isEqualToString:ACTION_PAY]) {
 //                UITextField *payAmountTextField = [[UITextField alloc] initWithFrame:CGRectMake(120, 5, 100, cell.viewForBaselineLayout.bounds.size.height - 12)];
@@ -301,8 +316,6 @@
                 
             }
         }
-        
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
     return cell;

@@ -186,7 +186,7 @@ static RootMenuViewController * _sharedInstance = nil;
         
         UIView *bgColorView = [[UIView alloc] init];
         [bgColorView setBackgroundColor:[UIColor colorWithRed:100/255.f green:100/255.f blue:100/255.f alpha:0.75]];
-        [cell setSelectedBackgroundView:bgColorView];
+//        [cell setSelectedBackgroundView:bgColorView];
         cell.selectedBackgroundView = bgColorView;
     }
     
