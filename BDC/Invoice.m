@@ -34,7 +34,6 @@ static id<InvoiceListDelegate> ListDelegate = nil;
 static NSMutableArray *invoices = nil;
 static NSMutableArray *inactiveInvoices = nil;
 
-//@synthesize objectId;
 @synthesize customerId;
 @synthesize customerName;
 @synthesize invoiceNumber;
@@ -77,7 +76,6 @@ static NSMutableArray *inactiveInvoices = nil;
 //@synthesize lastSentDate;
 //@synthesize expectedPayDate;
 @synthesize lineItems;
-@synthesize editDelegate;
 @synthesize detailsDelegate;
 
 + (void)setARDelegate:(id<InvoiceListDelegate>)delegate {
@@ -159,7 +157,7 @@ static NSMutableArray *inactiveInvoices = nil;
                 [weakSelf.editDelegate didUpdateObject];
                 [weakSelf.detailsDelegate didUpdateObject];
             } else {
-                [weakSelf.editDelegate didCreateInvoice:invId];
+                [weakSelf.editDelegate didCreateObject:invId];
             }
         } else {
             [weakSelf.editDelegate failedToSaveObject];

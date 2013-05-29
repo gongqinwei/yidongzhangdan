@@ -14,7 +14,6 @@
 #import "Util.h"
 #import "Uploader.h"
 #import "UIHelper.h"
-//#import "BillDetailsViewController.h"
 #import "BDCAppDelegate.h"
 
 #define LIST_ACTIVE_BILL_FILTER     @"{ \"start\" : 0, \
@@ -44,10 +43,7 @@ static NSMutableArray *inactiveBills = nil;
 @synthesize paidAmount;
 @synthesize approvalStatus;
 @synthesize paymentStatus;
-
 @synthesize lineItems;
-
-@synthesize editDelegate;
 @synthesize detailsDelegate;
 
 
@@ -134,7 +130,7 @@ static NSMutableArray *inactiveBills = nil;
                 [weakSelf.editDelegate didUpdateObject];
                 [weakSelf.detailsDelegate didUpdateObject];
             } else {
-                [weakSelf.editDelegate didCreateBill:billId];
+                [weakSelf.editDelegate didCreateObject:billId];
             }
         } else {
             [weakSelf.editDelegate failedToSaveObject];

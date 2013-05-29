@@ -22,10 +22,7 @@ enum ItemInfoType {
 #define ItemInfo            [NSArray arrayWithObjects:@"Type", @"Name", @"Price", @"Qty", nil]
 #define DOLLAR_RECT         CGRectMake(CELL_WIDTH - 185, 5, 10, CELL_HEIGHT - 10)
 
-@interface EditItemViewController () <ItemDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
-
-@property (nonatomic, strong) Item *shaddowItem;
-@property (nonatomic, assign) BOOL modeChanged;
+@interface EditItemViewController () <UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
 @property (nonatomic, strong) UIPickerView *itemTypePickerView;
 @property (nonatomic, strong) UITextField *itemTypeTextField;
@@ -33,50 +30,20 @@ enum ItemInfoType {
 @property (nonatomic, strong) UITextField *itemPriceTextField;
 @property (nonatomic, strong) UITextField *itemQtyTextField;
 
-//@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
-
 @end
 
 @implementation EditItemViewController
 
-@synthesize item = _item;
 @synthesize lineItemIndex;
-@synthesize shaddowItem;
-@synthesize modeChanged;
 @synthesize itemTypePickerView;
 @synthesize itemTypeTextField;
 @synthesize itemNameTextField;
 @synthesize itemPriceTextField;
 @synthesize itemQtyTextField;
-
 @synthesize lineItemDelegate;
 
-- (void)setItem:(Item *)item {
-    _item = item;
-    
-    self.shaddowItem = nil;
-    self.shaddowItem = [[Item alloc] init];
-    
-    [Item clone:item to:self.shaddowItem];
-    self.title = item.name;
-}
-
-- (void)setMode:(ViewMode)mode {
-    super.mode = mode;
-    self.modeChanged = YES;
-    
-    if (mode == kViewMode) {
-        NSLog(@"%@", self); //TODO: will crash at next line if w/o this NSLog!!! why???
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
-        self.navigationItem.rightBarButtonItem.tag = 1;
-        self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
-    } else {
-        //TODO: in modify mode, make right button (temp) "Preserve" instead of "Save"
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveItem:)];
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelEdit:)];
-    }
-        
-    [self.tableView reloadData];
+- (Class)busObjClass {
+    return [Item class];
 }
 
 #pragma mark - Depricated: this method is no longer needed as the edit bar button will be moved to action menu
@@ -86,73 +53,53 @@ enum ItemInfoType {
     }
 }
 
-- (IBAction)saveItem:(UIBarButtonItem *)sender {
+- (IBAction)saveBusObj:(UIBarButtonItem *)sender {
     if ([self tryTap]) {
-        self.navigationItem.rightBarButtonItem.customView = self.activityIndicator;
-        [self.activityIndicator startAnimating];
-        [self.view findAndResignFirstResponder];
+        Item *shaddowItem = (Item *)self.shaddowBusObj;
         
-        if (self.shaddowItem.type == INVALID_ITEM_TYPE) {
+        if (shaddowItem.type == INVALID_ITEM_TYPE) {
             [UIHelper showInfo:@"Missing type!" withStatus:kError];
             //        self.navigationItem.rightBarButtonItem.customView = nil;
             return;
         }
         
-        if (self.shaddowItem.name == nil || [self.shaddowItem.name length] == 0) {
+        if (self.shaddowBusObj.name == nil || [self.shaddowBusObj.name length] == 0) {
             [UIHelper showInfo:@"Missing name!" withStatus:kError];
             //        self.navigationItem.rightBarButtonItem.customView = nil;
             return;
         }
         
-        if (self.shaddowItem.price == nil) {
+        if (shaddowItem.price == nil) {
             [UIHelper showInfo:@"Missing price!" withStatus:kError];
             //        self.navigationItem.rightBarButtonItem.customView = nil;
             return;
         }
         
+        [super saveBusObj:sender];
+        
         if (self.mode == kCreateMode) {
-            [self.shaddowItem create];
+            [shaddowItem create];
         } else if (self.mode == kUpdateMode){
-            [self.shaddowItem update];
+            [shaddowItem update];
         } else if (self.mode == kModifyMode) {
-            [self.lineItemDelegate didModifyItem:self.shaddowItem forIndex:self.lineItemIndex];
+            [self.lineItemDelegate didModifyItem:shaddowItem forIndex:self.lineItemIndex];
             [self navigateBack];
-        }
-    }
-}
-
-- (void)cancelEdit:(UIBarButtonItem *)sender {
-    if ([self tryTap]) {
-        if (self.mode == kCreateMode || self.mode == kModifyMode) {
-            [self navigateBack];
-        } else {
-            [self setItem:self.item];
-            self.mode = kViewMode;
         }
     }
 }
 
 #pragma mark - Life Cycle methods
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
-    if (!self.item) {
-        self.item = [[Item alloc] init];
-        self.shaddowItem = [[Item alloc] init];
-        self.shaddowItem.type = INVALID_ITEM_TYPE;
+    Item *shaddowItem = (Item *)self.shaddowBusObj;
+    
+    if (!self.busObj) {
+        self.busObj = [[Item alloc] init];
+        self.shaddowBusObj = [[Item alloc] init];
+        shaddowItem.type = INVALID_ITEM_TYPE;
     }
-    
-    self.busObj = self.item;
-    
+        
     [super viewDidLoad];
     
     if (self.mode == kViewMode) {
@@ -163,8 +110,8 @@ enum ItemInfoType {
     
 //    self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    self.item.editDelegate = self;
-    self.shaddowItem.editDelegate = self;
+    self.busObj.editDelegate = self;
+    self.shaddowBusObj.editDelegate = self;
     
     self.itemTypePickerView = [[UIPickerView alloc] initWithFrame:PICKER_RECT];
     self.itemTypePickerView.delegate = self;
@@ -258,6 +205,8 @@ enum ItemInfoType {
     cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:APP_LABEL_FONT_SIZE];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
+    Item *shaddowItem = (Item *)self.shaddowBusObj;
+    
     switch (indexPath.row) {
         case kItemType:
             if (self.mode == kCreateMode) {
@@ -266,16 +215,16 @@ enum ItemInfoType {
                 
                 [cell addSubview:self.itemTypeTextField];
             } else {
-                cell.detailTextLabel.text = [ItemTypeNames objectAtIndex: self.shaddowItem.type];
+                cell.detailTextLabel.text = [ItemTypeNames objectAtIndex: shaddowItem.type];
             }
             break;
         case kItemName:
         {
             if (self.mode == kViewMode || self.mode == kModifyMode) {
-                cell.detailTextLabel.text = self.shaddowItem.name;
+                cell.detailTextLabel.text = self.shaddowBusObj.name;
             } else {
-                if (self.shaddowItem != nil) {
-                    self.itemNameTextField.text = self.shaddowItem.name;
+                if (self.shaddowBusObj != nil) {
+                    self.itemNameTextField.text = self.shaddowBusObj.name;
                 }
                 self.itemNameTextField.backgroundColor = cell.backgroundColor;
                 
@@ -286,14 +235,14 @@ enum ItemInfoType {
         case kItemPrice:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = [Util formatCurrency:self.shaddowItem.price];
+                cell.detailTextLabel.text = [Util formatCurrency:shaddowItem.price];
             } else {
                 UILabel *dollarLabel = [[UILabel alloc] initWithFrame:DOLLAR_RECT];
                 dollarLabel.text = @"$";
                 [cell addSubview:dollarLabel];
                 
-                if (self.shaddowItem != nil) {
-                    self.itemPriceTextField.text = [self.shaddowItem.price stringValue];
+                if (self.shaddowBusObj != nil) {
+                    self.itemPriceTextField.text = [shaddowItem.price stringValue];
                 }
                 self.itemPriceTextField.backgroundColor = cell.backgroundColor;
                 
@@ -304,8 +253,8 @@ enum ItemInfoType {
         case kItemQuantity:
         {
             if (self.mode == kModifyMode) {
-                if (self.shaddowItem != nil) {
-                    self.itemQtyTextField.text = [NSString stringWithFormat:@"%d", self.shaddowItem.qty];
+                if (self.shaddowBusObj != nil) {
+                    self.itemQtyTextField.text = [NSString stringWithFormat:@"%d", shaddowItem.qty];
                 }
                 self.itemQtyTextField.backgroundColor = cell.backgroundColor;
                 
@@ -350,24 +299,25 @@ enum ItemInfoType {
 #pragma mark - Text Field delegate
 
 // private
-- (void)textFieldDoneEditing:(UITextField *)textField {    
+- (void)textFieldDoneEditing:(UITextField *)textField {
+    Item *shaddowItem = (Item *)self.shaddowBusObj;
+    
     NSString *txt = [Util trim:textField.text];
-//    if ([txt length] > 0) {
         if (textField.tag == kItemName * TAG_BASE) {
-            self.shaddowItem.name = txt;
+            self.shaddowBusObj.name = txt;
         } else if (textField.tag == kItemPrice * TAG_BASE) {
             if ([txt length] == 0) {
-                self.shaddowItem.price = 0;
+                shaddowItem.price = 0;
                 self.itemPriceTextField.text = @"0.00";
             } else {
-                self.shaddowItem.price = [NSDecimalNumber decimalNumberWithString: txt];
+                shaddowItem.price = [NSDecimalNumber decimalNumberWithString: txt];
             }
         } else if (textField.tag == kItemQuantity * TAG_BASE) {
             if ([txt length] == 0) {
-                self.shaddowItem.qty = 0;
+                shaddowItem.qty = 0;
                 self.itemQtyTextField.text = @"0";
             } else {
-                self.shaddowItem.qty = [txt intValue];
+                shaddowItem.qty = [txt intValue];
             }
         }
 //    }
@@ -403,53 +353,16 @@ enum ItemInfoType {
 #pragma mark - UIPickerView Delegate
 
 - (void) pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    Item *shaddowItem = (Item *)self.shaddowBusObj;
+    
     if (row == 0) {
         self.itemTypeTextField.text = @"";
-        self.shaddowItem.type = INVALID_ITEM_TYPE;
+        shaddowItem.type = INVALID_ITEM_TYPE;
     } else {
         self.itemTypeTextField.text = [ItemTypeNames objectAtIndex: row - 1];
-        self.shaddowItem.type = row - 1;
+        shaddowItem.type = row - 1;
     }
 }
 
-#pragma mark - model delegate
-
-- (void)doneSaveObject {
-//    [Item retrieveList];
-    
-    [Item clone:self.shaddowItem to:self.item];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.mode = kViewMode;
-        self.title = self.shaddowItem.name;
-    });
-    
-//    self.navigationItem.rightBarButtonItem.customView = nil;
-}
-
-- (void)didCreateItem: (NSString *)newItemId {
-    self.item.objectId = newItemId;
-    self.shaddowItem.objectId = newItemId;
-    self.title = self.itemNameTextField.text;
-    [self doneSaveObject];
-}
-
-//- (void)didUpdateItem {
-//    [self doneSaveObject];
-//}
-//
-//- (void)didDeleteItem {
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [self.navigationController popViewControllerAnimated:YES];
-//    });
-//}
-//
-//- (void)failedToSaveItem {
-//    __weak EditItemViewController *weakSelf = self;
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [weakSelf.activityIndicator stopAnimating];
-////        self.navigationItem.rightBarButtonItem.customView = nil;
-//    });
-//}
 
 @end

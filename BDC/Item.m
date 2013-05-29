@@ -14,25 +14,16 @@
 #import "BDCAppDelegate.h"
 
 
-@interface Item ()
-
-//+ (void)setItems:(NSDictionary *)items active:(Boolean)isActive;
-
-@end
-
 @implementation Item
 
 static id <ItemListDelegate> ListDelegate = nil;
 static NSMutableDictionary *items = nil;
 static NSMutableDictionary *inactiveItems = nil;
 
-//@synthesize name;
 @synthesize price;
 @synthesize qty;
 @synthesize type;
-//@synthesize taxable;
-@synthesize editDelegate;
-//@synthesize editInvoiceDelegate;
+
 
 + (id<ItemListDelegate>)getListDelegate {
     return ListDelegate;
@@ -83,7 +74,7 @@ static NSMutableDictionary *inactiveItems = nil;
             if ([theAction isEqualToString:UPDATE]) {
                 [weakSelf.editDelegate didUpdateObject];
             } else {
-                [weakSelf.editDelegate didCreateItem:itemId];
+                [weakSelf.editDelegate didCreateObject:itemId];
                 [ListDelegate didAddItem:self];
             }
         } else {

@@ -263,7 +263,7 @@ static NSMutableDictionary * inactiveCustomers = nil;
                 [weakSelf.editDelegate didUpdateObject];
                 [weakSelf.editInvoiceDelegate didUpdateObject];
             } else {
-                [weakSelf.editDelegate didCreateCustomer:customerId];
+                [weakSelf.editDelegate didCreateObject:customerId];
             }
         } else {
             [weakSelf.editDelegate failedToSaveObject];

@@ -239,7 +239,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:ITEM_VIEW_ITEM_SEGUE]) {
-        [segue.destinationViewController setItem:sender];
+        [segue.destinationViewController setBusObj:sender];
         [segue.destinationViewController setMode:kViewMode];
     } else if ([segue.identifier isEqualToString:ITEM_CREATE_ITEM_SEGUE]) {
         [segue.destinationViewController setTitle:@"New Item"];
@@ -247,7 +247,7 @@
     } else if ([segue.identifier isEqualToString:ITEM_MODIFY_ITEM_SEGUE]) {
         int index = [sender intValue];
         Item *item = [self.items objectAtIndex:index];
-        [segue.destinationViewController setItem:item];
+        [segue.destinationViewController setBusObj:item];
         [segue.destinationViewController setLineItemIndex:index];
         [segue.destinationViewController setMode:kModifyMode];
         ((EditItemViewController*)segue.destinationViewController).lineItemDelegate = self;

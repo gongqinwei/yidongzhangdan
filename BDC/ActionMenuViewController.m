@@ -295,7 +295,7 @@
                 payAmountLabel.textAlignment = UITextAlignmentRight;
                 
                 if ([((NSArray *)[BankAccount list]) count]) {
-                    Bill *bill = ((EditBillViewController *)self.targetViewController).bill;
+                    Bill *bill = (Bill *)((EditBillViewController *)self.targetViewController).busObj;
                     NSDecimalNumber *payAmount = [bill.amount decimalNumberBySubtracting:bill.paidAmount];
                     payAmountLabel.text = [Util formatCurrency:payAmount];
                     payAmountLabel.textColor = [UIColor whiteColor];

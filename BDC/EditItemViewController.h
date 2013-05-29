@@ -17,9 +17,7 @@
 
 @interface EditItemViewController : SlidingDetailsTableViewController
 
-@property (nonatomic, strong) Item *item;
 @property (nonatomic, assign) int lineItemIndex;
-
 @property (nonatomic, weak) id<LineItemDelegate> lineItemDelegate;
 
 @end

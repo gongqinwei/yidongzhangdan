@@ -32,8 +32,6 @@ static NSMutableDictionary * inactiveVendors = nil;
 @synthesize email;
 @synthesize phone;
 @synthesize payBy;
-
-@synthesize editDelegate;
 @synthesize editBillDelegate;
 
 + (id<VendorListDelegate>)getListDelegate {
@@ -240,7 +238,7 @@ static NSMutableDictionary * inactiveVendors = nil;
                 [weakSelf.editDelegate didUpdateObject];
                 [weakSelf.editBillDelegate didUpdateObject];
             } else {
-                [weakSelf.editDelegate didCreateVendor:vendorId];
+                [weakSelf.editDelegate didCreateObject:vendorId];
             }
         } else {
             [weakSelf.editDelegate failedToSaveObject];

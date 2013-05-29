@@ -32,10 +32,6 @@ typedef enum {
 
 #define VendorPaymentTypes  [NSArray arrayWithObjects:[NSNumber numberWithInt:kCheck], [NSNumber numberWithInt:kAch], [NSNumber numberWithInt:kRpps], nil]
 
-@protocol VendorDelegate <DetailsViewDelegate>
-@optional
-- (void)didCreateVendor:(NSString *)newVendorId;
-@end
 
 @protocol VendorListDelegate <ListViewDelegate>
 @optional
@@ -57,8 +53,7 @@ typedef enum {
 @property (nonatomic, strong) NSString *phone;
 @property (nonatomic, strong) NSString *payBy;
 
-@property (nonatomic, weak) id<VendorDelegate> editDelegate;
-@property (nonatomic, weak) id<VendorDelegate> editBillDelegate;
+@property (nonatomic, weak) id<BusObjectDelegate> editBillDelegate;
 
 + (void)setListDelegate:(id<VendorListDelegate>)listDelegate;
 

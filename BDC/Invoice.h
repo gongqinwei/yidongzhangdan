@@ -34,16 +34,15 @@
                                     @"Amount Due", INV_AMOUNT_DUE, \
                         nil]
 
-@protocol InvoiceDelegate <DetailsViewDelegate>
-@optional
-- (void)didCreateInvoice:(NSString *)newInvoiceId;
-@end
 
 @protocol InvoiceListDelegate <ListViewDelegate>
+
 @optional
 - (void)didGetInvoices:(NSArray *)invoiceList;
 - (void)failedToGetInvoices;
+
 @end
+
 
 @interface Invoice : BDCBusinessObjectWithAttachments
 
@@ -102,7 +101,6 @@
 
 + (id)list:(NSArray *)invArr orderBy:(NSString *)attribue ascending:(Boolean)isAscending;
 
-@property (nonatomic, weak) id<InvoiceDelegate> editDelegate;
-@property (nonatomic, weak) id<InvoiceDelegate> detailsDelegate;
+@property (nonatomic, weak) id<BusObjectDelegate> detailsDelegate;
 
 @end

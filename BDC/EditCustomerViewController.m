@@ -7,6 +7,7 @@
 //
 
 #import "EditCustomerViewController.h"
+#import "Customer.h"
 #import "Util.h"
 #import "UIHelper.h"
 #import "Geo.h"
@@ -31,10 +32,8 @@ enum CustomerInfoType {
 #define INVALID_OPTION      -1
 #define PICKER_TAG_BASE     TAG_BASE * 2
 
-@interface EditCustomerViewController () <CustomerDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
-@property (nonatomic, strong) Customer *shaddowCustomer;
-@property (nonatomic, assign) BOOL modeChanged;
+@interface EditCustomerViewController () <UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
 @property (nonatomic, strong) UIPickerView *customerStatePickerView;
 @property (nonatomic, strong) UIPickerView *customerCountryPickerView;
@@ -52,11 +51,9 @@ enum CustomerInfoType {
 
 @end
 
+
 @implementation EditCustomerViewController
 
-@synthesize customer = _customer;
-@synthesize shaddowCustomer;
-@synthesize modeChanged;
 @synthesize customerStatePickerView;
 @synthesize customerCountryPickerView;
 @synthesize customerNameTextField;
@@ -72,30 +69,8 @@ enum CustomerInfoType {
 @synthesize customerEmailTextField;
 
 
-- (void)setCustomer:(Customer *)customer {
-    _customer = customer;
-    
-    self.shaddowCustomer = nil;
-    self.shaddowCustomer = [[Customer alloc] init];
-    
-    [Customer clone:customer to:self.shaddowCustomer];
-    self.title = customer.name;
-}
-
-- (void)setMode:(ViewMode)mode {
-    super.mode = mode;
-    self.modeChanged = YES;
-    
-    if (mode == kViewMode) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
-        self.navigationItem.rightBarButtonItem.tag = 1;
-        self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
-    } else {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveCustomer:)];
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelEdit:)];
-    }
-    
-    [self.tableView reloadData];
+- (Class)busObjClass {
+    return [Customer class];
 }
 
 #pragma mark - Depricated: this method is no longer needed as the edit bar button will be moved to action menu
@@ -105,59 +80,39 @@ enum CustomerInfoType {
     }
 }
 
-- (IBAction)saveCustomer:(UIBarButtonItem *)sender {
+- (IBAction)saveBusObj:(UIBarButtonItem *)sender {
     if ([self tryTap]) {
-        self.navigationItem.rightBarButtonItem.customView = self.activityIndicator;
-        [self.activityIndicator startAnimating];
-        [self.view findAndResignFirstResponder];
+        Customer *shaddowCustomer = (Customer *)self.shaddowBusObj;
         
-        if (self.shaddowCustomer.name == nil || [self.shaddowCustomer.name length] == 0) {
+        if (self.shaddowBusObj.name == nil || [self.shaddowBusObj.name length] == 0) {
             [UIHelper showInfo:@"Missing name!" withStatus:kError];
             self.navigationItem.rightBarButtonItem.customView = nil;
             return;
         }
         
+        [super saveBusObj:sender];
+        
         if (self.mode == kCreateMode) {
-            [self.shaddowCustomer create];
+            [shaddowCustomer create];
         } else if (self.mode == kUpdateMode){
-            [self.shaddowCustomer update];
-        }
-    }
-}
-
-- (void)cancelEdit:(UIBarButtonItem *)sender {
-    if ([self tryTap]) {
-        if (self.mode == kCreateMode) {
-            [self navigateBack];
-        } else {
-            [self setCustomer:self.customer];
-            self.mode = kViewMode;
+            [shaddowCustomer update];
         }
     }
 }
 
 #pragma mark - Life Cycle methods
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
-    if (!self.customer) {
-        self.customer = [[Customer alloc] init];
-        self.shaddowCustomer = [[Customer alloc] init];
-        self.shaddowCustomer.billState = nil;
-        self.shaddowCustomer.billCountry = INVALID_OPTION;
+    Customer *shaddowCustomer = (Customer *)self.shaddowBusObj;
+    
+    if (!self.busObj) {
+        self.busObj = [[Customer alloc] init];
+        shaddowCustomer = [[Customer alloc] init];
+        shaddowCustomer.billState = nil;
+        shaddowCustomer.billCountry = INVALID_OPTION;
     }
-    
-    self.busObj = self.customer;
-    
+        
     [super viewDidLoad];
     
     if (self.mode == kViewMode) {
@@ -169,17 +124,17 @@ enum CustomerInfoType {
             self.title = @"New Customer";
         }
     }
-        
-    self.customer.editDelegate = self;
-    self.shaddowCustomer.editDelegate = self;
+    
+    self.busObj.editDelegate = self;
+    self.shaddowBusObj.editDelegate = self;
     
     self.customerStatePickerView = [[UIPickerView alloc] initWithFrame:PICKER_RECT];
     self.customerStatePickerView.delegate = self;
     self.customerStatePickerView.dataSource = self;
     self.customerStatePickerView.showsSelectionIndicator = YES;
     self.customerStatePickerView.tag = kCustomerState * PICKER_TAG_BASE;
-    if ([self.shaddowCustomer.billState isKindOfClass:[NSNumber class]] && [self.shaddowCustomer.billState intValue] != INVALID_OPTION) {
-        [self.customerStatePickerView selectRow:[self.shaddowCustomer.billState intValue] + 1 inComponent:0 animated:YES];
+    if ([shaddowCustomer.billState isKindOfClass:[NSNumber class]] && [shaddowCustomer.billState intValue] != INVALID_OPTION) {
+        [self.customerStatePickerView selectRow:[shaddowCustomer.billState intValue] + 1 inComponent:0 animated:YES];
     }
     
     self.customerCountryPickerView = [[UIPickerView alloc] initWithFrame:PICKER_RECT];
@@ -187,8 +142,8 @@ enum CustomerInfoType {
     self.customerCountryPickerView.dataSource = self;
     self.customerCountryPickerView.showsSelectionIndicator = YES;
     self.customerCountryPickerView.tag = kCustomerCountry * PICKER_TAG_BASE;
-    if (self.shaddowCustomer.billCountry != INVALID_OPTION) {
-        [self.customerCountryPickerView selectRow:self.shaddowCustomer.billCountry + 1 inComponent:0 animated:YES];
+    if (shaddowCustomer.billCountry != INVALID_OPTION) {
+        [self.customerCountryPickerView selectRow:shaddowCustomer.billCountry + 1 inComponent:0 animated:YES];
     }
     
     self.customerNameTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
@@ -320,14 +275,16 @@ enum CustomerInfoType {
     cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:APP_LABEL_FONT_SIZE];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
+    Customer *shaddowCustomer = (Customer *)self.shaddowBusObj;
+    
     switch (indexPath.row) {
         case kCustomerName:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowCustomer.name;
+                cell.detailTextLabel.text = self.shaddowBusObj.name;
             } else {
-                if (self.shaddowCustomer != nil) {
-                    self.customerNameTextField.text = self.shaddowCustomer.name;
+                if (self.shaddowBusObj != nil) {
+                    self.customerNameTextField.text = self.shaddowBusObj.name;
                 }
                 self.customerNameTextField.backgroundColor = cell.backgroundColor;
                 
@@ -338,10 +295,10 @@ enum CustomerInfoType {
         case kCustomerAddr1:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowCustomer.billAddr1;
+                cell.detailTextLabel.text = shaddowCustomer.billAddr1;
             } else {
-                if (self.shaddowCustomer != nil) {
-                    self.customerAddr1TextField.text = self.shaddowCustomer.billAddr1;
+                if (self.shaddowBusObj != nil) {
+                    self.customerAddr1TextField.text = shaddowCustomer.billAddr1;
                 }
                 self.customerAddr1TextField.backgroundColor = cell.backgroundColor;
                 
@@ -352,10 +309,10 @@ enum CustomerInfoType {
         case kCustomerAddr2:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowCustomer.billAddr2;
+                cell.detailTextLabel.text = shaddowCustomer.billAddr2;
             } else {
-                if (self.shaddowCustomer != nil) {
-                    self.customerAddr2TextField.text = self.shaddowCustomer.billAddr2;
+                if (self.shaddowBusObj != nil) {
+                    self.customerAddr2TextField.text = shaddowCustomer.billAddr2;
                 }
                 self.customerAddr2TextField.backgroundColor = cell.backgroundColor;
                 
@@ -366,10 +323,10 @@ enum CustomerInfoType {
         case kCustomerAddr3:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowCustomer.billAddr3;
+                cell.detailTextLabel.text = shaddowCustomer.billAddr3;
             } else {
-                if (self.shaddowCustomer != nil) {
-                    self.customerAddr3TextField.text = self.shaddowCustomer.billAddr3;
+                if (self.shaddowBusObj != nil) {
+                    self.customerAddr3TextField.text = shaddowCustomer.billAddr3;
                 }
                 self.customerAddr3TextField.backgroundColor = cell.backgroundColor;
                 
@@ -380,10 +337,10 @@ enum CustomerInfoType {
         case kCustomerAddr4:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowCustomer.billAddr4;
+                cell.detailTextLabel.text = shaddowCustomer.billAddr4;
             } else {
-                if (self.shaddowCustomer != nil) {
-                    self.customerAddr4TextField.text = self.shaddowCustomer.billAddr4;
+                if (self.shaddowBusObj != nil) {
+                    self.customerAddr4TextField.text = shaddowCustomer.billAddr4;
                 }
                 self.customerAddr4TextField.backgroundColor = cell.backgroundColor;
                 
@@ -394,10 +351,10 @@ enum CustomerInfoType {
         case kCustomerCity:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowCustomer.billCity;
+                cell.detailTextLabel.text = shaddowCustomer.billCity;
             } else {
-                if (self.shaddowCustomer != nil) {
-                    self.customerCityTextField.text = self.shaddowCustomer.billCity;
+                if (self.shaddowBusObj != nil) {
+                    self.customerCityTextField.text = shaddowCustomer.billCity;
                 }
                 self.customerCityTextField.backgroundColor = cell.backgroundColor;
                 
@@ -407,27 +364,27 @@ enum CustomerInfoType {
             break;
         case kCustomerState:
             if (self.mode == kViewMode) {
-                if ([self.shaddowCustomer.billState isKindOfClass:[NSNumber class]]) {
-                    if ([self.shaddowCustomer.billState intValue] == INVALID_OPTION) {
+                if ([shaddowCustomer.billState isKindOfClass:[NSNumber class]]) {
+                    if ([shaddowCustomer.billState intValue] == INVALID_OPTION) {
                         cell.detailTextLabel.text = @"";
                     } else {
-                        cell.detailTextLabel.text = [US_STATES objectAtIndex:[self.shaddowCustomer.billState intValue]];
+                        cell.detailTextLabel.text = [US_STATES objectAtIndex:[shaddowCustomer.billState intValue]];
                     }
                 } else {
-                    cell.detailTextLabel.text = self.shaddowCustomer.billState;
+                    cell.detailTextLabel.text = shaddowCustomer.billState;
                 }
             } else {
-                if ([self.shaddowCustomer.billState isKindOfClass:[NSNumber class]]) {
-                    if ([self.shaddowCustomer.billState intValue] == INVALID_OPTION) {
+                if ([shaddowCustomer.billState isKindOfClass:[NSNumber class]]) {
+                    if ([shaddowCustomer.billState intValue] == INVALID_OPTION) {
                         self.customerStateTextField.text = @"";
                     } else {
-                        self.customerStateTextField.text = [US_STATES objectAtIndex:[self.shaddowCustomer.billState intValue]];
+                        self.customerStateTextField.text = [US_STATES objectAtIndex:[shaddowCustomer.billState intValue]];
                     }
                     
                     self.customerStateTextField.inputView = self.customerStatePickerView;
                     self.customerStateTextField.rightViewMode = UITextFieldViewModeAlways;
                 } else {
-                    self.customerStateTextField.text = self.shaddowCustomer.billState;
+                    self.customerStateTextField.text = shaddowCustomer.billState;
                     self.customerStateTextField.enabled = YES;
                     self.customerStateTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
                     self.customerStateTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
@@ -440,16 +397,16 @@ enum CustomerInfoType {
             break;
         case kCustomerCountry:
             if (self.mode == kViewMode) {
-                if (self.shaddowCustomer.billCountry == INVALID_OPTION) {
+                if (shaddowCustomer.billCountry == INVALID_OPTION) {
                     cell.detailTextLabel.text = @"";
                 } else {
-                    cell.detailTextLabel.text = [COUNTRIES objectAtIndex: self.shaddowCustomer.billCountry];
+                    cell.detailTextLabel.text = [COUNTRIES objectAtIndex: shaddowCustomer.billCountry];
                 }
             } else {
-                if (self.shaddowCustomer.billCountry == INVALID_OPTION) {
+                if (shaddowCustomer.billCountry == INVALID_OPTION) {
                     self.customerCountryTextField.text = @"";
                 } else {
-                    self.customerCountryTextField.text = [COUNTRIES objectAtIndex: self.shaddowCustomer.billCountry];
+                    self.customerCountryTextField.text = [COUNTRIES objectAtIndex: shaddowCustomer.billCountry];
                 }
                 self.customerCountryTextField.backgroundColor = cell.backgroundColor;
                 
@@ -459,10 +416,10 @@ enum CustomerInfoType {
         case kCustomerZip:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowCustomer.billZip;
+                cell.detailTextLabel.text = shaddowCustomer.billZip;
             } else {
-                if (self.shaddowCustomer != nil) {
-                    self.customerZipTextField.text = self.shaddowCustomer.billZip;
+                if (self.shaddowBusObj != nil) {
+                    self.customerZipTextField.text = shaddowCustomer.billZip;
                 }
                 self.customerZipTextField.backgroundColor = cell.backgroundColor;
                 
@@ -473,10 +430,10 @@ enum CustomerInfoType {
         case kCustomerEmail:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowCustomer.email;
+                cell.detailTextLabel.text = shaddowCustomer.email;
             } else {
-                if (self.shaddowCustomer != nil) {
-                    self.customerEmailTextField.text = self.shaddowCustomer.email;
+                if (self.shaddowBusObj != nil) {
+                    self.customerEmailTextField.text = shaddowCustomer.email;
                 }
                 self.customerEmailTextField.backgroundColor = cell.backgroundColor;
                 
@@ -487,10 +444,10 @@ enum CustomerInfoType {
         case kCustomerPhone:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowCustomer.phone;
+                cell.detailTextLabel.text = shaddowCustomer.phone;
             } else {
-                if (self.shaddowCustomer != nil) {
-                    self.customerPhoneTextField.text = self.shaddowCustomer.phone;
+                if (self.shaddowBusObj != nil) {
+                    self.customerPhoneTextField.text = shaddowCustomer.phone;
                 }
                 self.customerPhoneTextField.backgroundColor = cell.backgroundColor;
                 
@@ -542,35 +499,37 @@ enum CustomerInfoType {
 //        [self.editingField resignFirstResponder];
 //        self.editingField = nil;
         
+        Customer *shaddowCustomer = (Customer *)self.shaddowBusObj;
+        
         NSString *txt = [Util trim:textField.text];
 //        if ([txt length] > 0) {
             switch (textField.tag) {
                 case kCustomerName * TAG_BASE:
-                    self.shaddowCustomer.name = txt;
+                    self.shaddowBusObj.name = txt;
                     break;
                 case kCustomerAddr1 * TAG_BASE:
-                    self.shaddowCustomer.billAddr1 = txt;
+                    shaddowCustomer.billAddr1 = txt;
                     break;
                 case kCustomerAddr2 * TAG_BASE:
-                    self.shaddowCustomer.billAddr2 = txt;
+                    shaddowCustomer.billAddr2 = txt;
                     break;
                 case kCustomerAddr3 * TAG_BASE:
-                    self.shaddowCustomer.billAddr3 = txt;
+                    shaddowCustomer.billAddr3 = txt;
                     break;
                 case kCustomerAddr4 * TAG_BASE:
-                    self.shaddowCustomer.billAddr4 = txt;
+                    shaddowCustomer.billAddr4 = txt;
                     break;
                 case kCustomerCity * TAG_BASE:
-                    self.shaddowCustomer.billCity = txt;
+                    shaddowCustomer.billCity = txt;
                     break;
                 case kCustomerZip * TAG_BASE:
-                    self.shaddowCustomer.billZip = txt;
+                    shaddowCustomer.billZip = txt;
                     break;
                 case kCustomerEmail * TAG_BASE:
-                    self.shaddowCustomer.email = txt;
+                    shaddowCustomer.email = txt;
                     break;
                 case kCustomerPhone * TAG_BASE:
-                    self.shaddowCustomer.phone = txt;
+                    shaddowCustomer.phone = txt;
                     break;
                 default:
                     break;
@@ -625,63 +584,43 @@ enum CustomerInfoType {
 #pragma mark - UIPickerView Delegate
 
 - (void) pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    Customer *shaddowCustomer = (Customer *)self.shaddowBusObj;
+    
     if (pickerView.tag == kCustomerState * PICKER_TAG_BASE) {
         if (row == 0) {
             self.customerStateTextField.text = @"";
-            self.shaddowCustomer.billState = [NSNumber numberWithInt:INVALID_OPTION];
+            shaddowCustomer.billState = [NSNumber numberWithInt:INVALID_OPTION];
         } else {
             self.customerStateTextField.text = [US_STATES objectAtIndex: row - 1];
-            self.shaddowCustomer.billState = [NSNumber numberWithInt: row - 1];
+            shaddowCustomer.billState = [NSNumber numberWithInt: row - 1];
         }
     } else if (pickerView.tag == kCustomerCountry * PICKER_TAG_BASE) {
         if (row == 0) {
             self.customerCountryTextField.text = @"";
-            self.shaddowCustomer.billCountry = INVALID_OPTION;
+            shaddowCustomer.billCountry = INVALID_OPTION;
         } else {
             self.customerCountryTextField.text = [COUNTRIES objectAtIndex: row - 1] ;
-            self.shaddowCustomer.billCountry = row - 1;
+            shaddowCustomer.billCountry = row - 1;
         }
         
         if (row == 1) {  //USA
             self.customerStateTextField.inputView = self.customerStatePickerView;
             self.customerStateTextField.rightViewMode = UITextFieldViewModeAlways;
-            if (![self.shaddowCustomer.billState isKindOfClass:[NSNumber class]]) {
+            if (![shaddowCustomer.billState isKindOfClass:[NSNumber class]]) {
                 self.customerStateTextField.text = @"";
-                self.shaddowCustomer.billState = [NSNumber numberWithInt:INVALID_OPTION];
+                shaddowCustomer.billState = [NSNumber numberWithInt:INVALID_OPTION];
             }
         } else {
             self.customerStateTextField.inputView = nil;
-            if ([self.shaddowCustomer.billState isKindOfClass:[NSNumber class]]) {
+            if ([shaddowCustomer.billState isKindOfClass:[NSNumber class]]) {
                 self.customerStateTextField.text = @"";
-                self.shaddowCustomer.billState = nil;
+                shaddowCustomer.billState = nil;
             }
-            self.customerStateTextField.text = self.shaddowCustomer.billState;
+            self.customerStateTextField.text = shaddowCustomer.billState;
             self.customerStateTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
             self.customerStateTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
         }
     }
-}
-
-#pragma mark - model delegate
-
-- (void)doneSaveObject {
-//    [Customer retrieveList];
-    
-    [Customer clone:self.shaddowCustomer to:self.customer];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.mode = kViewMode;
-        self.title = self.shaddowCustomer.name;
-    });
-    
-//    self.navigationItem.rightBarButtonItem.customView = nil;
-}
-
-- (void)didCreateCustomer: (NSString *)newCustomerId {
-    self.customer.objectId = newCustomerId;
-    self.shaddowCustomer.objectId = newCustomerId;
-    self.title = self.customerNameTextField.text;
-    [self doneSaveObject];
 }
 
 

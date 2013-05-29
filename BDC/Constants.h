@@ -18,7 +18,7 @@
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
-#define DOMAIN_URL          @"http://10.1.10.173"
+#define DOMAIN_URL          @"http://10.1.10.165"
 //#define DOMAIN_URL          @"http://192.168.1.130"
 #define APP_KEY             @"devKey"
 #endif
@@ -108,6 +108,7 @@
 #define AP_PAGE             @"MyBills"              //deprecated
 #define AR_PAGE             @"ReceivablesOverview"  //deprecated
 
+#define EMPTY_ID            @"00000000000000000000"
 
 #define RESPONSE_SUCCESS    0
 #define RESPONSE_FALURE     1

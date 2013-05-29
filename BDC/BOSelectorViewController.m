@@ -10,6 +10,7 @@
 #include "EditInvoiceViewController.h"
 #import "InvoicesTableViewController.h"
 #import "ScannerViewController.h"
+#import "Invoice.h"
 #import "Uploader.h"
 #import "APIHandler.h"
 #import "Constants.h"

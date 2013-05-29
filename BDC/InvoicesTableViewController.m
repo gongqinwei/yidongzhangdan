@@ -229,7 +229,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(Invoice *)sender
 {
     if ([segue.identifier isEqualToString:VIEW_INVOICE_SEGUE]) {
-        [segue.destinationViewController setInvoice:sender];
+        [segue.destinationViewController setBusObj:sender];
         [(EditInvoiceViewController *)segue.destinationViewController setMode:kViewMode];
         [segue.destinationViewController setTitle:sender.invoiceNumber];
     } else if ([segue.identifier isEqualToString:CREATE_INVOICE_SEGUE]) {

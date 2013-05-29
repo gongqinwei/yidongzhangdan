@@ -30,7 +30,7 @@ enum InfoType {
 #define BILL_INFO_CELL_ID                   @"Bill info cell"
 
 
-@interface CreateBillViewController () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource, BillDelegate>
+@interface CreateBillViewController () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource, BusObjectDelegate>
 
 @property (nonatomic, strong) UIPickerView *vendorPicker;
 @property (nonatomic, strong) UIPickerView *paymentTermsPicker;
@@ -117,7 +117,7 @@ enum InfoType {
     
     if (!self.bill) {
         self.bill = [[Bill alloc] init];
-        self.bill.delegate = self;
+        self.bill.editDelegate = self;
     }
 }
 

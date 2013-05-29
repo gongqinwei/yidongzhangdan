@@ -10,7 +10,7 @@
 #import "Constants.h"
 
 
-@interface InvoiceDetailsViewController () <InvoiceDelegate, UIGestureRecognizerDelegate>
+@interface InvoiceDetailsViewController () <UIGestureRecognizerDelegate>
 
 @end
 
@@ -60,7 +60,7 @@
     self.navigationBar.topItem.title = [@"Invoice " stringByAppendingString:self.invoice.invoiceNumber];
     
     self.InvoicePDFView.scalesPageToFit = YES;
-    self.invoice.detailsDelegate = self;
+//    self.invoice.detailsDelegate = self;
     [self updateView];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped:)];

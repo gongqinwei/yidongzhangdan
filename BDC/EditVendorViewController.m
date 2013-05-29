@@ -7,6 +7,7 @@
 //
 
 #import "EditVendorViewController.h"
+#import "Vendor.h"
 #import "Util.h"
 #import "UIHelper.h"
 #import "Geo.h"
@@ -32,10 +33,7 @@ enum VendorInfoType {
 #define INVALID_OPTION      -1
 #define PICKER_TAG_BASE     TAG_BASE * 2
 
-@interface EditVendorViewController () <VendorDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
-
-@property (nonatomic, strong) Vendor *shaddowVendor;
-@property (nonatomic, assign) BOOL modeChanged;
+@interface EditVendorViewController () <UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
 @property (nonatomic, strong) UIPickerView *vendorStatePickerView;
 @property (nonatomic, strong) UIPickerView *vendorCountryPickerView;
@@ -54,11 +52,9 @@ enum VendorInfoType {
 
 @end
 
+
 @implementation EditVendorViewController
 
-@synthesize vendor = _vendor;
-@synthesize shaddowVendor;
-@synthesize modeChanged;
 @synthesize vendorStatePickerView;
 @synthesize vendorCountryPickerView;
 @synthesize vendorNameTextField;
@@ -75,30 +71,8 @@ enum VendorInfoType {
 @synthesize vendorPayByLabel;
 
 
-- (void)setVendor:(Vendor *)vendor {
-    _vendor = vendor;
-    
-    self.shaddowVendor = nil;
-    self.shaddowVendor = [[Vendor alloc] init];
-    
-    [Vendor clone:vendor to:self.shaddowVendor];
-    self.title = vendor.name;
-}
-
-- (void)setMode:(ViewMode)mode {
-    super.mode = mode;
-    self.modeChanged = YES;
-    
-    if (mode == kViewMode) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
-        self.navigationItem.rightBarButtonItem.tag = 1;
-        self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
-    } else {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveVendor:)];
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelEdit:)];
-    }
-    
-    [self.tableView reloadData];
+- (Class)busObjClass {
+    return [Vendor class];
 }
 
 #pragma mark - Depricated: this method is no longer needed as the edit bar button will be moved to action menu
@@ -108,59 +82,37 @@ enum VendorInfoType {
     }
 }
 
-- (IBAction)saveVendor:(UIBarButtonItem *)sender {
+- (IBAction)saveBusObj:(UIBarButtonItem *)sender {
     if ([self tryTap]) {
-        self.navigationItem.rightBarButtonItem.customView = self.activityIndicator;
-        [self.activityIndicator startAnimating];
-        [self.view findAndResignFirstResponder];
+        Vendor *shaddowVendor = (Vendor *)self.shaddowBusObj;
         
-        if (self.shaddowVendor.name == nil || [self.shaddowVendor.name length] == 0) {
+        if (shaddowVendor.name == nil || [shaddowVendor.name length] == 0) {
             [UIHelper showInfo:@"Missing name!" withStatus:kError];
             self.navigationItem.rightBarButtonItem.customView = nil;
             return;
         }
         
+        [super saveBusObj:sender];
+        
         if (self.mode == kCreateMode) {
-            [self.shaddowVendor create];
+            [shaddowVendor create];
         } else if (self.mode == kUpdateMode){
-            [self.shaddowVendor update];
-        }
-    }
-}
-
-- (void)cancelEdit:(UIBarButtonItem *)sender {
-    if ([self tryTap]) {
-        if (self.mode == kCreateMode) {
-            [self navigateBack];
-        } else {
-            [self setVendor:self.vendor];
-            self.mode = kViewMode;
+            [shaddowVendor update];
         }
     }
 }
 
 #pragma mark - Life Cycle methods
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
-    if (!self.vendor) {
-        self.vendor = [[Vendor alloc] init];
-        self.shaddowVendor = [[Vendor alloc] init];
-        self.shaddowVendor.state = nil;
-        self.shaddowVendor.country = INVALID_OPTION;
+    if (!self.busObj) {
+        self.busObj = [[Vendor alloc] init];
+        self.shaddowBusObj = [[Vendor alloc] init];
+        ((Vendor *)self.shaddowBusObj).state = nil;
+        ((Vendor *)self.shaddowBusObj).country = INVALID_OPTION;
     }
-    
-    self.busObj = self.vendor;
-    
+        
     [super viewDidLoad];
     
     if (self.mode == kViewMode) {
@@ -173,16 +125,16 @@ enum VendorInfoType {
         }
     }
     
-    self.vendor.editDelegate = self;
-    self.shaddowVendor.editDelegate = self;
+    self.busObj.editDelegate = self;
+    self.shaddowBusObj.editDelegate = self;
     
     self.vendorStatePickerView = [[UIPickerView alloc] initWithFrame:PICKER_RECT];
     self.vendorStatePickerView.delegate = self;
     self.vendorStatePickerView.dataSource = self;
     self.vendorStatePickerView.showsSelectionIndicator = YES;
     self.vendorStatePickerView.tag = kVendorState * PICKER_TAG_BASE;
-    if ([self.shaddowVendor.state isKindOfClass:[NSNumber class]] && [self.shaddowVendor.state intValue] != INVALID_OPTION) {
-        [self.vendorStatePickerView selectRow:[self.shaddowVendor.state intValue] + 1 inComponent:0 animated:YES];
+    if ([((Vendor *)self.shaddowBusObj).state isKindOfClass:[NSNumber class]] && [((Vendor *)self.shaddowBusObj).state intValue] != INVALID_OPTION) {
+        [self.vendorStatePickerView selectRow:[((Vendor *)self.shaddowBusObj).state intValue] + 1 inComponent:0 animated:YES];
     }
     
     self.vendorCountryPickerView = [[UIPickerView alloc] initWithFrame:PICKER_RECT];
@@ -190,8 +142,8 @@ enum VendorInfoType {
     self.vendorCountryPickerView.dataSource = self;
     self.vendorCountryPickerView.showsSelectionIndicator = YES;
     self.vendorCountryPickerView.tag = kVendorCountry * PICKER_TAG_BASE;
-    if (self.shaddowVendor.country != INVALID_OPTION) {
-        [self.vendorCountryPickerView selectRow:self.shaddowVendor.country + 1 inComponent:0 animated:YES];
+    if (((Vendor *)self.shaddowBusObj).country != INVALID_OPTION) {
+        [self.vendorCountryPickerView selectRow:((Vendor *)self.shaddowBusObj).country + 1 inComponent:0 animated:YES];
     }
     
     self.vendorNameTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
@@ -323,10 +275,10 @@ enum VendorInfoType {
         case kVendorName:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowVendor.name;
+                cell.detailTextLabel.text = self.shaddowBusObj.name;
             } else {
-                if (self.shaddowVendor != nil) {
-                    self.vendorNameTextField.text = self.shaddowVendor.name;
+                if (self.shaddowBusObj != nil) {
+                    self.vendorNameTextField.text = self.shaddowBusObj.name;
                 }
                 self.vendorNameTextField.backgroundColor = cell.backgroundColor;
                 
@@ -335,15 +287,15 @@ enum VendorInfoType {
         }
             break;
         case kVendorPayBy:
-            cell.detailTextLabel.text = [VENDOR_PAYMENT_TYPES objectForKey:self.shaddowVendor.payBy];
+            cell.detailTextLabel.text = [VENDOR_PAYMENT_TYPES objectForKey:((Vendor *)self.shaddowBusObj).payBy];
             break;
         case kVendorAddr1:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowVendor.addr1;
+                cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).addr1;
             } else {
-                if (self.shaddowVendor != nil) {
-                    self.vendorAddr1TextField.text = self.shaddowVendor.addr1;
+                if (self.shaddowBusObj != nil) {
+                    self.vendorAddr1TextField.text = ((Vendor *)self.shaddowBusObj).addr1;
                 }
                 self.vendorAddr1TextField.backgroundColor = cell.backgroundColor;
                 
@@ -354,10 +306,10 @@ enum VendorInfoType {
         case kVendorAddr2:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowVendor.addr2;
+                cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).addr2;
             } else {
-                if (self.shaddowVendor != nil) {
-                    self.vendorAddr2TextField.text = self.shaddowVendor.addr2;
+                if (self.shaddowBusObj != nil) {
+                    self.vendorAddr2TextField.text = ((Vendor *)self.shaddowBusObj).addr2;
                 }
                 self.vendorAddr2TextField.backgroundColor = cell.backgroundColor;
                 
@@ -368,10 +320,10 @@ enum VendorInfoType {
         case kVendorAddr3:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowVendor.addr3;
+                cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).addr3;
             } else {
-                if (self.shaddowVendor != nil) {
-                    self.vendorAddr3TextField.text = self.shaddowVendor.addr3;
+                if (self.shaddowBusObj != nil) {
+                    self.vendorAddr3TextField.text = ((Vendor *)self.shaddowBusObj).addr3;
                 }
                 self.vendorAddr3TextField.backgroundColor = cell.backgroundColor;
                 
@@ -382,10 +334,10 @@ enum VendorInfoType {
         case kVendorAddr4:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowVendor.addr4;
+                cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).addr4;
             } else {
-                if (self.shaddowVendor != nil) {
-                    self.vendorAddr4TextField.text = self.shaddowVendor.addr4;
+                if (self.shaddowBusObj != nil) {
+                    self.vendorAddr4TextField.text = ((Vendor *)self.shaddowBusObj).addr4;
                 }
                 self.vendorAddr4TextField.backgroundColor = cell.backgroundColor;
                 
@@ -396,10 +348,10 @@ enum VendorInfoType {
         case kVendorCity:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowVendor.city;
+                cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).city;
             } else {
-                if (self.shaddowVendor != nil) {
-                    self.vendorCityTextField.text = self.shaddowVendor.city;
+                if (self.shaddowBusObj != nil) {
+                    self.vendorCityTextField.text = ((Vendor *)self.shaddowBusObj).city;
                 }
                 self.vendorCityTextField.backgroundColor = cell.backgroundColor;
                 
@@ -409,27 +361,27 @@ enum VendorInfoType {
             break;
         case kVendorState:
             if (self.mode == kViewMode) {
-                if ([self.shaddowVendor.state isKindOfClass:[NSNumber class]]) {
-                    if ([self.shaddowVendor.state intValue] == INVALID_OPTION) {
+                if ([((Vendor *)self.shaddowBusObj).state isKindOfClass:[NSNumber class]]) {
+                    if ([((Vendor *)self.shaddowBusObj).state intValue] == INVALID_OPTION) {
                         cell.detailTextLabel.text = @"";
                     } else {
-                        cell.detailTextLabel.text = [US_STATES objectAtIndex:[self.shaddowVendor.state intValue]];
+                        cell.detailTextLabel.text = [US_STATES objectAtIndex:[((Vendor *)self.shaddowBusObj).state intValue]];
                     }
                 } else {
-                    cell.detailTextLabel.text = self.shaddowVendor.state;
+                    cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).state;
                 }
             } else {
-                if ([self.shaddowVendor.state isKindOfClass:[NSNumber class]]) {
-                    if ([self.shaddowVendor.state intValue] == INVALID_OPTION) {
+                if ([((Vendor *)self.shaddowBusObj).state isKindOfClass:[NSNumber class]]) {
+                    if ([((Vendor *)self.shaddowBusObj).state intValue] == INVALID_OPTION) {
                         self.vendorStateTextField.text = @"";
                     } else {
-                        self.vendorStateTextField.text = [US_STATES objectAtIndex:[self.shaddowVendor.state intValue]];
+                        self.vendorStateTextField.text = [US_STATES objectAtIndex:[((Vendor *)self.shaddowBusObj).state intValue]];
                     }
                     
                     self.vendorStateTextField.inputView = self.vendorStatePickerView;
                     self.vendorStateTextField.rightViewMode = UITextFieldViewModeAlways;
                 } else {
-                    self.vendorStateTextField.text = self.shaddowVendor.state;
+                    self.vendorStateTextField.text = ((Vendor *)self.shaddowBusObj).state;
                     self.vendorStateTextField.enabled = YES;
                     self.vendorStateTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
                     self.vendorStateTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
@@ -442,16 +394,16 @@ enum VendorInfoType {
             break;
         case kVendorCountry:
             if (self.mode == kViewMode) {
-                if (self.shaddowVendor.country == INVALID_OPTION) {
+                if (((Vendor *)self.shaddowBusObj).country == INVALID_OPTION) {
                     cell.detailTextLabel.text = @"";
                 } else {
-                    cell.detailTextLabel.text = [COUNTRIES objectAtIndex: self.shaddowVendor.country];
+                    cell.detailTextLabel.text = [COUNTRIES objectAtIndex: ((Vendor *)self.shaddowBusObj).country];
                 }
             } else {
-                if (self.shaddowVendor.country == INVALID_OPTION) {
+                if (((Vendor *)self.shaddowBusObj).country == INVALID_OPTION) {
                     self.vendorCountryTextField.text = @"";
                 } else {
-                    self.vendorCountryTextField.text = [COUNTRIES objectAtIndex: self.shaddowVendor.country];
+                    self.vendorCountryTextField.text = [COUNTRIES objectAtIndex: ((Vendor *)self.shaddowBusObj).country];
                 }
                 self.vendorCountryTextField.backgroundColor = cell.backgroundColor;
                 
@@ -461,10 +413,10 @@ enum VendorInfoType {
         case kVendorZip:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowVendor.zip;
+                cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).zip;
             } else {
-                if (self.shaddowVendor != nil) {
-                    self.vendorZipTextField.text = self.shaddowVendor.zip;
+                if (self.shaddowBusObj != nil) {
+                    self.vendorZipTextField.text = ((Vendor *)self.shaddowBusObj).zip;
                 }
                 self.vendorZipTextField.backgroundColor = cell.backgroundColor;
                 
@@ -475,10 +427,10 @@ enum VendorInfoType {
         case kVendorEmail:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowVendor.email;
+                cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).email;
             } else {
-                if (self.shaddowVendor != nil) {
-                    self.vendorEmailTextField.text = self.shaddowVendor.email;
+                if (self.shaddowBusObj != nil) {
+                    self.vendorEmailTextField.text = ((Vendor *)self.shaddowBusObj).email;
                 }
                 self.vendorEmailTextField.backgroundColor = cell.backgroundColor;
                 
@@ -489,10 +441,10 @@ enum VendorInfoType {
         case kVendorPhone:
         {
             if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowVendor.phone;
+                cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).phone;
             } else {
-                if (self.shaddowVendor != nil) {
-                    self.vendorPhoneTextField.text = self.shaddowVendor.phone;
+                if (self.shaddowBusObj != nil) {
+                    self.vendorPhoneTextField.text = ((Vendor *)self.shaddowBusObj).phone;
                 }
                 self.vendorPhoneTextField.backgroundColor = cell.backgroundColor;
                 
@@ -548,31 +500,31 @@ enum VendorInfoType {
         //        if ([txt length] > 0) {
         switch (textField.tag) {
             case kVendorName * TAG_BASE:
-                self.shaddowVendor.name = txt;
+                self.shaddowBusObj.name = txt;
                 break;
             case kVendorAddr1 * TAG_BASE:
-                self.shaddowVendor.addr1 = txt;
+                ((Vendor *)self.shaddowBusObj).addr1 = txt;
                 break;
             case kVendorAddr2 * TAG_BASE:
-                self.shaddowVendor.addr2 = txt;
+                ((Vendor *)self.shaddowBusObj).addr2 = txt;
                 break;
             case kVendorAddr3 * TAG_BASE:
-                self.shaddowVendor.addr3 = txt;
+                ((Vendor *)self.shaddowBusObj).addr3 = txt;
                 break;
             case kVendorAddr4 * TAG_BASE:
-                self.shaddowVendor.addr4 = txt;
+                ((Vendor *)self.shaddowBusObj).addr4 = txt;
                 break;
             case kVendorCity * TAG_BASE:
-                self.shaddowVendor.city = txt;
+                ((Vendor *)self.shaddowBusObj).city = txt;
                 break;
             case kVendorZip * TAG_BASE:
-                self.shaddowVendor.zip = txt;
+                ((Vendor *)self.shaddowBusObj).zip = txt;
                 break;
             case kVendorEmail * TAG_BASE:
-                self.shaddowVendor.email = txt;
+                ((Vendor *)self.shaddowBusObj).email = txt;
                 break;
             case kVendorPhone * TAG_BASE:
-                self.shaddowVendor.phone = txt;
+                ((Vendor *)self.shaddowBusObj).phone = txt;
                 break;
             default:
                 break;
@@ -630,60 +582,38 @@ enum VendorInfoType {
     if (pickerView.tag == kVendorState * PICKER_TAG_BASE) {
         if (row == 0) {
             self.vendorStateTextField.text = @"";
-            self.shaddowVendor.state = [NSNumber numberWithInt:INVALID_OPTION];
+            ((Vendor *)self.shaddowBusObj).state = [NSNumber numberWithInt:INVALID_OPTION];
         } else {
             self.vendorStateTextField.text = [US_STATES objectAtIndex: row - 1];
-            self.shaddowVendor.state = [NSNumber numberWithInt: row - 1];
+            ((Vendor *)self.shaddowBusObj).state = [NSNumber numberWithInt: row - 1];
         }
     } else if (pickerView.tag == kVendorCountry * PICKER_TAG_BASE) {
         if (row == 0) {
             self.vendorCountryTextField.text = @"";
-            self.shaddowVendor.country = INVALID_OPTION;
+            ((Vendor *)self.shaddowBusObj).country = INVALID_OPTION;
         } else {
             self.vendorCountryTextField.text = [COUNTRIES objectAtIndex: row - 1] ;
-            self.shaddowVendor.country = row - 1;
+            ((Vendor *)self.shaddowBusObj).country = row - 1;
         }
         
         if (row == 1) {  //USA
             self.vendorStateTextField.inputView = self.vendorStatePickerView;
             self.vendorStateTextField.rightViewMode = UITextFieldViewModeAlways;
-            if (![self.shaddowVendor.state isKindOfClass:[NSNumber class]]) {
+            if (![((Vendor *)self.shaddowBusObj).state isKindOfClass:[NSNumber class]]) {
                 self.vendorStateTextField.text = @"";
-                self.shaddowVendor.state = [NSNumber numberWithInt:INVALID_OPTION];
+                ((Vendor *)self.shaddowBusObj).state = [NSNumber numberWithInt:INVALID_OPTION];
             }
         } else {
             self.vendorStateTextField.inputView = nil;
-            if ([self.shaddowVendor.state isKindOfClass:[NSNumber class]]) {
+            if ([((Vendor *)self.shaddowBusObj).state isKindOfClass:[NSNumber class]]) {
                 self.vendorStateTextField.text = @"";
-                self.shaddowVendor.state = nil;
+                ((Vendor *)self.shaddowBusObj).state = nil;
             }
-            self.vendorStateTextField.text = self.shaddowVendor.state;
+            self.vendorStateTextField.text = ((Vendor *)self.shaddowBusObj).state;
             self.vendorStateTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
             self.vendorStateTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
         }
     }
-}
-
-#pragma mark - model delegate
-
-- (void)doneSaveObject {
-    //    [Vendor retrieveList];
-    
-    [Vendor clone:self.shaddowVendor to:self.vendor];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.mode = kViewMode;
-        self.title = self.shaddowVendor.name;
-    });
-    
-    //    self.navigationItem.rightBarButtonItem.customView = nil;
-}
-
-- (void)didCreateVendor: (NSString *)newVendorId {
-    self.vendor.objectId = newVendorId;
-    self.shaddowVendor.objectId = newVendorId;
-    self.title = self.vendorNameTextField.text;
-    [self doneSaveObject];
 }
 
 

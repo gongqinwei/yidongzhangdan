@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BDCBusinessObject.h"
+#import "BDCBusinessObjectWithAttachments.h"
 #import "SlidingDetailsTableViewController.h"
 #import "SlidingListTableViewController.h"
 
@@ -29,32 +29,26 @@ typedef enum {
 
 #define ItemTypeNames   [NSArray arrayWithObjects:@"Service", @"Product (Non-inventory)", @"Discount", @"Sales Tax", nil]
 
-@protocol ItemDelegate <DetailsViewDelegate>
-@optional
-- (void)didCreateItem:(NSString *)newItemId;
-@end
 
 @class Item;
 
 @protocol ItemListDelegate <ListViewDelegate>
+
 @optional
 - (void)didGetItems;
 - (void)didAddItem:(Item *)item;
 - (void)failedToGetItems;
+
 @end
 
-@interface Item : BDCBusinessObject
+
+@interface Item : BDCBusinessObjectWithAttachments
 
 @property (nonatomic, assign) int type;
 @property (nonatomic, strong) NSDecimalNumber *price;
 @property (nonatomic, assign) int qty;
-//@property (nonatomic, assign) BOOL taxable;
-
-@property (nonatomic, weak) id<ItemDelegate> editDelegate;
-//@property (nonatomic, weak) id<ItemDelegate> editInvoiceDelegate;
 
 + (void)setListDelegate:(id<ItemListDelegate>)listDelegate;
-
 + (Item *)objectForKey:(NSString *)itemId;
 
 @end

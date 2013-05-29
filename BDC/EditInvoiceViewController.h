@@ -8,12 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SlidingDetailsTableViewController.h"
-#import "Invoice.h"
 
 @interface EditInvoiceViewController : SlidingDetailsTableViewController
-
-@property (nonatomic, strong) Invoice *invoice;
-
-- (void)addAttachmentData:(NSData *)attachmentData name:(NSString *)attachmentName;
 
 @end

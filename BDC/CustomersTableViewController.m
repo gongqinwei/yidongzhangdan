@@ -246,7 +246,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(Customer *)sender
 {
     if ([segue.identifier isEqualToString:CUSTOMER_VIEW_CUSTOMER_SEGUE]) {
-        [segue.destinationViewController setCustomer:sender];
+        [segue.destinationViewController setBusObj:sender];
         [segue.destinationViewController setMode:kViewMode];
     } else if ([segue.identifier isEqualToString:CUSTOMER_CREATE_CUSTOMER_SEGUE]) {
 //        [segue.destinationViewController setTitle:@"New Customer"];

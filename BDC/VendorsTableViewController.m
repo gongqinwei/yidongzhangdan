@@ -239,7 +239,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(Vendor *)sender
 {
     if ([segue.identifier isEqualToString:VENDOR_VIEW_VENDOR_SEGUE]) {
-        [segue.destinationViewController setVendor:sender];
+        [segue.destinationViewController setBusObj:sender];
         [segue.destinationViewController setMode:kViewMode];
     } else if ([segue.identifier isEqualToString:VENDOR_CREATE_VENDOR_SEGUE]) {
         //        [segue.destinationViewController setTitle:@"New Vendor"];

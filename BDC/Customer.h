@@ -25,16 +25,14 @@
 #define CUSTOMER_PHONE      @"phone"
 
 
-@protocol CustomerDelegate <DetailsViewDelegate>
-@optional
-- (void)didCreateCustomer:(NSString *)newCustomerId;
-@end
-
 @protocol CustomerListDelegate <ListViewDelegate>
+
 @optional
 - (void)didGetCustomers;
 - (void)failedToGetCustomers;
+
 @end
+
 
 @interface Customer : BDCBusinessObjectWithAttachments
 
@@ -59,11 +57,9 @@
 //@property (nonatomic, strong) NSString *altPhone;
 //@property (nonatomic, strong) NSString *fax;
 
-@property (nonatomic, weak) id<CustomerDelegate> editDelegate;
-@property (nonatomic, weak) id<CustomerDelegate> editInvoiceDelegate;
+@property (nonatomic, weak) id<BusObjectDelegate> editInvoiceDelegate;
 
 + (void)setListDelegate:(id<CustomerListDelegate>)listDelegate;
-
 + (Customer *)objectForKey:(NSString *)customerId;
 
 @end

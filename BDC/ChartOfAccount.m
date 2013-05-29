@@ -20,7 +20,6 @@ static NSMutableDictionary *accounts = nil;
 static NSMutableDictionary *inactiveAccounts = nil;
 
 @synthesize type;
-@synthesize editDelegate;
 
 + (id<AccountListDelegate>)getListDelegate {
     return ListDelegate;
@@ -70,7 +69,7 @@ static NSMutableDictionary *inactiveAccounts = nil;
             if ([theAction isEqualToString:UPDATE]) {
                 [weakSelf.editDelegate didUpdateObject];
             } else {
-                [weakSelf.editDelegate didCreateAccount:accountId];
+                [weakSelf.editDelegate didCreateObject:accountId];
                 [ListDelegate didAddAccount:self];
             }
         } else {

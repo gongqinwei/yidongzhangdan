@@ -18,6 +18,7 @@
 @synthesize objectId;
 @synthesize name;
 @synthesize isActive;
+@synthesize editDelegate;
 
 - (void)create {
     [self saveFor:CREATE];

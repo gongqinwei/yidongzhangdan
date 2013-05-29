@@ -8,11 +8,24 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol BusObjectDelegate
+
+@optional
+- (void)didCreateObject:(NSString *)newObjectId;
+- (void)didUpdateObject;
+- (void)didDeleteObject;
+- (void)failedToSaveObject;
+
+@end
+
+
 @interface BDCBusinessObject : NSObject
 
 @property (nonatomic, strong) NSString *objectId;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, assign) BOOL isActive;
+
+@property (nonatomic, weak) id<BusObjectDelegate> editDelegate;
 
 - (void)create;
 - (void)update;

@@ -72,15 +72,4 @@
     }
 }
 
-//#pragma mark - Action Menu delegate
-//
-//- (void)didSelectCrudAction:(NSString *)action {
-//    if ([action isEqualToString:ACTION_CREATE]) {
-//        [self.view removeGestureRecognizer:self.tapRecognizer];
-//        [self performSegueWithIdentifier:self.createNewSegue sender:nil];
-//    } else if ([action isEqualToString:ACTION_UPDATE] || [action isEqualToString:ACTION_DELETE] || [action isEqualToString:ACTION_UNDELETE]) {
-//        [self enterEditMode];
-//    }
-//}
-
 @end

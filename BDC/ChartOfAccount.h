@@ -14,11 +14,6 @@
 #define ACCOUNT_TYPE        @"type"
 
 
-@protocol AccountDelegate <DetailsViewDelegate>
-@optional
-- (void)didCreateAccount:(NSString *)newAccountId;
-@end
-
 @class ChartOfAccount;
 
 @protocol AccountListDelegate <ListViewDelegate>
@@ -33,10 +28,7 @@
 
 @property (nonatomic, assign) int type;
 
-@property (nonatomic, weak) id<AccountDelegate> editDelegate;
-
 + (void)setListDelegate:(id<AccountListDelegate>)listDelegate;
-
 + (ChartOfAccount *)objectForKey:(NSString *)accountId;
 
 @end

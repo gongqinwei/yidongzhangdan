@@ -7,10 +7,7 @@
 //
 
 #import "SlidingDetailsTableViewController.h"
-#import "Vendor.h"
 
 @interface EditVendorViewController : SlidingDetailsTableViewController
-
-@property (nonatomic, strong) Vendor *vendor;
 
 @end

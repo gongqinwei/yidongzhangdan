@@ -37,20 +37,16 @@
                         nil]
 
 
-@protocol BillDelegate <DetailsViewDelegate>
-@optional
-- (void)didCreateBill:(NSString *)newBillId;
-@end
-
 @protocol BillListDelegate <ListViewDelegate>
+
 @optional
 - (void)didGetBills:(NSArray *)billList;
 - (void)failedToGetBills;
+
 @end
 
-@interface Bill : BDCBusinessObjectWithAttachments
 
-@property (nonatomic, weak) id<BillDelegate> delegate;
+@interface Bill : BDCBusinessObjectWithAttachments
 
 @property (nonatomic, strong) NSString *vendorId;
 @property (nonatomic, strong) NSString *vendorName;
@@ -70,7 +66,6 @@
 
 + (id)list:(NSArray *)invArr orderBy:(NSString *)attribue ascending:(Boolean)isAscending;
 
-@property (nonatomic, weak) id<BillDelegate> editDelegate;
-@property (nonatomic, weak) id<BillDelegate> detailsDelegate;
+@property (nonatomic, weak) id<BusObjectDelegate> detailsDelegate;
 
 @end

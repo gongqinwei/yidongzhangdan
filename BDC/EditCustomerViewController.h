@@ -7,10 +7,7 @@
 //
 
 #import "SlidingDetailsTableViewController.h"
-#import "Customer.h"
 
 @interface EditCustomerViewController : SlidingDetailsTableViewController
-
-@property (nonatomic, strong) Customer *customer;
 
 @end
