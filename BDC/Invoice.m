@@ -251,10 +251,20 @@ static NSMutableArray *inactiveInvoices = nil;
         if(response_status == RESPONSE_SUCCESS) {
             NSMutableArray *invArr;
             if (isActive) {
-                invoices = [NSMutableArray array];
+                if (invoices) {
+                    [invoices removeAllObjects];
+                } else {
+                    invoices = [NSMutableArray array];
+                }
+
                 invArr = invoices;
             } else {
-                inactiveInvoices = [NSMutableArray array];
+                if (inactiveInvoices) {
+                    [inactiveInvoices removeAllObjects];
+                } else {
+                    inactiveInvoices = [NSMutableArray array];
+                }
+
                 invArr = inactiveInvoices;
             }
             

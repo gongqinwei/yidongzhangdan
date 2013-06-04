@@ -119,20 +119,20 @@
 }
 
 - (void)addAttachment:(NSString *)ext data:(NSData *)attachmentData {
-    UIImage *image;
+//    UIImage *image;
+//    
+//    if (attachmentData && [IMAGE_TYPE_SET containsObject:ext]) {
+//        image = [UIImage imageWithData:attachmentData];
+//    } else {
+//        NSString *iconFileName = [NSString stringWithFormat:@"%@_icon.png", ext];
+//        image = [UIImage imageNamed:iconFileName];
+//        
+//        if (!image) {
+//            image = [UIImage imageNamed:@"unknown_file_icon.png"];
+//        }
+//    }
     
-    if (attachmentData && [IMAGE_TYPE_SET containsObject:ext]) {
-        image = [UIImage imageWithData:attachmentData];
-    } else {
-        NSString *iconFileName = [NSString stringWithFormat:@"%@_icon.png", ext];
-        image = [UIImage imageNamed:iconFileName];
-        
-        if (!image) {
-            image = [UIImage imageNamed:@"unknown_file_icon.png"];
-        }
-    }
-    
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[Document getIconForType:ext data:attachmentData]];
     
     CGRect rect = imageView.frame;
     rect.size.height = IMG_HEIGHT;
@@ -387,6 +387,8 @@
         self.previewController.delegate = self;
         self.previewController.dataSource = self;
     }
+    
+    self.title = self.shaddowBusObj.name;
 }
 
 - (void)inputAccessoryDoneAction:(UIBarButtonItem *)button {

@@ -111,10 +111,20 @@ static NSMutableDictionary * inactiveCustomers = nil;
         if(response_status == RESPONSE_SUCCESS) {
             NSMutableDictionary *customerDict;
             if (isActive) {
-                customers = [NSMutableDictionary dictionary];
+                if (customers) {
+                    [customers removeAllObjects];
+                } else {
+                    customers = [NSMutableDictionary dictionary];
+                }
+
                 customerDict = customers;
             } else {
-                inactiveCustomers = [NSMutableDictionary dictionary];
+                if (inactiveCustomers) {
+                    [inactiveCustomers removeAllObjects];
+                } else {
+                    inactiveCustomers = [NSMutableDictionary dictionary];
+                }
+
                 customerDict = inactiveCustomers;
             }
 

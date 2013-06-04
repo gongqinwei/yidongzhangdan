@@ -85,10 +85,20 @@ static NSMutableDictionary * inactiveVendors = nil;
         if(response_status == RESPONSE_SUCCESS) {
             NSMutableDictionary *vendorDict;
             if (isActive) {
-                vendors = [NSMutableDictionary dictionary];
+                if (vendors) {
+                    [vendors removeAllObjects];
+                } else {
+                    vendors = [NSMutableDictionary dictionary];
+                }
+
                 vendorDict = vendors;
             } else {
-                inactiveVendors = [NSMutableDictionary dictionary];
+                if (inactiveVendors) {
+                    [inactiveVendors removeAllObjects];
+                } else {
+                    inactiveVendors = [NSMutableDictionary dictionary];
+                }
+
                 vendorDict = inactiveVendors;
             }
             

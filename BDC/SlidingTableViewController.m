@@ -40,21 +40,7 @@
 {
     [super viewDidLoad];
 
-    // keep a strong reference to self.navigationController so that it won't be released by ARC
-    self.navigation = self.navigationController;
-    
-    self.leftSwipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(toggleMenu:)];
-    self.leftSwipeRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.view addGestureRecognizer:self.leftSwipeRecognizer];
-    
-    self.rightSwipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(toggleMenu:)];
-    self.rightSwipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.view addGestureRecognizer:self.rightSwipeRecognizer];
-    
-    self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleMenu:)];
-    
-    self.actionMenuVC = nil;
-    self.slidingOutDelegate = [RootMenuViewController sharedInstance];
+    [self initialize];
 }
 
 - (void)didReceiveMemoryWarning

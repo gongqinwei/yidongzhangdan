@@ -2,21 +2,59 @@
 //  InboxViewController.m
 //  BDC
 //
-//  Created by Qinwei Gong on 8/31/12.
+//  Created by Qinwei Gong on 5/29/13.
 //
 //
 
 #import "InboxViewController.h"
+#import "DocumentCell.h"
+#import "Util.h"
+#import "BOSelectorViewController.h"
+#import <QuickLook/QuickLook.h>
+#import <QuartzCore/QuartzCore.h>
 
-@interface InboxViewController ()
+#define DOCUMENT_ASSOCIATE_SEGUE        @"DocumentAssociatedWith"
+
+
+@interface InboxViewController () <DocumentListDelegate, DocumentCellDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
+
+@property (nonatomic, strong) QLPreviewController *previewController;
 
 @end
 
+
 @implementation InboxViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
+@synthesize previewController;
+
+
+- (void)changeCurrentDocumentTo:(Document *)doc {
+    [self.currentDocument.documentDelegate didGetDeselected];
+    self.currentDocument = doc;
+    [self.currentDocument.documentDelegate didGetSelected];
+    
+    NSArray *actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], ACTION_DELETE, nil];
+    self.actionMenuVC.crudActions = self.crudActions = actionMenus;
+    [self.actionMenuVC.tableView reloadData];
+}
+
+- (void)downloadDocument:(Document *)doc {
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", DOMAIN_URL, doc.fileUrl]];
+    NSURLRequest *req = [NSURLRequest  requestWithURL:url
+                                          cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                      timeoutInterval:API_TIMEOUT];
+    
+    [NSURLConnection sendAsynchronousRequest:req
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                               doc.data = data;
+//                               [self.collectionView reloadData];
+                           }];
+}
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:style];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
     }
@@ -26,102 +64,129 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
-#pragma mark - Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    // Configure the cell...
+    [Document setDocumentListDelegate:self];
+    
+    self.dataArray = [Document listForCategory:FILE_CATEGORY_DOCUMENT];
+
+    if (self.dataArray) {
+        for (Document *doc in self.dataArray) {
+            [self downloadDocument:doc];
+        }
+    }
+    
+    self.previewController = [[QLPreviewController alloc] init];
+    self.previewController.delegate = self;
+    self.previewController.dataSource = self;
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:DOCUMENT_ASSOCIATE_SEGUE]) {
+        [segue.destinationViewController setPhotoName:self.currentDocument.name];
+        [segue.destinationViewController setPhotoData:self.currentDocument.data];
+    }
+}
+
+#pragma mark - UICollectionView Datasource
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.dataArray.count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *CellIdentifier = @"InboxCell";
+    
+    DocumentCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+
+    Document *doc = self.dataArray[indexPath.row];
+    cell.document = doc;
+    cell.documentName.text = doc.name;
+    cell.documentName.adjustsFontSizeToFitWidth = YES;
+    cell.documentName.minimumFontSize = 8;
+    cell.documentCreatedDate.text = [Util formatDate:doc.createdDate format:nil];
+    cell.selectDelegate = self;
     
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
+/*- (UICollectionReusableView *)collectionView:
+ (UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+ return [[UICollectionReusableView alloc] init];
+ }*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
+#pragma mark - UICollectionView Delegate
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    [self changeCurrentDocumentTo:self.dataArray[indexPath.row]];
+    
+    self.previewController.currentPreviewItemIndex = indexPath.row;
+    [self presentModalViewController:self.previewController animated:YES];
 }
-*/
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"- %d", indexPath.row);
 }
-*/
 
-#pragma mark - Table view delegate
+#pragma mark – UICollectionView Delegate FlowLayout
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    CGSize retval = CGSizeMake(95, 95);
+    return retval;
 }
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
+    return UIEdgeInsetsMake(7, 7, 7, 7);
+}
+
+#pragma mark - Document List delegate
+
+- (void)didGetDocuments {
+    self.dataArray = [Document listForCategory:FILE_CATEGORY_DOCUMENT];
+}
+
+#pragma mark - Document Cell delegate
+
+- (void)didSelectCell:(DocumentCell *)cell {
+    [self changeCurrentDocumentTo:cell.document];
+}
+
+#pragma mark - QuickLook Preview Controller Data Source
+
+- (NSInteger) numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller {
+    return self.dataArray.count;
+}
+
+- (id<QLPreviewItem>) previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index {
+    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsDir = [dirPaths objectAtIndex:0];
+    
+    Document *doc = self.dataArray[index];
+    
+    NSString *filePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent:doc.name]];
+    [doc.data writeToFile:filePath atomically:YES];
+    
+    return [NSURL fileURLWithPath:filePath];
+}
+
+#pragma mark - Action Menu delegate
+
+- (void)didSelectCrudAction:(NSString *)action {
+    [super didSelectCrudAction:action];
+    
+    if ([action hasPrefix:@"Associate"]) {
+        [self performSegueWithIdentifier:DOCUMENT_ASSOCIATE_SEGUE sender:self];
+    }
+}
+
 
 @end

@@ -30,7 +30,7 @@
 
 #define ROOT_MENU       [NSArray arrayWithObjects: \
                             [NSArray arrayWithObjects:MENU_PROFILE,                                     CATEGORY_NIL, nil], \
-                            [NSArray arrayWithObjects:MENU_SCANNER,                                     CATEGORY_TOOL, nil], \
+                            [NSArray arrayWithObjects:MENU_SCANNER, MENU_INBOX,                         CATEGORY_TOOL, nil], \
                             [NSArray arrayWithObjects:MENU_INVOICES, MENU_CUSTOMERS, MENU_ITEMS,        CATEGORY_AR, nil], \
                             [NSArray arrayWithObjects:MENU_BILLS, MENU_VENDORS,                         CATEGORY_AP, nil], \
                             [NSArray arrayWithObjects:MENU_ORGS, MENU_LOGOUT,                           CATEGORY_MORE, nil], \

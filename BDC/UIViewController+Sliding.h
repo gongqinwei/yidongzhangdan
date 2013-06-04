@@ -16,9 +16,10 @@
 #define ACTION_UPDATE           @"Edit"
 #define ACTION_DELETE           @"Delete..."
 #define ACTION_UNDELETE         @"Undelete..."
-#define ACTION_LIST             @"List For"
-#define ACTION_ORDER            @"Order By"
+#define ACTION_LIST             @"List for"
+#define ACTION_ORDER            @"Order by"
 #define ACTION_PAY              @"Pay"
+#define ACTION_ASSOCIATE        @"Associate %@ with..."
 
 
 @protocol SlideDelegate <NSObject>
@@ -61,6 +62,7 @@
 @property (nonatomic, strong) UISwipeGestureRecognizer *rightSwipeRecognizer;
 @property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
 
+- (void)initialize;
 - (void)slideIn;
 - (void)slideOut;
 - (IBAction)toggleMenu:(id)sender;

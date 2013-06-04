@@ -17,6 +17,7 @@
 #import "Bill.h"
 #import "Vendor.h"
 #import "ChartOfAccount.h"
+#import "Document.h"
 #import "Util.h"
 #import "UIHelper.h"
 
@@ -111,6 +112,9 @@ static RootMenuViewController * _sharedInstance = nil;
     [Bill retrieveList];
     [Vendor retrieveList];
     [ChartOfAccount retrieveList];
+    
+    [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
+    [Document retrieveListForCategory:FILE_CATEGORY_ATTACHMENT];
     
     _sharedInstance = self;
     

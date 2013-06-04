@@ -225,10 +225,20 @@ static NSMutableArray *inactiveBills = nil;
         if(response_status == RESPONSE_SUCCESS) {
             NSMutableArray *billArr;
             if (isActive) {
-                bills = [NSMutableArray array];
+                if (bills) {
+                    [bills removeAllObjects];
+                } else {
+                    bills = [NSMutableArray array];
+                }
+                
                 billArr = bills;
             } else {
-                inactiveBills = [NSMutableArray array];
+                if (bills) {
+                    [inactiveBills removeAllObjects];
+                } else {
+                    inactiveBills = [NSMutableArray array];
+                }
+
                 billArr = inactiveBills;
             }
             

@@ -2,13 +2,12 @@
 //  InboxViewController.h
 //  BDC
 //
-//  Created by Qinwei Gong on 8/31/12.
+//  Created by Qinwei Gong on 5/29/13.
 //
 //
 
-#import <UIKit/UIKit.h>
-#import "SlidingTableViewController.h"
+#import "SlidingCollectionViewController.h"
 
-@interface InboxViewController : SlidingTableViewController
+@interface InboxViewController : SlidingCollectionViewController
 
 @end

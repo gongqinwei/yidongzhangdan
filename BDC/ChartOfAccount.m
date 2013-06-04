@@ -128,10 +128,20 @@ static NSMutableDictionary *inactiveAccounts = nil;
         if(response_status == RESPONSE_SUCCESS) {
             NSMutableDictionary *accountDict;
             if (isActive) {
-                accounts = [NSMutableDictionary dictionary];
+                if (accounts) {
+                    [accounts removeAllObjects];
+                } else {
+                    accounts = [NSMutableDictionary dictionary];
+                }
+
                 accountDict = accounts;
             } else {
-                inactiveAccounts = [NSMutableDictionary dictionary];
+                if (inactiveAccounts) {
+                    [inactiveAccounts removeAllObjects];
+                } else {
+                    inactiveAccounts = [NSMutableDictionary dictionary];
+                }
+
                 accountDict = inactiveAccounts;
             }
             

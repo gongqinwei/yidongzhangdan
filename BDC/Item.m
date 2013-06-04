@@ -179,10 +179,20 @@ static NSMutableDictionary *inactiveItems = nil;
         if(response_status == RESPONSE_SUCCESS) {
             NSMutableDictionary *itemDict;
             if (isActive) {
-                items = [NSMutableDictionary dictionary];
+                if (items) {
+                    [items removeAllObjects];
+                } else {
+                    items = [NSMutableDictionary dictionary];
+                }
+
                 itemDict = items;
             } else {
-                inactiveItems = [NSMutableDictionary dictionary];
+                if (inactiveItems) {
+                    [inactiveItems removeAllObjects];
+                } else {
+                    inactiveItems = [NSMutableDictionary dictionary];
+                }
+
                 itemDict = inactiveItems;
             }
             

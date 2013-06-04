@@ -269,6 +269,8 @@
         } else {
             NSString *action = [self.crudActions objectAtIndex:indexPath.row];
             cell.textLabel.text = action;
+            cell.textLabel.adjustsFontSizeToFitWidth = YES;
+            cell.textLabel.minimumFontSize = 10;
             [self addSelectedBackGroundForCell:cell];
             
             if ([action isEqualToString:ACTION_PAY]) {
@@ -313,7 +315,6 @@
                 payAmountLabel.backgroundColor = [UIColor clearColor];
                 
                 [cell addSubview:payAmountLabel];
-                
             }
         }
     }
