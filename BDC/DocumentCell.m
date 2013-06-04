@@ -14,7 +14,6 @@
 
 @property (nonatomic, strong) UIView *infoOverlay;
 
-
 @end
 
 
@@ -26,10 +25,10 @@
 @synthesize document = _document;
 @synthesize selectDelegate;
 
-- (void)toggleInfoDisplay:(BOOL)show {
-    self.documentName.hidden = show;
-    self.documentCreatedDate.hidden = show;
-    self.infoOverlay.hidden = show;
+- (void)toggleInfoDisplay:(BOOL)hidden {
+    self.documentName.hidden = hidden;
+    self.documentCreatedDate.hidden = hidden;
+    self.infoOverlay.hidden = hidden;
 }
 
 - (IBAction)showDocumentInfo:(UIButton *)sender {

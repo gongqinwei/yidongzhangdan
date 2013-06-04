@@ -15,12 +15,39 @@
 @synthesize dataArray;
 @synthesize currentDocument;
 @synthesize refreshControl;
+@synthesize previewController;
+
 
 - (void)refreshView {
     self.refreshControl.attributedTitle = REFRESHING;
-//    [[self class] retrieveList];
+    [self changeCurrentDocumentTo:nil];
+}
+
+- (void)endRefreshView {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.collectionView reloadData];
+        self.refreshControl.attributedTitle = LAST_REFRESHED;
+        [self.refreshControl endRefreshing];
+    });
+}
+
+- (void)downloadDocument:(Document *)doc {
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", DOMAIN_URL, doc.fileUrl]];
+    NSURLRequest *req = [NSURLRequest  requestWithURL:url
+                                          cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                      timeoutInterval:API_TIMEOUT];
     
-//    [self exitEditMode];
+    [NSURLConnection sendAsynchronousRequest:req
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                               doc.data = data;
+                           }];
+}
+
+- (void)changeCurrentDocumentTo:(Document *)doc {
+    [self.currentDocument.documentDelegate didGetDeselected];
+    self.currentDocument = doc;
+    [self.currentDocument.documentDelegate didGetSelected];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -53,6 +80,32 @@
     [super viewDidLoad];
     
     [self initialize];
+    
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self action:@selector(refreshView) forControlEvents:UIControlEventValueChanged];
+    [self.collectionView addSubview:self.refreshControl];
+    
+    self.previewController = [[QLPreviewController alloc] init];
+    self.previewController.delegate = self;
+    self.previewController.dataSource = self;
+}
+
+#pragma mark - QuickLook Preview Controller Data Source
+
+- (NSInteger) numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller {
+    return self.dataArray.count;
+}
+
+- (id<QLPreviewItem>) previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index {
+    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsDir = [dirPaths objectAtIndex:0];
+    
+    Document *doc = self.dataArray[index];
+    
+    NSString *filePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent:doc.name]];
+    [doc.data writeToFile:filePath atomically:YES];
+    
+    return [NSURL fileURLWithPath:filePath];
 }
 
 #pragma mark - Action Menu delegate

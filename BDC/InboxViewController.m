@@ -10,46 +10,35 @@
 #import "DocumentCell.h"
 #import "Util.h"
 #import "BOSelectorViewController.h"
-#import <QuickLook/QuickLook.h>
 #import <QuartzCore/QuartzCore.h>
 
 #define DOCUMENT_ASSOCIATE_SEGUE        @"DocumentAssociatedWith"
 
 
-@interface InboxViewController () <DocumentListDelegate, DocumentCellDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
-
-@property (nonatomic, strong) QLPreviewController *previewController;
+@interface InboxViewController () <DocumentListDelegate, DocumentCellDelegate>
 
 @end
 
 
 @implementation InboxViewController
 
-@synthesize previewController;
-
-
-- (void)changeCurrentDocumentTo:(Document *)doc {
-    [self.currentDocument.documentDelegate didGetDeselected];
-    self.currentDocument = doc;
-    [self.currentDocument.documentDelegate didGetSelected];
+// Override
+- (void)refreshView {
+    [super refreshView];
     
-    NSArray *actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], ACTION_DELETE, nil];
-    self.actionMenuVC.crudActions = self.crudActions = actionMenus;
-    [self.actionMenuVC.tableView reloadData];
+    [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
 }
 
-- (void)downloadDocument:(Document *)doc {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", DOMAIN_URL, doc.fileUrl]];
-    NSURLRequest *req = [NSURLRequest  requestWithURL:url
-                                          cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                      timeoutInterval:API_TIMEOUT];
+- (void)changeCurrentDocumentTo:(Document *)doc {
+    [super changeCurrentDocumentTo:doc];
     
-    [NSURLConnection sendAsynchronousRequest:req
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-                               doc.data = data;
-//                               [self.collectionView reloadData];
-                           }];
+    NSArray *actionMenus = nil;
+    if (doc) {
+        actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], ACTION_DELETE, nil];
+    }
+    
+    self.actionMenuVC.crudActions = self.crudActions = actionMenus;
+    [self.actionMenuVC.tableView reloadData];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -69,15 +58,11 @@
     
     self.dataArray = [Document listForCategory:FILE_CATEGORY_DOCUMENT];
 
-    if (self.dataArray) {
-        for (Document *doc in self.dataArray) {
-            [self downloadDocument:doc];
-        }
-    }
-    
-    self.previewController = [[QLPreviewController alloc] init];
-    self.previewController.delegate = self;
-    self.previewController.dataSource = self;
+//    if (self.dataArray) {
+//        for (Document *doc in self.dataArray) {
+//            [self downloadDocument:doc];
+//        }
+//    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -115,6 +100,9 @@
     cell.documentName.minimumFontSize = 8;
     cell.documentCreatedDate.text = [Util formatDate:doc.createdDate format:nil];
     cell.selectDelegate = self;
+    [cell toggleInfoDisplay:YES];
+    
+    [self downloadDocument:doc];
     
     return cell;
 }
@@ -152,30 +140,14 @@
 
 - (void)didGetDocuments {
     self.dataArray = [Document listForCategory:FILE_CATEGORY_DOCUMENT];
+    
+    [super endRefreshView];
 }
 
 #pragma mark - Document Cell delegate
 
 - (void)didSelectCell:(DocumentCell *)cell {
     [self changeCurrentDocumentTo:cell.document];
-}
-
-#pragma mark - QuickLook Preview Controller Data Source
-
-- (NSInteger) numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller {
-    return self.dataArray.count;
-}
-
-- (id<QLPreviewItem>) previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index {
-    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *docsDir = [dirPaths objectAtIndex:0];
-    
-    Document *doc = self.dataArray[index];
-    
-    NSString *filePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent:doc.name]];
-    [doc.data writeToFile:filePath atomically:YES];
-    
-    return [NSURL fileURLWithPath:filePath];
 }
 
 #pragma mark - Action Menu delegate

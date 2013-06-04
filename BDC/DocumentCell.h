@@ -27,4 +27,6 @@
 @property (nonatomic, strong) Document *document;
 @property (nonatomic, strong) id<DocumentCellDelegate> selectDelegate;
 
+- (void)toggleInfoDisplay:(BOOL)show;
+
 @end

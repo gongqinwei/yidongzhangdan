@@ -18,8 +18,8 @@
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
-#define DOMAIN_URL          @"http://10.1.10.172"
-//#define DOMAIN_URL          @"http://192.168.1.130"
+//#define DOMAIN_URL          @"http://10.1.10.172"
+#define DOMAIN_URL          @"http://192.168.1.49"
 #define APP_KEY             @"devKey"
 #endif
 

@@ -114,7 +114,7 @@ static RootMenuViewController * _sharedInstance = nil;
     [ChartOfAccount retrieveList];
     
     [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
-    [Document retrieveListForCategory:FILE_CATEGORY_ATTACHMENT];
+//    [Document retrieveListForCategory:FILE_CATEGORY_ATTACHMENT];
     
     _sharedInstance = self;
     
