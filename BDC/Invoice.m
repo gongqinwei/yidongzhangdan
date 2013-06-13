@@ -147,7 +147,11 @@ static NSMutableArray *inactiveInvoices = nil;
             NSString *invId = [info objectForKey:ID];
             self.objectId = invId;
             
-            if ([theAction isEqual:CREATE] || self.isActive) {
+            if ([theAction isEqualToString:CREATE]) {
+                self.isActive = YES;
+            }
+            
+            if (self.isActive) {
                 [Invoice retrieveListForActive:YES];
             } else {
                 [Invoice retrieveListForActive:NO];

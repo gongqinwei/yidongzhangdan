@@ -32,12 +32,10 @@
 
 @property (nonatomic, strong) NSMutableArray *searchResults;
 @property (nonatomic, strong) NSMutableArray *searchResultTypes;
-
 @property (nonatomic, strong) UILabel *ascLabel;
 
-- (SlidingTableViewController *)slideInListViewIdentifier:(NSString *)identifier;
-
 @end
+
 
 @implementation ActionMenuViewController
 
@@ -52,6 +50,11 @@
 @synthesize ascLabel;
 @synthesize crudActions;
 
+static ActionMenuViewController * _sharedInstance = nil;
+
++ (ActionMenuViewController *)sharedInstance {
+    return _sharedInstance;
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -137,6 +140,8 @@
             }
         }
     }
+    
+    _sharedInstance = self;
 }
 
 - (void)viewDidUnload {
@@ -338,6 +343,34 @@
     return vc;
 }
 
+- (void)performSegueForObject:(BDCBusinessObject *)obj {
+    if ([obj isKindOfClass:[Invoice class]]) {
+        InvoicesTableViewController *listVC = (InvoicesTableViewController *)[self slideInListViewIdentifier:MENU_INVOICES];
+        self.actionDelegate = listVC;
+        
+        [self.actionDelegate didSelectSortAttribute:[listVC.actionMenuVC.sortAttributes objectAtIndex:listVC.actionMenuVC.lastSortAttribute.row]
+                                          ascending:(listVC.actionMenuVC) ? listVC.actionMenuVC.ascSwitch.on : YES
+                                             active:!listVC.actionMenuVC.activenessSwitch.selectedSegmentIndex];
+        
+        [listVC performSegueWithIdentifier:@"ViewInvoice" sender:(Invoice *)obj];
+    } else if ([obj isKindOfClass:[Bill class]]) {
+        BillsTableViewController *listVC = (BillsTableViewController *)[self slideInListViewIdentifier:MENU_BILLS];
+        self.actionDelegate = listVC;
+        
+        [self.actionDelegate didSelectSortAttribute:[listVC.actionMenuVC.sortAttributes objectAtIndex:listVC.actionMenuVC.lastSortAttribute.row]
+                                          ascending:(listVC.actionMenuVC) ? listVC.actionMenuVC.ascSwitch.on : YES
+                                             active:!listVC.actionMenuVC.activenessSwitch.selectedSegmentIndex];
+        
+        [listVC performSegueWithIdentifier:@"ViewBill" sender:(Bill *)obj];
+    } else if ([obj isKindOfClass:[Customer class]]) {
+        [[self slideInListViewIdentifier:MENU_CUSTOMERS] performSegueWithIdentifier:@"ViewCustomer" sender:(Customer *)obj];
+    } else if ([obj isKindOfClass:[Item class]]) {
+        [[self slideInListViewIdentifier:MENU_ITEMS] performSegueWithIdentifier:@"ViewItem" sender:(Item *)obj];
+    } else if ([obj isKindOfClass:[Vendor class]]) {
+        [[self slideInListViewIdentifier:MENU_VENDORS] performSegueWithIdentifier:@"ViewVendor" sender:(Vendor *)obj];
+    }
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         [self.searchDisplayController setActive:NO animated:YES];
@@ -345,31 +378,33 @@
         
         BDCBusinessObject * obj = (BDCBusinessObject *)[[self.searchResults objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
         
-        if ([obj isKindOfClass:[Invoice class]]) {            
-            InvoicesTableViewController *listVC = (InvoicesTableViewController *)[self slideInListViewIdentifier:MENU_INVOICES];
-            self.actionDelegate = listVC;
-            
-            [self.actionDelegate didSelectSortAttribute:[listVC.actionMenuVC.sortAttributes objectAtIndex:listVC.actionMenuVC.lastSortAttribute.row]
-                                              ascending:(listVC.actionMenuVC) ? listVC.actionMenuVC.ascSwitch.on : YES
-                                                 active:!listVC.actionMenuVC.activenessSwitch.selectedSegmentIndex];
-            
-            [listVC performSegueWithIdentifier:@"ViewInvoice" sender:(Invoice *)obj];
-        } else if ([obj isKindOfClass:[Bill class]]) {
-            BillsTableViewController *listVC = (BillsTableViewController *)[self slideInListViewIdentifier:MENU_BILLS];
-            self.actionDelegate = listVC;
-            
-            [self.actionDelegate didSelectSortAttribute:[listVC.actionMenuVC.sortAttributes objectAtIndex:listVC.actionMenuVC.lastSortAttribute.row]
-                                              ascending:(listVC.actionMenuVC) ? listVC.actionMenuVC.ascSwitch.on : YES
-                                                 active:!listVC.actionMenuVC.activenessSwitch.selectedSegmentIndex];
-            
-            [listVC performSegueWithIdentifier:@"ViewBill" sender:(Bill *)obj];
-        } else if ([obj isKindOfClass:[Customer class]]) {
-            [[self slideInListViewIdentifier:MENU_CUSTOMERS] performSegueWithIdentifier:@"ViewCustomer" sender:(Customer *)obj];
-        } else if ([obj isKindOfClass:[Item class]]) {
-            [[self slideInListViewIdentifier:MENU_ITEMS] performSegueWithIdentifier:@"ViewItem" sender:(Item *)obj];
-        } else if ([obj isKindOfClass:[Vendor class]]) {
-            [[self slideInListViewIdentifier:MENU_VENDORS] performSegueWithIdentifier:@"ViewVendor" sender:(Vendor *)obj];
-        }
+        [self performSegueForObject:obj];
+        
+//        if ([obj isKindOfClass:[Invoice class]]) {            
+//            InvoicesTableViewController *listVC = (InvoicesTableViewController *)[ActionMenuViewController slideInListViewIdentifier:MENU_INVOICES];
+//            self.actionDelegate = listVC;
+//            
+//            [self.actionDelegate didSelectSortAttribute:[listVC.actionMenuVC.sortAttributes objectAtIndex:listVC.actionMenuVC.lastSortAttribute.row]
+//                                              ascending:(listVC.actionMenuVC) ? listVC.actionMenuVC.ascSwitch.on : YES
+//                                                 active:!listVC.actionMenuVC.activenessSwitch.selectedSegmentIndex];
+//            
+//            [listVC performSegueWithIdentifier:@"ViewInvoice" sender:(Invoice *)obj];
+//        } else if ([obj isKindOfClass:[Bill class]]) {
+//            BillsTableViewController *listVC = (BillsTableViewController *)[ActionMenuViewController slideInListViewIdentifier:MENU_BILLS];
+//            self.actionDelegate = listVC;
+//            
+//            [self.actionDelegate didSelectSortAttribute:[listVC.actionMenuVC.sortAttributes objectAtIndex:listVC.actionMenuVC.lastSortAttribute.row]
+//                                              ascending:(listVC.actionMenuVC) ? listVC.actionMenuVC.ascSwitch.on : YES
+//                                                 active:!listVC.actionMenuVC.activenessSwitch.selectedSegmentIndex];
+//            
+//            [listVC performSegueWithIdentifier:@"ViewBill" sender:(Bill *)obj];
+//        } else if ([obj isKindOfClass:[Customer class]]) {
+//            [[ActionMenuViewController slideInListViewIdentifier:MENU_CUSTOMERS] performSegueWithIdentifier:@"ViewCustomer" sender:(Customer *)obj];
+//        } else if ([obj isKindOfClass:[Item class]]) {
+//            [[ActionMenuViewController slideInListViewIdentifier:MENU_ITEMS] performSegueWithIdentifier:@"ViewItem" sender:(Item *)obj];
+//        } else if ([obj isKindOfClass:[Vendor class]]) {
+//            [[ActionMenuViewController slideInListViewIdentifier:MENU_VENDORS] performSegueWithIdentifier:@"ViewVendor" sender:(Vendor *)obj];
+//        }
     } else {
         if (self.targetViewController.sortAttributes) {
             if (indexPath.section == 1) {

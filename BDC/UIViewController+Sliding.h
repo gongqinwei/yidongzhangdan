@@ -65,6 +65,7 @@
 - (void)initialize;
 - (void)slideIn;
 - (void)slideOut;
+- (void)disappear;
 - (IBAction)toggleMenu:(id)sender;
 //- (void)removeTapGesture;
 - (void)enterEditMode;

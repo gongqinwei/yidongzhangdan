@@ -238,7 +238,11 @@ static NSMutableDictionary * inactiveVendors = nil;
             NSString *vendorId = [info objectForKey:ID];
             self.objectId = vendorId;
             
-            if ([theAction isEqual:CREATE] || self.isActive) {
+            if ([theAction isEqualToString:CREATE]) {
+                self.isActive = YES;
+            }
+            
+            if (self.isActive) {
                 [Vendor retrieveListForActive:YES];
             } else {
                 [Vendor retrieveListForActive:NO];

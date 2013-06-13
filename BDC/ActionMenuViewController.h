@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "UIViewController+Sliding.h"
+#import "BDCBusinessObject.h"
+
+@class SlidingTableViewController;
 
 @protocol ActionMenuDelegate;
 
@@ -22,5 +25,10 @@
 @property (nonatomic, strong) NSIndexPath *lastSortAttribute;
 
 @property (nonatomic, strong) NSArray *crudActions;
+
+- (SlidingTableViewController *)slideInListViewIdentifier:(NSString *)identifier;
+- (void)performSegueForObject:(BDCBusinessObject *)obj;
+
++ (ActionMenuViewController *)sharedInstance;
 
 @end

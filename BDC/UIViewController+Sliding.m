@@ -160,6 +160,32 @@ static char const * const TapRecognizerKey = "tapRecognizer";
     }];
 }
 
+// synchronous version of slideOut; TODO: refactor
+- (void)disappear {
+    [self.actionMenuVC.view removeFromSuperview];
+    
+    self.navigationItem.hidesBackButton = NO;
+    [self.view removeGestureRecognizer:self.tapRecognizer];
+    
+    CGRect destination = self.navigationController.view.frame;
+    if (destination.origin.x > 0) {
+        destination.origin.x = [UIScreen mainScreen].bounds.size.width;
+    } else {
+        destination.origin.x = [UIScreen mainScreen].bounds.size.width * -1;
+    }
+    
+    self.navigationController.view.frame = destination;
+    
+    UIViewController *topVC = self.navigationController.topViewController;
+    [topVC.view removeGestureRecognizer:topVC.tapRecognizer];
+    topVC.navigationItem.hidesBackButton = NO;
+    
+    [self.navigationController removeFromParentViewController];
+    [self.slidingOutDelegate viewDidSlideOut];
+    [UIHelper removeShaddowForView:self.navigationController.view];
+}
+
+
 - (void)slideOut {
     [self.actionMenuVC.view removeFromSuperview];
     

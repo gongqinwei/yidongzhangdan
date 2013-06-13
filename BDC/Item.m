@@ -65,7 +65,11 @@ static NSMutableDictionary *inactiveItems = nil;
             NSString *itemId = [info objectForKey:ID];
             self.objectId = itemId;
             
-            if ([theAction isEqual:CREATE] || self.isActive) {
+            if ([theAction isEqualToString:CREATE]) {
+                self.isActive = YES;
+            }
+            
+            if (self.isActive) {
                 [Item retrieveListForActive:YES];
             } else {
                 [Item retrieveListForActive:NO];

@@ -58,6 +58,10 @@
     self.modeChanged = YES;
     
     if (mode == kViewMode) {
+        self.isActive = self.busObj.isActive;
+        self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
+        self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
+        
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
         self.navigationItem.rightBarButtonItem.tag = 1;
         self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
@@ -397,18 +401,11 @@
                                                                   action:@selector(inputAccessoryDoneAction:)];
     self.inputAccessoryView.items = [NSArray arrayWithObjects:flexibleSpace, doneButton, nil];
     
-    if (self.mode == kViewMode) {
-        self.isActive = self.busObj.isActive;
-        self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
-        self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
-        
-//        // retrieve attachments
-//        [self retrieveDocAttachments];
-        
-//        self.previewController = [[QLPreviewController alloc] init];
-//        self.previewController.delegate = self;
-//        self.previewController.dataSource = self;
-    }
+//    if (self.mode == kViewMode) {
+//        self.isActive = self.busObj.isActive;
+//        self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
+//        self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
+//    }
     
     self.previewController = [[QLPreviewController alloc] init];
     self.previewController.delegate = self;
@@ -519,6 +516,15 @@
 
 #pragma mark - Model Delegate methods
 
+// private
+- (void)quitAttachMode {
+    SlidingTableViewController *vc = self.navigationController.childViewControllers[0];
+    [self.navigationController popToRootViewControllerAnimated:NO];
+    
+    [[ActionMenuViewController sharedInstance] performSegueForObject:self.busObj];
+    [vc disappear];
+}
+
 - (void)doneSaveObject {
     NSMutableArray *original = [NSMutableArray arrayWithArray:[self.busObj.attachmentDict allKeys]];
     NSMutableArray *current = [NSMutableArray arrayWithArray:[self.attachmentDict allKeys]];
@@ -572,8 +578,12 @@
                         [self.busObjClass clone:self.shaddowBusObj to:self.busObj];
                         
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            self.mode = kViewMode;
-                            self.title = self.shaddowBusObj.name;
+                            if (self.mode == kAttachMode) {
+                                [self quitAttachMode];
+                            } else {
+                                self.mode = kViewMode;
+                                self.title = self.shaddowBusObj.name;
+                            }
                         });
                     }
                     
@@ -607,8 +617,12 @@
                         [self.busObjClass clone:self.shaddowBusObj to:self.busObj];
                         
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            self.mode = kViewMode;
-                            self.title = self.shaddowBusObj.name;
+                            if (self.mode == kAttachMode) {
+                                [self quitAttachMode];
+                            } else {
+                                self.mode = kViewMode;
+                                self.title = self.shaddowBusObj.name;
+                            }
                         });
                     }
                     
@@ -646,8 +660,12 @@
                         [Document removeFromInbox:doc];
                         
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            self.mode = kViewMode;
-                            self.title = self.shaddowBusObj.name;
+                            if (self.mode == kAttachMode) {
+                                [self quitAttachMode];
+                            } else {
+                                self.mode = kViewMode;
+                                self.title = self.shaddowBusObj.name;
+                            }
                         });
                     }
                     

@@ -38,8 +38,7 @@
 
 static RootMenuViewController * _sharedInstance = nil;
 
-+ (RootMenuViewController *)sharedInstance
-{
++ (RootMenuViewController *)sharedInstance {
     return _sharedInstance;
 }
 
