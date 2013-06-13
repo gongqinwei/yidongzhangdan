@@ -414,8 +414,6 @@
 				7E91E417159394C4005104AF /* APViewController.m */,
 				0E7F8B43172A5B8F0090464C /* Bill */,
 				0E7F8B44172A5B9F0090464C /* Vendor */,
-				7E91E42C15993E6D005104AF /* BOSelectorViewController.h */,
-				7E91E42D15993E6D005104AF /* BOSelectorViewController.m */,
 				7E91E441159BCC2F005104AF /* CreateBillViewController.h */,
 				0E8FBAD4160D844C0074C01B /* CreateBillViewController.m */,
 			);
@@ -589,6 +587,8 @@
 				7E579F8915ACE571009D1455 /* UserProfileViewController.m */,
 				7E91E41F1593F83B005104AF /* ScannerViewController.h */,
 				7E91E4201593F83B005104AF /* ScannerViewController.m */,
+				7E91E42C15993E6D005104AF /* BOSelectorViewController.h */,
+				7E91E42D15993E6D005104AF /* BOSelectorViewController.m */,
 				0EA29AB416DDBE7600386617 /* Sliding */,
 				0EA29AB516DDBE9900386617 /* Login */,
 				0EA29AB616DDBEE500386617 /* Menu */,

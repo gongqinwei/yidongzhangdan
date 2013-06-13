@@ -51,6 +51,11 @@ static id <DocumentListDelegate> AttachmentListDelegate = nil;
     return nil;
 }
 
++ (void)removeFromInbox:(Document *)doc {
+    [documents removeObject:doc];
+    [DocumentListDelegate didGetDocuments];
+}
+
 + (void)retrieveListForCategory:(NSString *)category {
     [UIAppDelegate incrNetworkActivities];
     

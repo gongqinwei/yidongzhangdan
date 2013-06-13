@@ -78,12 +78,15 @@ enum PhotoSourceType {
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    if([segue.identifier isEqualToString:SELECT_BO_SEGUE]) {
-        NSString *photoName = [self autoFillPhotoName];
+    NSString *photoName = [self autoFillPhotoName];
         
-        [(BOSelectorViewController *)segue.destinationViewController setPhotoName:photoName];
-        [segue.destinationViewController setPhotoData:self.photoData];
-//    }
+//    [(BOSelectorViewController *)segue.destinationViewController setPhotoName:photoName];
+//    [segue.destinationViewController setPhotoData:self.photoData];
+    
+    Document *doc = [[Document alloc] init];
+    doc.name = photoName;
+    doc.data = self.photoData;
+    [segue.destinationViewController setDocument:doc];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

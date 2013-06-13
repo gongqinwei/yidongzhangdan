@@ -18,8 +18,8 @@
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
-//#define DOMAIN_URL          @"http://10.1.10.172"
-#define DOMAIN_URL          @"http://192.168.1.49"
+#define DOMAIN_URL          @"http://10.1.10.167"
+//#define DOMAIN_URL          @"http://192.168.1.52"
 #define APP_KEY             @"devKey"
 #endif
 
@@ -74,6 +74,7 @@
 #define UPLOAD_API          @"UploadAttachment.json"
 #define RETRIEVE_DOCS_API   @"RetrieveAttachment.json"
 #define REMOVE_DOCS_API     @"RemoveAttachment.json"
+#define ASSIGN_DOCS_API     @"AssignDocument.json"
 #define LIST_API            @"List/"
 #define BILL_API            @"Bill.json"
 #define PAY_BILL_API        @"PayBill.json"

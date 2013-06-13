@@ -93,7 +93,7 @@ static NSMutableArray *inactiveInvoices = nil;
 - (id)init {
     if (self = [super init]) {
         self.lineItems = [NSMutableArray array];
-        self.attachments = [NSMutableArray array];
+//        self.attachments = [NSMutableArray array];
     }
     return self;
 }

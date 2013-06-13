@@ -7,15 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SlidingViewController.h"
+#import "Document.h"
 
-@interface BOSelectorViewController : SlidingViewController
+@interface BOSelectorViewController : UITableViewController
 
-@property (nonatomic, strong) NSString *photoName;
-@property (nonatomic, strong) NSData *photoData;
+@property (nonatomic, strong) Document *document;
+//@property (nonatomic, strong) NSString *photoName;
+//@property (nonatomic, strong) NSData *photoData;
 
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *uploadIndicator;
-@property (weak, nonatomic) IBOutlet UILabel *uploadError;
-@property (weak, nonatomic) IBOutlet UILabel *photoNameLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *uploadError;
+//@property (weak, nonatomic) IBOutlet UILabel *photoNameLabel;
 
 @end

@@ -21,8 +21,6 @@
 #import "Customer.h"
 #import "Organization.h"
 #import "Document.h"
-#import "Uploader.h"
-//#import "APIHandler.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <MessageUI/MessageUI.h>
@@ -440,8 +438,14 @@ typedef enum {
         return [InvoiceInfo count];
     } else if (section == kInvoiceLineItems) {
         return [((Invoice *)self.shaddowBusObj).lineItems count];
+    } else if (section == kInvoiceAttachment) {
+        if (self.mode == kAttachMode) {
+            return 1;
+        } else {
+            return 2;
+        }
     } else {
-        return 2;
+        return 0;
     }
 }
 
@@ -659,25 +663,12 @@ typedef enum {
             
             if (indexPath.row == 0) {
                 if (self.mode != kCreateMode && self.mode != kAttachMode) {
-//                    [self addPDFAttachment];
                     [cell.contentView addSubview:self.pdfView];
+                } else {
+                    [cell.contentView addSubview:self.attachmentScrollView];
+                    [cell.contentView addSubview:self.attachmentPageControl];
                 }
             } else {
-            
-//                // clean up first
-//                for (UIView *subview in [self.attachmentScrollView subviews]) {
-//                    if ([subview isKindOfClass:[UIImageView class]]) {
-//                        [subview removeFromSuperview];
-//                    }
-//                }
-//                
-//                for (Document * doc in shaddowInvoice.attachments) {
-//                    NSString *ext = [[doc.name pathExtension] lowercaseString];
-//                    [self addAttachment:ext data:doc.data];
-//                }
-//                
-//                [self layoutScrollImages:NO];
-
                 [cell.contentView addSubview:self.attachmentScrollView];
                 [cell.contentView addSubview:self.attachmentPageControl];
             }

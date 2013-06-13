@@ -51,6 +51,7 @@
 
 + (NSMutableArray *)listForCategory:(NSString *)category;
 + (void)retrieveListForCategory:(NSString *)category;
++ (void)removeFromInbox:(Document *)doc;
 
 + (UIImage *)getIconForType:(NSString *)ext data:(NSData *)attachmentData;
 

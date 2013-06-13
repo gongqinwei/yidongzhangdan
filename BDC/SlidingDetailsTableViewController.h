@@ -9,6 +9,7 @@
 #import "SlidingTableViewController.h"
 #import "BDCBusinessObjectWithAttachments.h"
 #import "ScannerViewController.h"
+#import "Document.h"
 #import <QuickLook/QuickLook.h>
 
 //@protocol DetailsViewDelegate <NSObject>
@@ -45,7 +46,7 @@
 - (void)inputAccessoryDoneAction:(UIBarButtonItem *)button;
 
 - (void)cancelEdit:(UIBarButtonItem *)sender;
-- (void)addAttachmentData:(NSData *)attachmentData name:(NSString *)attachmentName;
+- (void)addDocument:(Document *)document;
 - (void)addAttachment:(NSString *)ext data:(NSData *)attachmentData;
 - (void)selectAttachment:(UIImageView *)imageView;
 - (void)imageTapped:(UITapGestureRecognizer *)gestureRecognizer;

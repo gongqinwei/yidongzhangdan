@@ -112,8 +112,7 @@
         && (self.crudActions == nil || self.crudActions.count == 0)) {
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     } else {
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-        
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;        
         self.actionDelegate = self.targetViewController;
         
         self.ascSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(SLIDING_DISTANCE - 108.0, 1.0, 40.0, ACTION_MENU_SECTION_HEADER_HEIGHT)];
@@ -349,10 +348,10 @@
         if ([obj isKindOfClass:[Invoice class]]) {            
             InvoicesTableViewController *listVC = (InvoicesTableViewController *)[self slideInListViewIdentifier:MENU_INVOICES];
             self.actionDelegate = listVC;
-
+            
             [self.actionDelegate didSelectSortAttribute:[listVC.actionMenuVC.sortAttributes objectAtIndex:listVC.actionMenuVC.lastSortAttribute.row]
-                                            ascending:listVC.actionMenuVC.ascSwitch.on
-                                               active:!listVC.actionMenuVC.activenessSwitch.selectedSegmentIndex];
+                                              ascending:(listVC.actionMenuVC) ? listVC.actionMenuVC.ascSwitch.on : YES
+                                                 active:!listVC.actionMenuVC.activenessSwitch.selectedSegmentIndex];
             
             [listVC performSegueWithIdentifier:@"ViewInvoice" sender:(Invoice *)obj];
         } else if ([obj isKindOfClass:[Bill class]]) {
@@ -360,7 +359,7 @@
             self.actionDelegate = listVC;
             
             [self.actionDelegate didSelectSortAttribute:[listVC.actionMenuVC.sortAttributes objectAtIndex:listVC.actionMenuVC.lastSortAttribute.row]
-                                              ascending:listVC.actionMenuVC.ascSwitch.on
+                                              ascending:(listVC.actionMenuVC) ? listVC.actionMenuVC.ascSwitch.on : YES
                                                  active:!listVC.actionMenuVC.activenessSwitch.selectedSegmentIndex];
             
             [listVC performSegueWithIdentifier:@"ViewBill" sender:(Bill *)obj];
@@ -388,7 +387,7 @@
             } else if (indexPath.section == 2) {
                 [self.actionDelegate didSelectCrudAction:[self.crudActions objectAtIndex:indexPath.row]];
             }
-        } else {
+        } else {            
             [self.actionDelegate didSelectCrudAction:[self.crudActions objectAtIndex:indexPath.row]];
         }
  

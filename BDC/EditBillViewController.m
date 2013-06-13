@@ -22,8 +22,6 @@
 #import "BankAccount.h"
 #import "Organization.h"
 #import "Document.h"
-#import "Uploader.h"
-#import "APIHandler.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <MessageUI/MessageUI.h>
@@ -567,20 +565,6 @@ typedef enum {
             if (!cell) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:BILL_ATTACH_CELL_ID];
             }
-            
-//            // clean up first
-//            for (UIView *subview in [self.attachmentScrollView subviews]) {
-//                if ([subview isKindOfClass:[UIImageView class]]) {
-//                    [subview removeFromSuperview];
-//                }
-//            }
-//            
-//            for (Document * doc in shaddowBill.attachments) {
-//                NSString *ext = [[doc.name pathExtension] lowercaseString];
-//                [self addAttachment:ext data:doc.data];
-//            }
-//            
-//            [self layoutScrollImages:NO];
             
             [cell.contentView addSubview:self.attachmentScrollView];
             [cell.contentView addSubview:self.attachmentPageControl];

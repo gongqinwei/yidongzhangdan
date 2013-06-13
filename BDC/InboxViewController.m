@@ -34,10 +34,11 @@
     
     NSArray *actionMenus = nil;
     if (doc) {
-        actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], ACTION_DELETE, nil];
+        actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], ACTION_DELETE, nil]; //TODO: need delete API
     }
     
     self.actionMenuVC.crudActions = self.crudActions = actionMenus;
+    self.actionMenuVC.actionDelegate = self;
     [self.actionMenuVC.tableView reloadData];
 }
 
@@ -73,8 +74,9 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:DOCUMENT_ASSOCIATE_SEGUE]) {
-        [segue.destinationViewController setPhotoName:self.currentDocument.name];
-        [segue.destinationViewController setPhotoData:self.currentDocument.data];
+//        [segue.destinationViewController setPhotoName:self.currentDocument.name];
+//        [segue.destinationViewController setPhotoData:self.currentDocument.data];
+        [segue.destinationViewController setDocument:self.currentDocument];
     }
 }
 

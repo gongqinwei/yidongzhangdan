@@ -14,6 +14,14 @@
 @synthesize attachments;
 @synthesize attachmentDict;
 
+- (id)init {
+    if (self = [super init]) {
+        self.attachments = [NSMutableArray array];
+        self.attachmentDict = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
+
 + (void)clone:(BDCBusinessObjectWithAttachments *)source to:(BDCBusinessObjectWithAttachments *)target {
     [super clone:source to:target];
     

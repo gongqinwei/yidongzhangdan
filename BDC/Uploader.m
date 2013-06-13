@@ -16,10 +16,7 @@
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     
     if(file.length == 0) {
-//        NSDateFormatter *format = [[NSDateFormatter alloc] init];
-//        [format setDateFormat:@"yyyyMMddHHmmss"];
-//        file = [format stringFromDate:[NSDate date]];   //use timestamp as filename if it's not given
-        
+        //use timestamp as filename if it's not given
         file = [Util formatDate:[NSDate date] format:@"yyyyMMddHHmmss"];
     } else {
         file = [file lastPathComponent];
@@ -42,7 +39,7 @@
     
     [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];    
     [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"data\"\r\n\r\n"]  dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithFormat:@"{\"id\":\"%@\", \"fileName\":\"%@\"}\r\n", objId, file] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"{\"id\":\"%@\", \"fileName\":\"%@\"}\r\n", objId?objId:@"", file] dataUsingEncoding:NSUTF8StringEncoding]];
     
     [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"Filedata\"; filename=\"%@\"\r\n", file] dataUsingEncoding:NSUTF8StringEncoding]];
