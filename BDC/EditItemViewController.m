@@ -55,6 +55,8 @@ enum ItemInfoType {
 
 - (IBAction)saveBusObj:(UIBarButtonItem *)sender {
     if ([self tryTap]) {
+        [self.view findAndResignFirstResponder];
+        
         Item *shaddowItem = (Item *)self.shaddowBusObj;
         
         if (shaddowItem.type == INVALID_ITEM_TYPE) {
@@ -77,7 +79,7 @@ enum ItemInfoType {
         
         [super saveBusObj:sender];
         
-        if (self.mode == kCreateMode) {
+        if (self.mode == kCreateMode || self.mode == kAttachMode) {
             [shaddowItem create];
         } else if (self.mode == kUpdateMode){
             [shaddowItem update];
@@ -104,7 +106,7 @@ enum ItemInfoType {
     
     if (self.mode == kViewMode) {
         self.modeChanged = NO;
-    } else if (self.mode == kCreateMode) {
+    } else if (self.mode == kCreateMode || self.mode == kAttachMode) {
         self.title = @"New Item";
     }
     

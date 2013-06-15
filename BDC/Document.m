@@ -51,6 +51,11 @@ static id <DocumentListDelegate> AttachmentListDelegate = nil;
     return nil;
 }
 
++ (void)addToInbox:(Document *)doc {
+    [documents addObject:doc];
+    [DocumentListDelegate didGetDocuments];
+}
+
 + (void)removeFromInbox:(Document *)doc {
     [documents removeObject:doc];
     [DocumentListDelegate didGetDocuments];

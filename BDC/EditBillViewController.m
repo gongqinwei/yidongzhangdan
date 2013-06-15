@@ -126,6 +126,10 @@ typedef enum {
     return [NSIndexPath indexPathForRow:0 inSection:kBillDocs];
 }
 
+- (void)handleRemovalForDocument:(Document *)doc {
+    [Document addToInbox:doc];
+}
+
 - (void)setMode:(ViewMode)mode {
     self.totalAmount = [NSDecimalNumber zero];
     
@@ -167,6 +171,8 @@ typedef enum {
 
 - (IBAction)saveBusObj:(UIBarButtonItem *)sender {
     if ([self tryTap]) {
+        [self.view findAndResignFirstResponder];
+        
         Bill *shaddowBill = (Bill *)self.shaddowBusObj;
         
         if (shaddowBill.vendorId == nil) {
@@ -221,7 +227,7 @@ typedef enum {
     } else {
         self.crudActions = nil;
         
-        if (self.mode == kCreateMode) {
+        if (self.mode == kCreateMode || self.mode == kAttachMode) {
             self.title = @"New Bill";
         }
     }
@@ -403,7 +409,7 @@ typedef enum {
                             cell.detailTextLabel.text = @"Select one";
                         }
                         
-                        if ([shaddowBill.paymentStatus isEqualToString:PAYMENT_UNPAID]) {
+                        if (!shaddowBill.paymentStatus || [shaddowBill.paymentStatus isEqualToString:PAYMENT_UNPAID]) {
                             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                         }
                     }
@@ -728,11 +734,14 @@ typedef enum {
             case kBillInfo:
                 switch (indexPath.row) {
                     case kBillVendor:
-                        if ([((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]) {
+                    {
+                        Bill *shaddowBill = (Bill *)self.shaddowBusObj;
+                        if (!shaddowBill.paymentStatus || [shaddowBill.paymentStatus isEqualToString:PAYMENT_UNPAID]) {
                             [self performSegueWithIdentifier:BILL_SELECT_VENDOR_SEGUE sender:self];
                         }
                         
                         break;
+                    }
                     default:
                         break;
                 }
@@ -909,6 +918,13 @@ typedef enum {
 //            [UIHelper showInfo:@"You haven't set up bank account in Bill.com!" withStatus:kInfo];
 //        }
     }
+}
+
+#pragma mark - Model Delegate methods
+
+- (void)didCreateObject:(NSString *)newObjectId {
+    self.busObj.objectId = newObjectId;
+    self.shaddowBusObj.objectId = newObjectId;
 }
 
 @end

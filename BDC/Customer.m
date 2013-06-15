@@ -263,7 +263,11 @@ static NSMutableDictionary * inactiveCustomers = nil;
             NSString *customerId = [info objectForKey:ID];
             self.objectId = customerId;
             
-            if ([theAction isEqual:CREATE] || self.isActive) {
+            if ([theAction isEqualToString:CREATE]) {
+                self.isActive = YES;
+            }
+            
+            if (self.isActive) {
                 [Customer retrieveListForActive:YES];
             } else {
                 [Customer retrieveListForActive:NO];

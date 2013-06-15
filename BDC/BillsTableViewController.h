@@ -12,7 +12,4 @@
 
 @property (nonatomic, strong) NSMutableArray *bills;
 
-@property (nonatomic, strong) NSString *photoName;
-@property (nonatomic, strong) NSData *photoData;
-
 @end

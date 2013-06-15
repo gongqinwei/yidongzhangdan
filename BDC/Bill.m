@@ -67,6 +67,52 @@ static NSMutableArray *inactiveBills = nil;
     return self;
 }
 
+- (void)populateBillWithInfo:(NSDictionary *)dict {
+    self.objectId = [dict objectForKey:ID];
+    self.invoiceNumber = [dict objectForKey:BILL_NUMBER];
+    self.amount = [Util id2Decimal:[dict objectForKey:BILL_AMOUNT]];
+    self.paidAmount = [Util id2Decimal:[dict objectForKey:BILL_AMOUNT_PAID]];
+    self.vendorId = [dict objectForKey:BILL_VENDOR_ID];
+    self.invoiceDate = [Util getDate:[dict objectForKey:BILL_DATE] format:nil];
+    self.dueDate = [Util getDate:[dict objectForKey:BILL_DUE_DATE] format:nil];
+    self.approvalStatus = [dict objectForKey:BILL_APPROVAL_STATUS];
+    self.paymentStatus = [dict objectForKey:BILL_PAYMENT_STATUS];
+    self.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
+    
+    self.lineItems = [NSMutableArray array];
+    NSArray *jsonItems = [dict objectForKey:BILL_LINE_ITEMS];
+    for (id lineItem in jsonItems) {
+        APLineItem *item = [[APLineItem alloc] init];
+        item.objectId = [lineItem objectForKey:ID];
+        item.account = [ChartOfAccount objectForKey:[lineItem objectForKey:LINE_ITEM_ACCOUNT]];
+        item.amount = [Util id2Decimal:[lineItem objectForKey:LINE_ITEM_AMOUNT]];
+        [self.lineItems addObject:item];
+    }
+}
+
+- (void)readBill {
+    NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, READ, BILL_API];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+    
+    __weak Bill *weakSelf = self;
+    
+    [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        NSInteger response_status;
+        NSDictionary *dict = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        
+        if(response_status == RESPONSE_SUCCESS) {
+            [self populateBillWithInfo:dict];
+            [weakSelf.editDelegate didUpdateObject];
+//            [ListDelegate didGetBills:<#(NSArray *)#>];
+        } else {
+            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            NSLog(@"Failed to read bill %@: %@", self.objectId, [err localizedDescription]);
+        }
+    }];
+
+}
+
 - (void)saveFor:(NSString *)action {
     NSString *theAction = [NSString stringWithString:action];
     
@@ -120,7 +166,11 @@ static NSMutableArray *inactiveBills = nil;
             NSString *billId = [info objectForKey:ID];
             self.objectId = billId;
             
-            if ([theAction isEqual:CREATE] || self.isActive) {
+            if ([theAction isEqualToString:CREATE]) {
+                self.isActive = YES;
+            }
+            
+            if (self.isActive) {
                 [Bill retrieveListForActive:YES];
             } else {
                 [Bill retrieveListForActive:NO];
@@ -131,6 +181,7 @@ static NSMutableArray *inactiveBills = nil;
                 [weakSelf.detailsDelegate didUpdateObject];
             } else {
                 [weakSelf.editDelegate didCreateObject:billId];
+                [weakSelf readBill];
             }
         } else {
             [weakSelf.editDelegate failedToSaveObject];
@@ -245,26 +296,28 @@ static NSMutableArray *inactiveBills = nil;
             for (id item in jsonBills) {
                 NSDictionary *dict = (NSDictionary*)item;
                 Bill *bill = [[Bill alloc] init];
-                bill.objectId = [dict objectForKey:ID];
-                bill.invoiceNumber = [dict objectForKey:BILL_NUMBER];
-                bill.amount = [Util id2Decimal:[dict objectForKey:BILL_AMOUNT]];
-                bill.paidAmount = [Util id2Decimal:[dict objectForKey:BILL_AMOUNT_PAID]];
-                bill.vendorId = [dict objectForKey:BILL_VENDOR_ID];
-                bill.invoiceDate = [Util getDate:[dict objectForKey:BILL_DATE] format:nil];
-                bill.dueDate = [Util getDate:[dict objectForKey:BILL_DUE_DATE] format:nil];
-                bill.approvalStatus = [dict objectForKey:BILL_APPROVAL_STATUS];
-                bill.paymentStatus = [dict objectForKey:BILL_PAYMENT_STATUS];
-                bill.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
+                [bill populateBillWithInfo:dict];
                 
-                bill.lineItems = [NSMutableArray array];
-                NSArray *jsonItems = [dict objectForKey:BILL_LINE_ITEMS];
-                for (id lineItem in jsonItems) {
-                    APLineItem *item = [[APLineItem alloc] init];
-                    item.objectId = [lineItem objectForKey:ID];
-                    item.account = [ChartOfAccount objectForKey:[lineItem objectForKey:LINE_ITEM_ACCOUNT]];                    
-                    item.amount = [Util id2Decimal:[lineItem objectForKey:LINE_ITEM_AMOUNT]];
-                    [bill.lineItems addObject:item];
-                }
+//                bill.objectId = [dict objectForKey:ID];
+//                bill.invoiceNumber = [dict objectForKey:BILL_NUMBER];
+//                bill.amount = [Util id2Decimal:[dict objectForKey:BILL_AMOUNT]];
+//                bill.paidAmount = [Util id2Decimal:[dict objectForKey:BILL_AMOUNT_PAID]];
+//                bill.vendorId = [dict objectForKey:BILL_VENDOR_ID];
+//                bill.invoiceDate = [Util getDate:[dict objectForKey:BILL_DATE] format:nil];
+//                bill.dueDate = [Util getDate:[dict objectForKey:BILL_DUE_DATE] format:nil];
+//                bill.approvalStatus = [dict objectForKey:BILL_APPROVAL_STATUS];
+//                bill.paymentStatus = [dict objectForKey:BILL_PAYMENT_STATUS];
+//                bill.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
+//                
+//                bill.lineItems = [NSMutableArray array];
+//                NSArray *jsonItems = [dict objectForKey:BILL_LINE_ITEMS];
+//                for (id lineItem in jsonItems) {
+//                    APLineItem *item = [[APLineItem alloc] init];
+//                    item.objectId = [lineItem objectForKey:ID];
+//                    item.account = [ChartOfAccount objectForKey:[lineItem objectForKey:LINE_ITEM_ACCOUNT]];                    
+//                    item.amount = [Util id2Decimal:[lineItem objectForKey:LINE_ITEM_AMOUNT]];
+//                    [bill.lineItems addObject:item];
+//                }
                 
                 [billArr addObject:bill];
             }

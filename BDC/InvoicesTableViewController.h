@@ -13,7 +13,4 @@
 
 @property (nonatomic, strong) NSMutableArray *invoices;
 
-@property (nonatomic, strong) NSString *photoName;
-@property (nonatomic, strong) NSData *photoData;
-
 @end

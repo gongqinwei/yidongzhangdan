@@ -236,7 +236,6 @@
 - (IBAction)saveBusObj:(UIBarButtonItem *)sender {
     self.navigationItem.rightBarButtonItem.customView = self.activityIndicator;
     [self.activityIndicator startAnimating];
-    [self.view findAndResignFirstResponder];
 }
 
 - (void)retrieveDocAttachments {
@@ -525,6 +524,9 @@
     [vc disappear];
 }
 
+- (void)handleRemovalForDocument:(Document *)doc {
+}
+
 - (void)doneSaveObject {
     NSMutableArray *original = [NSMutableArray arrayWithArray:[self.busObj.attachmentDict allKeys]];
     NSMutableArray *current = [NSMutableArray arrayWithArray:[self.attachmentDict allKeys]];
@@ -570,6 +572,9 @@
                 [APIHandler getResponse:response data:data error:&err status:&response_status];
                 
                 if(response_status == RESPONSE_SUCCESS) {
+                    [self.shaddowBusObj.attachmentDict removeObjectForKey:doc.objectId]; //TODO: needed?
+                    [self handleRemovalForDocument:doc];
+                    
                     [doneLock lock];
                     
                     [toBeDeleted removeObject:docId];
@@ -647,9 +652,11 @@
                 
                 if(response_status == RESPONSE_SUCCESS) {
                     if (![info isEqualToString:EMPTY_ID]) {
-                        doc.objectId = info;
+                        doc.objectId = info;    //could become an attachment id!
                         [self.shaddowBusObj.attachmentDict setObject:doc forKey:doc.objectId];
                     }
+                    
+                    [Document removeFromInbox:doc];
                     
                     [doneLock lock];
                     
@@ -657,7 +664,6 @@
                     
                     if (toBeDeleted.count == 0 && numNotYetAdded == 0 && toBeAttached.count == 0) {
                         [self.busObjClass clone:self.shaddowBusObj to:self.busObj];
-                        [Document removeFromInbox:doc];
                         
                         dispatch_async(dispatch_get_main_queue(), ^{
                             if (self.mode == kAttachMode) {

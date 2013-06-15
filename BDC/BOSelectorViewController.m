@@ -7,10 +7,17 @@
 //
 
 #import "BOSelectorViewController.h"
-#include "EditInvoiceViewController.h"
 #import "InvoicesTableViewController.h"
+#import "BillsTableViewController.h"
+#import "VendorsTableViewController.h"
+#import "CustomersTableViewController.h"
+#import "ItemsTableViewController.h"
 #import "ScannerViewController.h"
 #import "Invoice.h"
+#import "Bill.h"
+#import "Vendor.h"
+#import "Customer.h"
+#import "Item.h"
 #import "Uploader.h"
 #import "APIHandler.h"
 #import "Constants.h"
@@ -23,6 +30,12 @@
 #define ATTACH_TO_EXISTING_BILL_SEGUE               @"AttachToExistingBill"
 #define ATTACH_TO_NEW_VENDCREDIT_SEGUE              @"AttachToNewVendorCredit"
 #define ATTACH_TO_EXISTING_VENDCREDIT_SEGUE         @"AttachToExistingVendorCredit"
+#define ATTACH_TO_NEW_VENDOR_SEGUE                  @"AttachToNewVendor"
+#define ATTACH_TO_EXISTING_VENDOR_SEGUE             @"AttachToExistingVendor"
+#define ATTACH_TO_NEW_CUSTOMER_SEGUE                @"AttachToNewCustomer"
+#define ATTACH_TO_EXISTING_CUSTOMER_SEGUE           @"AttachToExistingCustomer"
+#define ATTACH_TO_NEW_ITEM_SEGUE                    @"AttachToNewItem"
+#define ATTACH_TO_EXISTING_ITEM_SEGUE               @"AttachToExistingItem"
 #define UPLOAD_TO_INBOX_SEGUE                       @"UploadToInbox"
 
 
@@ -69,17 +82,25 @@
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if (![segue.identifier isEqualToString:RESET_SCANNER_FROM_BO_SELECT_SEGUE] && [segue.destinationViewController respondsToSelector:@selector(setPhotoData:)]) {
-        [segue.destinationViewController setPhotoName:self.document.name];
-        [segue.destinationViewController setPhotoData:self.document.data];
-    }
-    
-    if ([segue.identifier isEqualToString:ATTACH_TO_NEW_INVOICE_SEGUE] || [segue.identifier isEqualToString:ATTACH_TO_NEW_BILL_SEGUE] || [segue.identifier isEqualToString:ATTACH_TO_NEW_VENDCREDIT_SEGUE]) {
+//    if ([segue.identifier isEqualToString:ATTACH_TO_NEW_INVOICE_SEGUE] || [segue.identifier isEqualToString:ATTACH_TO_NEW_BILL_SEGUE] || [segue.identifier isEqualToString:ATTACH_TO_NEW_VENDCREDIT_SEGUE]) {
+    if ([segue.destinationViewController isKindOfClass:[SlidingDetailsTableViewController class]]) {
         [segue.destinationViewController addDocument:self.document];
         [segue.destinationViewController setMode:kAttachMode];
-    } else if ([segue.identifier isEqualToString:ATTACH_TO_EXISTING_INVOICE_SEGUE] || [segue.identifier isEqualToString:ATTACH_TO_EXISTING_BILL_SEGUE] || [segue.identifier isEqualToString:ATTACH_TO_EXISTING_VENDCREDIT_SEGUE]) {
-        [segue.destinationViewController setMode:kSelectMode];
-        [segue.destinationViewController setInvoices:[Invoice list]];
+    } else if ([segue.destinationViewController isKindOfClass:[SlidingTableViewController class]]) {
+        [segue.destinationViewController setDocument:self.document];
+        [segue.destinationViewController setMode:kAttachMode];
+        
+        if ([segue.identifier isEqualToString:ATTACH_TO_EXISTING_INVOICE_SEGUE]) {
+            [segue.destinationViewController setInvoices:[Invoice list]];
+        } else if ([segue.identifier isEqualToString:ATTACH_TO_EXISTING_BILL_SEGUE]) {
+            [segue.destinationViewController setBills:[Bill list]];
+        } else if ([segue.identifier isEqualToString:ATTACH_TO_EXISTING_VENDOR_SEGUE]) {
+            [segue.destinationViewController setVendors:[Vendor list]];
+        } else if ([segue.identifier isEqualToString:ATTACH_TO_EXISTING_CUSTOMER_SEGUE]) {
+            [segue.destinationViewController setCustomers:[Customer list]];
+        } else if ([segue.identifier isEqualToString:ATTACH_TO_EXISTING_ITEM_SEGUE]) {
+            [segue.destinationViewController setItems:[Item list]];
+        }
     }
 }
 
@@ -112,6 +133,15 @@
 }
 
 #pragma mark - Table view datasource
+
+// need this temparorily; once Attachment view controller is implemented, remove this.
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    if (self.document.objectId) {
+        return 2;
+    } else {
+        return 3;
+    }
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     switch (section) {

@@ -77,8 +77,6 @@
 
 @synthesize bills = _bills;
 @synthesize lastSelected;
-@synthesize photoName;
-@synthesize photoData;
 
 @synthesize overDueBills;
 @synthesize dueIn7DaysBills;
@@ -112,29 +110,31 @@
 }
 
 - (void)navigateAttach {
-    NSString *billId = ((Bill *)[self.bills objectAtIndex:self.lastSelected.row]).objectId;
+    [self attachDocumentForObject:self.bills[self.lastSelected.row]];
     
-    if (self.photoData != nil && self.photoName != nil) {
-        [Uploader uploadFile:self.photoName data:self.photoData objectId:billId handler:^(NSURLResponse * response, NSData * data, NSError * err) {
-            NSInteger status;
-            [APIHandler getResponse:response data:data error:&err status:&status];
-            
-            if(status == RESPONSE_SUCCESS) {
-                [UIHelper showInfo:@"Attached successfully" withStatus:kSuccess];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.navigationController popViewControllerAnimated:YES]; // where to navigate to?
-//                    [(ScannerViewController *)[((UINavigationController *)[self.tabBarController.viewControllers objectAtIndex:kScanTab]).viewControllers objectAtIndex:0] reset];                    
-                });
-            } else {
-                [UIHelper showInfo:@"Failed to attach" withStatus:kFailure];
-            }
-        }];
-    }
+//    NSString *billId = ((Bill *)[self.bills objectAtIndex:self.lastSelected.row]).objectId;
+//    
+//    if (self.photoData != nil && self.photoName != nil) {
+//        [Uploader uploadFile:self.photoName data:self.photoData objectId:billId handler:^(NSURLResponse * response, NSData * data, NSError * err) {
+//            NSInteger status;
+//            [APIHandler getResponse:response data:data error:&err status:&status];
+//            
+//            if(status == RESPONSE_SUCCESS) {
+//                [UIHelper showInfo:@"Attached successfully" withStatus:kSuccess];
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [self.navigationController popViewControllerAnimated:YES]; // where to navigate to?
+////                    [(ScannerViewController *)[((UINavigationController *)[self.tabBarController.viewControllers objectAtIndex:kScanTab]).viewControllers objectAtIndex:0] reset];                    
+//                });
+//            } else {
+//                [UIHelper showInfo:@"Failed to attach" withStatus:kFailure];
+//            }
+//        }];
+//    }
 }
 
-- (void)navigateCancel {
-    [self.navigationController popViewControllerAnimated:YES];
-}
+//- (void)navigateCancel {
+//    [self.navigationController popViewControllerAnimated:YES];
+//}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -154,22 +154,23 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    if (self.mode == kSelectMode) {
+    if (self.mode == kAttachMode) {
         self.title = @"Select Bill";
+        [super viewWillAppear:animated];
         
-        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]
-                                         initWithTitle: @"Cancel"
-                                         style: UIBarButtonItemStyleBordered
-                                         target: self action:@selector(navigateCancel)];
-        
-        self.navigationItem.leftBarButtonItem = cancelButton;
-        
-        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc]
-                                       initWithTitle: @"Attach"
-                                       style: UIBarButtonItemStyleBordered
-                                       target: self action:@selector(navigateAttach)];
-        
-        self.navigationItem.rightBarButtonItem = doneButton;
+//        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]
+//                                         initWithTitle: @"Cancel"
+//                                         style: UIBarButtonItemStyleBordered
+//                                         target: self action:@selector(navigateCancel)];
+//        
+//        self.navigationItem.leftBarButtonItem = cancelButton;
+//        
+//        UIBarButtonItem *attachButton = [[UIBarButtonItem alloc]
+//                                       initWithTitle: @"Attach"
+//                                       style: UIBarButtonItemStyleBordered
+//                                       target: self action:@selector(navigateAttach)];
+//        
+//        self.navigationItem.rightBarButtonItem = attachButton;
     }
 }
 
@@ -181,7 +182,7 @@
     [Bill setListDelegate:self];
 //    [Bill retrieveListForActive:YES];
     
-    if (self.mode != kSelectMode) {        
+    if (self.mode != kAttachMode) {        
         UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
         [refresh addTarget:self action:@selector(refreshView) forControlEvents:UIControlEventValueChanged];
         refresh.attributedTitle = PULL_TO_REFRESH;
@@ -345,7 +346,7 @@
     lblAmount.textAlignment = UITextAlignmentLeft;
     [cell addSubview:lblAmount];
     
-    if (self.mode == kSelectMode) {
+    if (self.mode == kAttachMode) {
         cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
     }
     
@@ -499,7 +500,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.mode == kSelectMode) {
+    if (self.mode == kAttachMode) {
         if (self.lastSelected != nil) { //TODO: may need to reset self.lastSelected on viewWillAppear
             UITableViewCell *oldRow = [self.tableView cellForRowAtIndexPath:self.lastSelected];
             oldRow.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;

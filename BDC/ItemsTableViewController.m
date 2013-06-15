@@ -20,12 +20,15 @@
 
 @interface ItemsTableViewController () <ItemListDelegate, LineItemDelegate>
 
+@property (nonatomic, strong) NSIndexPath *lastSelected;
+
 @end
 
 @implementation ItemsTableViewController
 
 @synthesize items = _items;
 @synthesize selectDelegate;
+@synthesize lastSelected;
 
 - (void)setItems:(NSMutableArray *)items {
     _items = items;
@@ -46,11 +49,15 @@
     }
 }
 
-- (void)navigateCancel {
-    if ([self tryTap]) {
-        [self.navigationController popViewControllerAnimated:YES];
-    }
+- (void)navigateAttach {
+    [self attachDocumentForObject:self.items[self.lastSelected.row]];
 }
+
+//- (void)navigateCancel {
+//    if ([self tryTap]) {
+//        [self.navigationController popViewControllerAnimated:YES];
+//    }
+//}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -70,22 +77,9 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    if (self.mode == kSelectMode) {
+    if (self.mode == kSelectMode || self.mode == kAttachMode) {
         self.title = @"Select Items";
-        
-        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]
-                                         initWithTitle: @"Cancel"
-                                         style: UIBarButtonItemStyleBordered
-                                         target: self action:@selector(navigateCancel)];
-        
-        self.navigationItem.leftBarButtonItem = cancelButton;
-        
-        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc]
-                                       initWithTitle: @"Done"
-                                       style: UIBarButtonItemStyleBordered
-                                       target: self action:@selector(navigateDone)];
-        
-        self.navigationItem.rightBarButtonItem = doneButton;        
+        [super viewWillAppear:animated];
     }
 }
 
@@ -124,7 +118,7 @@
         }
         self.items = arr;
         self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
-    } else {
+    } else if(self.mode != kAttachMode) {
         self.items = [Item listOrderBy:ITEM_NAME ascending:YES active:YES];
         
         UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
@@ -194,7 +188,7 @@
         cell.textLabel.textColor = [UIColor blackColor];
         cell.detailTextLabel.font = [UIFont systemFontOfSize:13.0];
         
-        if (self.mode == kSelectMode) {
+        if (self.mode == kSelectMode || self.mode == kAttachMode) {
             cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;           
         }
     }
@@ -256,7 +250,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.mode == kSelectMode) {
+    if (self.mode == kSelectMode || self.mode == kAttachMode) {
         UITableViewCell *row = [self.tableView cellForRowAtIndexPath:indexPath];
         row.accessoryType = UITableViewCellAccessoryCheckmark;
     } else {
@@ -274,6 +268,16 @@
     if (self.mode == kSelectMode) {
         UITableViewCell *row = [self.tableView cellForRowAtIndexPath:indexPath];
         row.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+    } else if (self.mode == kAttachMode) {
+        if (self.lastSelected != nil) {
+            UITableViewCell *oldRow = [self.tableView cellForRowAtIndexPath:self.lastSelected];
+            oldRow.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+        }
+        
+        UITableViewCell *newRow = [self.tableView cellForRowAtIndexPath:indexPath];
+        newRow.accessoryType = UITableViewCellAccessoryCheckmark;
+        
+        self.lastSelected = indexPath;
     } else {
         if (!self.tableView.editing) {
             [self performSegueWithIdentifier:ITEM_VIEW_ITEM_SEGUE sender:[self.items objectAtIndex:indexPath.row]];

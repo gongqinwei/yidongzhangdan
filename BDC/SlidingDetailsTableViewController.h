@@ -54,7 +54,7 @@
 - (void)retrieveDocAttachments;
 - (void)layoutScrollImages:(BOOL)needChangePage;
 - (void)doneSaveObject;
-
+- (void)handleRemovalForDocument:(Document *)doc;
 - (NSIndexPath *)getAttachmentPath;
 
 

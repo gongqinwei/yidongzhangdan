@@ -84,6 +84,8 @@ enum VendorInfoType {
 
 - (IBAction)saveBusObj:(UIBarButtonItem *)sender {
     if ([self tryTap]) {
+        [self.view findAndResignFirstResponder];
+        
         Vendor *shaddowVendor = (Vendor *)self.shaddowBusObj;
         
         if (shaddowVendor.name == nil || [shaddowVendor.name length] == 0) {
@@ -94,7 +96,7 @@ enum VendorInfoType {
         
         [super saveBusObj:sender];
         
-        if (self.mode == kCreateMode) {
+        if (self.mode == kCreateMode || self.mode == kAttachMode) {
             [shaddowVendor create];
         } else if (self.mode == kUpdateMode){
             [shaddowVendor update];
@@ -120,7 +122,7 @@ enum VendorInfoType {
     } else {
         self.crudActions = nil;
         
-        if (self.mode == kCreateMode) {
+        if (self.mode == kCreateMode || self.mode == kAttachMode) {
             self.title = @"New Vendor";
         }
     }

@@ -62,11 +62,15 @@
     }
 }
 
-- (void)navigateCancel {
-    if ([self tryTap]) {
-        [self.navigationController popViewControllerAnimated:YES];
-    }
+- (void)navigateAttach {
+    [self attachDocumentForObject:self.vendors[self.lastSelected.row]];
 }
+
+//- (void)navigateCancel {
+//    if ([self tryTap]) {
+//        [self.navigationController popViewControllerAnimated:YES];
+//    }
+//}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -86,22 +90,9 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    if (self.mode == kSelectMode) {
+    if (self.mode == kSelectMode || self.mode == kAttachMode) {
         self.title = @"Select Vendor";
-        
-        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]
-                                         initWithTitle: @"Cancel"
-                                         style: UIBarButtonItemStyleBordered
-                                         target: self action:@selector(navigateCancel)];
-        
-        self.navigationItem.leftBarButtonItem = cancelButton;
-        
-        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc]
-                                       initWithTitle: @"Done"
-                                       style: UIBarButtonItemStyleBordered
-                                       target: self action:@selector(navigateDone)];
-        
-        self.navigationItem.rightBarButtonItem = doneButton;
+        [super viewWillAppear:animated];
     }
 }
 
@@ -114,7 +105,7 @@
     [Vendor setListDelegate:self];
     //    [Vendor retrieveList];
     
-    if (self.mode != kSelectMode) {
+    if (self.mode != kSelectMode && self.mode != kAttachMode) {
         UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
         [refresh addTarget:self action:@selector(refreshView) forControlEvents:UIControlEventValueChanged];
         refresh.attributedTitle = PULL_TO_REFRESH;
@@ -185,7 +176,7 @@
         cell.textLabel.textColor = [UIColor blackColor];
         cell.detailTextLabel.font = [UIFont systemFontOfSize:13.0];
         
-        if (self.mode == kSelectMode) {
+        if (self.mode == kSelectMode || self.mode == kAttachMode) {
             cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
         }
     }
@@ -249,7 +240,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.mode == kSelectMode) {
+    if (self.mode == kSelectMode || self.mode == kAttachMode) {
         if (self.lastSelected != nil) {
             UITableViewCell *oldRow = [self.tableView cellForRowAtIndexPath:self.lastSelected];
             oldRow.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;

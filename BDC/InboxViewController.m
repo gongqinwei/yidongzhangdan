@@ -142,7 +142,7 @@
 
 - (void)didGetDocuments {
     self.dataArray = [Document listForCategory:FILE_CATEGORY_DOCUMENT];
-    
+    [self changeCurrentDocumentTo:nil];
     [super endRefreshView];
 }
 

@@ -76,8 +76,6 @@
 
 @synthesize invoices = _invoices;
 @synthesize lastSelected;
-@synthesize photoName;
-@synthesize photoData;
 
 @synthesize overDueInvoices;
 @synthesize dueIn7DaysInvoices;
@@ -113,31 +111,33 @@
 }
 
 - (void)navigateAttach {
-    NSString *invoiceId = ((Invoice *)[self.invoices objectAtIndex:self.lastSelected.row]).objectId;
+    [self attachDocumentForObject:self.invoices[self.lastSelected.row]];
     
-    if (self.photoData != nil && self.photoName != nil) {
-        [Uploader uploadFile:self.photoName data:self.photoData objectId:invoiceId handler:^(NSURLResponse * response, NSData * data, NSError * err) {
-            NSInteger status;
-            [APIHandler getResponse:response data:data error:&err status:&status];
-            
-            if(status == RESPONSE_SUCCESS) {
-                [UIHelper showInfo:@"Attached successfully" withStatus:kSuccess];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.navigationController popViewControllerAnimated:YES]; // where to navigate to?
-//                    [(ScannerViewController *)[((UINavigationController *)[self.tabBarController.viewControllers objectAtIndex:kScanTab]).viewControllers objectAtIndex:0] reset];
-                    
-
-                });
-            } else {
-                [UIHelper showInfo:@"Failed to attach" withStatus:kFailure];
-            }
-        }];
-    }
+//    NSString *invoiceId = ((Invoice *)[self.invoices objectAtIndex:self.lastSelected.row]).objectId;
+//    
+//    if (self.photoData != nil && self.photoName != nil) {
+//        [Uploader uploadFile:self.photoName data:self.photoData objectId:invoiceId handler:^(NSURLResponse * response, NSData * data, NSError * err) {
+//            NSInteger status;
+//            [APIHandler getResponse:response data:data error:&err status:&status];
+//            
+//            if(status == RESPONSE_SUCCESS) {
+//                [UIHelper showInfo:@"Attached successfully" withStatus:kSuccess];
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [self.navigationController popViewControllerAnimated:YES]; // where to navigate to?
+////                    [(ScannerViewController *)[((UINavigationController *)[self.tabBarController.viewControllers objectAtIndex:kScanTab]).viewControllers objectAtIndex:0] reset];
+//                    
+//
+//                });
+//            } else {
+//                [UIHelper showInfo:@"Failed to attach" withStatus:kFailure];
+//            }
+//        }];
+//    }
 }
 
-- (void)navigateCancel {
-    [self.navigationController popViewControllerAnimated:YES];
-}
+//- (void)navigateCancel {
+//    [self.navigationController popViewControllerAnimated:YES];
+//}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -157,22 +157,23 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    if (self.mode == kSelectMode) {
+    if (self.mode == kAttachMode) {
         self.title = @"Select Invoice";
-        
-        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]
-                                         initWithTitle: @"Cancel"
-                                         style: UIBarButtonItemStyleBordered
-                                         target: self action:@selector(navigateCancel)];
-        
-        self.navigationItem.leftBarButtonItem = cancelButton;
-        
-        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc]
-                                       initWithTitle: @"Attach"
-                                       style: UIBarButtonItemStyleBordered
-                                       target: self action:@selector(navigateAttach)];
-        
-        self.navigationItem.rightBarButtonItem = doneButton;
+        [super viewWillAppear:animated];
+//        
+//        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]
+//                                         initWithTitle: @"Cancel"
+//                                         style: UIBarButtonItemStyleBordered
+//                                         target: self action:@selector(navigateCancel)];
+//        
+//        self.navigationItem.leftBarButtonItem = cancelButton;
+//        
+//        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc]
+//                                       initWithTitle: @"Attach"
+//                                       style: UIBarButtonItemStyleBordered
+//                                       target: self action:@selector(navigateAttach)];
+//        
+//        self.navigationItem.rightBarButtonItem = doneButton;
     }
 }
 
@@ -180,7 +181,7 @@
 {
     [super viewDidLoad];
     
-    if (self.mode != kSelectMode) {
+    if (self.mode != kAttachMode) {
         [Invoice setListDelegate:self];
 //        self.deleteDelegate = self;
         
@@ -336,7 +337,7 @@
     lblAmount.textAlignment = UITextAlignmentLeft;
     [cell addSubview:lblAmount];
     
-    if (self.mode == kSelectMode) {
+    if (self.mode == kAttachMode) {
         cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
     }
     
@@ -490,7 +491,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.mode == kSelectMode) {
+    if (self.mode == kAttachMode) {
         if (self.lastSelected != nil) { // TODO: may need to reset self.lastSelected on viewWillAppear
             UITableViewCell *oldRow = [self.tableView cellForRowAtIndexPath:self.lastSelected];
             oldRow.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;

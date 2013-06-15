@@ -241,6 +241,8 @@ typedef enum {
 
 - (IBAction)saveBusObj:(UIBarButtonItem *)sender {
     if ([self tryTap]) {
+        [self.view findAndResignFirstResponder];
+        
         Invoice *shaddowInvoice = (Invoice *)self.shaddowBusObj;
         
         if (shaddowInvoice.customerId == nil) {
@@ -303,7 +305,7 @@ typedef enum {
     } else {
         self.crudActions = nil;
         
-        if (self.mode == kCreateMode) {
+        if (self.mode == kCreateMode || self.mode == kAttachMode) {
             self.title = @"New Invoice";
         }
     }

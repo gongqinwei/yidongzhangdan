@@ -82,6 +82,8 @@ enum CustomerInfoType {
 
 - (IBAction)saveBusObj:(UIBarButtonItem *)sender {
     if ([self tryTap]) {
+        [self.view findAndResignFirstResponder];
+        
         Customer *shaddowCustomer = (Customer *)self.shaddowBusObj;
         
         if (self.shaddowBusObj.name == nil || [self.shaddowBusObj.name length] == 0) {
@@ -92,7 +94,7 @@ enum CustomerInfoType {
         
         [super saveBusObj:sender];
         
-        if (self.mode == kCreateMode) {
+        if (self.mode == kCreateMode || self.mode == kAttachMode) {
             [shaddowCustomer create];
         } else if (self.mode == kUpdateMode){
             [shaddowCustomer update];
@@ -120,7 +122,7 @@ enum CustomerInfoType {
     } else {
         self.crudActions = nil;
         
-        if (self.mode == kCreateMode) {
+        if (self.mode == kCreateMode || self.mode == kAttachMode) {
             self.title = @"New Customer";
         }
     }
