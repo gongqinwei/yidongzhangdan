@@ -9,6 +9,19 @@
 #ifndef BDC_Geo_h
 #define BDC_Geo_h
 
+#define ADDR_DETAILS    [NSArray arrayWithObjects:@"Address1", @"Address2", @"Address3", @"Address4", @"City", @"State", @"Country", @"Zipcode", nil]
+
+enum AddrType {
+    kAddr1,
+    kAddr2,
+    kAddr3,
+    kAddr4,
+    kCity,
+    kState,
+    kCountry,
+    kZip
+};
+
 #define COUNTRIES       [NSArray arrayWithObjects: \
 @"USA", \
 @"Afghanistan", \

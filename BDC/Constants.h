@@ -18,8 +18,8 @@
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
-#define DOMAIN_URL          @"http://10.1.10.178"
-//#define DOMAIN_URL          @"http://192.168.1.52"
+//#define DOMAIN_URL          @"http://10.1.10.178"
+#define DOMAIN_URL          @"http://192.168.1.81"
 #define APP_KEY             @"devKey"
 #endif
 
@@ -139,9 +139,22 @@
 #define FULL_SCREEN_HEIGHT              NORMAL_SCREEN_HEIGHT + STATUS_BAR_HEIGHT
 
 #define TAG_BASE                        100
+#define PICKER_TAG_BASE                 TAG_BASE * 2
+
 #define CELL_WIDTH                      300
 #define CELL_HEIGHT                     44
 #define INFO_INPUT_RECT                 CGRectMake(CELL_WIDTH - 170, 5, 170, CELL_HEIGHT - 10)
+
+#define INVALID_OPTION                  -1
+
+// doucment/attachment thumbnail
+#define IMG_PADDING                     10
+#define IMG_WIDTH                       CELL_WIDTH / 4
+#define IMG_HEIGHT                      IMG_WIDTH - IMG_PADDING
+#define ATTACHMENT_RECT                 CGRectMake(5, 0, CELL_WIDTH, IMG_HEIGHT)
+#define ATTACHMENT_PV_HEIGHT            3
+#define ATTACHMENT_PV_RECT              CGRectMake(0, IMG_HEIGHT + IMG_PADDING, CELL_WIDTH, ATTACHMENT_PV_HEIGHT)
+#define NUM_ATTACHMENT_PER_PAGE         4
 
 #define SLIDING_DISTANCE                270
 #define SLIDING_DURATION                0.30

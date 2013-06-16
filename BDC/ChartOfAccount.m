@@ -60,7 +60,11 @@ static NSMutableDictionary *inactiveAccounts = nil;
             NSString *accountId = [info objectForKey:ID];
             self.objectId = accountId;
             
-            if ([theAction isEqual:CREATE] || self.isActive) {
+            if ([theAction isEqualToString:CREATE]) {
+                self.isActive = YES;
+            }
+            
+            if (self.isActive) {
                 [ChartOfAccount retrieveListForActive:YES];
             } else {
                 [ChartOfAccount retrieveListForActive:NO];

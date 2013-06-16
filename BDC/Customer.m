@@ -28,14 +28,16 @@ static NSMutableDictionary * customers = nil;
 static NSMutableDictionary * inactiveCustomers = nil;
 
 //@synthesize name;
-@synthesize billAddr1;
-@synthesize billAddr2;
-@synthesize billAddr3;
-@synthesize billAddr4;
-@synthesize billCity;
-@synthesize billState;
-@synthesize billCountry;
-@synthesize billZip;
+
+//@synthesize addr1;
+//@synthesize addr2;
+//@synthesize addr3;
+//@synthesize addr4;
+//@synthesize city;
+//@synthesize state;
+//@synthesize country;
+//@synthesize zip;
+
 //@synthesize shipAddr1;
 //@synthesize shipAddr2;
 //@synthesize shipAddr3;
@@ -145,26 +147,26 @@ static NSMutableDictionary * inactiveCustomers = nil;
                 NSString *email = [dict objectForKey:CUSTOMER_EMAIL];
                 NSString *phone = [dict objectForKey:CUSTOMER_PHONE];
 
-                customer.billAddr1 = (addr1 == (id)[NSNull null]) ? nil : addr1;
-                customer.billAddr2 = (addr2 == (id)[NSNull null]) ? nil : addr2;
-                customer.billAddr3 = (addr3 == (id)[NSNull null]) ? nil : addr3;
-                customer.billAddr4 = (addr4 == (id)[NSNull null]) ? nil : addr4;
-                customer.billCity = (city == (id)[NSNull null]) ? nil : city;
-                customer.billCountry = (country == (id)[NSNull null]) ? -1 : [COUNTRIES indexOfObject:country];
+                customer.addr1 = (addr1 == (id)[NSNull null]) ? nil : addr1;
+                customer.addr2 = (addr2 == (id)[NSNull null]) ? nil : addr2;
+                customer.addr3 = (addr3 == (id)[NSNull null]) ? nil : addr3;
+                customer.addr4 = (addr4 == (id)[NSNull null]) ? nil : addr4;
+                customer.city = (city == (id)[NSNull null]) ? nil : city;
+                customer.country = (country == (id)[NSNull null]) ? INVALID_OPTION : [COUNTRIES indexOfObject:country];
                 if (state == (id)[NSNull null]) {
-                    if (customer.billCountry == 0) {  //USA
-                        customer.billState = [NSNumber numberWithInt: -1];
+                    if (customer.country == 0) {  //USA
+                        customer.state = [NSNumber numberWithInt: INVALID_OPTION];
                     } else {
-                        customer.billState = nil;
+                        customer.state = nil;
                     }
                 } else {
-                    if (customer.billCountry == 0) {  //USA
-                        customer.billState = [NSNumber numberWithInt: [US_STATE_CODES indexOfObject:state]];
+                    if (customer.country == 0) {  //USA
+                        customer.state = [NSNumber numberWithInt: [US_STATE_CODES indexOfObject:state]];
                     } else {
-                        customer.billState = [NSString stringWithString: state];
+                        customer.state = [NSString stringWithString: state];
                     }
                 }                
-                customer.billZip = (zip == (id)[NSNull null]) ? nil : zip;
+                customer.zip = (zip == (id)[NSNull null]) ? nil : zip;
                 customer.email = (email == (id)[NSNull null]) ? nil : email;
                 customer.phone = (phone == (id)[NSNull null]) ? nil : phone;
                 
@@ -193,14 +195,14 @@ static NSMutableDictionary * inactiveCustomers = nil;
     
     target.name = source.name;
     target.isActive = source.isActive;
-    target.billAddr1 = source.billAddr1;
-    target.billAddr2 = source.billAddr2;
-    target.billAddr3 = source.billAddr3;
-    target.billAddr4 = source.billAddr4;
-    target.billCity = source.billCity;
-    target.billState = source.billState;
-    target.billCountry = source.billCountry;
-    target.billZip = source.billZip;
+    target.addr1 = source.addr1;
+    target.addr2 = source.addr2;
+    target.addr3 = source.addr3;
+    target.addr4 = source.addr4;
+    target.city = source.city;
+    target.state = source.state;
+    target.country = source.country;
+    target.zip = source.zip;
     target.phone = source.phone;
     target.email = source.email;
     target.editDelegate = source.editDelegate;
@@ -222,14 +224,14 @@ static NSMutableDictionary * inactiveCustomers = nil;
         [objStr appendFormat:@"\"%@\" : \"%@\", ", ID, self.objectId];
     }
     [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_NAME, self.name];
-    [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_ADDR1, self.billAddr1 == nil ? @"" : self.billAddr1];
-    [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_ADDR2, self.billAddr2 == nil ? @"" : self.billAddr2];
-    [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_ADDR3, self.billAddr3 == nil ? @"" : self.billAddr3];
-    [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_ADDR4, self.billAddr4 == nil ? @"" : self.billAddr4];
-    [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_CITY, self.billCity == nil ? @"" : self.billCity];
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_ADDR1, self.addr1 == nil ? @"" : self.addr1];
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_ADDR2, self.addr2 == nil ? @"" : self.addr2];
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_ADDR3, self.addr3 == nil ? @"" : self.addr3];
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_ADDR4, self.addr4 == nil ? @"" : self.addr4];
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_CITY, self.city == nil ? @"" : self.city];
     
-    if ([self.billState isKindOfClass:[NSNumber class]]) {
-        int idx = [self.billState intValue];
+    if ([self.state isKindOfClass:[NSNumber class]]) {
+        int idx = [self.state intValue];
         if (idx == -1) {
             [objStr appendFormat:@"\"%@\" : \"\", ", CUSTOMER_STATE];
         } else {
@@ -237,15 +239,15 @@ static NSMutableDictionary * inactiveCustomers = nil;
         }
 
     } else {
-        [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_STATE, self.billState == nil ? @"" : self.billState];
+        [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_STATE, self.state == nil ? @"" : self.state];
     }
-    if (self.billCountry == -1) {
+    if (self.country == -1) {
         [objStr appendFormat:@"\"%@\" : \"\", ", CUSTOMER_COUNTRY];
     } else {
-        [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_COUNTRY, [COUNTRIES objectAtIndex: self.billCountry]];
+        [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_COUNTRY, [COUNTRIES objectAtIndex: self.country]];
     }
     
-    [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_ZIP, self.billZip == nil ? @"" : self.billZip];
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_ZIP, self.zip == nil ? @"" : self.zip];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_EMAIL, self.email == nil ? @"" : [Util URLEncode:self.email]];
     [objStr appendFormat:@"\"%@\" : \"%@\" ", CUSTOMER_PHONE, self.phone == nil ? @"" : self.phone];
     [objStr appendString:@"}"];

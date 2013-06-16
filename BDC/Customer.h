@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BDCBusinessObjectWithAttachments.h"
+#import "BDCBusinessObjectWithAttachmentsAndAddress.h"
 #import "SlidingDetailsTableViewController.h"
 #import "SlidingListTableViewController.h"
 
@@ -34,16 +34,17 @@
 @end
 
 
-@interface Customer : BDCBusinessObjectWithAttachments
+@interface Customer : BDCBusinessObjectWithAttachmentsAndAddress
 
-@property (nonatomic, strong) NSString *billAddr1;
-@property (nonatomic, strong) NSString *billAddr2;
-@property (nonatomic, strong) NSString *billAddr3;
-@property (nonatomic, strong) NSString *billAddr4;
-@property (nonatomic, strong) NSString *billCity;
-@property (nonatomic, strong) id billState;
-@property (nonatomic, assign) int billCountry;
-@property (nonatomic, strong) NSString *billZip;
+//@property (nonatomic, strong) NSString *billAddr1;
+//@property (nonatomic, strong) NSString *billAddr2;
+//@property (nonatomic, strong) NSString *billAddr3;
+//@property (nonatomic, strong) NSString *billAddr4;
+//@property (nonatomic, strong) NSString *billCity;
+//@property (nonatomic, strong) id billState;
+//@property (nonatomic, assign) int billCountry;
+//@property (nonatomic, strong) NSString *billZip;
+
 //@property (nonatomic, strong) NSString *shipAddr1;
 //@property (nonatomic, strong) NSString *shipAddr2;
 //@property (nonatomic, strong) NSString *shipAddr3;

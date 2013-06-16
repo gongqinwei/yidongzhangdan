@@ -29,7 +29,7 @@
 enum InvoiceSections {
     kInvoiceInfo,
     kInvoiceLineItems,
-    kInvoiceAttachment
+    kInvoiceAttachments
 };
 
 enum InfoType {
@@ -46,11 +46,6 @@ typedef enum {
 #define INVOICE_ACTIONS     [NSArray arrayWithObjects:@"Edit invoice", @"Email Invoice", @"Delete invoice", @"Cancel", nil]
 #define ACTION_EMAIL        @"Email Invoice"
 
-#define TAG_BASE                        100
-#define CELL_WIDTH                      300
-#define IMG_PADDING                     10
-#define IMG_WIDTH                       CELL_WIDTH / 4
-#define IMG_HEIGHT                      IMG_WIDTH - IMG_PADDING
 #define INV_INFO_CELL_ID                @"InvoiceInfo"
 #define INV_ITEM_CELL_ID                @"InvoiceLineItem"
 #define INV_ATTACH_CELL_ID              @"InvoiceAttachment"
@@ -68,10 +63,6 @@ typedef enum {
 #define INV_INFO_INPUT_RECT     CGRectMake(CELL_WIDTH - 190, 5, 190, CELL_HEIGHT - 10)
 #define INV_ITEM_AMOUNT_RECT    CGRectMake(cell.viewForBaselineLayout.bounds.size.width - 130, 5, 90, cell.viewForBaselineLayout.bounds.size.height-10)
 #define INV_ITEM_QTY_RECT       CGRectMake(cell.viewForBaselineLayout.bounds.size.width - 180, 10, 60, cell.viewForBaselineLayout.bounds.size.height-20)
-#define INV_ATTACHMENT_RECT     CGRectMake(5, 0, CELL_WIDTH, IMG_HEIGHT)
-#define INV_ATTACHMENT_PV_HEIGHT        3
-#define INV_ATTACHMENT_PV_RECT  CGRectMake(0, IMG_HEIGHT + IMG_PADDING, CELL_WIDTH, INV_ATTACHMENT_PV_HEIGHT)
-#define INV_NUM_ATTACHMENT_PER_PAGE     4
 
 #define DELETE_INV_ALERT_TAG            1
 #define REMOVE_ATTACHMENT_ALERT_TAG     2
@@ -115,7 +106,7 @@ typedef enum {
 }
 
 - (NSIndexPath *)getAttachmentPath {
-    return [NSIndexPath indexPathForRow:1 inSection:kInvoiceAttachment];
+    return [NSIndexPath indexPathForRow:1 inSection:kInvoiceAttachments];
 }
 
 - (void)setMode:(ViewMode)mode {
@@ -344,18 +335,6 @@ typedef enum {
     self.invoiceDueDateTextField.clearButtonMode = UITextFieldViewModeNever;
     self.invoiceDueDateTextField.inputView = self.dueDatePicker;
     self.invoiceDueDateTextField.inputAccessoryView = [self inputAccessoryViewForTag:kInvoiceDueDate];
-        
-    self.attachmentScrollView = [[UIScrollView alloc] initWithFrame:INV_ATTACHMENT_RECT]; // CGRectMake(IMG_PADDING, IMG_PADDING, CELL_WIDTH, IMG_HEIGHT)];
-    self.attachmentScrollView.pagingEnabled = YES;
-    self.attachmentScrollView.scrollEnabled = YES;
-    self.attachmentScrollView.clipsToBounds = YES;
-    self.attachmentScrollView.bounces = NO;
-    self.attachmentScrollView.showsHorizontalScrollIndicator = NO;
-    self.attachmentScrollView.showsVerticalScrollIndicator = NO;
-    self.attachmentScrollView.delegate = self;
-    
-    self.attachmentPageControl = [[UIPageControl alloc] initWithFrame:INV_ATTACHMENT_PV_RECT];
-    self.attachmentPageControl.currentPage = 0;
     
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.activityIndicator.hidesWhenStopped = YES;
@@ -440,7 +419,7 @@ typedef enum {
         return [InvoiceInfo count];
     } else if (section == kInvoiceLineItems) {
         return [((Invoice *)self.shaddowBusObj).lineItems count];
-    } else if (section == kInvoiceAttachment) {
+    } else if (section == kInvoiceAttachments) {
         if (self.mode == kAttachMode) {
             return 1;
         } else {
@@ -654,7 +633,7 @@ typedef enum {
             self.totalAmount = [self.totalAmount decimalNumberByAdding:amount];
         }
             break;
-        case kInvoiceAttachment:
+        case kInvoiceAttachments:
         {
             cell = [tableView dequeueReusableCellWithIdentifier:INV_ATTACH_CELL_ID];
             if (!cell) {
@@ -691,7 +670,7 @@ typedef enum {
     } else if (indexPath.section == kInvoiceLineItems) {
         return CELL_HEIGHT;
     } else {
-        return IMG_HEIGHT + IMG_PADDING + INV_ATTACHMENT_PV_HEIGHT;
+        return IMG_HEIGHT + IMG_PADDING + ATTACHMENT_PV_HEIGHT;
     }
 }
 

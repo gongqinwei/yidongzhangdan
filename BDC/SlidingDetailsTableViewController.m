@@ -381,7 +381,6 @@
     }
 }
 
-
 #pragma mark - view controller life cycle
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -390,6 +389,19 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.attachmentScrollView = [[UIScrollView alloc] initWithFrame:ATTACHMENT_RECT]; // CGRectMake(IMG_PADDING, IMG_PADDING, CELL_WIDTH, IMG_HEIGHT)];
+    self.attachmentScrollView.pagingEnabled = YES;
+    self.attachmentScrollView.scrollEnabled = YES;
+    self.attachmentScrollView.clipsToBounds = YES;
+    self.attachmentScrollView.bounces = NO;
+    self.attachmentScrollView.showsHorizontalScrollIndicator = NO;
+    self.attachmentScrollView.showsVerticalScrollIndicator = NO;
+    self.attachmentScrollView.delegate = self;
+    
+    self.attachmentPageControl = [[UIPageControl alloc] initWithFrame:ATTACHMENT_PV_RECT];
+    self.attachmentPageControl.currentPage = 0;
+    
     
     self.inputAccessoryView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, ToolbarHeight)];
     self.inputAccessoryView.barStyle = UIBarStyleBlackTranslucent;

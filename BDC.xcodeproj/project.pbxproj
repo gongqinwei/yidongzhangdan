@@ -10,6 +10,7 @@
 		0E01C34F172214FF00184702 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 0E01C34E172214FF00184702 /* .gitignore */; };
 		0E14EC601603ED960098EB03 /* warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E14EC5E1603ED960098EB03 /* warning.png */; };
 		0E14EC611603ED960098EB03 /* success.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E14EC5F1603ED960098EB03 /* success.png */; };
+		0E188B8C176C435300493EE1 /* BDCBusinessObjectWithAttachmentsAndAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E188B8B176C435300493EE1 /* BDCBusinessObjectWithAttachmentsAndAddress.m */; };
 		0E1A79171633790D001B24BF /* EditItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E1A79161633790C001B24BF /* EditItemViewController.m */; };
 		0E2C0AC315EC44390059C739 /* Invoice.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2C0AC215EC44390059C739 /* Invoice.m */; };
 		0E2C0ACB15F12D9B0059C739 /* InvoicesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E2C0ACA15F12D9B0059C739 /* InvoicesTableViewController.m */; };
@@ -121,6 +122,8 @@
 		0E01C34E172214FF00184702 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		0E14EC5E1603ED960098EB03 /* warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = warning.png; sourceTree = "<group>"; };
 		0E14EC5F1603ED960098EB03 /* success.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = success.png; sourceTree = "<group>"; };
+		0E188B8A176C435300493EE1 /* BDCBusinessObjectWithAttachmentsAndAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDCBusinessObjectWithAttachmentsAndAddress.h; sourceTree = "<group>"; };
+		0E188B8B176C435300493EE1 /* BDCBusinessObjectWithAttachmentsAndAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDCBusinessObjectWithAttachmentsAndAddress.m; sourceTree = "<group>"; };
 		0E1A79151633790C001B24BF /* EditItemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditItemViewController.h; sourceTree = "<group>"; };
 		0E1A79161633790C001B24BF /* EditItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditItemViewController.m; sourceTree = "<group>"; };
 		0E2C0AC115EC44390059C739 /* Invoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Invoice.h; sourceTree = "<group>"; };
@@ -538,6 +541,8 @@
 				0E3A15701742F958007F2DC6 /* Document.m */,
 				0EB21934174B3B2300382C44 /* BDCBusinessObjectWithAttachments.h */,
 				0EB21935174B3B2300382C44 /* BDCBusinessObjectWithAttachments.m */,
+				0E188B8A176C435300493EE1 /* BDCBusinessObjectWithAttachmentsAndAddress.h */,
+				0E188B8B176C435300493EE1 /* BDCBusinessObjectWithAttachmentsAndAddress.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -848,6 +853,7 @@
 				0EEB9F751756B26B00AAAC35 /* SlidingCollectionViewController.m in Sources */,
 				0EEB9F781756B5AE00AAAC35 /* InboxViewController.m in Sources */,
 				0EEB9F7C1756B91300AAAC35 /* DocumentCell.m in Sources */,
+				0E188B8C176C435300493EE1 /* BDCBusinessObjectWithAttachmentsAndAddress.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

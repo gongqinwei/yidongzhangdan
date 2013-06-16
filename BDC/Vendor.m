@@ -21,14 +21,14 @@ static id <VendorListDelegate> ListDelegate = nil;
 static NSMutableDictionary * vendors = nil;
 static NSMutableDictionary * inactiveVendors = nil;
 
-@synthesize addr1;
-@synthesize addr2;
-@synthesize addr3;
-@synthesize addr4;
-@synthesize city;
-@synthesize state;
-@synthesize country;
-@synthesize zip;
+//@synthesize addr1;
+//@synthesize addr2;
+//@synthesize addr3;
+//@synthesize addr4;
+//@synthesize city;
+//@synthesize state;
+//@synthesize country;
+//@synthesize zip;
 @synthesize email;
 @synthesize phone;
 @synthesize payBy;
@@ -125,10 +125,10 @@ static NSMutableDictionary * inactiveVendors = nil;
                 vendor.addr3 = (addr3 == (id)[NSNull null]) ? nil : addr3;
                 vendor.addr4 = (addr4 == (id)[NSNull null]) ? nil : addr4;
                 vendor.city = (city == (id)[NSNull null]) ? nil : city;
-                vendor.country = (country == (id)[NSNull null]) ? -1 : [COUNTRIES indexOfObject:country];
+                vendor.country = (country == (id)[NSNull null]) ? INVALID_OPTION : [COUNTRIES indexOfObject:country];
                 if (state == (id)[NSNull null]) {
                     if (vendor.country == 0) {  //USA
-                        vendor.state = [NSNumber numberWithInt: -1];
+                        vendor.state = [NSNumber numberWithInt: INVALID_OPTION];
                     } else {
                         vendor.state = nil;
                     }

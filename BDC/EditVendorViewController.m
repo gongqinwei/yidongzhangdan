@@ -13,25 +13,28 @@
 #import "Geo.h"
 #import <QuartzCore/QuartzCore.h>
 
+enum VendorSections {
+    kVendorInfo,
+    kVendorAddr,
+    kVendorAttachments
+};
+
 enum VendorInfoType {
     kVendorName,
     kVendorPayBy,
-    kVendorAddr1,
-    kVendorAddr2,
-    kVendorAddr3,
-    kVendorAddr4,
-    kVendorCity,
-    kVendorState,
-    kVendorCountry,
-    kVendorZip,
     kVendorEmail,
     kVendorPhone
 };
 
-#define VendorInfo    [NSArray arrayWithObjects:@"Name", @"Pay By", @"Address1", @"Address2", @"Address3", @"Address4", @"City", @"State", @"Country", @"Zipcode", @"Email", @"Phone", nil]
+#define VendorInfo      [NSArray arrayWithObjects: \
+                            [NSArray arrayWithObjects:@"Name", @"Pay By", @"Email", @"Phone", nil], \
+                            ADDR_DETAILS, \
+                            [NSArray arrayWithObjects:nil], \
+                        nil]
 
-#define INVALID_OPTION      -1
-#define PICKER_TAG_BASE     TAG_BASE * 2
+#define VENDOR_ADDR_TAG_OFFSET          4
+#define VENDOR_SCAN_PHOTO_SEGUE         @"ScanMoreVendorPhoto"
+
 
 @interface EditVendorViewController () <UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
@@ -49,6 +52,8 @@ enum VendorInfoType {
 @property (nonatomic, strong) UITextField *vendorPhoneTextField;
 @property (nonatomic, strong) UITextField *vendorEmailTextField;
 @property (nonatomic, strong) UILabel *vendorPayByLabel;
+@property (nonatomic, strong) NSMutableString *address;
+@property (nonatomic, assign) int numOfLinesInAddr;
 
 @end
 
@@ -69,10 +74,16 @@ enum VendorInfoType {
 @synthesize vendorPhoneTextField;
 @synthesize vendorEmailTextField;
 @synthesize vendorPayByLabel;
+@synthesize address;
+@synthesize numOfLinesInAddr;
 
 
 - (Class)busObjClass {
     return [Vendor class];
+}
+
+- (NSIndexPath *)getAttachmentPath {
+    return [NSIndexPath indexPathForRow:0 inSection:kVendorAttachments];
 }
 
 #pragma mark - Depricated: this method is no longer needed as the edit bar button will be moved to action menu
@@ -104,6 +115,11 @@ enum VendorInfoType {
     }
 }
 
+- (void)addMoreAttachment {
+    [self.view findAndResignFirstResponder];
+    [self performSegueWithIdentifier:VENDOR_SCAN_PHOTO_SEGUE sender:self];
+}
+
 #pragma mark - Life Cycle methods
 
 - (void)viewDidLoad
@@ -127,25 +143,27 @@ enum VendorInfoType {
         }
     }
     
+    Vendor *shaddowVendor = (Vendor *)self.shaddowBusObj;
+    
     self.busObj.editDelegate = self;
     self.shaddowBusObj.editDelegate = self;
-    
+        
     self.vendorStatePickerView = [[UIPickerView alloc] initWithFrame:PICKER_RECT];
     self.vendorStatePickerView.delegate = self;
     self.vendorStatePickerView.dataSource = self;
     self.vendorStatePickerView.showsSelectionIndicator = YES;
-    self.vendorStatePickerView.tag = kVendorState * PICKER_TAG_BASE;
-    if ([((Vendor *)self.shaddowBusObj).state isKindOfClass:[NSNumber class]] && [((Vendor *)self.shaddowBusObj).state intValue] != INVALID_OPTION) {
-        [self.vendorStatePickerView selectRow:[((Vendor *)self.shaddowBusObj).state intValue] + 1 inComponent:0 animated:YES];
+    self.vendorStatePickerView.tag = (kState + VENDOR_ADDR_TAG_OFFSET) * PICKER_TAG_BASE;
+    if ([shaddowVendor.state isKindOfClass:[NSNumber class]] && [shaddowVendor.state intValue] != INVALID_OPTION) {
+        [self.vendorStatePickerView selectRow:[shaddowVendor.state intValue] + 1 inComponent:0 animated:YES];
     }
     
     self.vendorCountryPickerView = [[UIPickerView alloc] initWithFrame:PICKER_RECT];
     self.vendorCountryPickerView.delegate = self;
     self.vendorCountryPickerView.dataSource = self;
     self.vendorCountryPickerView.showsSelectionIndicator = YES;
-    self.vendorCountryPickerView.tag = kVendorCountry * PICKER_TAG_BASE;
-    if (((Vendor *)self.shaddowBusObj).country != INVALID_OPTION) {
-        [self.vendorCountryPickerView selectRow:((Vendor *)self.shaddowBusObj).country + 1 inComponent:0 animated:YES];
+    self.vendorCountryPickerView.tag = (kCountry + VENDOR_ADDR_TAG_OFFSET) * PICKER_TAG_BASE;
+    if (shaddowVendor.country != INVALID_OPTION) {
+        [self.vendorCountryPickerView selectRow:shaddowVendor.country + 1 inComponent:0 animated:YES];
     }
     
     self.vendorNameTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
@@ -157,52 +175,52 @@ enum VendorInfoType {
     
     self.vendorAddr1TextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
     [self initializeTextField:self.vendorAddr1TextField];
-    self.vendorAddr1TextField.tag = kVendorAddr1 * TAG_BASE;
+    self.vendorAddr1TextField.tag = (kAddr1 + VENDOR_ADDR_TAG_OFFSET) * TAG_BASE;
     self.vendorAddr1TextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.vendorAddr1TextField.rightViewMode = UITextFieldViewModeUnlessEditing;
     self.vendorAddr1TextField.delegate = self;
     
     self.vendorAddr2TextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
     [self initializeTextField:self.vendorAddr2TextField];
-    self.vendorAddr2TextField.tag = kVendorAddr2 * TAG_BASE;
+    self.vendorAddr2TextField.tag = (kAddr2 + VENDOR_ADDR_TAG_OFFSET) * TAG_BASE;
     self.vendorAddr2TextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.vendorAddr2TextField.rightViewMode = UITextFieldViewModeUnlessEditing;
     self.vendorAddr2TextField.delegate = self;
     
     self.vendorAddr3TextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
     [self initializeTextField:self.vendorAddr3TextField];
-    self.vendorAddr3TextField.tag = kVendorAddr3 * TAG_BASE;
+    self.vendorAddr3TextField.tag = (kAddr3 + VENDOR_ADDR_TAG_OFFSET) * TAG_BASE;
     self.vendorAddr3TextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.vendorAddr3TextField.rightViewMode = UITextFieldViewModeUnlessEditing;
     self.vendorAddr3TextField.delegate = self;
     
     self.vendorAddr4TextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
     [self initializeTextField:self.vendorAddr4TextField];
-    self.vendorAddr4TextField.tag = kVendorAddr4 * TAG_BASE;
+    self.vendorAddr4TextField.tag = (kAddr4 + VENDOR_ADDR_TAG_OFFSET) * TAG_BASE;
     self.vendorAddr4TextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.vendorAddr4TextField.rightViewMode = UITextFieldViewModeUnlessEditing;
     self.vendorAddr4TextField.delegate = self;
     
     self.vendorCityTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
     [self initializeTextField:self.vendorCityTextField];
-    self.vendorCityTextField.tag = kVendorCity * TAG_BASE;
+    self.vendorCityTextField.tag = (kCity + VENDOR_ADDR_TAG_OFFSET) * TAG_BASE;
     self.vendorCityTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.vendorCityTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
     self.vendorCityTextField.delegate = self;
     
     self.vendorStateTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
     [self initializeTextField:self.vendorStateTextField];
-    self.vendorStateTextField.tag = kVendorState * TAG_BASE;
+    self.vendorStateTextField.tag = (kState + VENDOR_ADDR_TAG_OFFSET) * TAG_BASE;
     
     self.vendorCountryTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
     [self initializeTextField:self.vendorCountryTextField];
-    self.vendorCountryTextField.tag = kVendorCountry * TAG_BASE;
+    self.vendorCountryTextField.tag = (kCountry + VENDOR_ADDR_TAG_OFFSET) * TAG_BASE;
     self.vendorCountryTextField.rightViewMode = UITextFieldViewModeAlways;
     self.vendorCountryTextField.inputView = self.vendorCountryPickerView;
     
     self.vendorZipTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
     [self initializeTextField:self.vendorZipTextField];
-    self.vendorZipTextField.tag = kVendorZip * TAG_BASE;
+    self.vendorZipTextField.tag = (kZip + VENDOR_ADDR_TAG_OFFSET) * TAG_BASE;
     self.vendorZipTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.vendorZipTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
     self.vendorZipTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation; //how about zip in foreign countries?
@@ -226,6 +244,16 @@ enum VendorInfoType {
     
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.activityIndicator.hidesWhenStopped = YES;
+    
+    self.address = [NSMutableString string];
+    self.numOfLinesInAddr = [((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj) formatAddress:self.address];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:VENDOR_SCAN_PHOTO_SEGUE]) {
+        ((ScannerViewController *)segue.destinationViewController).delegate = self;
+        [segue.destinationViewController setMode:kAttachMode];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -238,222 +266,278 @@ enum VendorInfoType {
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return [VendorInfo count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [VendorInfo count];
+    if (section == kVendorInfo) {
+        return [VendorInfo[section] count];
+    } else if (section == kVendorAddr) {
+        if (self.mode == kViewMode) {
+            return 1;
+        } else {
+            return [VendorInfo[section] count];
+        }
+    } else {
+        return 1;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"VendorInfoItem";
+    static NSString *VENDOR_INFO_CELL_ID = @"VendorInfoItem";
+    static NSString *VENDOR_ADDRESS_CELL_ID = @"VendorAddress";
+    static NSString *VENDOR_ATTACH_CELL_ID = @"VendorAttachments";
     
+    Vendor *shaddowVendor = (Vendor *)self.shaddowBusObj;
     UITableViewCell *cell;
-    if (self.modeChanged) {
-        if (self.mode == kViewMode) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
-        } else {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
-        }
-    } else {
-        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        if (!cell) {
-            if (self.mode == kViewMode) {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
-            } else {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
-            }
-        }
-    }
     
-    cell.textLabel.text = [VendorInfo objectAtIndex:indexPath.row];
-    cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:APP_LABEL_FONT_SIZE];
-    cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:APP_LABEL_FONT_SIZE];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
-    switch (indexPath.row) {
-        case kVendorName:
+    switch (indexPath.section) {
+        case kVendorInfo:
         {
-            if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = self.shaddowBusObj.name;
-            } else {
-                if (self.shaddowBusObj != nil) {
-                    self.vendorNameTextField.text = self.shaddowBusObj.name;
+            if (self.modeChanged) {
+                if (self.mode == kViewMode) {
+                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:VENDOR_INFO_CELL_ID];
+                } else {
+                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:VENDOR_INFO_CELL_ID];
                 }
-                self.vendorNameTextField.backgroundColor = cell.backgroundColor;
-                
-                [cell addSubview:self.vendorNameTextField];
-            }
-        }
-            break;
-        case kVendorPayBy:
-            cell.detailTextLabel.text = [VENDOR_PAYMENT_TYPES objectForKey:((Vendor *)self.shaddowBusObj).payBy];
-            break;
-        case kVendorAddr1:
-        {
-            if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).addr1;
             } else {
-                if (self.shaddowBusObj != nil) {
-                    self.vendorAddr1TextField.text = ((Vendor *)self.shaddowBusObj).addr1;
-                }
-                self.vendorAddr1TextField.backgroundColor = cell.backgroundColor;
-                
-                [cell addSubview:self.vendorAddr1TextField];
-            }
-        }
-            break;
-        case kVendorAddr2:
-        {
-            if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).addr2;
-            } else {
-                if (self.shaddowBusObj != nil) {
-                    self.vendorAddr2TextField.text = ((Vendor *)self.shaddowBusObj).addr2;
-                }
-                self.vendorAddr2TextField.backgroundColor = cell.backgroundColor;
-                
-                [cell addSubview:self.vendorAddr2TextField];
-            }
-        }
-            break;
-        case kVendorAddr3:
-        {
-            if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).addr3;
-            } else {
-                if (self.shaddowBusObj != nil) {
-                    self.vendorAddr3TextField.text = ((Vendor *)self.shaddowBusObj).addr3;
-                }
-                self.vendorAddr3TextField.backgroundColor = cell.backgroundColor;
-                
-                [cell addSubview:self.vendorAddr3TextField];
-            }
-        }
-            break;
-        case kVendorAddr4:
-        {
-            if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).addr4;
-            } else {
-                if (self.shaddowBusObj != nil) {
-                    self.vendorAddr4TextField.text = ((Vendor *)self.shaddowBusObj).addr4;
-                }
-                self.vendorAddr4TextField.backgroundColor = cell.backgroundColor;
-                
-                [cell addSubview:self.vendorAddr4TextField];
-            }
-        }
-            break;
-        case kVendorCity:
-        {
-            if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).city;
-            } else {
-                if (self.shaddowBusObj != nil) {
-                    self.vendorCityTextField.text = ((Vendor *)self.shaddowBusObj).city;
-                }
-                self.vendorCityTextField.backgroundColor = cell.backgroundColor;
-                
-                [cell addSubview:self.vendorCityTextField];
-            }
-        }
-            break;
-        case kVendorState:
-            if (self.mode == kViewMode) {
-                if ([((Vendor *)self.shaddowBusObj).state isKindOfClass:[NSNumber class]]) {
-                    if ([((Vendor *)self.shaddowBusObj).state intValue] == INVALID_OPTION) {
-                        cell.detailTextLabel.text = @"";
+                cell = [tableView dequeueReusableCellWithIdentifier:VENDOR_INFO_CELL_ID];
+                if (!cell) {
+                    if (self.mode == kViewMode) {
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:VENDOR_INFO_CELL_ID];
                     } else {
-                        cell.detailTextLabel.text = [US_STATES objectAtIndex:[((Vendor *)self.shaddowBusObj).state intValue]];
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:VENDOR_INFO_CELL_ID];
                     }
-                } else {
-                    cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).state;
                 }
-            } else {
-                if ([((Vendor *)self.shaddowBusObj).state isKindOfClass:[NSNumber class]]) {
-                    if ([((Vendor *)self.shaddowBusObj).state intValue] == INVALID_OPTION) {
-                        self.vendorStateTextField.text = @"";
+            }
+            
+            cell.textLabel.text = VendorInfo[indexPath.section][indexPath.row];            
+            cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:APP_LABEL_FONT_SIZE];
+            cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:APP_LABEL_FONT_SIZE];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            
+            switch (indexPath.row) {
+                case kVendorName:
+                    if (self.mode == kViewMode) {
+                        cell.detailTextLabel.text = self.shaddowBusObj.name;
                     } else {
-                        self.vendorStateTextField.text = [US_STATES objectAtIndex:[((Vendor *)self.shaddowBusObj).state intValue]];
+                        if (self.shaddowBusObj != nil) {
+                            self.vendorNameTextField.text = self.shaddowBusObj.name;
+                        }
+                        self.vendorNameTextField.backgroundColor = cell.backgroundColor;
+                        
+                        [cell addSubview:self.vendorNameTextField];
                     }
-                    
-                    self.vendorStateTextField.inputView = self.vendorStatePickerView;
-                    self.vendorStateTextField.rightViewMode = UITextFieldViewModeAlways;
-                } else {
-                    self.vendorStateTextField.text = ((Vendor *)self.shaddowBusObj).state;
-                    self.vendorStateTextField.enabled = YES;
-                    self.vendorStateTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-                    self.vendorStateTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
-                }
-                
-                self.vendorStateTextField.backgroundColor = cell.backgroundColor;
-                
-                [cell addSubview:self.vendorStateTextField];
-            }
-            break;
-        case kVendorCountry:
-            if (self.mode == kViewMode) {
-                if (((Vendor *)self.shaddowBusObj).country == INVALID_OPTION) {
-                    cell.detailTextLabel.text = @"";
-                } else {
-                    cell.detailTextLabel.text = [COUNTRIES objectAtIndex: ((Vendor *)self.shaddowBusObj).country];
-                }
-            } else {
-                if (((Vendor *)self.shaddowBusObj).country == INVALID_OPTION) {
-                    self.vendorCountryTextField.text = @"";
-                } else {
-                    self.vendorCountryTextField.text = [COUNTRIES objectAtIndex: ((Vendor *)self.shaddowBusObj).country];
-                }
-                self.vendorCountryTextField.backgroundColor = cell.backgroundColor;
-                
-                [cell addSubview:self.vendorCountryTextField];
-            }
-            break;
-        case kVendorZip:
-        {
-            if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).zip;
-            } else {
-                if (self.shaddowBusObj != nil) {
-                    self.vendorZipTextField.text = ((Vendor *)self.shaddowBusObj).zip;
-                }
-                self.vendorZipTextField.backgroundColor = cell.backgroundColor;
-                
-                [cell addSubview:self.vendorZipTextField];
+                    break;
+                case kVendorPayBy:
+                    cell.detailTextLabel.text = [VENDOR_PAYMENT_TYPES objectForKey:shaddowVendor.payBy];
+                    break;
+                case kVendorEmail:
+                    if (self.mode == kViewMode) {
+                        cell.detailTextLabel.text = shaddowVendor.email;
+                    } else {
+                        if (self.shaddowBusObj != nil) {
+                            self.vendorEmailTextField.text = shaddowVendor.email;
+                        }
+                        self.vendorEmailTextField.backgroundColor = cell.backgroundColor;
+                        
+                        [cell addSubview:self.vendorEmailTextField];
+                    }
+                    break;
+                case kVendorPhone:
+                    if (self.mode == kViewMode) {
+                        cell.detailTextLabel.text = shaddowVendor.phone;
+                    } else {
+                        if (self.shaddowBusObj != nil) {
+                            self.vendorPhoneTextField.text = shaddowVendor.phone;
+                        }
+                        self.vendorPhoneTextField.backgroundColor = cell.backgroundColor;
+                        
+                        [cell addSubview:self.vendorPhoneTextField];
+                    }
+                    break;
+                default:
+                    break;
             }
         }
             break;
-        case kVendorEmail:
+            
+        case kVendorAddr:
         {
-            if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).email;
-            } else {
-                if (self.shaddowBusObj != nil) {
-                    self.vendorEmailTextField.text = ((Vendor *)self.shaddowBusObj).email;
+            if (self.modeChanged) {
+                if (self.mode == kViewMode) {
+                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:VENDOR_ADDRESS_CELL_ID];
+                } else {
+                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:VENDOR_ADDRESS_CELL_ID];
                 }
-                self.vendorEmailTextField.backgroundColor = cell.backgroundColor;
-                
-                [cell addSubview:self.vendorEmailTextField];
+            } else {
+                cell = [tableView dequeueReusableCellWithIdentifier:VENDOR_ADDRESS_CELL_ID];
+                if (!cell) {
+                    if (self.mode == kViewMode) {
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:VENDOR_ADDRESS_CELL_ID];
+                    } else {
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:VENDOR_ADDRESS_CELL_ID];
+                    }
+                }
+            }
+            
+            cell.textLabel.text = VendorInfo[indexPath.section][indexPath.row];            
+            cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:APP_LABEL_FONT_SIZE];
+            cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:APP_LABEL_FONT_SIZE];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            
+            if (self.mode == kViewMode) {
+                cell.textLabel.text = @"Address";
+                cell.detailTextLabel.text = self.address;
+                cell.detailTextLabel.numberOfLines = self.numOfLinesInAddr;
+                cell.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
+            } else {
+                switch (indexPath.row) {
+                    case kAddr1:
+                        if (self.mode == kViewMode) {
+                            cell.detailTextLabel.text = shaddowVendor.addr1;
+                        } else {
+                            if (self.shaddowBusObj != nil) {
+                                self.vendorAddr1TextField.text = shaddowVendor.addr1;
+                            }
+                            self.vendorAddr1TextField.backgroundColor = cell.backgroundColor;
+                            
+                            [cell addSubview:self.vendorAddr1TextField];
+                        }
+                        break;
+                    case kAddr2:
+                        if (self.mode == kViewMode) {
+                            cell.detailTextLabel.text = shaddowVendor.addr2;
+                        } else {
+                            if (self.shaddowBusObj != nil) {
+                                self.vendorAddr2TextField.text = shaddowVendor.addr2;
+                            }
+                            self.vendorAddr2TextField.backgroundColor = cell.backgroundColor;
+                            
+                            [cell addSubview:self.vendorAddr2TextField];
+                        }
+                        break;
+                    case kAddr3:
+                        if (self.mode == kViewMode) {
+                            cell.detailTextLabel.text = shaddowVendor.addr3;
+                        } else {
+                            if (self.shaddowBusObj != nil) {
+                                self.vendorAddr3TextField.text = shaddowVendor.addr3;
+                            }
+                            self.vendorAddr3TextField.backgroundColor = cell.backgroundColor;
+                            
+                            [cell addSubview:self.vendorAddr3TextField];
+                        }
+                        break;
+                    case kAddr4:
+                        if (self.mode == kViewMode) {
+                            cell.detailTextLabel.text = shaddowVendor.addr4;
+                        } else {
+                            if (self.shaddowBusObj != nil) {
+                                self.vendorAddr4TextField.text = shaddowVendor.addr4;
+                            }
+                            self.vendorAddr4TextField.backgroundColor = cell.backgroundColor;
+                            
+                            [cell addSubview:self.vendorAddr4TextField];
+                        }
+                        break;
+                    case kCity:
+                        if (self.mode == kViewMode) {
+                            cell.detailTextLabel.text = shaddowVendor.city;
+                        } else {
+                            if (self.shaddowBusObj != nil) {
+                                self.vendorCityTextField.text = shaddowVendor.city;
+                            }
+                            self.vendorCityTextField.backgroundColor = cell.backgroundColor;
+                            
+                            [cell addSubview:self.vendorCityTextField];
+                        }
+                        break;
+                    case kState:
+                        if (self.mode == kViewMode) {
+                            if ([shaddowVendor.state isKindOfClass:[NSNumber class]]) {
+                                if ([shaddowVendor.state intValue] == INVALID_OPTION) {
+                                    cell.detailTextLabel.text = @"";
+                                } else {
+                                    cell.detailTextLabel.text = [US_STATES objectAtIndex:[shaddowVendor.state intValue]];
+                                }
+                            } else {
+                                cell.detailTextLabel.text = shaddowVendor.state;
+                            }
+                        } else {
+                            if ([shaddowVendor.state isKindOfClass:[NSNumber class]]) {
+                                if ([shaddowVendor.state intValue] == INVALID_OPTION) {
+                                    self.vendorStateTextField.text = @"";
+                                } else {
+                                    self.vendorStateTextField.text = [US_STATES objectAtIndex:[shaddowVendor.state intValue]];
+                                }
+                                
+                                self.vendorStateTextField.inputView = self.vendorStatePickerView;
+                                self.vendorStateTextField.rightViewMode = UITextFieldViewModeAlways;
+                            } else {
+                                self.vendorStateTextField.text = shaddowVendor.state;
+                                self.vendorStateTextField.enabled = YES;
+                                self.vendorStateTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+                                self.vendorStateTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
+                            }
+                            
+                            self.vendorStateTextField.backgroundColor = cell.backgroundColor;
+                            
+                            [cell addSubview:self.vendorStateTextField];
+                        }
+                        break;
+                    case kCountry:
+                        if (self.mode == kViewMode) {
+                            if (shaddowVendor.country == INVALID_OPTION) {
+                                cell.detailTextLabel.text = @"";
+                            } else {
+                                cell.detailTextLabel.text = [COUNTRIES objectAtIndex: shaddowVendor.country];
+                            }
+                        } else {
+                            if (shaddowVendor.country == INVALID_OPTION) {
+                                self.vendorCountryTextField.text = @"";
+                            } else {
+                                self.vendorCountryTextField.text = [COUNTRIES objectAtIndex: shaddowVendor.country];
+                            }
+                            self.vendorCountryTextField.backgroundColor = cell.backgroundColor;
+                            
+                            [cell addSubview:self.vendorCountryTextField];
+                        }
+                        break;
+                    case kZip:
+                        if (self.mode == kViewMode) {
+                            cell.detailTextLabel.text = shaddowVendor.zip;
+                        } else {
+                            if (self.shaddowBusObj != nil) {
+                                self.vendorZipTextField.text = shaddowVendor.zip;
+                            }
+                            self.vendorZipTextField.backgroundColor = cell.backgroundColor;
+                            
+                            [cell addSubview:self.vendorZipTextField];
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
             break;
-        case kVendorPhone:
+        
+        case kVendorAttachments:
         {
-            if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = ((Vendor *)self.shaddowBusObj).phone;
-            } else {
-                if (self.shaddowBusObj != nil) {
-                    self.vendorPhoneTextField.text = ((Vendor *)self.shaddowBusObj).phone;
-                }
-                self.vendorPhoneTextField.backgroundColor = cell.backgroundColor;
-                
-                [cell addSubview:self.vendorPhoneTextField];
+            cell = [tableView dequeueReusableCellWithIdentifier:VENDOR_ATTACH_CELL_ID];
+            if (!cell) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:VENDOR_ATTACH_CELL_ID];
             }
+            
+            [cell.contentView addSubview:self.attachmentScrollView];
+            [cell.contentView addSubview:self.attachmentPageControl];
+            cell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
         }
             break;
+            
         default:
             break;
     }
@@ -461,6 +545,58 @@ enum VendorInfoType {
     return cell;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == kVendorInfo) {
+        return CELL_HEIGHT;
+    } else if (indexPath.section == kVendorAddr) {
+        if (self.mode == kViewMode) {
+            return CELL_HEIGHT * (self.numOfLinesInAddr + 1) * 0.4;
+        } else {
+            return CELL_HEIGHT;
+        }
+    } else {
+        return IMG_HEIGHT + IMG_PADDING + ATTACHMENT_PV_HEIGHT;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if (section == kVendorInfo || section == kVendorAddr) {
+        return 0;
+    } else {
+        return 30;
+    }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (section == kVendorInfo || section == kVendorAddr) {
+        return nil;
+    } else {
+        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 360, 30)];
+        headerView.backgroundColor = [UIColor clearColor];
+        
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 200, 20)];
+        label.text = @"Documents";
+        label.font = [UIFont fontWithName:@"Helvetica-Bold" size:17];
+        label.backgroundColor = [UIColor clearColor];
+        label.textColor = APP_SYSTEM_BLUE_COLOR;
+        label.shadowColor = [UIColor whiteColor];
+        label.shadowOffset = CGSizeMake(0, 1);
+        
+        [headerView addSubview:label];
+        
+        if (self.mode != kViewMode) {
+            UIButton *cameraButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+            CGRect frame = CGRectMake(265, -10, 40, 40);
+            cameraButton.frame = frame;
+            cameraButton.backgroundColor = [UIColor clearColor];
+            [cameraButton addTarget:self action:@selector(addMoreAttachment) forControlEvents:UIControlEventTouchUpInside];
+            
+            [headerView addSubview:cameraButton];
+        }
+        
+        return headerView;
+    }
+}
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -495,54 +631,46 @@ enum VendorInfoType {
 // private
 - (void)textFieldDoneEditing:(UITextField *)textField {
     if (textField != nil) {
-        //        [self.editingField resignFirstResponder];
-        //        self.editingField = nil;
-        
+        Vendor *shaddowVendor = (Vendor *)self.shaddowBusObj;
         NSString *txt = [Util trim:textField.text];
-        //        if ([txt length] > 0) {
+                
         switch (textField.tag) {
             case kVendorName * TAG_BASE:
                 self.shaddowBusObj.name = txt;
                 break;
-            case kVendorAddr1 * TAG_BASE:
-                ((Vendor *)self.shaddowBusObj).addr1 = txt;
-                break;
-            case kVendorAddr2 * TAG_BASE:
-                ((Vendor *)self.shaddowBusObj).addr2 = txt;
-                break;
-            case kVendorAddr3 * TAG_BASE:
-                ((Vendor *)self.shaddowBusObj).addr3 = txt;
-                break;
-            case kVendorAddr4 * TAG_BASE:
-                ((Vendor *)self.shaddowBusObj).addr4 = txt;
-                break;
-            case kVendorCity * TAG_BASE:
-                ((Vendor *)self.shaddowBusObj).city = txt;
-                break;
-            case kVendorZip * TAG_BASE:
-                ((Vendor *)self.shaddowBusObj).zip = txt;
-                break;
             case kVendorEmail * TAG_BASE:
-                ((Vendor *)self.shaddowBusObj).email = txt;
+                shaddowVendor.email = txt;
                 break;
             case kVendorPhone * TAG_BASE:
-                ((Vendor *)self.shaddowBusObj).phone = txt;
+                shaddowVendor.phone = txt;
+                break;
+            case (kAddr1 + VENDOR_ADDR_TAG_OFFSET) * TAG_BASE:
+                shaddowVendor.addr1 = txt;
+                break;
+            case (kAddr2 + VENDOR_ADDR_TAG_OFFSET) * TAG_BASE:
+                shaddowVendor.addr2 = txt;
+                break;
+            case (kAddr3 + VENDOR_ADDR_TAG_OFFSET) * TAG_BASE:
+                shaddowVendor.addr3 = txt;
+                break;
+            case (kAddr4 + VENDOR_ADDR_TAG_OFFSET) * TAG_BASE:
+                shaddowVendor.addr4 = txt;
+                break;
+            case (kCity + VENDOR_ADDR_TAG_OFFSET) * TAG_BASE:
+                shaddowVendor.city = txt;
+                break;
+            case (kZip + VENDOR_ADDR_TAG_OFFSET) * TAG_BASE:
+                shaddowVendor.zip = txt;
                 break;
             default:
                 break;
-        }
-        //        }
-        
+        }        
     }
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField*)textField {
     [self textFieldDoneEditing:textField];
     return YES;
-}
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
-    //    self.editingField = textField;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
@@ -556,9 +684,9 @@ enum VendorInfoType {
 }
 
 - (NSInteger) pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    if (pickerView.tag == kVendorState * PICKER_TAG_BASE) {
+    if (pickerView.tag == (kState + VENDOR_ADDR_TAG_OFFSET) * PICKER_TAG_BASE) {
         return [US_STATES count] + 1;
-    } else if (pickerView.tag == kVendorCountry * PICKER_TAG_BASE) {
+    } else if (pickerView.tag == (kCountry + VENDOR_ADDR_TAG_OFFSET) * PICKER_TAG_BASE) {
         return [COUNTRIES count] + 1;
     } else {
         return 0;
@@ -569,9 +697,9 @@ enum VendorInfoType {
     if (row == 0) {
         return SELECT_ONE;
     }
-    if (pickerView.tag == kVendorState * PICKER_TAG_BASE) {
+    if (pickerView.tag == (kState + VENDOR_ADDR_TAG_OFFSET) * PICKER_TAG_BASE) {
         return [US_STATES objectAtIndex: row - 1];
-    } else if (pickerView.tag == kVendorCountry * PICKER_TAG_BASE) {
+    } else if (pickerView.tag == (kCountry + VENDOR_ADDR_TAG_OFFSET) * PICKER_TAG_BASE) {
         return [COUNTRIES objectAtIndex: row - 1];
     } else {
         return nil;
@@ -581,41 +709,51 @@ enum VendorInfoType {
 #pragma mark - UIPickerView Delegate
 
 - (void) pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    if (pickerView.tag == kVendorState * PICKER_TAG_BASE) {
+    Vendor *shaddowVendor = (Vendor *)self.shaddowBusObj;
+    
+    if (pickerView.tag == (kState + VENDOR_ADDR_TAG_OFFSET) * PICKER_TAG_BASE) {
         if (row == 0) {
             self.vendorStateTextField.text = @"";
-            ((Vendor *)self.shaddowBusObj).state = [NSNumber numberWithInt:INVALID_OPTION];
+            shaddowVendor.state = [NSNumber numberWithInt:INVALID_OPTION];
         } else {
             self.vendorStateTextField.text = [US_STATES objectAtIndex: row - 1];
-            ((Vendor *)self.shaddowBusObj).state = [NSNumber numberWithInt: row - 1];
+            shaddowVendor.state = [NSNumber numberWithInt: row - 1];
         }
-    } else if (pickerView.tag == kVendorCountry * PICKER_TAG_BASE) {
+    } else if (pickerView.tag == (kCountry + VENDOR_ADDR_TAG_OFFSET) * PICKER_TAG_BASE) {
         if (row == 0) {
             self.vendorCountryTextField.text = @"";
-            ((Vendor *)self.shaddowBusObj).country = INVALID_OPTION;
+            shaddowVendor.country = INVALID_OPTION;
         } else {
             self.vendorCountryTextField.text = [COUNTRIES objectAtIndex: row - 1] ;
-            ((Vendor *)self.shaddowBusObj).country = row - 1;
+            shaddowVendor.country = row - 1;
         }
         
         if (row == 1) {  //USA
             self.vendorStateTextField.inputView = self.vendorStatePickerView;
             self.vendorStateTextField.rightViewMode = UITextFieldViewModeAlways;
-            if (![((Vendor *)self.shaddowBusObj).state isKindOfClass:[NSNumber class]]) {
+            if (![shaddowVendor.state isKindOfClass:[NSNumber class]]) {
                 self.vendorStateTextField.text = @"";
-                ((Vendor *)self.shaddowBusObj).state = [NSNumber numberWithInt:INVALID_OPTION];
+                shaddowVendor.state = [NSNumber numberWithInt:INVALID_OPTION];
             }
         } else {
             self.vendorStateTextField.inputView = nil;
-            if ([((Vendor *)self.shaddowBusObj).state isKindOfClass:[NSNumber class]]) {
+            if ([shaddowVendor.state isKindOfClass:[NSNumber class]]) {
                 self.vendorStateTextField.text = @"";
-                ((Vendor *)self.shaddowBusObj).state = nil;
+                shaddowVendor.state = nil;
             }
-            self.vendorStateTextField.text = ((Vendor *)self.shaddowBusObj).state;
+            self.vendorStateTextField.text = shaddowVendor.state;
             self.vendorStateTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
             self.vendorStateTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
         }
     }
+}
+
+#pragma mark - Model delegate
+
+- (void)doneSaveObject {
+    [super doneSaveObject];
+    self.address = [NSMutableString string];
+    self.numOfLinesInAddr = [((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj) formatAddress:self.address];
 }
 
 

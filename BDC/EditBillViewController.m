@@ -48,11 +48,6 @@ typedef enum {
 
 #define BILL_ACTIONS                    [NSArray arrayWithObjects:@"Pay bill", @"Edit Bill", @"Delete bill", @"Cancel", nil]
 
-#define TAG_BASE                        100
-#define CELL_WIDTH                      300
-#define IMG_PADDING                     10
-#define IMG_WIDTH                       CELL_WIDTH / 4
-#define IMG_HEIGHT                      IMG_WIDTH - IMG_PADDING
 #define BILL_INFO_CELL_ID               @"BillInfo"
 #define BILL_ITEM_CELL_ID               @"BillLineItem"
 #define BILL_ATTACH_CELL_ID             @"BillDocs"
@@ -68,10 +63,6 @@ typedef enum {
 #define BILL_INFO_INPUT_RECT     CGRectMake(CELL_WIDTH - 190, 5, 190, CELL_HEIGHT - 10)
 #define BILL_ITEM_ACCOUNT_RECT   CGRectMake(cell.viewForBaselineLayout.bounds.origin.x + 46, 6, 150, cell.viewForBaselineLayout.bounds.size.height - 10)
 #define BILL_ITEM_AMOUNT_RECT    CGRectMake(cell.viewForBaselineLayout.bounds.size.width - 115, 6, 100, cell.viewForBaselineLayout.bounds.size.height - 10)
-#define BILL_ATTACHMENT_RECT     CGRectMake(5, 0, CELL_WIDTH, IMG_HEIGHT)
-#define BILL_ATTACHMENT_PV_HEIGHT       3
-#define BILL_ATTACHMENT_PV_RECT  CGRectMake(0, IMG_HEIGHT + IMG_PADDING, CELL_WIDTH, BILL_ATTACHMENT_PV_HEIGHT)
-#define BILL_NUM_ATTACHMENT_PER_PAGE    4
 
 #define DELETE_BILL_ALERT_TAG           1
 #define REMOVE_ATTACHMENT_ALERT_TAG     2
@@ -287,18 +278,6 @@ typedef enum {
     self.billAmountLabel.textAlignment = UITextAlignmentRight;
     self.billAmountLabel.font = [UIFont fontWithName:APP_FONT size:15];
     self.billAmountLabel.backgroundColor = [UIColor clearColor];
-    
-    self.attachmentScrollView = [[UIScrollView alloc] initWithFrame:BILL_ATTACHMENT_RECT]; // CGRectMake(IMG_PADDING, IMG_PADDING, CELL_WIDTH, IMG_HEIGHT)];
-    self.attachmentScrollView.pagingEnabled = YES;
-    self.attachmentScrollView.scrollEnabled = YES;
-    self.attachmentScrollView.clipsToBounds = YES;
-    self.attachmentScrollView.bounces = NO;
-    self.attachmentScrollView.showsHorizontalScrollIndicator = NO;
-    self.attachmentScrollView.showsVerticalScrollIndicator = NO;
-    self.attachmentScrollView.delegate = self;
-    
-    self.attachmentPageControl = [[UIPageControl alloc] initWithFrame:BILL_ATTACHMENT_PV_RECT];
-    self.attachmentPageControl.currentPage = 0;
     
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.activityIndicator.hidesWhenStopped = YES;
@@ -592,7 +571,7 @@ typedef enum {
     } else if (indexPath.section == kBillLineItems) {
         return CELL_HEIGHT;
     } else {
-        return IMG_HEIGHT + IMG_PADDING + BILL_ATTACHMENT_PV_HEIGHT;
+        return IMG_HEIGHT + IMG_PADDING + ATTACHMENT_PV_HEIGHT;
     }
 }
 
