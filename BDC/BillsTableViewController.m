@@ -44,8 +44,6 @@
 
 @interface BillsTableViewController () <BillListDelegate>
 
-@property (nonatomic, strong) NSIndexPath *lastSelected;
-
 @property (nonatomic, strong) NSMutableArray *overDueBills;
 @property (nonatomic, strong) NSMutableArray *dueIn7DaysBills;
 @property (nonatomic, strong) NSMutableArray *dueOver7DaysBills;
@@ -76,7 +74,6 @@
 @implementation BillsTableViewController
 
 @synthesize bills = _bills;
-@synthesize lastSelected;
 
 @synthesize overDueBills;
 @synthesize dueIn7DaysBills;
@@ -110,31 +107,9 @@
 }
 
 - (void)navigateAttach {
+    [super navigateAttach];
     [self attachDocumentForObject:self.bills[self.lastSelected.row]];
-    
-//    NSString *billId = ((Bill *)[self.bills objectAtIndex:self.lastSelected.row]).objectId;
-//    
-//    if (self.photoData != nil && self.photoName != nil) {
-//        [Uploader uploadFile:self.photoName data:self.photoData objectId:billId handler:^(NSURLResponse * response, NSData * data, NSError * err) {
-//            NSInteger status;
-//            [APIHandler getResponse:response data:data error:&err status:&status];
-//            
-//            if(status == RESPONSE_SUCCESS) {
-//                [UIHelper showInfo:@"Attached successfully" withStatus:kSuccess];
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [self.navigationController popViewControllerAnimated:YES]; // where to navigate to?
-////                    [(ScannerViewController *)[((UINavigationController *)[self.tabBarController.viewControllers objectAtIndex:kScanTab]).viewControllers objectAtIndex:0] reset];                    
-//                });
-//            } else {
-//                [UIHelper showInfo:@"Failed to attach" withStatus:kFailure];
-//            }
-//        }];
-//    }
 }
-
-//- (void)navigateCancel {
-//    [self.navigationController popViewControllerAnimated:YES];
-//}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -499,7 +474,7 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+{    
     if (self.mode == kAttachMode) {
         if (self.lastSelected != nil) { //TODO: may need to reset self.lastSelected on viewWillAppear
             UITableViewCell *oldRow = [self.tableView cellForRowAtIndexPath:self.lastSelected];

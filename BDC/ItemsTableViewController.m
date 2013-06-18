@@ -20,15 +20,12 @@
 
 @interface ItemsTableViewController () <ItemListDelegate, LineItemDelegate>
 
-@property (nonatomic, strong) NSIndexPath *lastSelected;
-
 @end
 
 @implementation ItemsTableViewController
 
 @synthesize items = _items;
 @synthesize selectDelegate;
-@synthesize lastSelected;
 
 - (void)setItems:(NSMutableArray *)items {
     _items = items;
@@ -50,14 +47,9 @@
 }
 
 - (void)navigateAttach {
+    [super navigateAttach];
     [self attachDocumentForObject:self.items[self.lastSelected.row]];
 }
-
-//- (void)navigateCancel {
-//    if ([self tryTap]) {
-//        [self.navigationController popViewControllerAnimated:YES];
-//    }
-//}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -249,7 +241,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+{    
     if (self.mode == kSelectMode || self.mode == kAttachMode) {
         UITableViewCell *row = [self.tableView cellForRowAtIndexPath:indexPath];
         row.accessoryType = UITableViewCellAccessoryCheckmark;

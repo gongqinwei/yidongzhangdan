@@ -23,6 +23,9 @@
 @property (nonatomic, strong) NSString *createNewSegue;
 @property (nonatomic, strong) id<ListViewDelegate> listViewDelegate;
 
+@property (nonatomic, strong) NSIndexPath *lastSelected;
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
+
 
 - (void)navigateDone;
 - (void)navigateAttach;

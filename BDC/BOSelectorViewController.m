@@ -11,13 +11,13 @@
 #import "BillsTableViewController.h"
 #import "VendorsTableViewController.h"
 #import "CustomersTableViewController.h"
-#import "ItemsTableViewController.h"
+#import "InboxViewController.h"
 #import "ScannerViewController.h"
+#import "RootMenuViewController.h"
 #import "Invoice.h"
 #import "Bill.h"
 #import "Vendor.h"
 #import "Customer.h"
-#import "Item.h"
 #import "Uploader.h"
 #import "APIHandler.h"
 #import "Constants.h"
@@ -34,9 +34,6 @@
 #define ATTACH_TO_EXISTING_VENDOR_SEGUE             @"AttachToExistingVendor"
 #define ATTACH_TO_NEW_CUSTOMER_SEGUE                @"AttachToNewCustomer"
 #define ATTACH_TO_EXISTING_CUSTOMER_SEGUE           @"AttachToExistingCustomer"
-#define ATTACH_TO_NEW_ITEM_SEGUE                    @"AttachToNewItem"
-#define ATTACH_TO_EXISTING_ITEM_SEGUE               @"AttachToExistingItem"
-#define UPLOAD_TO_INBOX_SEGUE                       @"UploadToInbox"
 
 
 @interface BOSelectorViewController ()
@@ -61,24 +58,36 @@
         
         [Uploader uploadFile:self.document.name data:self.document.data objectId:nil handler:^(NSURLResponse * response, NSData * data, NSError * err) {
             NSInteger status;
-            [APIHandler getResponse:response data:data error:&err status:&status];
+            NSString *info = [APIHandler getResponse:response data:data error:&err status:&status];
             
             if(status == RESPONSE_SUCCESS) {
+                if (![info isEqualToString:EMPTY_ID]) {
+                    self.document.objectId = info;
+                }
+                
+                [Document addToInbox:self.document];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self performSegueWithIdentifier:UPLOAD_TO_INBOX_SEGUE sender:self];
-//                    [UIHelper switchViewController:self toTab:kInboxTab withSegue:RESET_SCANNER_FROM_BO_SELECT_SEGUE animated:YES];
+                    [weakSelf.uploadIndicator stopAnimating];
+                    [self resetScanner];
                 });
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf.uploadIndicator stopAnimating];
                     [UIHelper showInfo:@"Failed to upload picture to Inbox!" withStatus:kFailure];
                 });
             }
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.uploadIndicator stopAnimating];
-            });
         }];
     }
+}
+
+// private
+- (void)resetScanner {
+    ScannerViewController *scannerVC = self.navigationController.childViewControllers[0];
+    [self.navigationController popToRootViewControllerAnimated:NO];
+    
+    [[ActionMenuViewController sharedInstance] performSegueForObject:self.document];
+    [scannerVC disappear];
+    [scannerVC reset];
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -98,8 +107,6 @@
             [segue.destinationViewController setVendors:[Vendor list]];
         } else if ([segue.identifier isEqualToString:ATTACH_TO_EXISTING_CUSTOMER_SEGUE]) {
             [segue.destinationViewController setCustomers:[Customer list]];
-        } else if ([segue.identifier isEqualToString:ATTACH_TO_EXISTING_ITEM_SEGUE]) {
-            [segue.destinationViewController setItems:[Item list]];
         }
     }
 }
@@ -117,7 +124,6 @@
 {
     [super viewDidLoad];
     
-    self.navigationItem.rightBarButtonItem.customView = self.uploadIndicator;
     self.uploadIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.uploadIndicator.hidesWhenStopped = YES;
     [self.uploadIndicator stopAnimating];
@@ -149,14 +155,14 @@
             return 2;
             break;
         case 1:
-            return 3;
+            return 2;
             break;
         case 2:
-            if (self.document.objectId) {
+//            if (self.document.objectId) {
                 return 1;
-            } else {
-                return 2;
-            }
+//            } else {
+//                return 2;
+//            }
             break;
     }
     return 0;
@@ -165,8 +171,11 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 2 && indexPath.row == 1) {
+    if (indexPath.section == 2 && indexPath.row == 0) {
         [self uploadToInbox:self];
+        
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        cell.accessoryView = self.uploadIndicator;
     }
 }
 

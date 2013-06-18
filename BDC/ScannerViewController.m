@@ -43,6 +43,7 @@ enum PhotoSourceType {
 - (void)reset {
     self.fileName.text = nil;
     self.preview.image = nil;
+    self.submit.hidden = YES;
 }
 
 - (NSString *)autoFillPhotoName {

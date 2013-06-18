@@ -17,11 +17,18 @@
 @synthesize document;
 @synthesize createNewSegue;
 @synthesize listViewDelegate;
+@synthesize lastSelected;
+@synthesize activityIndicator;
 
 
 - (void)navigateDone {}
 
-- (void)navigateAttach {}
+- (void)navigateAttach {
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:self.lastSelected];
+    cell.accessoryView = self.activityIndicator;
+    self.activityIndicator.hidden = NO;
+    [self.activityIndicator startAnimating];
+}
 
 - (void)navigateCancel {
     if ([self tryTap]) {
@@ -33,6 +40,10 @@
     [super viewDidLoad];
     
     self.listViewDelegate = self;
+    
+    self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    self.activityIndicator.hidesWhenStopped = YES;
+    [self.activityIndicator stopAnimating];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -79,6 +90,7 @@
     [Document removeFromInbox:self.document];
     
     dispatch_async(dispatch_get_main_queue(), ^{
+        [self.activityIndicator stopAnimating];
         [self performSegueForObject:obj];
     });
     
@@ -86,6 +98,7 @@
 }
 
 - (void)handleAttachFailure:(NSError *)err forObject:(BDCBusinessObject *)obj {
+    [self.activityIndicator stopAnimating];
     [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
     NSLog(@"Failed to associate document %@ with %@: %@", self.document.name, obj.name, [err localizedDescription]);
 }

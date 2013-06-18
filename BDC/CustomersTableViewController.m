@@ -19,13 +19,10 @@
 
 @interface CustomersTableViewController () <CustomerListDelegate, ListViewDelegate>
 
-@property (nonatomic, strong) NSIndexPath *lastSelected;
-
 @end
 
 @implementation CustomersTableViewController
 
-@synthesize lastSelected;
 @synthesize customers = _customers;
 @synthesize selectDelegate;
 
@@ -70,14 +67,9 @@
 }
 
 - (void)navigateAttach {
+    [super navigateAttach];
     [self attachDocumentForObject:self.customers[self.lastSelected.row]];
 }
-
-//- (void)navigateCancel {
-//    if ([self tryTap]) {
-//        [self.navigationController popViewControllerAnimated:YES];
-//    }
-//}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -246,7 +238,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+{    
     if (self.mode == kSelectMode || self.mode == kAttachMode) {
         if (self.lastSelected != nil) {
             UITableViewCell *oldRow = [self.tableView cellForRowAtIndexPath:self.lastSelected];

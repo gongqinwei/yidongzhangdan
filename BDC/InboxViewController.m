@@ -58,12 +58,6 @@
     [Document setDocumentListDelegate:self];
     
     self.dataArray = [Document listForCategory:FILE_CATEGORY_DOCUMENT];
-
-//    if (self.dataArray) {
-//        for (Document *doc in self.dataArray) {
-//            [self downloadDocument:doc];
-//        }
-//    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -104,7 +98,9 @@
     cell.selectDelegate = self;
     [cell toggleInfoDisplay:YES];
     
-    [self downloadDocument:doc];
+    if (!doc.data) {
+        [self downloadDocument:doc];
+    }
     
     return cell;
 }
@@ -142,8 +138,20 @@
 
 - (void)didGetDocuments {
     self.dataArray = [Document listForCategory:FILE_CATEGORY_DOCUMENT];
-    [self changeCurrentDocumentTo:nil];
-    [super endRefreshView];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self changeCurrentDocumentTo:nil];
+        [super endRefreshView];
+        [self.previewController reloadData];
+    });
+}
+
+- (void)didAddDocument:(Document *)doc {
+    self.dataArray = [Document listForCategory:FILE_CATEGORY_DOCUMENT];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self changeCurrentDocumentTo:nil];
+        [self.collectionView insertItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]];
+        [self.previewController reloadData];
+    });
 }
 
 #pragma mark - Document Cell delegate

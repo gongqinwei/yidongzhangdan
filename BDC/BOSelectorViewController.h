@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SlidingTableViewController.h"
 #import "Document.h"
 
-@interface BOSelectorViewController : UITableViewController
+@interface BOSelectorViewController : SlidingTableViewController
 
 @property (nonatomic, strong) Document *document;
 //@property (nonatomic, strong) NSString *photoName;

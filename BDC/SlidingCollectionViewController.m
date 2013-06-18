@@ -24,11 +24,9 @@
 }
 
 - (void)endRefreshView {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.collectionView reloadData];
-        self.refreshControl.attributedTitle = LAST_REFRESHED;
-        [self.refreshControl endRefreshing];
-    });
+    [self.collectionView reloadData];
+    self.refreshControl.attributedTitle = LAST_REFRESHED;
+    [self.refreshControl endRefreshing];
 }
 
 - (void)downloadDocument:(Document *)doc {

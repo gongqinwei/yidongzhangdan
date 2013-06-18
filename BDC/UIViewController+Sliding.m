@@ -181,8 +181,8 @@ static char const * const TapRecognizerKey = "tapRecognizer";
     topVC.navigationItem.hidesBackButton = NO;
     
     [self.navigationController removeFromParentViewController];
-    [self.slidingOutDelegate viewDidSlideOut];
     [UIHelper removeShaddowForView:self.navigationController.view];
+    [self.slidingOutDelegate viewDidSlideOut];
 }
 
 
