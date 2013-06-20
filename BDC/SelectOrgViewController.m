@@ -158,9 +158,6 @@
         selectedOrg = [self.orgs objectAtIndex:indexPath.row];
     }
     
-    // persist
-    [Organization selectOrg:selectedOrg];
-    
     NSMutableDictionary *info = [NSMutableDictionary dictionary];
 
     [info setObject:ORG_ID forKey:selectedOrg.objectId];
@@ -170,29 +167,39 @@
     __weak SelectOrgViewController *weakSelf = self;
     
     [APIHandler asyncCallWithAction:LOGIN_API Info:info AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
-        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [weakSelf.indicator stopAnimating];
-//            weakSelf.indicator.hidden = YES;
-//        });
-        
         NSInteger status;
         NSDictionary *responseData = [APIHandler getResponse:response data:data error:&err status:&status];
         
         if (status == RESPONSE_SUCCESS) {
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                weakSelf.warning.hidden = true;
-//            });
-            
             // set cookie for session id
             NSString *sessionId = [responseData objectForKey:SESSION_ID_KEY];
-            [Util setSession:sessionId];
             
-            // redirect
-            dispatch_async(dispatch_get_main_queue(), ^{
-                weakSelf.searchDisplayController.active = NO;
-                [weakSelf performSegueWithIdentifier:@"GoToOrg" sender:weakSelf];
-            });
+            // randomly pick a cheap api to test API accessibility
+            NSString *action = [LIST_API stringByAppendingString: ACCOUNT_API];
+            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, LIST_INACTIVE_FILTER, nil];
+            
+            [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+                NSInteger response_status;
+                [APIHandler getResponse:response data:data error:&err status:&response_status];
+                                
+                if(response_status == RESPONSE_SUCCESS) {
+                    // persist
+                    [Organization selectOrg:selectedOrg];
+                    [Util setSession:sessionId];
+                    
+                    // redirect
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        weakSelf.searchDisplayController.active = NO;
+                        [weakSelf performSegueWithIdentifier:@"GoToOrg" sender:weakSelf];
+                    });
+                } else if (response_status == RESPONSE_TIMEOUT) {
+                    [UIHelper showInfo:SysTimeOut withStatus:kError];
+                    NSLog(SysTimeOut);
+                } else {
+                    [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+                    NSLog(@"%@", [err localizedDescription]);
+                }
+            }];
         } else {
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             NSLog(@"%@", [err localizedDescription]);
