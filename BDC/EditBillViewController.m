@@ -68,6 +68,7 @@ typedef enum {
 #define DELETE_BILL_ALERT_TAG           1
 #define REMOVE_ATTACHMENT_ALERT_TAG     2
 
+
 @interface EditBillViewController () <VendorSelectDelegate, ScannerDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
 
 @property (nonatomic, strong) NSDecimalNumber *totalAmount;
@@ -195,22 +196,29 @@ typedef enum {
 }
 
 - (void)setBillActions {
-    if (self.mode == kViewMode || self.isActive) {
+    if (self.mode == kViewMode) {
         self.crudActions = nil;
         
-        if (![((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]) {
+        if (((Bill *)self.shaddowBusObj).paymentStatus && ![((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]) {
             self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, nil];
         } else {
-            self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
+            if (self.isActive) {
+                self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
+            } else {
+                self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
+            }
+            
         }
         
-        //TODO: also allow pay if no need for approval
-        if (([((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_UNASSIGNED]
-             || [((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_APPROVED])
-            && ([((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]
-                || [((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_PARTIAL]))
-        {
-            self.crudActions = [@[ACTION_PAY] arrayByAddingObjectsFromArray:self.crudActions];
+        if (self.isActive) {
+            //TODO: also allow pay if no need for approval
+            if (([((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_UNASSIGNED]
+                 || [((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_APPROVED])
+                && ([((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]
+                    || [((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_PARTIAL]))
+            {
+                self.crudActions = [@[ACTION_PAY] arrayByAddingObjectsFromArray:self.crudActions];
+            }
         }
     }
 }
@@ -798,11 +806,15 @@ typedef enum {
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     self.currentField = textField;
+    
+    [super textFieldDidBeginEditing:textField];
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     [self textFieldDoneEditing:textField];
     self.currentField = nil;
+    
+    [super textFieldDidEndEditing:textField];
 }
 
 #pragma mark - Date Picker target action
@@ -935,11 +947,5 @@ typedef enum {
     }
 }
 
-#pragma mark - Model Delegate methods
-
-- (void)didCreateObject:(NSString *)newObjectId {
-    self.busObj.objectId = newObjectId;
-    self.shaddowBusObj.objectId = newObjectId;
-}
 
 @end

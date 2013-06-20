@@ -50,5 +50,8 @@
 - (void)handleRemovalForDocument:(Document *)doc;
 - (NSIndexPath *)getAttachmentPath;
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField;
+- (void)textFieldDidEndEditing:(UITextField *)textField;
+
 
 @end

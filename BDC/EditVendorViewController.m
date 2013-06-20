@@ -679,6 +679,8 @@ enum VendorInfoType {
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     [self textFieldDoneEditing:textField];
+    
+    [super textFieldDidEndEditing:textField];
 }
 
 #pragma mark - UIPickerView Datascource

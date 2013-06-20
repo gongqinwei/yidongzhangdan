@@ -886,6 +886,8 @@ typedef enum {
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     [self textFieldDoneEditing:textField];
+    
+    [super textFieldDidEndEditing:textField];
 }
 
 #pragma mark - Date Picker target action

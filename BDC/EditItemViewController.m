@@ -241,6 +241,7 @@ enum ItemInfoType {
             } else {
                 UILabel *dollarLabel = [[UILabel alloc] initWithFrame:DOLLAR_RECT];
                 dollarLabel.text = @"$";
+                dollarLabel.backgroundColor = [UIColor clearColor];
                 [cell addSubview:dollarLabel];
                 
                 if (self.shaddowBusObj != nil) {
@@ -332,6 +333,8 @@ enum ItemInfoType {
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     [self textFieldDoneEditing:textField];
+    
+    [super textFieldDidEndEditing:textField];
 }
 
 #pragma mark - UIPickerView Datascource

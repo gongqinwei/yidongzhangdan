@@ -180,8 +180,8 @@ static NSMutableArray *inactiveBills = nil;
                 [weakSelf.editDelegate didUpdateObject];
                 [weakSelf.detailsDelegate didUpdateObject];
             } else {
-                [weakSelf.editDelegate didCreateObject:billId];
                 [weakSelf read];    //to get default approval info and line item id's
+                [weakSelf.editDelegate didCreateObject:billId];
             }
         } else {
             [weakSelf.editDelegate failedToSaveObject];

@@ -21,6 +21,13 @@
 #define IMG_HEIGHT                      IMG_WIDTH - IMG_PADDING
 #define NUM_ATTACHMENT_PER_PAGE         4
 
+static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
+static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
+static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
+// adjust this following value to account for the height of your toolbar, too
+static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 216;
+static double animatedDistance = 0;
+
 
 @interface SlidingDetailsTableViewController()
 
@@ -61,6 +68,12 @@
         self.isActive = self.busObj.isActive;
         self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
         self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
+        if (self.isActive) {
+            self.actionMenuVC.crudActions = self.crudActions;
+        } else {
+            self.actionMenuVC.crudActions = self.inactiveCrudActions;
+        }
+        [self.actionMenuVC.tableView reloadData];
         
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
         self.navigationItem.rightBarButtonItem.tag = 1;
@@ -726,6 +739,9 @@
 - (void)didCreateObject:(NSString *)newObjectId {
     self.busObj.objectId = newObjectId;
     self.shaddowBusObj.objectId = newObjectId;
+    
+    self.actionMenuVC.actionDelegate = self;
+    
     [self doneSaveObject];
 }
 
@@ -773,6 +789,49 @@
     if (buttonIndex == 1) {
         [self toggleActiveness];
     }
+}
+
+#pragma mark - Text Field delegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {    
+    CGRect textFieldRect = [self.view convertRect:textField.bounds fromView:textField];
+    CGRect viewRect = [self.view convertRect:self.view.bounds fromView:self.view];
+    CGFloat midline = textFieldRect.origin.y + 0.5 * textFieldRect.size.height;
+    CGFloat numerator = midline - viewRect.origin.y - MINIMUM_SCROLL_FRACTION * viewRect.size.height;
+    CGFloat denominator = (MAXIMUM_SCROLL_FRACTION - MINIMUM_SCROLL_FRACTION) * viewRect.size.height;
+    CGFloat heightFraction = numerator / denominator;
+    
+    if (heightFraction < 0.0) {
+        heightFraction = 0.0;
+    }else if (heightFraction > 1.0) {
+        heightFraction = 1.0;
+    }
+    
+    animatedDistance = floor(PORTRAIT_KEYBOARD_HEIGHT * heightFraction);
+    
+    CGRect viewFrame = self.view.frame;
+    viewFrame.origin.y -= animatedDistance;
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];
+    
+    [self.view setFrame:viewFrame];
+    
+    [UIView commitAnimations];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    CGRect viewFrame = self.view.frame;
+    viewFrame.origin.y += animatedDistance;
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];
+    
+    [self.view setFrame:viewFrame];
+    
+    [UIView commitAnimations];
 }
 
 #pragma mark - Scan View delegate

@@ -310,7 +310,6 @@ static ActionMenuViewController * _sharedInstance = nil;
                 
                 if ([((NSArray *)[BankAccount list]) count]) {
                     Bill *bill = (Bill *)((EditBillViewController *)self.targetViewController).busObj;
-                    NSLog(@"bill amt: %@; paid: %@", bill.amount, bill.paidAmount);
                     NSDecimalNumber *payAmount = [bill.amount decimalNumberBySubtracting:bill.paidAmount];
                     self.payAmountLabel.text = [Util formatCurrency:payAmount];
                     self.payAmountLabel.textColor = [UIColor whiteColor];
