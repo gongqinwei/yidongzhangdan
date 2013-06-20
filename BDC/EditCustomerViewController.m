@@ -243,6 +243,10 @@ enum CustomerInfoType {
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.activityIndicator.hidesWhenStopped = YES;
     
+    [self formatAddr];
+}
+
+- (void)formatAddr {
     self.address = [NSMutableString string];
     self.numOfLinesInAddr = [((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj) formatAddress:self.address];
 }
@@ -385,8 +389,6 @@ enum CustomerInfoType {
 
             if (self.mode == kViewMode) {
                 cell.textLabel.text = @"Address";
-                NSLog(@"addr: %@", self.address);
-                NSLog(@"lines: %d", self.numOfLinesInAddr);
                 cell.detailTextLabel.text = self.address;
                 cell.detailTextLabel.numberOfLines = self.numOfLinesInAddr;
                 cell.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
@@ -515,7 +517,6 @@ enum CustomerInfoType {
                             [cell addSubview:self.customerZipTextField];
                         }
                         break;
-
                     default:
                         break;
                 }
@@ -683,9 +684,9 @@ enum CustomerInfoType {
 }
 
 - (NSInteger) pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    if (pickerView.tag == kState * PICKER_TAG_BASE) {
+    if (pickerView.tag == (kState + CUSTOMER_ADDR_TAG_OFFSET) * PICKER_TAG_BASE) {
         return [US_STATES count] + 1;
-    } else if (pickerView.tag == kCountry * PICKER_TAG_BASE) {
+    } else if (pickerView.tag == (kCountry + CUSTOMER_ADDR_TAG_OFFSET) * PICKER_TAG_BASE) {
         return [COUNTRIES count] + 1;
     } else {
         return 0;
@@ -696,9 +697,9 @@ enum CustomerInfoType {
     if (row == 0) {
         return SELECT_ONE;
     }
-    if (pickerView.tag == kState * PICKER_TAG_BASE) {
+    if (pickerView.tag == (kState + CUSTOMER_ADDR_TAG_OFFSET) * PICKER_TAG_BASE) {
         return [US_STATES objectAtIndex: row - 1];
-    } else if (pickerView.tag == kCountry * PICKER_TAG_BASE) {
+    } else if (pickerView.tag == (kCountry + CUSTOMER_ADDR_TAG_OFFSET) * PICKER_TAG_BASE) {
         return [COUNTRIES objectAtIndex: row - 1];
     } else {
         return nil;
@@ -710,7 +711,7 @@ enum CustomerInfoType {
 - (void) pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     Customer *shaddowCustomer = (Customer *)self.shaddowBusObj;
     
-    if (pickerView.tag == kState * PICKER_TAG_BASE) {
+    if (pickerView.tag == (kState + CUSTOMER_ADDR_TAG_OFFSET) * PICKER_TAG_BASE) {
         if (row == 0) {
             self.customerStateTextField.text = @"";
             shaddowCustomer.state = [NSNumber numberWithInt:INVALID_OPTION];
@@ -718,7 +719,7 @@ enum CustomerInfoType {
             self.customerStateTextField.text = [US_STATES objectAtIndex: row - 1];
             shaddowCustomer.state = [NSNumber numberWithInt: row - 1];
         }
-    } else if (pickerView.tag == kCountry * PICKER_TAG_BASE) {
+    } else if (pickerView.tag == (kCountry + CUSTOMER_ADDR_TAG_OFFSET) * PICKER_TAG_BASE) {
         if (row == 0) {
             self.customerCountryTextField.text = @"";
             shaddowCustomer.country = INVALID_OPTION;
@@ -727,7 +728,7 @@ enum CustomerInfoType {
             shaddowCustomer.country = row - 1;
         }
         
-        if (row == 1) {  //USA
+        if (row == 1 || row == US_FULL_INDEX + 1) {  //USA
             self.customerStateTextField.inputView = self.customerStatePickerView;
             self.customerStateTextField.rightViewMode = UITextFieldViewModeAlways;
             if (![shaddowCustomer.state isKindOfClass:[NSNumber class]]) {
@@ -748,6 +749,11 @@ enum CustomerInfoType {
 }
 
 #pragma mark - Model delegate
+
+- (void)didReadObject {
+    [self formatAddr];
+    [super didReadObject];
+}
 
 - (void)doneSaveObject {
     [super doneSaveObject];

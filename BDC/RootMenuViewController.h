@@ -36,6 +36,30 @@
                             [NSArray arrayWithObjects:MENU_ORGS, MENU_LOGOUT,                           CATEGORY_MORE, nil], \
                         nil]
 
+enum RootMenuSections {
+    kRootProfile,
+    kRootTool,
+    kRootAR,
+    kRootAP,
+    kRootMore
+};
+
+enum RootToolItems {
+    kToolScanner,
+    kToolInbox
+};
+
+enum RootARItems {
+    kARInvoice,
+    kARCustomer,
+    kARItem
+};
+
+enum RootAPItems {
+    kAPBill,
+    kAPVendor
+};
+
 @interface RootMenuViewController : UIViewController <SlideDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *menuTableView;

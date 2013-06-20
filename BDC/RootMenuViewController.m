@@ -99,20 +99,20 @@ static RootMenuViewController * _sharedInstance = nil;
     self.currVC.navigation = navVC;
     self.currVC.navigationId = startingVCId;
     
-    NSIndexPath * initIndexPath = [NSIndexPath indexPathForRow:0 inSection:2];
+    NSIndexPath * initIndexPath = [NSIndexPath indexPathForRow:kARInvoice inSection:kRootAR];
     [self.menuTableView selectRowAtIndexPath:initIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
             
 //    [Invoice setARDelegate:(AROverViewController *)self.currVC];  //assumption: currVC is AROverViewController.
     
-    [Invoice retrieveListForActive:YES];
+    [Invoice retrieveListForActive:YES reload:YES];
+    [Bill retrieveListForActive:YES reload:YES];
     [Customer retrieveList];
-    [Item retrieveList];
-    
-    [Bill retrieveList];
     [Vendor retrieveList];
-    [ChartOfAccount retrieveList];
-    
     [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
+    [Item retrieveList];
+    [ChartOfAccount retrieveList];
+    [Invoice retrieveListForActive:NO reload:NO];
+    [Bill retrieveListForActive:NO reload:NO];
 //    [Document retrieveListForCategory:FILE_CATEGORY_ATTACHMENT];
     
     _sharedInstance = self;
@@ -189,7 +189,6 @@ static RootMenuViewController * _sharedInstance = nil;
         
         UIView *bgColorView = [[UIView alloc] init];
         [bgColorView setBackgroundColor:[UIColor colorWithRed:100/255.f green:100/255.f blue:100/255.f alpha:0.75]];
-//        [cell setSelectedBackgroundView:bgColorView];
         cell.selectedBackgroundView = bgColorView;
     }
     

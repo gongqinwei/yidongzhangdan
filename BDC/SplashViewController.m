@@ -11,6 +11,7 @@
 #import "Organization.h"
 #import "APIHandler.h"
 
+
 @interface SplashViewController () <OrgDelegate>
 
 @property (nonatomic, strong) NSString *username;
@@ -80,6 +81,7 @@
         [APIHandler asyncCallWithAction:LOGIN_API Info:info AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
             NSInteger status;
             NSDictionary *responseData = [APIHandler getResponse:response data:data error:&err status:&status];
+            
             if (status == RESPONSE_SUCCESS) {
                 // set cookie for session id
                 NSString *sessionId = [responseData objectForKey:SESSION_ID_KEY];

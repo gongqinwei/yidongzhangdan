@@ -13,10 +13,5 @@
 @interface BOSelectorViewController : SlidingTableViewController
 
 @property (nonatomic, strong) Document *document;
-//@property (nonatomic, strong) NSString *photoName;
-//@property (nonatomic, strong) NSData *photoData;
-
-//@property (weak, nonatomic) IBOutlet UILabel *uploadError;
-//@property (weak, nonatomic) IBOutlet UILabel *photoNameLabel;
 
 @end

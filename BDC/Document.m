@@ -93,7 +93,7 @@ static id <DocumentListDelegate> AttachmentListDelegate = nil;
                 doc.objectId = [dict objectForKey:ID];
                 doc.name = [dict objectForKey:@"fileName"];
                 doc.fileUrl = [dict objectForKey:@"fileUrl"];
-                doc.createdDate = [Util getDate:[[dict objectForKey:@"createdDate"] substringToIndex:10] format:nil];
+                doc.createdDate = [Util getDate:[dict objectForKey:@"createdDate"] format:@"MM/dd/yy hh:mm a"];
                 
                 if ([category isEqualToString:FILE_CATEGORY_ATTACHMENT]) {
                     doc.associatedTo = [dict objectForKey:@"busObject"];

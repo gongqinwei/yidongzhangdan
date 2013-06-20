@@ -67,7 +67,7 @@ static NSMutableArray *inactiveBills = nil;
     return self;
 }
 
-- (void)populateBillWithInfo:(NSDictionary *)dict {
+- (void)populateObjectWithInfo:(NSDictionary *)dict {
     self.objectId = [dict objectForKey:ID];
     self.invoiceNumber = [dict objectForKey:BILL_NUMBER];
     self.amount = [Util id2Decimal:[dict objectForKey:BILL_AMOUNT]];
@@ -90,28 +90,28 @@ static NSMutableArray *inactiveBills = nil;
     }
 }
 
-- (void)readBill {
-    NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, READ, BILL_API];
-    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
-    
-    __weak Bill *weakSelf = self;
-    
-    [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
-        NSInteger response_status;
-        NSDictionary *dict = [APIHandler getResponse:response data:data error:&err status:&response_status];
-        
-        if(response_status == RESPONSE_SUCCESS) {
-            [self populateBillWithInfo:dict];
-            [weakSelf.editDelegate didUpdateObject];
-//            [ListDelegate didGetBills:<#(NSArray *)#>];
-        } else {
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"Failed to read bill %@: %@", self.objectId, [err localizedDescription]);
-        }
-    }];
-
-}
+//- (void)read {
+//    NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, READ, BILL_API];
+//    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
+//    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+//    
+//    __weak Bill *weakSelf = self;
+//    
+//    [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+//        NSInteger response_status;
+//        NSDictionary *dict = [APIHandler getResponse:response data:data error:&err status:&response_status];
+//        
+//        if(response_status == RESPONSE_SUCCESS) {
+//            [self populateObjectWithInfo:dict];
+//            [weakSelf.editDelegate didUpdateObject];
+////            [ListDelegate didGetBills:<#(NSArray *)#>];
+//        } else {
+//            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+//            NSLog(@"Failed to read bill %@: %@", self.objectId, [err localizedDescription]);
+//        }
+//    }];
+//
+//}
 
 - (void)saveFor:(NSString *)action {
     NSString *theAction = [NSString stringWithString:action];
@@ -181,7 +181,7 @@ static NSMutableArray *inactiveBills = nil;
                 [weakSelf.detailsDelegate didUpdateObject];
             } else {
                 [weakSelf.editDelegate didCreateObject:billId];
-                [weakSelf readBill];
+                [weakSelf read];    //to get default approval info and line item id's
             }
         } else {
             [weakSelf.editDelegate failedToSaveObject];
@@ -284,7 +284,7 @@ static NSMutableArray *inactiveBills = nil;
                 
                 billArr = bills;
             } else {
-                if (bills) {
+                if (inactiveBills) {
                     [inactiveBills removeAllObjects];
                 } else {
                     inactiveBills = [NSMutableArray array];
@@ -296,28 +296,7 @@ static NSMutableArray *inactiveBills = nil;
             for (id item in jsonBills) {
                 NSDictionary *dict = (NSDictionary*)item;
                 Bill *bill = [[Bill alloc] init];
-                [bill populateBillWithInfo:dict];
-                
-//                bill.objectId = [dict objectForKey:ID];
-//                bill.invoiceNumber = [dict objectForKey:BILL_NUMBER];
-//                bill.amount = [Util id2Decimal:[dict objectForKey:BILL_AMOUNT]];
-//                bill.paidAmount = [Util id2Decimal:[dict objectForKey:BILL_AMOUNT_PAID]];
-//                bill.vendorId = [dict objectForKey:BILL_VENDOR_ID];
-//                bill.invoiceDate = [Util getDate:[dict objectForKey:BILL_DATE] format:nil];
-//                bill.dueDate = [Util getDate:[dict objectForKey:BILL_DUE_DATE] format:nil];
-//                bill.approvalStatus = [dict objectForKey:BILL_APPROVAL_STATUS];
-//                bill.paymentStatus = [dict objectForKey:BILL_PAYMENT_STATUS];
-//                bill.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
-//                
-//                bill.lineItems = [NSMutableArray array];
-//                NSArray *jsonItems = [dict objectForKey:BILL_LINE_ITEMS];
-//                for (id lineItem in jsonItems) {
-//                    APLineItem *item = [[APLineItem alloc] init];
-//                    item.objectId = [lineItem objectForKey:ID];
-//                    item.account = [ChartOfAccount objectForKey:[lineItem objectForKey:LINE_ITEM_ACCOUNT]];                    
-//                    item.amount = [Util id2Decimal:[lineItem objectForKey:LINE_ITEM_AMOUNT]];
-//                    [bill.lineItems addObject:item];
-//                }
+                [bill populateObjectWithInfo:dict];
                 
                 [billArr addObject:bill];
             }
@@ -336,6 +315,10 @@ static NSMutableArray *inactiveBills = nil;
             NSLog(@"Failed to retrieve list of bill for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
         }
     }];
+}
+
+- (void)cloneTo:(BDCBusinessObject *)target {
+    [Bill clone:self to:target];
 }
 
 + (void)clone:(Bill *)source to:(Bill *)target {
@@ -367,6 +350,14 @@ static NSMutableArray *inactiveBills = nil;
         for (id item in source.attachments) {
             [target.attachments addObject:item];
         }
+    }
+}
+
+- (void)updateParentList {
+    if (self.isActive) {
+        [Bill retrieveListForActive:YES];
+    } else {
+        [Bill retrieveListForActive:NO];
     }
 }
 

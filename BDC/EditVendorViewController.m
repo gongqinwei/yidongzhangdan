@@ -245,6 +245,10 @@ enum VendorInfoType {
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.activityIndicator.hidesWhenStopped = YES;
     
+    [self formatAddr];
+}
+
+- (void)formatAddr {
     self.address = [NSMutableString string];
     self.numOfLinesInAddr = [((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj) formatAddress:self.address];
 }
@@ -728,7 +732,7 @@ enum VendorInfoType {
             shaddowVendor.country = row - 1;
         }
         
-        if (row == 1) {  //USA
+        if (row == 1 || row == US_FULL_INDEX + 1) {  //USA
             self.vendorStateTextField.inputView = self.vendorStatePickerView;
             self.vendorStateTextField.rightViewMode = UITextFieldViewModeAlways;
             if (![shaddowVendor.state isKindOfClass:[NSNumber class]]) {
@@ -749,6 +753,11 @@ enum VendorInfoType {
 }
 
 #pragma mark - Model delegate
+
+- (void)didReadObject {
+    [self formatAddr];
+    [super didReadObject];
+}
 
 - (void)doneSaveObject {
     [super doneSaveObject];

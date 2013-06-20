@@ -7,6 +7,7 @@
 //
 
 #import "SlidingListTableViewController.h"
+#import "ScannerViewController.h"
 #import "APIHandler.h"
 #import "Uploader.h"
 #import "UIHelper.h"
@@ -14,6 +15,7 @@
 
 @implementation SlidingListTableViewController
 
+@synthesize busObjClass;
 @synthesize document;
 @synthesize createNewSegue;
 @synthesize listViewDelegate;
@@ -44,6 +46,13 @@
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.activityIndicator.hidesWhenStopped = YES;
     [self.activityIndicator stopAnimating];
+    
+    if (self.mode != kSelectMode && self.mode != kAttachMode) {
+        UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
+        [refresh addTarget:self action:@selector(refreshView) forControlEvents:UIControlEventValueChanged];
+        refresh.attributedTitle = PULL_TO_REFRESH;
+        self.refreshControl = refresh;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -75,11 +84,14 @@
 
 // private
 - (void)performSegueForObject:(BDCBusinessObject *)obj {
-    SlidingTableViewController *vc = self.navigationController.childViewControllers[0];
+    UIViewController *vc = self.navigationController.childViewControllers[0];
     [self.navigationController popToRootViewControllerAnimated:NO];
     
     [[ActionMenuViewController sharedInstance] performSegueForObject:obj];
     [vc disappear];
+    if ([vc isKindOfClass:[ScannerViewController class]]) {
+        [((ScannerViewController *)vc) reset];
+    }
 }
 
 - (void)handleAttachSuccess:(NSString *)info forObject:(BDCBusinessObject *)obj {
@@ -160,6 +172,18 @@
     [self.navigationItem setRightBarButtonItem:actionButton];
     
     [self.tableView setEditing:NO animated:YES];
+}
+
+- (void)refreshView {
+    self.refreshControl.attributedTitle = REFRESHING;
+    
+    if (!self.actionMenuVC || !self.actionMenuVC.activenessSwitch || self.actionMenuVC.activenessSwitch.selectedSegmentIndex == 0) {
+        [[self busObjClass] retrieveListForActive:YES];
+    } else {
+        [[self busObjClass] retrieveListForActive:NO];
+    }
+    
+    [self exitEditMode];
 }
 
 #pragma mark - Model Delegate methods

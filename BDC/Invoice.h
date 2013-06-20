@@ -39,6 +39,7 @@
 
 @optional
 - (void)didGetInvoices:(NSArray *)invoiceList;
+- (void)didReadAnInvoice;
 - (void)failedToGetInvoices;
 
 @end

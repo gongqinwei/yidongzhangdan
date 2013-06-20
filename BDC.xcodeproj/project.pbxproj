@@ -427,15 +427,15 @@
 			isa = PBXGroup;
 			children = (
 				0ED59D4D162DFD4E008DE1C9 /* SlidingViewController.h */,
-				0EEB9F741756B26B00AAAC35 /* SlidingCollectionViewController.m */,
+				0ED59D4E162DFD4E008DE1C9 /* SlidingViewController.m */,
 				0EE2C137162D231600BB00DA /* SlidingTableViewController.h */,
 				0EE2C138162D231600BB00DA /* SlidingTableViewController.m */,
 				0E847CEC171785C300C7FA53 /* SlidingListTableViewController.h */,
 				0E847CED171785C300C7FA53 /* SlidingListTableViewController.m */,
 				0E847CEF1717862A00C7FA53 /* SlidingDetailsTableViewController.h */,
 				0E847CF01717862A00C7FA53 /* SlidingDetailsTableViewController.m */,
-				0ED59D4E162DFD4E008DE1C9 /* SlidingViewController.m */,
 				0EEB9F731756B26B00AAAC35 /* SlidingCollectionViewController.h */,
+				0EEB9F741756B26B00AAAC35 /* SlidingCollectionViewController.m */,
 			);
 			name = Sliding;
 			sourceTree = "<group>";

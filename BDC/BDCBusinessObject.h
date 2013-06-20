@@ -12,8 +12,10 @@
 
 @optional
 - (void)didCreateObject:(NSString *)newObjectId;
+- (void)didReadObject;
 - (void)didUpdateObject;
 - (void)didDeleteObject;
+- (void)failedToReadObject;
 - (void)failedToSaveObject;
 
 @end
@@ -28,6 +30,7 @@
 @property (nonatomic, weak) id<BusObjectDelegate> editDelegate;
 
 - (void)create;
+- (void)read;
 - (void)update;
 - (void)remove;
 - (void)revive;
@@ -36,6 +39,9 @@
 - (void)toggleActive:(Boolean)isActive;
 
 - (void)saveFor:(NSString *)action;
+- (void)populateObjectWithInfo:(NSDictionary *)dict;
+- (void)cloneTo:(BDCBusinessObject *)target;
+- (void)updateParentList;
 
 + (void)retrieveList;
 + (void)retrieveListForActive:(BOOL)isActive;

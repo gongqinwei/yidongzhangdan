@@ -111,7 +111,11 @@
 
 + (NSDecimalNumber *)parseCurrency:(NSString *)str {
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+    if ([[Util trim:str] hasPrefix:@"$"]) {
+        [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+    } else {
+        [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    }
     
     NSNumber *number = [formatter numberFromString:str];
     return [NSDecimalNumber decimalNumberWithDecimal:[number decimalValue]];

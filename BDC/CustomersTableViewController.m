@@ -21,10 +21,15 @@
 
 @end
 
+
 @implementation CustomersTableViewController
 
 @synthesize customers = _customers;
 @synthesize selectDelegate;
+
+- (Class)busObjClass {
+    return [Customer class];
+}
 
 - (void)setCustomers:(NSMutableArray *)customers {
     _customers = customers;
@@ -104,12 +109,7 @@
     [Customer setListDelegate:self];
 //    [Customer retrieveList];
     
-    if (self.mode != kSelectMode && self.mode != kAttachMode) {        
-        UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
-        [refresh addTarget:self action:@selector(refreshView) forControlEvents:UIControlEventValueChanged];
-        refresh.attributedTitle = PULL_TO_REFRESH;
-        self.refreshControl = refresh;
-        
+    if (self.mode != kSelectMode && self.mode != kAttachMode) {
         self.sortAttributes = [NSArray array];
         self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
         self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
@@ -118,13 +118,6 @@
     }
     
     self.createNewSegue = CUSTOMER_CREATE_CUSTOMER_SEGUE;
-}
-
-- (void)refreshView {
-    self.refreshControl.attributedTitle = REFRESHING;
-    [Customer retrieveList];
-
-    [self exitEditMode];
 }
 
 - (void)viewDidUnload
@@ -276,9 +269,21 @@
 
 #pragma mark - model delegate
 
+- (void)didReadObject {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
+}
+
 - (void)didGetCustomers {
     self.tableView.editing = NO;
-    self.customers = [Customer listOrderBy:CUSTOMER_NAME ascending:self.isAsc active:self.isActive];
+    
+    if (!self.actionMenuVC) {
+        self.customers = [Customer listOrderBy:CUSTOMER_NAME ascending:self.isAsc active:self.isActive];
+    } else {
+        self.customers = [Customer listOrderBy:[self.actionMenuVC.sortAttributes objectAtIndex:self.actionMenuVC.lastSortAttribute.row] ascending:self.actionMenuVC.ascSwitch.on active:self.actionMenuVC.activenessSwitch.selectedSegmentIndex == 0];
+    }
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [self restoreEditButton:self.navigationItem.rightBarButtonItem];
         

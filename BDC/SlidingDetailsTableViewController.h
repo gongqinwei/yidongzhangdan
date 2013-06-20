@@ -12,13 +12,6 @@
 #import "Document.h"
 #import <QuickLook/QuickLook.h>
 
-//@protocol DetailsViewDelegate <NSObject>
-//@optional
-//- (void)didUpdateObject;
-//- (void)didDeleteObject;
-//- (void)failedToSaveObject;
-//@end
-
 
 @interface SlidingDetailsTableViewController : SlidingTableViewController <BusObjectDelegate, ScannerDelegate, UIAlertViewDelegate, UIScrollViewDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
 

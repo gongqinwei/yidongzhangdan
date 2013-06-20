@@ -133,8 +133,8 @@ static NSMutableDictionary *inactiveItems = nil;
     NSArray *itemArr = [itemList allValues];
     
     NSSortDescriptor *firstOrder = [[NSSortDescriptor alloc] initWithKey:ITEM_NAME ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
-    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:ID ascending:NO];
-    itemArr = [itemArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, secondOrder, nil]];
+//    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:ID ascending:NO];
+    itemArr = [itemArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, nil]];
     
     for (Item *item in itemArr) {
         item.qty = 1;
@@ -165,6 +165,14 @@ static NSMutableDictionary *inactiveItems = nil;
         item = [inactiveItems objectForKey:itemId];
     }
     return item;
+}
+
+- (void)populateObjectWithInfo:(NSDictionary *)dict {
+    self.objectId = [dict objectForKey:ID];
+    self.name = [dict objectForKey:ITEM_NAME];
+    self.type = [ItemTypes indexOfObject:[NSNumber numberWithInt: [[dict objectForKey:ITEM_TYPE] intValue]]];
+    self.price = [Util id2Decimal:[dict objectForKey:ITEM_PRICE]];
+    self.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
 }
 
 + (void)retrieveListForActive:(BOOL)isActive {
@@ -203,11 +211,7 @@ static NSMutableDictionary *inactiveItems = nil;
             for (id item in jsonItems) {
                 NSDictionary *dict = (NSDictionary*)item;
                 Item *item = [[Item alloc] init];
-                item.objectId = [dict objectForKey:ID];
-                item.name = [dict objectForKey:ITEM_NAME];
-                item.type = [ItemTypes indexOfObject:[NSNumber numberWithInt: [[dict objectForKey:ITEM_TYPE] intValue]]];
-                item.price = [Util id2Decimal:[dict objectForKey:ITEM_PRICE]];
-                item.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
+                [item populateObjectWithInfo:dict];
                 
                 [itemDict setObject:item forKey:item.objectId];
             }
@@ -226,6 +230,10 @@ static NSMutableDictionary *inactiveItems = nil;
     }];
 }
 
+- (void)cloneTo:(BDCBusinessObject *)target {
+    [Item clone:self to:target];
+}
+
 + (void)clone:(Item *)source to:(Item *)target {
     [super clone:source to:target];
     
@@ -236,5 +244,10 @@ static NSMutableDictionary *inactiveItems = nil;
     target.editDelegate = source.editDelegate;
 //    target.editInvoiceDelegate = source.editInvoiceDelegate;
 }
+
+- (void)updateParentList {
+    [ListDelegate didReadObject];
+}
+
 
 @end

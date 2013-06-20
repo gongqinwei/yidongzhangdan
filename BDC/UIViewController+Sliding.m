@@ -210,16 +210,11 @@ static char const * const TapRecognizerKey = "tapRecognizer";
     }];
 }
 
-- (void)enterEditMode {
-//    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(exitEditMode)];
-//    [self.navigationItem setRightBarButtonItem:doneButton];
-}
+- (void)enterEditMode {}
 
-- (void)exitEditMode {
-//    UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
-//    actionButton.tag = 1;
-//    [self.navigationItem setRightBarButtonItem:actionButton];
-}
+- (void)exitEditMode {}
+
+- (void)refreshView {}
 
 #pragma mark - Sliding Table View Controller delegate
 

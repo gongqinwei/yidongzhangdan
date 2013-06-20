@@ -98,6 +98,10 @@
 @synthesize billListsCopy;
 
 
+- (Class)busObjClass {
+    return [Bill class];
+}
+
 - (void)setBills:(NSArray *)bills {
     _bills = [NSMutableArray arrayWithArray:bills];
 
@@ -157,12 +161,7 @@
     [Bill setListDelegate:self];
 //    [Bill retrieveListForActive:YES];
     
-    if (self.mode != kAttachMode) {        
-        UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
-        [refresh addTarget:self action:@selector(refreshView) forControlEvents:UIControlEventValueChanged];
-        refresh.attributedTitle = PULL_TO_REFRESH;
-        self.refreshControl = refresh;
-        
+    if (self.mode != kAttachMode) {
         self.sortAttributes = [NSArray arrayWithObjects:BILL_VENDOR_NAME, BILL_NUMBER, BILL_DATE, BILL_DUE_DATE, BILL_AMOUNT, BILL_AMOUNT_PAID, BILL_APPROVAL_STATUS, nil];
         self.sortAttributeLabels = BILL_LABELS;
         
@@ -180,19 +179,13 @@
     
     self.createNewSegue = CREATE_BILL_SEGUE;
     
-    [BankAccount retrieveListForActive:YES];
-}
-
-- (void)refreshView {
-    self.refreshControl.attributedTitle = REFRESHING;
+    self.totalBillAmount = [NSDecimalNumber zero];
     
-    if (!self.actionMenuVC || self.actionMenuVC.activenessSwitch.selectedSegmentIndex == 0) {
-        [Bill retrieveListForActive:YES];
-    } else {
-        [Bill retrieveListForActive:NO];
+    for(Bill *bill in self.bills) {
+        self.totalBillAmount = [self.totalBillAmount decimalNumberByAdding:bill.amount];
     }
     
-    [self exitEditMode];
+    [BankAccount retrieveListForActive:YES];
 }
 
 - (void)viewDidUnload
@@ -280,7 +273,7 @@
     
     UILabel * lblVendor = [[UILabel alloc] initWithFrame:VENDOR_RECT];
     Vendor *vendor = [Vendor objectForKey:bill.vendorId];
-    lblVendor.text = [@"Vendor: " stringByAppendingString: vendor.name];
+    lblVendor.text = vendor.name;
     lblVendor.font = [UIFont fontWithName:APP_FONT size:BILL_FONT_SIZE];
     lblVendor.textAlignment = UITextAlignmentLeft;
     [cell addSubview:lblVendor];
@@ -293,7 +286,18 @@
     
     UILabel * lblStatus = [[UILabel alloc] initWithFrame:APPROVAL_STATUS_RECT];
     lblStatus.text = [APPROVAL_STATUSES objectForKey:bill.approvalStatus];
-    lblStatus.font = [UIFont fontWithName:APP_FONT size:BILL_FONT_SIZE];
+    if ([APPROVAL_APPROVED isEqualToString:bill.approvalStatus]) {
+        lblStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_FONT_SIZE];
+        lblStatus.textColor = [UIColor colorWithRed:60/255.0 green:180/255.0 blue:60/255.0 alpha:1.0];
+    } else if ([APPROVAL_DENIED isEqualToString:bill.approvalStatus]) {
+        lblStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_FONT_SIZE];
+        lblStatus.textColor = [UIColor redColor];
+    } else if ([APPROVAL_APPROVING isEqualToString:bill.approvalStatus]) {
+        lblStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_FONT_SIZE];
+        lblStatus.textColor = [UIColor colorWithRed:60/255.0 green:90/255.0 blue:180/255.0 alpha:1.0];
+    } else {
+        lblStatus.font = [UIFont fontWithName:APP_FONT size:BILL_FONT_SIZE];
+    }
     lblStatus.textAlignment = UITextAlignmentLeft;
     [cell addSubview:lblStatus];
     
@@ -305,7 +309,25 @@
     
     UILabel * lblPaymentStatus = [[UILabel alloc] initWithFrame:PAYMENT_STATUS_RECT];
     lblPaymentStatus.text = [PAYMENT_STATUSES objectForKey:bill.paymentStatus];
-    lblPaymentStatus.font = [UIFont fontWithName:APP_FONT size:BILL_FONT_SIZE];
+    if ([PAYMENT_PAID isEqualToString:bill.paymentStatus]) {
+        lblPaymentStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_FONT_SIZE];
+        lblPaymentStatus.textColor = [UIColor colorWithRed:60/255.0 green:180/255.0 blue:60/255.0 alpha:1.0];
+    } else if ([PAYMENT_UNPAID isEqualToString:bill.paymentStatus]
+               && [Util isDay:bill.dueDate earlierThanDay:[NSDate date]] ) {
+        lblPaymentStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_FONT_SIZE];
+        lblPaymentStatus.textColor = [UIColor redColor];
+    } else if ([PAYMENT_UNPAID isEqualToString:bill.paymentStatus]
+               && [Util isSameDay:bill.dueDate otherDay:[NSDate date]]) {
+        lblPaymentStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_FONT_SIZE];
+        lblPaymentStatus.textColor = [UIColor orangeColor];
+    } else if ([PAYMENT_SCHEDULED isEqualToString:bill.paymentStatus]
+               || [PAYMENT_PENDING isEqualToString:bill.paymentStatus]
+               || [PAYMENT_PARTIAL isEqualToString:bill.paymentStatus]) {
+        lblPaymentStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_FONT_SIZE];
+        lblPaymentStatus.textColor = [UIColor colorWithRed:60/255.0 green:90/255.0 blue:180/255.0 alpha:1.0];
+    } else {
+        lblPaymentStatus.font = [UIFont fontWithName:APP_FONT size:BILL_FONT_SIZE];
+    }
     lblPaymentStatus.textAlignment = UITextAlignmentLeft;
     [cell addSubview:lblPaymentStatus];
     

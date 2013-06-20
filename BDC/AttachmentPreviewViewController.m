@@ -15,8 +15,7 @@
 
 @implementation AttachmentPreviewViewController
 
-@synthesize photoName;
-@synthesize photoData;
+@synthesize document;
 @synthesize photoImageView;
 @synthesize previewNavigationBar;
 
@@ -54,9 +53,9 @@
     [super viewDidLoad];
 	
     [self.previewNavigationBar setBarStyle:UIBarStyleBlackTranslucent];
-    self.previewNavigationBar.topItem.title = self.photoName;
+    self.previewNavigationBar.topItem.title = self.document.name;
     
-    UIImage *img = [[UIImage alloc] initWithData:self.photoData];
+    UIImage *img = [[UIImage alloc] initWithData:self.document.data];
     self.photoImageView.image = img;
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTapped:)];

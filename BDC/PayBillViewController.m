@@ -33,24 +33,37 @@
 
 
 - (IBAction)payBill:(id)sender {
-    //TODO: if pay amount from textfield is bigger than what's supposed to be, show "invalid" red label, and return right away
+    NSDecimalNumber *payAmount = [Util parseCurrency:self.payAmountTextField.text];    
     
-    NSString *objStr = [NSString stringWithFormat:@"{\"billId\" : \"%@\", \"amount\" : %f, \"processDate\" : \"%@\"}",
+    if ([payAmount compare:[NSDecimalNumber zero]] == NSOrderedAscending || [payAmount compare:[NSDecimalNumber zero]] == NSOrderedSame) {
+        [UIHelper showInfo:@"Invalid amount to pay!" withStatus:kError];
+    } else if ([payAmount compare:[self.bill.amount decimalNumberBySubtracting:self.bill.paidAmount]] == NSOrderedDescending) {
+        [UIHelper showInfo:@"You're too generous! Amount too big!" withStatus:kWarning];
+    }
+    
+    NSString *objStr = [NSString stringWithFormat:@"{\"billId\" : \"%@\", \"amount\" : %@, \"processDate\" : \"%@\"}",
                         self.bill.objectId,
-                        [self.payAmountTextField.text doubleValue],
+                        payAmount,
                         [Util formatDate:self.processDatePicker.date format:@"yyyy-MM-dd"]];
+    
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
-        
+    
+    __weak PayBillViewController *weakSelf = self;
+    
     [APIHandler asyncCallWithAction:PAY_BILL_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
         [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         if(response_status == RESPONSE_SUCCESS) {                        
-            //TODO:
-            // 1. show success info box
-            // 2. if fully paid, after info box disappear, remove this bill also from both edit and list
+            [UIHelper showInfo:[NSString stringWithFormat:@"Successfully paid %@ for bill %@", [Util formatCurrency:payAmount], bill.name] withStatus:kSuccess];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf dismissModalViewControllerAnimated:YES];
+            });
+            
+            // refresh details page for the change in payment status
+            [self.bill read];
         } else {
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to pay bill %@: %@", self.bill.name, [err localizedDescription]] withStatus:kFailure];
             NSLog(@"Failed to pay bill %@: %@", self.bill.name, [err localizedDescription]);
         }
     }];

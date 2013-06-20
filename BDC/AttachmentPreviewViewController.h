@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Document.h"
 
 @interface AttachmentPreviewViewController : UIViewController
 
-@property (nonatomic, strong) NSData *photoData;
-@property (nonatomic, strong) NSString *photoName;
+@property (nonatomic, strong) Document *document;
 @property (weak, nonatomic) IBOutlet UIImageView *photoImageView;
 @property (weak, nonatomic) IBOutlet UINavigationBar *previewNavigationBar;
 

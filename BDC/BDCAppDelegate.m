@@ -10,6 +10,12 @@
 #import "Invoice.h"
 #import "Customer.h"
 #import "Item.h"
+#import "Bill.h"
+#import "Vendor.h"
+#import "Document.h"
+#import "ChartOfAccount.h"
+#import "SplashViewController.h"
+#import "APIHandler.h"
 
 @interface BDCAppDelegate ()
 
@@ -45,7 +51,48 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    NSString *selectedOrgId = [Util getSelectedOrgId];
+    NSString *userName = [Util getUsername];
+    NSString *password = [Util getPassword];
+    
+    if (!userName || userName.length == 0 || !password || password.length == 0) {
+        [self switchToVC:@"LoginScreen"];
+    }
+    
+    NSMutableDictionary *info = [NSMutableDictionary dictionary];
+    [info setObject:ORG_ID forKey:selectedOrgId];
+    [info setObject:USERNAME forKey:userName];
+    [info setObject:PASSWORD forKey:password];
+    
+    [APIHandler asyncCallWithAction:LOGIN_API Info:info AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        NSInteger status;
+        NSDictionary *responseData = [APIHandler getResponse:response data:data error:&err status:&status];
+        
+        if (status == RESPONSE_SUCCESS) {
+            // set cookie for session id
+            NSString *sessionId = [responseData objectForKey:SESSION_ID_KEY];
+            [Util setSession:sessionId];
+            
+            [Invoice retrieveListForActive:YES reload:YES];
+            [Bill retrieveListForActive:YES reload:YES];
+            [Customer retrieveList];
+            [Vendor retrieveList];
+            [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
+            [Item retrieveList];
+            [ChartOfAccount retrieveList];
+            [Invoice retrieveListForActive:NO reload:NO];
+            [Bill retrieveListForActive:NO reload:NO];
+        } else {
+            [self switchToVC:@"LoginScreen"];
+        }
+    }];
+}
+
+- (void)switchToVC:(NSString *)vcID {
+    UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil];
+    SplashViewController* splash = [mainstoryboard instantiateViewControllerWithIdentifier:vcID];
+    [self.window makeKeyAndVisible];
+    [self.window.rootViewController presentViewController:splash animated:YES completion:NULL];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -53,9 +100,7 @@
     if (self.isFirstLaunch) {
         self.isFirstLaunch = NO;
     } else {        
-        [Invoice retrieveList];
-        [Item retrieveList];
-        [Customer retrieveList];
+        
     }
 }
 

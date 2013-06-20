@@ -67,8 +67,8 @@ static NSMutableDictionary * inactiveCustomers = nil;
     NSArray *customerArr = [custList allValues];
     
     NSSortDescriptor *firstOrder = [[NSSortDescriptor alloc] initWithKey:CUSTOMER_NAME ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
-    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:ID ascending:NO];
-    customerArr = [customerArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, secondOrder, nil]];
+//    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:ID ascending:NO];
+    customerArr = [customerArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, nil]];
     
     return [NSMutableArray arrayWithArray:customerArr];
 }
@@ -95,6 +95,47 @@ static NSMutableDictionary * inactiveCustomers = nil;
         customer = [inactiveCustomers objectForKey:customerId];
     }
     return customer;
+}
+
+- (void)populateObjectWithInfo:(NSDictionary *)dict {
+    self.objectId = [dict objectForKey:ID];
+    self.name = [dict objectForKey:CUSTOMER_NAME];
+    
+    NSString *addr1 = [dict objectForKey:CUSTOMER_ADDR1];
+    NSString *addr2 = [dict objectForKey:CUSTOMER_ADDR2];
+    NSString *addr3 = [dict objectForKey:CUSTOMER_ADDR3];
+    NSString *addr4 = [dict objectForKey:CUSTOMER_ADDR4];
+    NSString *city = [dict objectForKey:CUSTOMER_CITY];
+    NSString *state = [dict objectForKey:CUSTOMER_STATE];
+    NSString *country = [dict objectForKey:CUSTOMER_COUNTRY];
+    NSString *zip = [dict objectForKey:CUSTOMER_ZIP];
+    NSString *emailStr = [dict objectForKey:CUSTOMER_EMAIL];
+    NSString *phoneStr = [dict objectForKey:CUSTOMER_PHONE];
+    
+    self.addr1 = (addr1 == (id)[NSNull null]) ? nil : addr1;
+    self.addr2 = (addr2 == (id)[NSNull null]) ? nil : addr2;
+    self.addr3 = (addr3 == (id)[NSNull null]) ? nil : addr3;
+    self.addr4 = (addr4 == (id)[NSNull null]) ? nil : addr4;
+    self.city = (city == (id)[NSNull null]) ? nil : city;
+    self.country = (country == (id)[NSNull null]) ? INVALID_OPTION : [COUNTRIES indexOfObject:country];
+    if (state == (id)[NSNull null]) {
+        if (self.country == 0 || self.country == US_FULL_INDEX) {  //USA
+            self.state = [NSNumber numberWithInt: INVALID_OPTION];
+        } else {
+            self.state = nil;
+        }
+    } else {
+        if (self.country == 0 || self.country == US_FULL_INDEX) {  //USA
+            self.state = [NSNumber numberWithInt: [US_STATE_CODES indexOfObject:state]];
+        } else {
+            self.state = [NSString stringWithString: state];
+        }
+    }
+    self.zip = (zip == (id)[NSNull null]) ? nil : zip;
+    self.email = (emailStr == (id)[NSNull null]) ? nil : emailStr;
+    self.phone = (phoneStr == (id)[NSNull null]) ? nil : phoneStr;
+    
+    self.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
 }
 
 + (void)retrieveListForActive:(BOOL)isActive {
@@ -133,44 +174,7 @@ static NSMutableDictionary * inactiveCustomers = nil;
             for (id item in jsonCustomers) {
                 NSDictionary *dict = (NSDictionary*)item;
                 Customer *customer = [[Customer alloc] init];
-                customer.objectId = [dict objectForKey:ID];
-                customer.name = [dict objectForKey:CUSTOMER_NAME];
-                
-                NSString *addr1 = [dict objectForKey:CUSTOMER_ADDR1];
-                NSString *addr2 = [dict objectForKey:CUSTOMER_ADDR2];
-                NSString *addr3 = [dict objectForKey:CUSTOMER_ADDR3];
-                NSString *addr4 = [dict objectForKey:CUSTOMER_ADDR4];
-                NSString *city = [dict objectForKey:CUSTOMER_CITY];
-                NSString *state = [dict objectForKey:CUSTOMER_STATE];
-                NSString *country = [dict objectForKey:CUSTOMER_COUNTRY];
-                NSString *zip = [dict objectForKey:CUSTOMER_ZIP];
-                NSString *email = [dict objectForKey:CUSTOMER_EMAIL];
-                NSString *phone = [dict objectForKey:CUSTOMER_PHONE];
-
-                customer.addr1 = (addr1 == (id)[NSNull null]) ? nil : addr1;
-                customer.addr2 = (addr2 == (id)[NSNull null]) ? nil : addr2;
-                customer.addr3 = (addr3 == (id)[NSNull null]) ? nil : addr3;
-                customer.addr4 = (addr4 == (id)[NSNull null]) ? nil : addr4;
-                customer.city = (city == (id)[NSNull null]) ? nil : city;
-                customer.country = (country == (id)[NSNull null]) ? INVALID_OPTION : [COUNTRIES indexOfObject:country];
-                if (state == (id)[NSNull null]) {
-                    if (customer.country == 0) {  //USA
-                        customer.state = [NSNumber numberWithInt: INVALID_OPTION];
-                    } else {
-                        customer.state = nil;
-                    }
-                } else {
-                    if (customer.country == 0) {  //USA
-                        customer.state = [NSNumber numberWithInt: [US_STATE_CODES indexOfObject:state]];
-                    } else {
-                        customer.state = [NSString stringWithString: state];
-                    }
-                }                
-                customer.zip = (zip == (id)[NSNull null]) ? nil : zip;
-                customer.email = (email == (id)[NSNull null]) ? nil : email;
-                customer.phone = (phone == (id)[NSNull null]) ? nil : phone;
-                
-                customer.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
+                [customer populateObjectWithInfo:dict];
 
                 [customerDict setObject:customer forKey:customer.objectId];
             }
@@ -188,25 +192,6 @@ static NSMutableDictionary * inactiveCustomers = nil;
         }
     }];
 
-}
-
-+ (void)clone:(Customer *)source to:(Customer *)target {
-    [super clone:source to:target];
-    
-    target.name = source.name;
-    target.isActive = source.isActive;
-    target.addr1 = source.addr1;
-    target.addr2 = source.addr2;
-    target.addr3 = source.addr3;
-    target.addr4 = source.addr4;
-    target.city = source.city;
-    target.state = source.state;
-    target.country = source.country;
-    target.zip = source.zip;
-    target.phone = source.phone;
-    target.email = source.email;
-    target.editDelegate = source.editDelegate;
-    target.editInvoiceDelegate = source.editInvoiceDelegate;
 }
 
 - (void)saveFor:(NSString *)action {
@@ -326,6 +311,33 @@ static NSMutableDictionary * inactiveCustomers = nil;
             NSLog(@"Failed to %@ customer %@: %@", act, self.objectId, [err localizedDescription]);
         }
     }];
+}
+
+- (void)cloneTo:(BDCBusinessObject *)target {
+    [Customer clone:self to:target];
+}
+
++ (void)clone:(Customer *)source to:(Customer *)target {
+    [super clone:source to:target];
+    
+    target.name = source.name;
+    target.isActive = source.isActive;
+    target.addr1 = source.addr1;
+    target.addr2 = source.addr2;
+    target.addr3 = source.addr3;
+    target.addr4 = source.addr4;
+    target.city = source.city;
+    target.state = source.state;
+    target.country = source.country;
+    target.zip = source.zip;
+    target.phone = source.phone;
+    target.email = source.email;
+    target.editDelegate = source.editDelegate;
+    target.editInvoiceDelegate = source.editInvoiceDelegate;
+}
+
+- (void)updateParentList {
+    [ListDelegate didReadObject];
 }
 
 

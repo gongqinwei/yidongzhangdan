@@ -24,6 +24,7 @@
 
 
 #define ACTION_MENU_SECTION_HEADER_HEIGHT       28
+#define ACTION_MENU_CELL_HEIGHT                 40
 #define ASCENDING                               @"Asc"
 #define DESCENDIDNG                             @"Desc"
 
@@ -33,6 +34,7 @@
 @property (nonatomic, strong) NSMutableArray *searchResults;
 @property (nonatomic, strong) NSMutableArray *searchResultTypes;
 @property (nonatomic, strong) UILabel *ascLabel;
+@property (nonatomic, strong) UILabel *payAmountLabel;
 
 @end
 
@@ -48,11 +50,15 @@
 @synthesize activenessSwitch;
 @synthesize ascSwitch;
 @synthesize ascLabel;
+@synthesize payAmountLabel;
 @synthesize crudActions;
 
 static ActionMenuViewController * _sharedInstance = nil;
 
 + (ActionMenuViewController *)sharedInstance {
+    if (!_sharedInstance) {
+        _sharedInstance = [[ActionMenuViewController alloc] init];
+    }
     return _sharedInstance;
 }
 
@@ -297,28 +303,31 @@ static ActionMenuViewController * _sharedInstance = nil;
 //                payAmountTextField.backgroundColor = [UIColor lightGrayColor];
 //                payAmountTextField.rightView = [[UIView alloc] initWithFrame:TEXT_FIELD_RIGHT_PADDING_RECT];
                 
-                UILabel *payAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 7, 170, cell.viewForBaselineLayout.bounds.size.height - 12)];
-                payAmountLabel.textAlignment = UITextAlignmentRight;
+                [self.payAmountLabel removeFromSuperview];
+                self.payAmountLabel = nil;
+                self.payAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 7, 170, cell.viewForBaselineLayout.bounds.size.height - 12)];
+                self.payAmountLabel.textAlignment = UITextAlignmentRight;
                 
                 if ([((NSArray *)[BankAccount list]) count]) {
                     Bill *bill = (Bill *)((EditBillViewController *)self.targetViewController).busObj;
+                    NSLog(@"bill amt: %@; paid: %@", bill.amount, bill.paidAmount);
                     NSDecimalNumber *payAmount = [bill.amount decimalNumberBySubtracting:bill.paidAmount];
-                    payAmountLabel.text = [Util formatCurrency:payAmount];
-                    payAmountLabel.textColor = [UIColor whiteColor];
-                    payAmountLabel.font = [UIFont fontWithName:APP_FONT size:16];
+                    self.payAmountLabel.text = [Util formatCurrency:payAmount];
+                    self.payAmountLabel.textColor = [UIColor whiteColor];
+                    self.payAmountLabel.font = [UIFont fontWithName:APP_FONT size:16];
                     
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 } else {
-                    payAmountLabel.text = @"No bank account for Paybles";
-                    payAmountLabel.font = [UIFont systemFontOfSize:13.0f];
-                    payAmountLabel.textColor = [UIColor orangeColor];
+                    self.payAmountLabel.text = @"No bank account for Paybles";
+                    self.payAmountLabel.font = [UIFont systemFontOfSize:13.0f];
+                    self.payAmountLabel.textColor = [UIColor orangeColor];
                     
                     cell.textLabel.textColor = [UIColor lightGrayColor];
                 }
                 
-                payAmountLabel.backgroundColor = [UIColor clearColor];
+                self.payAmountLabel.backgroundColor = [UIColor clearColor];
                 
-                [cell addSubview:payAmountLabel];
+                [cell addSubview:self.payAmountLabel];
             }
         }
     }
@@ -333,7 +342,7 @@ static ActionMenuViewController * _sharedInstance = nil;
     SlidingTableViewController *vc = [navVC.childViewControllers objectAtIndex:0];
     
     [RootMenuViewController sharedInstance].currVC = vc;
-    [RootMenuViewController sharedInstance].currVC.navigation = navVC;
+    [RootMenuViewController sharedInstance].currVC.navigation = navVC;    
     [RootMenuViewController sharedInstance].currVC.navigationId = identifier;
     
     [vc.view removeGestureRecognizer:vc.tapRecognizer];
@@ -353,6 +362,7 @@ static ActionMenuViewController * _sharedInstance = nil;
                                              active:!listVC.actionMenuVC.activenessSwitch.selectedSegmentIndex];
         
         [listVC performSegueWithIdentifier:@"ViewInvoice" sender:(Invoice *)obj];
+        [[RootMenuViewController sharedInstance].menuTableView selectRowAtIndexPath:[NSIndexPath indexPathForItem:kARInvoice inSection:kRootAR] animated:NO scrollPosition:UITableViewScrollPositionNone];
     } else if ([obj isKindOfClass:[Bill class]]) {
         BillsTableViewController *listVC = (BillsTableViewController *)[self slideInListViewIdentifier:MENU_BILLS];
         self.actionDelegate = listVC;
@@ -362,12 +372,19 @@ static ActionMenuViewController * _sharedInstance = nil;
                                              active:!listVC.actionMenuVC.activenessSwitch.selectedSegmentIndex];
         
         [listVC performSegueWithIdentifier:@"ViewBill" sender:(Bill *)obj];
+        [[RootMenuViewController sharedInstance].menuTableView selectRowAtIndexPath:[NSIndexPath indexPathForItem:kAPBill inSection:kRootAP] animated:NO scrollPosition:UITableViewScrollPositionNone];
     } else if ([obj isKindOfClass:[Customer class]]) {
         [[self slideInListViewIdentifier:MENU_CUSTOMERS] performSegueWithIdentifier:@"ViewCustomer" sender:(Customer *)obj];
+        [[RootMenuViewController sharedInstance].menuTableView selectRowAtIndexPath:[NSIndexPath indexPathForItem:kARCustomer inSection:kRootAR] animated:NO scrollPosition:UITableViewScrollPositionNone];
     } else if ([obj isKindOfClass:[Item class]]) {
         [[self slideInListViewIdentifier:MENU_ITEMS] performSegueWithIdentifier:@"ViewItem" sender:(Item *)obj];
+        [[RootMenuViewController sharedInstance].menuTableView selectRowAtIndexPath:[NSIndexPath indexPathForItem:kARItem inSection:kRootAR] animated:NO scrollPosition:UITableViewScrollPositionNone];
     } else if ([obj isKindOfClass:[Vendor class]]) {
         [[self slideInListViewIdentifier:MENU_VENDORS] performSegueWithIdentifier:@"ViewVendor" sender:(Vendor *)obj];
+        [[RootMenuViewController sharedInstance].menuTableView selectRowAtIndexPath:[NSIndexPath indexPathForItem:kAPVendor inSection:kRootAP] animated:NO scrollPosition:UITableViewScrollPositionNone];
+    } else if ([obj isKindOfClass:[Document class]]) {
+        [self slideInListViewIdentifier:MENU_INBOX];
+        [[RootMenuViewController sharedInstance].menuTableView selectRowAtIndexPath:[NSIndexPath indexPathForItem:kToolInbox inSection:kRootTool] animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
 }
 
@@ -434,7 +451,7 @@ static ActionMenuViewController * _sharedInstance = nil;
     if (tableView != self.searchDisplayController.searchResultsTableView && self.targetViewController.sortAttributes && indexPath.section == 0) {
         return 31.0;
     } else {
-        return CELL_HEIGHT;
+        return ACTION_MENU_CELL_HEIGHT;
     }
 }
 

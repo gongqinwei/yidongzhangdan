@@ -70,6 +70,7 @@
 //- (void)removeTapGesture;
 - (void)enterEditMode;
 - (void)exitEditMode;
+- (void)refreshView;
 - (BOOL)tryTap;
 
 @end

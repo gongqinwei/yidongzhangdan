@@ -14,6 +14,7 @@
 #import "ScannerViewController.h"
 #import "AttachmentPreviewViewController.h"
 #import "EditVendorViewController.h"
+#import "PayBillViewController.h"
 //#import "EditAPLineItemViewController.h"
 #import "Util.h"
 #import "Constants.h"
@@ -54,12 +55,12 @@ typedef enum {
 
 #define BILL_SELECT_VENDOR_SEGUE        @"SelectVendorForBill"
 #define BILL_SCAN_PHOTO_SEGUE           @"ScanMoreBillPhoto"
-#define BILL_PREVIEW_ATTACHMENT_SEGUE   @"PreviewBillDoc"
+//#define BILL_PREVIEW_ATTACHMENT_SEGUE   @"PreviewBillDoc"
 #define BILL_VIEW_VENDOR_DETAILS_SEGUE  @"ViewVendorDetails"
 #define BILL_PAY_BILL_SEGUE             @"PayBill"
 
 #define BILL_LABEL_FONT_SIZE            13
-#define BillInfo                 [NSArray arrayWithObjects:@"Vendor", @"Invoice #", @"Inv Date", @"Due Date", @"Approval Status", @"Payment Status", nil]
+#define BillInfo                 [NSArray arrayWithObjects:@"Vendor", @"Invoice #", @"Inv Date", @"Due Date", @"Approval", @"Payment", nil]
 #define BILL_INFO_INPUT_RECT     CGRectMake(CELL_WIDTH - 190, 5, 190, CELL_HEIGHT - 10)
 #define BILL_ITEM_ACCOUNT_RECT   CGRectMake(cell.viewForBaselineLayout.bounds.origin.x + 46, 6, 150, cell.viewForBaselineLayout.bounds.size.height - 10)
 #define BILL_ITEM_AMOUNT_RECT    CGRectMake(cell.viewForBaselineLayout.bounds.size.width - 115, 6, 100, cell.viewForBaselineLayout.bounds.size.height - 10)
@@ -125,6 +126,8 @@ typedef enum {
     self.totalAmount = [NSDecimalNumber zero];
     
     [super setMode:mode];
+    
+    [self setBillActions];
 }
 
 #pragma mark - private methods
@@ -191,6 +194,27 @@ typedef enum {
     }
 }
 
+- (void)setBillActions {
+    if (self.mode == kViewMode || self.isActive) {
+        self.crudActions = nil;
+        
+        if (![((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]) {
+            self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, nil];
+        } else {
+            self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
+        }
+        
+        //TODO: also allow pay if no need for approval
+        if (([((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_UNASSIGNED]
+             || [((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_APPROVED])
+            && ([((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]
+                || [((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_PARTIAL]))
+        {
+            self.crudActions = [@[ACTION_PAY] arrayByAddingObjectsFromArray:self.crudActions];
+        }
+    }
+}
+
 #pragma mark - Life Cycle
 
 - (void)viewDidLoad
@@ -202,19 +226,21 @@ typedef enum {
     
     [super viewDidLoad];
     
+    [self setBillActions];
+    
     if (self.mode == kViewMode) {
         self.modeChanged = NO;
-        if (![((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]) {
-            self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, nil];
-        }
-        
-        //TODO: also allow pay if no need for approval
-        if (([((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_UNASSIGNED]
-             || [((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_APPROVED])
-            && ([((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]
-             || [((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_PARTIAL])) {
-            self.crudActions = [@[ACTION_PAY] arrayByAddingObjectsFromArray:self.crudActions];
-        }
+//        if (![((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]) {
+//            self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, nil];
+//        }
+//        
+//        //TODO: also allow pay if no need for approval
+//        if (([((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_UNASSIGNED]
+//             || [((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_APPROVED])
+//            && ([((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]
+//             || [((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_PARTIAL])) {
+//            self.crudActions = [@[ACTION_PAY] arrayByAddingObjectsFromArray:self.crudActions];
+//        }
     } else {
         self.crudActions = nil;
         
@@ -307,20 +333,17 @@ typedef enum {
     } else if ([segue.identifier isEqualToString:BILL_SCAN_PHOTO_SEGUE]) {
         ((ScannerViewController *)segue.destinationViewController).delegate = self;
         [segue.destinationViewController setMode:kAttachMode];
-    } else if ([segue.identifier isEqualToString:BILL_PREVIEW_ATTACHMENT_SEGUE]) {
-        NSInteger idx = ((UIImageView *)sender).tag;
-        if (self.mode != kCreateMode && self.mode != kAttachMode) {
-            idx--;
-        }
-        NSString *attachmentName = ((Document *)[self.shaddowBusObj.attachments objectAtIndex:idx]).name;
-        NSData *attachmentData = ((Document *)[self.shaddowBusObj.attachments objectAtIndex:idx]).data;
-        [segue.destinationViewController setPhotoName:attachmentName];
-        [segue.destinationViewController setPhotoData:attachmentData];
+//    } else if ([segue.identifier isEqualToString:BILL_PREVIEW_ATTACHMENT_SEGUE]) {
+//        NSInteger idx = ((UIImageView *)sender).tag;
+//        if (self.mode != kCreateMode && self.mode != kAttachMode) {
+//            idx--;
+//        }
+//        [segue.destinationViewController setDocument:[self.shaddowBusObj.attachments objectAtIndex:idx]];
     } else if ([segue.identifier isEqualToString:BILL_VIEW_VENDOR_DETAILS_SEGUE]) {
         [segue.destinationViewController setBusObj:sender];
         [segue.destinationViewController setMode:kViewMode];
     } else if ([segue.identifier isEqualToString:BILL_PAY_BILL_SEGUE]) {
-        [segue.destinationViewController setBusObj:self.shaddowBusObj];
+        [segue.destinationViewController setBill:(Bill *)self.shaddowBusObj];
     }
 }
 
@@ -453,8 +476,8 @@ typedef enum {
                     }
                     break;
                 case kBillApprovalStatus:
-                    cell.textLabel.numberOfLines = 2;
-                    cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+//                    cell.textLabel.numberOfLines = 2;
+//                    cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
                     
                     if (shaddowBill.approvalStatus != nil) {
                         cell.detailTextLabel.text = [APPROVAL_STATUSES objectForKey:shaddowBill.approvalStatus];
@@ -463,8 +486,8 @@ typedef enum {
                     }
                     break;
                 case kBillPaymentStatus:
-                    cell.textLabel.numberOfLines = 2;
-                    cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+//                    cell.textLabel.numberOfLines = 2;
+//                    cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
                     
                     if (shaddowBill.paymentStatus != nil) {
                         cell.detailTextLabel.text = [PAYMENT_STATUSES objectForKey:shaddowBill.paymentStatus];
@@ -854,6 +877,19 @@ typedef enum {
 }
 
 #pragma mark - model delegate
+
+- (void)didReadObject {
+    self.totalAmount = [NSDecimalNumber zero];
+    [super didReadObject];
+    [self.actionMenuVC.tableView reloadData];
+}
+
+- (void)didUpdateObject {
+    [super didUpdateObject];
+    
+    ((Bill *)self.busObj).amount = self.totalAmount;
+    [self.actionMenuVC.tableView reloadData];
+}
 
 - (void)didSelectVendor:(NSString *)vendorId {
     ((Bill *)self.shaddowBusObj).vendorId = vendorId;

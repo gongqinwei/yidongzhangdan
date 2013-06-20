@@ -387,10 +387,7 @@ typedef enum {
         if (self.mode != kCreateMode && self.mode != kAttachMode) {
             idx--;
         }
-        NSString *attachmentName = ((Document *)[self.shaddowBusObj.attachments objectAtIndex:idx]).name;
-        NSData *attachmentData = ((Document *)[self.shaddowBusObj.attachments objectAtIndex:idx]).data;
-        [segue.destinationViewController setPhotoName:attachmentName];
-        [segue.destinationViewController setPhotoData:attachmentData];
+        [segue.destinationViewController setDocument:[self.shaddowBusObj.attachments objectAtIndex:idx]];
     } else if ([segue.identifier isEqualToString:INV_VIEW_PDF_SEGUE]) {
         [segue.destinationViewController setInvoice:sender];
     } else if ([segue.identifier isEqualToString:INV_VIEW_CUSTOMER_DETAILS_SEGUE]) {
@@ -1030,6 +1027,11 @@ typedef enum {
 }
 
 #pragma mark - model delegate
+
+- (void)didReadObject {
+    self.totalAmount = [NSDecimalNumber zero];
+    [super didReadObject];
+}
 
 - (void)didSelectCustomer:(NSString *)customerId {
     ((Invoice *)self.shaddowBusObj).customerId = customerId;

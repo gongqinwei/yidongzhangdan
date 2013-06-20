@@ -22,10 +22,15 @@
 
 @end
 
+
 @implementation ItemsTableViewController
 
 @synthesize items = _items;
 @synthesize selectDelegate;
+
+- (Class)busObjClass {
+    return [Item class];
+}
 
 - (void)setItems:(NSMutableArray *)items {
     _items = items;
@@ -113,23 +118,12 @@
     } else if(self.mode != kAttachMode) {
         self.items = [Item listOrderBy:ITEM_NAME ascending:YES active:YES];
         
-        UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
-        [refresh addTarget:self action:@selector(refreshView) forControlEvents:UIControlEventValueChanged];
-        refresh.attributedTitle = PULL_TO_REFRESH;
-        self.refreshControl = refresh;
-        
         self.sortAttributes = [NSArray array];
         self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
         self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];        
     }
     
     self.createNewSegue = ITEM_CREATE_ITEM_SEGUE;
-}
-
-- (void)refreshView {
-    self.refreshControl.attributedTitle = REFRESHING;
-    [Item retrieveList];
-    [self exitEditMode];
 }
 
 - (void)didReceiveMemoryWarning
@@ -301,10 +295,22 @@
 
 #pragma mark - model delegate
 
+- (void)didReadObject {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
+}
+
 - (void)didGetItems {
     if (self.mode != kSelectMode) {
         self.tableView.editing = NO;
-        self.items = [Item listOrderBy:ITEM_NAME ascending:self.isAsc active:self.isActive];
+        
+        if (!self.actionMenuVC) {
+            self.items = [Item listOrderBy:ITEM_NAME ascending:self.isAsc active:self.isActive];
+        } else {
+            self.items = [Item listOrderBy:[self.actionMenuVC.sortAttributes objectAtIndex:self.actionMenuVC.lastSortAttribute.row] ascending:self.actionMenuVC.ascSwitch.on active:self.actionMenuVC.activenessSwitch.selectedSegmentIndex == 0];
+        }
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [self restoreEditButton:self.navigationItem.rightBarButtonItem];
             

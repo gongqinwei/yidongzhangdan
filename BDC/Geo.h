@@ -9,6 +9,7 @@
 #ifndef BDC_Geo_h
 #define BDC_Geo_h
 
+#define US_FULL_INDEX   220
 #define ADDR_DETAILS    [NSArray arrayWithObjects:@"Address1", @"Address2", @"Address3", @"Address4", @"City", @"State", @"Country", @"Zipcode", nil]
 
 enum AddrType {

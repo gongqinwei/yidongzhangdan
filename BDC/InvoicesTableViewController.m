@@ -25,17 +25,17 @@
 #define INVOICE_TABLE_CELL_HEIGHT           90
 #define INVOICE_TABLE_LABEL_HEIGHT          15
 #define INVOICE_TABLE_LABEL_WIDTH           130
-#define CUSTOMER_RECT                       CGRectMake(10, 5, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
-#define INVOICE_NUM_RECT                    CGRectMake(10, 25, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
+#define INVOICE_NUM_RECT                    CGRectMake(10, 5, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
+#define CUSTOMER_RECT                       CGRectMake(10, 25, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
 #define INVOICE_DATE_RECT                   CGRectMake(160, 25, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
 #define STATUS_RECT                         CGRectMake(10, 45, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
 #define DUE_DATE_RECT                       CGRectMake(160, 45, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
-#define AMOUNT_DUE_RECT                     CGRectMake(10, 65, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
-#define AMOUNT_RECT                         CGRectMake(160, 65, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
+#define AMOUNT_RECT                         CGRectMake(10, 65, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
+#define AMOUNT_DUE_RECT                     CGRectMake(188, 65, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
 #define SECTION_HEADER_RECT                 CGRectMake(0, 0, SCREEN_WIDTH, INVOICE_TABLE_SECTION_HEADER_HEIGHT)
 #define SECTION_HEADER_QTY_AMT_RECT         CGRectMake(SCREEN_WIDTH - 170, 7, 170, 15)
 #define SECTION_ACCESSORY_RECT              CGRectMake(SCREEN_WIDTH - 30, 7, 30, 15)
-#define CUSTOMER_FONT_SIZE                  16
+#define INVOICE_NUM_FONT_SIZE               16
 #define INVOICE_FONT_SIZE                   13
 
 #define VIEW_INVOICE_SEGUE                  @"ViewInvoice"
@@ -100,6 +100,10 @@
 //@synthesize deleteDelegate;
 
 
+- (Class)busObjClass {
+    return [Invoice class];
+}
+
 - (void)setInvoices:(NSArray *)invoices {
     _invoices = [NSMutableArray arrayWithArray:invoices];
 
@@ -159,11 +163,6 @@
         [Invoice setListDelegate:self];
 //        self.deleteDelegate = self;
         
-        UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
-        [refresh addTarget:self action:@selector(refreshView) forControlEvents:UIControlEventValueChanged];
-        refresh.attributedTitle = PULL_TO_REFRESH;
-        self.refreshControl = refresh;
-        
         self.sortAttributes = [NSArray arrayWithObjects:INV_CUSTOMER_NAME, INV_NUMBER, INV_DATE, INV_DUE_DATE, INV_AMOUNT, INV_AMOUNT_DUE, nil];
         self.sortAttributeLabels = INV_LABELS;
         
@@ -177,18 +176,6 @@
     }
     
     self.createNewSegue = CREATE_INVOICE_SEGUE;
-}
-
-- (void)refreshView {
-    self.refreshControl.attributedTitle = REFRESHING;
-
-    if (!self.actionMenuVC || self.actionMenuVC.activenessSwitch.selectedSegmentIndex == 0) {
-        [Invoice retrieveListForActive:YES];
-    } else {
-        [Invoice retrieveListForActive:NO];
-    }
-    
-    [self exitEditMode];
 }
 
 - (void)viewDidUnload
@@ -268,18 +255,18 @@
         }
     }
     
+    UILabel * lblInvNum = [[UILabel alloc] initWithFrame:INVOICE_NUM_RECT];
+    lblInvNum.text = inv.invoiceNumber;
+    lblInvNum.font = [UIFont fontWithName:APP_BOLD_FONT size:INVOICE_NUM_FONT_SIZE];
+    lblInvNum.textAlignment = UITextAlignmentLeft;
+    [cell addSubview:lblInvNum];
+    
     UILabel * lblCustomer = [[UILabel alloc] initWithFrame:CUSTOMER_RECT];
     Customer *customer = [Customer objectForKey:inv.customerId];
     lblCustomer.text = customer.name;
-    lblCustomer.font = [UIFont fontWithName:APP_BOLD_FONT size:CUSTOMER_FONT_SIZE];
+    lblCustomer.font = [UIFont fontWithName:APP_FONT size:INVOICE_FONT_SIZE];
     lblCustomer.textAlignment = UITextAlignmentLeft;
     [cell addSubview:lblCustomer];
-    
-    UILabel * lblInvNum = [[UILabel alloc] initWithFrame:INVOICE_NUM_RECT];
-    lblInvNum.text = [@"Inv " stringByAppendingString:inv.invoiceNumber];
-    lblInvNum.font = [UIFont fontWithName:APP_FONT size:INVOICE_FONT_SIZE];
-    lblInvNum.textAlignment = UITextAlignmentLeft;
-    [cell addSubview:lblInvNum];
     
     UILabel * lblInvDate = [[UILabel alloc] initWithFrame:INVOICE_DATE_RECT];
     lblInvDate.text = [@"Inv Date " stringByAppendingString:[Util formatDate:inv.invoiceDate format:nil]];
@@ -288,8 +275,26 @@
     [cell addSubview:lblInvDate];
     
     UILabel * lblStatus = [[UILabel alloc] initWithFrame:STATUS_RECT];
-    lblStatus.text = [@"Status " stringByAppendingString:[PAYMENT_STATUSES objectForKey:inv.paymentStatus]];
-    lblStatus.font = [UIFont fontWithName:APP_FONT size:INVOICE_FONT_SIZE];
+    lblStatus.text = [PAYMENT_STATUSES objectForKey:inv.paymentStatus];
+    if ([PAYMENT_PAID isEqualToString:inv.paymentStatus]) {
+        lblStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:INVOICE_FONT_SIZE];
+        lblStatus.textColor = [UIColor colorWithRed:60/255.0 green:180/255.0 blue:60/255.0 alpha:1.0];
+    } else if ([PAYMENT_UNPAID isEqualToString:inv.paymentStatus]
+               && [Util isDay:inv.dueDate earlierThanDay:[NSDate date]] ) {
+        lblStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:INVOICE_FONT_SIZE];
+        lblStatus.textColor = [UIColor redColor];
+    } else if ([PAYMENT_UNPAID isEqualToString:inv.paymentStatus]
+               && [Util isSameDay:inv.dueDate otherDay:[NSDate date]]) {
+        lblStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:INVOICE_FONT_SIZE];
+        lblStatus.textColor = [UIColor orangeColor];
+    } else if ([PAYMENT_SCHEDULED isEqualToString:inv.paymentStatus]
+               || [PAYMENT_PENDING isEqualToString:inv.paymentStatus]
+               || [PAYMENT_PARTIAL isEqualToString:inv.paymentStatus]) {
+        lblStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:INVOICE_FONT_SIZE];
+        lblStatus.textColor = [UIColor colorWithRed:60/255.0 green:90/255.0 blue:180/255.0 alpha:1.0];
+    } else {
+        lblStatus.font = [UIFont fontWithName:APP_FONT size:INVOICE_FONT_SIZE];
+    }
     lblStatus.textAlignment = UITextAlignmentLeft;
     [cell addSubview:lblStatus];
     
@@ -299,17 +304,17 @@
     lblDueDate.textAlignment = UITextAlignmentLeft;
     [cell addSubview:lblDueDate];
     
-    UILabel * lblAmountDue = [[UILabel alloc] initWithFrame:AMOUNT_DUE_RECT];
-    lblAmountDue.text = [@"Amount Due " stringByAppendingString:[Util formatCurrency:inv.amountDue]];
-    lblAmountDue.font = [UIFont fontWithName:APP_FONT size:INVOICE_FONT_SIZE];
-    lblAmountDue.textAlignment = UITextAlignmentLeft;
-    [cell addSubview:lblAmountDue];
-    
     UILabel * lblAmount = [[UILabel alloc] initWithFrame:AMOUNT_RECT];
     lblAmount.text = [@"Amount " stringByAppendingString:[Util formatCurrency:inv.amount]];
     lblAmount.font = [UIFont fontWithName:APP_FONT size:INVOICE_FONT_SIZE];
     lblAmount.textAlignment = UITextAlignmentLeft;
     [cell addSubview:lblAmount];
+    
+    UILabel * lblAmountDue = [[UILabel alloc] initWithFrame:AMOUNT_DUE_RECT];
+    lblAmountDue.text = [Util formatCurrency:inv.amountDue];
+    lblAmountDue.font = [UIFont fontWithName:APP_FONT size:INVOICE_FONT_SIZE];
+    lblAmountDue.textAlignment = UITextAlignmentLeft;
+    [cell addSubview:lblAmountDue];
     
     if (self.mode == kAttachMode) {
         cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
@@ -497,7 +502,7 @@
 #pragma mark - Invoice delegate
 
 - (void)didGetInvoices:(NSArray *)invoiceList {
-    dispatch_async(dispatch_get_main_queue(), ^{        
+    dispatch_async(dispatch_get_main_queue(), ^{
         self.refreshControl.attributedTitle = LAST_REFRESHED;
         [self.refreshControl endRefreshing];
     });

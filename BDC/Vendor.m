@@ -47,8 +47,8 @@ static NSMutableDictionary * inactiveVendors = nil;
     NSArray *vendorArr = [vendorList allValues];
     
     NSSortDescriptor *firstOrder = [[NSSortDescriptor alloc] initWithKey:VENDOR_NAME ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
-    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:ID ascending:NO];
-    vendorArr = [vendorArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, secondOrder, nil]];
+//    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:ID ascending:NO];
+    vendorArr = [vendorArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, nil]];
     
     return [NSMutableArray arrayWithArray:vendorArr];
 }
@@ -67,6 +67,49 @@ static NSMutableDictionary * inactiveVendors = nil;
         vendor = [inactiveVendors objectForKey:vendorId];
     }
     return vendor;
+}
+
+- (void)populateObjectWithInfo:(NSDictionary *)dict {
+    self.objectId = [dict objectForKey:ID];
+    self.name = [dict objectForKey:VENDOR_NAME];
+    
+    NSString *addr1 = [dict objectForKey:VENDOR_ADDR1];
+    NSString *addr2 = [dict objectForKey:VENDOR_ADDR2];
+    NSString *addr3 = [dict objectForKey:VENDOR_ADDR3];
+    NSString *addr4 = [dict objectForKey:VENDOR_ADDR4];
+    NSString *city = [dict objectForKey:VENDOR_CITY];
+    NSString *state = [dict objectForKey:VENDOR_STATE];
+    NSString *country = [dict objectForKey:VENDOR_COUNTRY];
+    NSString *zip = [dict objectForKey:VENDOR_ZIP];
+    NSString *emailStr = [dict objectForKey:VENDOR_EMAIL];
+    NSString *phoneStr = [dict objectForKey:VENDOR_PHONE];
+    NSString *payByStr = [dict objectForKey:VENDOR_PAYBY];
+    
+    self.addr1 = (addr1 == (id)[NSNull null]) ? nil : addr1;
+    self.addr2 = (addr2 == (id)[NSNull null]) ? nil : addr2;
+    self.addr3 = (addr3 == (id)[NSNull null]) ? nil : addr3;
+    self.addr4 = (addr4 == (id)[NSNull null]) ? nil : addr4;
+    self.city = (city == (id)[NSNull null]) ? nil : city;
+    self.country = (country == (id)[NSNull null]) ? INVALID_OPTION : [COUNTRIES indexOfObject:country];
+    if (state == (id)[NSNull null]) {
+        if (self.country == 0 || self.country == US_FULL_INDEX) {  //USA
+            self.state = [NSNumber numberWithInt: INVALID_OPTION];
+        } else {
+            self.state = nil;
+        }
+    } else {
+        if (self.country == 0 || self.country == US_FULL_INDEX) {  //USA
+            self.state = [NSNumber numberWithInt: [US_STATE_CODES indexOfObject:state]];
+        } else {
+            self.state = [NSString stringWithString: state];
+        }
+    }
+    self.zip = (zip == (id)[NSNull null]) ? nil : zip;
+    self.email = (emailStr == (id)[NSNull null]) ? nil : emailStr;
+    self.phone = (phoneStr == (id)[NSNull null]) ? nil : phoneStr;
+    self.payBy = payByStr; //[VendorPaymentTypes indexOfObject:[NSNumber numberWithInt:[payBy intValue]]];
+    
+    self.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
 }
 
 + (void)retrieveListForActive:(BOOL)isActive {
@@ -105,46 +148,7 @@ static NSMutableDictionary * inactiveVendors = nil;
             for (id item in jsonVendors) {
                 NSDictionary *dict = (NSDictionary*)item;
                 Vendor *vendor = [[Vendor alloc] init];
-                vendor.objectId = [dict objectForKey:ID];
-                vendor.name = [dict objectForKey:VENDOR_NAME];
-                
-                NSString *addr1 = [dict objectForKey:VENDOR_ADDR1];
-                NSString *addr2 = [dict objectForKey:VENDOR_ADDR2];
-                NSString *addr3 = [dict objectForKey:VENDOR_ADDR3];
-                NSString *addr4 = [dict objectForKey:VENDOR_ADDR4];
-                NSString *city = [dict objectForKey:VENDOR_CITY];
-                NSString *state = [dict objectForKey:VENDOR_STATE];
-                NSString *country = [dict objectForKey:VENDOR_COUNTRY];
-                NSString *zip = [dict objectForKey:VENDOR_ZIP];
-                NSString *email = [dict objectForKey:VENDOR_EMAIL];
-                NSString *phone = [dict objectForKey:VENDOR_PHONE];
-                NSString *payBy = [dict objectForKey:VENDOR_PAYBY];
-                
-                vendor.addr1 = (addr1 == (id)[NSNull null]) ? nil : addr1;
-                vendor.addr2 = (addr2 == (id)[NSNull null]) ? nil : addr2;
-                vendor.addr3 = (addr3 == (id)[NSNull null]) ? nil : addr3;
-                vendor.addr4 = (addr4 == (id)[NSNull null]) ? nil : addr4;
-                vendor.city = (city == (id)[NSNull null]) ? nil : city;
-                vendor.country = (country == (id)[NSNull null]) ? INVALID_OPTION : [COUNTRIES indexOfObject:country];
-                if (state == (id)[NSNull null]) {
-                    if (vendor.country == 0) {  //USA
-                        vendor.state = [NSNumber numberWithInt: INVALID_OPTION];
-                    } else {
-                        vendor.state = nil;
-                    }
-                } else {
-                    if (vendor.country == 0) {  //USA
-                        vendor.state = [NSNumber numberWithInt: [US_STATE_CODES indexOfObject:state]];
-                    } else {
-                        vendor.state = [NSString stringWithString: state];
-                    }
-                }
-                vendor.zip = (zip == (id)[NSNull null]) ? nil : zip;
-                vendor.email = (email == (id)[NSNull null]) ? nil : email;
-                vendor.phone = (phone == (id)[NSNull null]) ? nil : phone;
-                vendor.payBy = payBy; //[VendorPaymentTypes indexOfObject:[NSNumber numberWithInt:[payBy intValue]]];
-                
-                vendor.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
+                [vendor populateObjectWithInfo:dict];
                 
                 [vendorDict setObject:vendor forKey:vendor.objectId];
             }
@@ -160,6 +164,10 @@ static NSMutableDictionary * inactiveVendors = nil;
             NSLog(@"Failed to retrieve list of vendors for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
         }
     }];
+}
+
+- (void)cloneTo:(BDCBusinessObject *)target {
+    [Vendor clone:self to:target];
 }
 
 + (void)clone:(Vendor *)source to:(Vendor *)target {
@@ -299,6 +307,10 @@ static NSMutableDictionary * inactiveVendors = nil;
             NSLog(@"Failed to %@ vendor %@: %@", act, self.objectId, [err localizedDescription]);
         }
     }];
+}
+
+- (void)updateParentList {
+    [ListDelegate didReadObject];
 }
 
 

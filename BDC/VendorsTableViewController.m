@@ -27,6 +27,10 @@
 @synthesize vendors = _vendors;
 @synthesize selectDelegate;
 
+- (Class)busObjClass {
+    return [Vendor class];
+}
+
 - (void)setVendors:(NSMutableArray *)vendors {
     _vendors = vendors;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -99,11 +103,6 @@
     //    [Vendor retrieveList];
     
     if (self.mode != kSelectMode && self.mode != kAttachMode) {
-        UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
-        [refresh addTarget:self action:@selector(refreshView) forControlEvents:UIControlEventValueChanged];
-        refresh.attributedTitle = PULL_TO_REFRESH;
-        self.refreshControl = refresh;
-        
         self.sortAttributes = [NSArray array];
         self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
         self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
@@ -112,13 +111,6 @@
     }
     
     self.createNewSegue = VENDOR_CREATE_VENDOR_SEGUE;
-}
-
-- (void)refreshView {
-    self.refreshControl.attributedTitle = REFRESHING;
-    [Vendor retrieveList];
-    
-    [self exitEditMode];
 }
 
 - (void)viewDidUnload
@@ -270,9 +262,21 @@
 
 #pragma mark - model delegate
 
+- (void)didReadObject {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
+}
+
 - (void)didGetVendors {
     self.tableView.editing = NO;
-    self.vendors = [Vendor listOrderBy:VENDOR_NAME ascending:self.isAsc active:self.isActive];
+    
+    if (!self.actionMenuVC) {
+        self.vendors = [Vendor listOrderBy:VENDOR_NAME ascending:self.isAsc active:self.isActive];
+    } else {
+        self.vendors = [Vendor listOrderBy:[self.actionMenuVC.sortAttributes objectAtIndex:self.actionMenuVC.lastSortAttribute.row] ascending:self.actionMenuVC.ascSwitch.on active:self.actionMenuVC.activenessSwitch.selectedSegmentIndex == 0];
+    }
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [self restoreEditButton:self.navigationItem.rightBarButtonItem];
         

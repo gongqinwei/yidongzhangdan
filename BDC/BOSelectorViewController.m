@@ -62,7 +62,7 @@
             
             if(status == RESPONSE_SUCCESS) {
                 if (![info isEqualToString:EMPTY_ID]) {
-                    self.document.objectId = info;
+                    self.document.objectId = info; // at this moment, returned document id is empty, coz there's only a DocumentUploadedObject but no DocumentObject yet
                 }
                 
                 [Document addToInbox:self.document];
@@ -142,7 +142,7 @@
 
 // need this temparorily; once Attachment view controller is implemented, remove this.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if (self.document.objectId) {
+    if (self.mode == kAttachMode) {
         return 2;
     } else {
         return 3;
@@ -158,7 +158,7 @@
             return 2;
             break;
         case 2:
-//            if (self.document.objectId) {
+//            if (self.mode == kAttachMode) {
                 return 1;
 //            } else {
 //                return 2;

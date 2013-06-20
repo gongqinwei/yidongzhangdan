@@ -239,6 +239,28 @@ static NSMutableArray *inactiveInvoices = nil;
     return inactiveInvoices;
 }
 
+- (void)populateObjectWithInfo:(NSDictionary *)dict {
+    self.objectId = [dict objectForKey:ID];
+    self.invoiceNumber = [dict objectForKey:INV_NUMBER];
+    self.paymentStatus = [dict objectForKey:INV_PAYMENT_STATUS];
+    self.amount = [Util id2Decimal:[dict objectForKey:INV_AMOUNT]];
+    self.amountDue = [Util id2Decimal:[dict objectForKey:INV_AMOUNT_DUE]];
+    self.customerId = [dict objectForKey:INV_CUSTOMER_ID];
+    self.invoiceDate = [Util getDate:[dict objectForKey:INV_DATE] format:nil];
+    self.dueDate = [Util getDate:[dict objectForKey:INV_DUE_DATE] format:nil];
+    self.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
+    
+    self.lineItems = [NSMutableArray array];
+    NSArray *jsonItems = [dict objectForKey:INV_LINE_ITEMS];
+    for (id lineItem in jsonItems) {
+        Item *item = [[Item alloc] init];
+        item.objectId = [lineItem objectForKey:INV_ITEM_ID];
+        item.qty = [[lineItem objectForKey:INV_ITEM_QUANTITY] integerValue];
+        item.price = [Util id2Decimal:[lineItem objectForKey:INV_ITEM_PRICE]];
+        [self.lineItems addObject:item];
+    }
+}
+
 + (void)retrieveListForActive:(BOOL)isActive reload:(BOOL)needReload {
     [UIAppDelegate incrNetworkActivities];
     
@@ -275,26 +297,8 @@ static NSMutableArray *inactiveInvoices = nil;
             for (id item in jsonInvs) {
                 NSDictionary *dict = (NSDictionary*)item;
                 Invoice *inv = [[Invoice alloc] init];
-                inv.objectId = [dict objectForKey:ID];
-                inv.invoiceNumber = [dict objectForKey:INV_NUMBER];
-                inv.paymentStatus = [dict objectForKey:INV_PAYMENT_STATUS];
-                inv.amount = [Util id2Decimal:[dict objectForKey:INV_AMOUNT]];
-                inv.amountDue = [Util id2Decimal:[dict objectForKey:INV_AMOUNT_DUE]];
-                inv.customerId = [dict objectForKey:INV_CUSTOMER_ID];
-                inv.invoiceDate = [Util getDate:[dict objectForKey:INV_DATE] format:nil];
-                inv.dueDate = [Util getDate:[dict objectForKey:INV_DUE_DATE] format:nil];
-                inv.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
-                
-                inv.lineItems = [NSMutableArray array];
-                NSArray *jsonItems = [dict objectForKey:INV_LINE_ITEMS];
-                for (id lineItem in jsonItems) {
-                    Item *item = [[Item alloc] init];
-                    item.objectId = [lineItem objectForKey:INV_ITEM_ID];
-                    item.qty = [[lineItem objectForKey:INV_ITEM_QUANTITY] integerValue];
-                    item.price = [Util id2Decimal:[lineItem objectForKey:INV_ITEM_PRICE]];
-                    [inv.lineItems addObject:item];
-                }
-                
+                [inv populateObjectWithInfo:dict];
+                                
                 [invArr addObject:inv];
             }
 
@@ -312,6 +316,10 @@ static NSMutableArray *inactiveInvoices = nil;
             NSLog(@"Failed to retrieve list of invoice for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
         }
     }];
+}
+
+- (void)cloneTo:(BDCBusinessObject *)target {
+    [Invoice clone:self to:target];
 }
 
 + (void)clone:(Invoice *)source to:(Invoice *)target {
@@ -340,6 +348,14 @@ static NSMutableArray *inactiveInvoices = nil;
         for (id item in source.attachments) {
             [target.attachments addObject:item];
         }
+    }
+}
+
+- (void)updateParentList {
+    if (self.isActive) {
+        [Invoice retrieveListForActive:YES];
+    } else {
+        [Invoice retrieveListForActive:NO];
     }
 }
 

@@ -34,7 +34,8 @@
     
     NSArray *actionMenus = nil;
     if (doc) {
-        actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], ACTION_DELETE, nil]; //TODO: need delete API
+        actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], nil];
+//        actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], ACTION_DELETE, nil]; //TODO: need delete API
     }
     
     self.actionMenuVC.crudActions = self.crudActions = actionMenus;
@@ -68,9 +69,8 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:DOCUMENT_ASSOCIATE_SEGUE]) {
-//        [segue.destinationViewController setPhotoName:self.currentDocument.name];
-//        [segue.destinationViewController setPhotoData:self.currentDocument.data];
         [segue.destinationViewController setDocument:self.currentDocument];
+        [segue.destinationViewController setMode:kAttachMode];
     }
 }
 
@@ -151,6 +151,12 @@
         [self changeCurrentDocumentTo:nil];
         [self.collectionView insertItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]];
         [self.previewController reloadData];
+    });
+}
+
+- (void)failedToGetDocuments {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [super endRefreshView];
     });
 }
 

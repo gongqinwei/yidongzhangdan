@@ -11,12 +11,15 @@
 
 @protocol ListViewDelegate <NSObject>
 @optional
+- (void)didReadObject;
 - (void)didDeleteObject;
 - (void)didDeleteObject:(NSIndexPath *)indexPath;
 @end
 
 
 @interface SlidingListTableViewController : SlidingTableViewController <ListViewDelegate>
+
+@property (nonatomic, strong, readonly) Class busObjClass;
 
 @property (nonatomic, strong) Document *document;
 

@@ -72,12 +72,13 @@
     
     // retrieve attachments
     // clean up first
-    for (UIView *subview in [self.attachmentScrollView subviews]) {
-        if ([subview isKindOfClass:[UIImageView class]]) {
-            NSLog(@"-------------- deleting attachment view from scroll view ================");
-            [subview removeFromSuperview];
-        }
-    }
+//    for (UIView *subview in [self.attachmentScrollView subviews]) {
+//        if ([subview isKindOfClass:[UIImageView class]]) {
+//            NSLog(@"-------------- deleting attachment view from scroll view ================");
+//            [subview removeFromSuperview];
+//        }
+//    }
+    [self ressetScrollView];
     
     [self.tableView reloadData];
     NSLog(@"---- shaddow.attachments: %d", [self.shaddowBusObj.attachments count]);
@@ -390,14 +391,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.attachmentScrollView = [[UIScrollView alloc] initWithFrame:ATTACHMENT_RECT]; // CGRectMake(IMG_PADDING, IMG_PADDING, CELL_WIDTH, IMG_HEIGHT)];
-    self.attachmentScrollView.pagingEnabled = YES;
-    self.attachmentScrollView.scrollEnabled = YES;
-    self.attachmentScrollView.clipsToBounds = YES;
-    self.attachmentScrollView.bounces = NO;
-    self.attachmentScrollView.showsHorizontalScrollIndicator = NO;
-    self.attachmentScrollView.showsVerticalScrollIndicator = NO;
-    self.attachmentScrollView.delegate = self;
+    [self ressetScrollView];
     
     self.attachmentPageControl = [[UIPageControl alloc] initWithFrame:ATTACHMENT_PV_RECT];
     self.attachmentPageControl.currentPage = 0;
@@ -423,6 +417,31 @@
     self.previewController.dataSource = self;
     
     self.title = self.shaddowBusObj.name;
+    
+    if (self.mode == kViewMode) {
+        UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
+        [refresh addTarget:self action:@selector(refreshView) forControlEvents:UIControlEventValueChanged];
+        refresh.attributedTitle = PULL_TO_REFRESH;
+        self.refreshControl = refresh;
+    }
+
+}
+
+- (void)ressetScrollView {
+    [self.attachmentScrollView removeFromSuperview];
+    self.attachmentScrollView = [[UIScrollView alloc] initWithFrame:ATTACHMENT_RECT];
+    self.attachmentScrollView.pagingEnabled = YES;
+    self.attachmentScrollView.scrollEnabled = YES;
+    self.attachmentScrollView.clipsToBounds = YES;
+    self.attachmentScrollView.bounces = NO;
+    self.attachmentScrollView.showsHorizontalScrollIndicator = NO;
+    self.attachmentScrollView.showsVerticalScrollIndicator = NO;
+    self.attachmentScrollView.delegate = self;
+}
+
+- (void)refreshView {
+    self.refreshControl.attributedTitle = REFRESHING;
+    [self.shaddowBusObj read];
 }
 
 - (void)inputAccessoryDoneAction:(UIBarButtonItem *)button {
@@ -534,6 +553,9 @@
     
     [[ActionMenuViewController sharedInstance] performSegueForObject:self.busObj];
     [vc disappear];
+    if ([vc isKindOfClass:[ScannerViewController class]]) {
+        [((ScannerViewController *)vc) reset];
+    }
 }
 
 - (void)handleRemovalForDocument:(Document *)doc {
@@ -705,6 +727,27 @@
     self.busObj.objectId = newObjectId;
     self.shaddowBusObj.objectId = newObjectId;
     [self doneSaveObject];
+}
+
+- (void)didReadObject {
+    self.shaddowBusObj.attachmentDict = [NSMutableDictionary dictionary];
+    self.shaddowBusObj.attachments = [NSMutableArray array];
+    [self.shaddowBusObj cloneTo:self.busObj];
+    
+    [self ressetScrollView];
+    [self retrieveDocAttachments];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [self.tableView reloadData];
+        
+        self.refreshControl.attributedTitle = LAST_REFRESHED;
+        [self.refreshControl endRefreshing];
+    });
+}
+
+- (void)failedToReadObject {
+    [self.refreshControl endRefreshing];
 }
 
 - (void)didUpdateObject {
