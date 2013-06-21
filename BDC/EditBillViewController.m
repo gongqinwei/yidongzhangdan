@@ -538,7 +538,7 @@ typedef enum {
             
             APLineItem *item = [shaddowBill.lineItems objectAtIndex:indexPath.row];
             
-            if (self.mode == kViewMode) {
+            if (self.mode == kViewMode || (((Bill *)self.shaddowBusObj).paymentStatus && ![((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID])) {
                 cell.textLabel.text = item.account.name ? item.account.name : @" ";
 //                cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_LABEL_FONT_SIZE];
                 [cell.textLabel sizeToFit];
@@ -643,7 +643,7 @@ typedef enum {
         
         [headerView addSubview:label];
         
-        if (self.mode != kViewMode) {
+        if (self.mode != kViewMode && (!((Bill *)self.shaddowBusObj).paymentStatus || [((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID])) {
             UIButton *addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
             CGRect frame = CGRectMake(265, -10, 40, 40);
             addButton.frame = frame;
