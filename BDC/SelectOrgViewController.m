@@ -119,13 +119,21 @@
 
 //    cell.detailTextLabel.text = [NSString stringWithFormat:@"%d bills overdue", indexPath.row + 1];
     
-    NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100&orgId=%@", DOMAIN_URL, ORG_LOGO_API, org.objectId]]];
+//    NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100&orgId=%@", DOMAIN_URL, ORG_LOGO_API, org.objectId]]];
     
-    if ([UIImage imageWithData: imageData]) {
-        UIImageView *orgLogo = [[UIImageView alloc] initWithImage:[UIImage imageWithData: imageData]];
-        orgLogo.frame = CGRectMake(2, 2, 39, 39);
-        [cell addSubview:orgLogo];
-    }
+    dispatch_async(dispatch_get_global_queue(0,0), ^{
+        NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100&orgId=%@", DOMAIN_URL, ORG_LOGO_API, org.objectId]]];
+        
+        if (imageData != nil) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([UIImage imageWithData: imageData]) {
+                    UIImageView *orgLogo = [[UIImageView alloc] initWithImage:[UIImage imageWithData: imageData]];
+                    orgLogo.frame = CGRectMake(2, 2, 39, 39);
+                    [cell addSubview:orgLogo];
+                }
+            });
+        }
+    });
   
     return cell;
 }
