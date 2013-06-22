@@ -20,11 +20,12 @@
 #import "Document.h"
 #import "Util.h"
 #import "UIHelper.h"
+#import <MessageUI/MessageUI.h>
 
 #define ROOT_MENU_SECTION_HEADER_HEIGHT     22
 #define ROOT_MENU_CELL_ID                   @"RootMenuItem"
 
-@interface RootMenuViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface RootMenuViewController () <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate>
 
 //- (void)showView:(NSString *)identifier;
 
@@ -43,7 +44,15 @@ static RootMenuViewController * _sharedInstance = nil;
 }
 
 - (UINavigationController *)showView:(NSString *)identifier {
-    if ([self.currVC.navigationId isEqualToString:identifier]) {
+    identifier = [identifier stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    if (!self.currVC) {
+        UINavigationController *navVC = [self.menuItems objectForKey:identifier];
+        self.currVC = [navVC.childViewControllers objectAtIndex:0];
+        self.currVC.navigation = navVC;
+        self.currVC.navigationId = identifier;
+        [self.currVC slideIn];
+    } else if ([self.currVC.navigationId isEqualToString:identifier]) {
         [self.currVC toggleMenu:self];
     } else {
         [self.currVC slideOut];
@@ -77,32 +86,31 @@ static RootMenuViewController * _sharedInstance = nil;
     
     self.menuItems = [NSMutableDictionary dictionary];
     
-    //start with Invoices view
-    NSString *startingVCId = MENU_INVOICES;
-    
-    for (int i = 0; i < [ROOT_MENU count] - 1; i++) {
+    for (int i = 0; i < [ROOT_MENU count]; i++) {
         for (int j = 0; j < [[ROOT_MENU objectAtIndex:i] count] - 1; j++) {
-            NSString *vcID = [[ROOT_MENU objectAtIndex:i] objectAtIndex:j];
-            UINavigationController *navVC = [self.storyboard instantiateViewControllerWithIdentifier:vcID];
-            [self.menuItems setObject:navVC forKey:vcID];
-            
-//            if (![vcID isEqualToString:startingVCId]) {
+            if (i != kRootMore || j == kMoreLegal) {
+                NSString *vcID = [[ROOT_MENU objectAtIndex:i] objectAtIndex:j];
+                vcID = [vcID stringByReplacingOccurrencesOfString:@" " withString:@""];
+                UINavigationController *navVC = [self.storyboard instantiateViewControllerWithIdentifier:vcID];
+                [self.menuItems setObject:navVC forKey:vcID];
                 [UIHelper adjustScreen:navVC];
-//            }
+            }
         }
     }
     
-    UINavigationController *navVC = [self.menuItems objectForKey:startingVCId];
-    [self.view addSubview:navVC.view];
+    //start with Invoices view
+//    NSString *startingVCId = MENU_INVOICES;
+//    UINavigationController *navVC = [self.menuItems objectForKey:startingVCId];
+//    [self.view addSubview:navVC.view];
+//    
+//    self.currVC = [navVC.childViewControllers objectAtIndex:0];
+//    self.currVC.navigation = navVC;
+//    self.currVC.navigationId = startingVCId;
+//    
+//    NSIndexPath * initIndexPath = [NSIndexPath indexPathForRow:kARInvoice inSection:kRootAR];
+//    [self.menuTableView selectRowAtIndexPath:initIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     
-    self.currVC = [navVC.childViewControllers objectAtIndex:0];
-    self.currVC.navigation = navVC;
-    self.currVC.navigationId = startingVCId;
-    
-    NSIndexPath * initIndexPath = [NSIndexPath indexPathForRow:kARInvoice inSection:kRootAR];
-    [self.menuTableView selectRowAtIndexPath:initIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-            
-//    [Invoice setARDelegate:(AROverViewController *)self.currVC];  //assumption: currVC is AROverViewController.
+////    [Invoice setARDelegate:(AROverViewController *)self.currVC];  //assumption: currVC is AROverViewController.
     
     [Invoice retrieveListForActive:YES reload:YES];
     [Bill retrieveListForActive:YES reload:YES];
@@ -132,9 +140,9 @@ static RootMenuViewController * _sharedInstance = nil;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"Organizations"]) {
+    if ([segue.identifier isEqualToString:MENU_ORGS]) {
         [(SelectOrgViewController *)segue.destinationViewController setIsInitialLogin:NO];
-    } else if ([segue.identifier isEqualToString:@"LogOut"]) {
+    } else if ([segue.identifier isEqualToString:MENU_LOGOUT]) {
         [Util logout];
     }
 }
@@ -184,7 +192,9 @@ static RootMenuViewController * _sharedInstance = nil;
         });
     } else {
         cell.textLabel.text = [[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-        NSString *imageName = [[[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] stringByAppendingString:@"Icon.png"];
+        NSString *menuName = [[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+        menuName = [menuName stringByReplacingOccurrencesOfString:@" " withString:@""];
+        NSString *imageName = [menuName stringByAppendingString:@"Icon.png"];
         cell.imageView.image = [UIImage imageNamed:imageName];
         
         UIView *bgColorView = [[UIView alloc] init];
@@ -199,17 +209,21 @@ static RootMenuViewController * _sharedInstance = nil;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 4) { // && indexPath.row == [[ROOT_MENU objectAtIndex:3] indexOfObject:MENU_LOGOUT])
-//        || (indexPath.section == 0 && indexPath.row == [[ROOT_MENU objectAtIndex:0] indexOfObject:MENU_ORGS])) {
-        [self performSegueWithIdentifier:[[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] sender:self];
+    if (indexPath.section == kRootMore) {
+        if (indexPath.row == kMoreOrgs || indexPath.row == kMoreLogout) {
+            [self performSegueWithIdentifier:[[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] sender:self];
+        } else if (indexPath.row == kMoreLegal) {
+            [self showView:[[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+        } else if (indexPath.row == kMoreFeedback) {
+            [self sendFeedbackEmail];
+        }
     } else if (indexPath.section != 0 || indexPath.row != 0) {
         [self showView:[[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
     }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    //    if ([[[ROOT_MENU objectAtIndex:section] objectAtIndex:0] length] == 0) {
-    if (section == 0) {
+    if (section == kRootProfile) {
         return 0;
     } else {
         return ROOT_MENU_SECTION_HEADER_HEIGHT;
@@ -217,8 +231,7 @@ static RootMenuViewController * _sharedInstance = nil;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    //    if ([[[ROOT_MENU objectAtIndex:section] objectAtIndex:0] length] == 0) {
-    if (section == 0) {
+    if (section == kRootProfile) {
         return nil;
     } else {
         UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, ROOT_MENU_SECTION_HEADER_HEIGHT)];
@@ -239,5 +252,50 @@ static RootMenuViewController * _sharedInstance = nil;
     [self.currVC slideIn];
 }
 
+#pragma mark - Feedback email
+
+- (void)sendFeedbackEmail {
+    if ([MFMailComposeViewController canSendMail]) {
+        MFMailComposeViewController *mailer = [[MFMailComposeViewController alloc] init];
+        mailer.mailComposeDelegate = self;
+        
+        Organization *org = [Organization getSelectedOrg];
+        [mailer setSubject:[NSString stringWithFormat:@"Feedback on MoBill iPhone app from %@", org.name]];
+        
+        NSArray *toRecipients = [NSArray arrayWithObjects:@"customer.mobill@gmail.com", nil];
+        [mailer setToRecipients:toRecipients];
+        
+        [self presentModalViewController:mailer animated:YES];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure"
+                                                        message:@"Your device doesn't support the composer sheet"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles: nil];
+        [alert show];
+    }
+}
+
+#pragma mark - MailComposer delegate
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+    switch (result){
+        case MFMailComposeResultSent:
+            [UIHelper showInfo: EMAIL_SENT withStatus:kSuccess];
+            break;
+        case MFMailComposeResultCancelled:
+            break;
+        case MFMailComposeResultSaved:
+            break;
+        case MFMailComposeResultFailed:
+            [UIHelper showInfo: EMAIL_FAILED withStatus:kFailure];
+            break;
+        default:
+            break;
+    }
+    
+    // Remove the mail view
+    [self dismissModalViewControllerAnimated:YES];
+}
 
 @end

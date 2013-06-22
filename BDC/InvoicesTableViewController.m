@@ -159,10 +159,10 @@
 {
     [super viewDidLoad];
     
+    self.invoices = [Invoice listOrderBy:INV_NUMBER ascending:YES active:YES];
+    [Invoice setListDelegate:self];
+    
     if (self.mode != kAttachMode) {
-        [Invoice setListDelegate:self];
-//        self.deleteDelegate = self;
-        
         self.sortAttributes = [NSArray arrayWithObjects:INV_CUSTOMER_NAME, INV_NUMBER, INV_DATE, INV_DUE_DATE, INV_AMOUNT, INV_AMOUNT_DUE, nil];
         self.sortAttributeLabels = INV_LABELS;
         

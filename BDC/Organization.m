@@ -29,8 +29,8 @@ static Organization *selectedOrg = nil;
 
 + (id)list {
     NSSortDescriptor *firstOrder = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
-    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:ID ascending:NO selector:@selector(localizedCaseInsensitiveCompare:)];
-    orgs = [orgs sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, secondOrder, nil]];
+//    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:ID ascending:NO selector:@selector(localizedCaseInsensitiveCompare:)];
+    orgs = [orgs sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, nil]];
     
     return orgs;
 }

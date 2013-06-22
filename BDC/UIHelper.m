@@ -13,8 +13,8 @@
 
 #define INFO_VIEW_POSITION_Y     150
 #define INFO_VIEW_WIDTH          170
-#define INFO_VIEW_HEIGHT         100
-#define INFO_VIEW_MARGIN         20
+#define INFO_VIEW_HEIGHT         150
+#define INFO_VIEW_MARGIN         12
 #define INFO_VIEW_PADDING        5
 
 #define INFO_ICON_SIZE           20

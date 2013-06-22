@@ -159,7 +159,6 @@
     
     self.bills = [Bill listOrderBy:BILL_NUMBER ascending:YES active:YES];
     [Bill setListDelegate:self];
-//    [Bill retrieveListForActive:YES];
     
     if (self.mode != kAttachMode) {
         self.sortAttributes = [NSArray arrayWithObjects:BILL_VENDOR_NAME, BILL_NUMBER, BILL_DATE, BILL_DUE_DATE, BILL_AMOUNT, BILL_AMOUNT_PAID, BILL_APPROVAL_STATUS, nil];
@@ -167,12 +166,6 @@
         
         self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
         self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
-        
-//        // retrieve inactive bill list in the background
-//        [Bill retrieveListForActive:NO reload:NO];
-//        [Vendor retrieveList];
-//        [ChartOfAccount retrieveList];
-//        [ChartOfAccount retrieveListForActive:YES reload:NO];
     } else {
         self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
     }

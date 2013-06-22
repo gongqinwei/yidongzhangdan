@@ -51,49 +51,60 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    NSString *selectedOrgId = [Util getSelectedOrgId];
+    UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil];
+    UINavigationController *initialController = (UINavigationController *)[mainstoryboard instantiateInitialViewController];
+    SplashViewController *splashScreen = initialController.childViewControllers[0];
+    
     NSString *userName = [Util getUsername];
     NSString *password = [Util getPassword];
     
     if (!userName || userName.length == 0 || !password || password.length == 0) {
-        [self switchToVC:@"LoginScreen"];
-    }
-    
-    NSMutableDictionary *info = [NSMutableDictionary dictionary];
-    [info setObject:ORG_ID forKey:selectedOrgId];
-    [info setObject:USERNAME forKey:userName];
-    [info setObject:PASSWORD forKey:password];
-    
-    [APIHandler asyncCallWithAction:LOGIN_API Info:info AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
-        NSInteger status;
-        NSDictionary *responseData = [APIHandler getResponse:response data:data error:&err status:&status];
+        self.window.rootViewController = initialController;
+        [self.window makeKeyAndVisible];
+        [splashScreen performSegueWithIdentifier:@"PresentLogin" sender:splashScreen];
+    } else {
+        NSString *selectedOrgId = [Util getSelectedOrgId];
+        NSMutableDictionary *info = [NSMutableDictionary dictionary];
+        [info setObject:ORG_ID forKey:selectedOrgId];
+        [info setObject:USERNAME forKey:userName];
+        [info setObject:PASSWORD forKey:password];
         
-        if (status == RESPONSE_SUCCESS) {
-            // set cookie for session id
-            NSString *sessionId = [responseData objectForKey:SESSION_ID_KEY];
-            [Util setSession:sessionId];
+        [APIHandler asyncCallWithAction:LOGIN_API Info:info AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+            NSInteger status;
+            NSDictionary *responseData = [APIHandler getResponse:response data:data error:&err status:&status];
             
-            [Invoice retrieveListForActive:YES reload:YES];
-            [Bill retrieveListForActive:YES reload:YES];
-            [Customer retrieveList];
-            [Vendor retrieveList];
-            [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
-            [Item retrieveList];
-            [ChartOfAccount retrieveList];
-            [Invoice retrieveListForActive:NO reload:NO];
-            [Bill retrieveListForActive:NO reload:NO];
-        } else {
-            [self switchToVC:@"LoginScreen"];
-        }
-    }];
+            if (status == RESPONSE_SUCCESS) {
+                // set cookie for session id
+                NSString *sessionId = [responseData objectForKey:SESSION_ID_KEY];
+                [Util setSession:sessionId];
+                                
+                [Invoice retrieveListForActive:YES reload:YES];
+                [Bill retrieveListForActive:YES reload:YES];
+                [Customer retrieveListForActive:YES reload:YES];
+                [Vendor retrieveListForActive:YES reload:YES];
+                [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
+                [Item retrieveListForActive:YES reload:YES];
+                [ChartOfAccount retrieveList];
+                [Invoice retrieveListForActive:NO reload:NO];
+                [Bill retrieveListForActive:NO reload:NO];
+                [Customer retrieveListForActive:NO reload:NO];
+                [Vendor retrieveListForActive:NO reload:NO];
+                [Item retrieveListForActive:NO reload:NO];
+            } else {
+                self.window.rootViewController = initialController;
+                [self.window makeKeyAndVisible];
+                [splashScreen performSegueWithIdentifier:@"PresentLogin" sender:splashScreen];
+            }
+        }];
+    }
 }
 
-- (void)switchToVC:(NSString *)vcID {
-    UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil];
-    SplashViewController* splash = [mainstoryboard instantiateViewControllerWithIdentifier:vcID];
-    [self.window makeKeyAndVisible];
-    [self.window.rootViewController presentViewController:splash animated:YES completion:NULL];
-}
+//- (void)switchToVC:(NSString *)vcID {
+//    UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil];
+//    SplashViewController* splash = [mainstoryboard instantiateViewControllerWithIdentifier:vcID];
+//    [self.window makeKeyAndVisible];
+//    [self.window.rootViewController presentViewController:splash animated:YES completion:NULL];
+//}
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {

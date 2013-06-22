@@ -13,6 +13,8 @@
 #import "APIHandler.h"
 #import "UIHelper.h"
 
+#define LOG_OUT_FROM_SELECT_ORGS_SEGUE      @"LogOutFromOrgSelect"
+
 @interface SelectOrgViewController ()
 
 @property (nonatomic, strong) NSArray *filteredOrgs;
@@ -29,6 +31,10 @@
 
 - (void)cancelSelect:(UIBarButtonItem *)sender {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)logout {
+    [self performSegueWithIdentifier:LOG_OUT_FROM_SELECT_ORGS_SEGUE sender:self];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -58,6 +64,8 @@
     self.orgs = [Organization list];
     if (!self.isInitialLogin) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelSelect:)];
+    } else {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Log Out" style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
     }
 }
 

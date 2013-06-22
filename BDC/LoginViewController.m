@@ -39,6 +39,11 @@
     [Organization retrieveList];
 }
 
+- (void)launchSignup {
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/Signup", DOMAIN_URL]];
+    [[UIApplication sharedApplication] openURL:url];
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -59,6 +64,15 @@
     
     self.email.text = [Util getUsername];
     self.password.text = [Util getPassword];
+    
+    UIButton *signUpUrl = [UIButton buttonWithType:UIButtonTypeCustom];
+    signUpUrl.frame = CGRectMake(80.0, 280.0, 160.0, 20.0);
+    signUpUrl.titleLabel.font = [UIFont fontWithName:APP_FONT size:17.0];
+    signUpUrl.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    [signUpUrl setTitle:@"Sign up for Bill.com" forState:UIControlStateNormal];
+    [signUpUrl setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [signUpUrl addTarget:self action:@selector(launchSignup) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:signUpUrl];
     
     [Organization setDelegate:self];
 }
@@ -100,11 +114,6 @@
         [info setObject:PASSWORD forKey:[Util URLEncode:[Util getPassword]]];
         
         [APIHandler asyncCallWithAction:LOGIN_API Info:info AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.indicator stopAnimating];
-                weakSelf.indicator.hidden = YES;
-            });
-            
             NSInteger status;
             NSDictionary *responseData = [APIHandler getResponse:response data:data error:&err status:&status];
             if (status == RESPONSE_SUCCESS) {
@@ -132,22 +141,26 @@
                 }
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    weakSelf.warning.text = [err localizedDescription];     //INVALID_CREDENTIAL;
-                    weakSelf.warning.hidden = NO;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [weakSelf.indicator stopAnimating];
+                        weakSelf.indicator.hidden = YES;
+                        weakSelf.warning.text = [err localizedDescription];     //INVALID_CREDENTIAL;
+                        weakSelf.warning.hidden = NO;
+                    });
                 });        
             }
         }];
     } else if (status == kFailListOrgs) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.indicator stopAnimating];
-            weakSelf.warning.hidden = YES;
+            weakSelf.indicator.hidden = YES;
             weakSelf.warning.text = FAIL_LIST_ORGS;
             weakSelf.warning.hidden = NO;
         });
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.indicator stopAnimating];
-            weakSelf.warning.hidden = YES;
+            weakSelf.indicator.hidden = YES;
             weakSelf.warning.text = INVALID_CREDENTIAL;
             weakSelf.warning.hidden = NO;
         });
