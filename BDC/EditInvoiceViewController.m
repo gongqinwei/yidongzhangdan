@@ -795,7 +795,7 @@ typedef enum {
         footerView.backgroundColor = [UIColor clearColor];
         
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 3, 100, 20)];
-        label.text = @"Balance Due";
+        label.text = @"Amount";
         label.font = [UIFont fontWithName:APP_BOLD_FONT size:14];
         label.backgroundColor = [UIColor clearColor];
         label.textColor = APP_LABEL_BLUE_COLOR;
