@@ -114,8 +114,8 @@
 #define RESPONSE_SUCCESS    0
 #define RESPONSE_FALURE     1
 #define RESPONSE_TIMEOUT    2
-#define ORG_NO_API          @"1105"
-#define INVALID_SESSION     @"1109"
+#define ORG_NO_API          @"BDC_1105"
+#define INVALID_SESSION     @"BDC_1109"
 #define RESPONSE_DATA_KEY   @"response_data"
 #define RESPONSE_STATUS_KEY @"response_status"
 #define RESPONSE_ERROR_CODE @"error_code"
