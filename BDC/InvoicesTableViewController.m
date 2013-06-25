@@ -176,6 +176,12 @@
     }
     
     self.createNewSegue = CREATE_INVOICE_SEGUE;
+    
+    self.totalInvoiceAmount = [NSDecimalNumber zero];
+    
+    for(Invoice *inv in self.invoices) {
+        self.totalInvoiceAmount = [self.totalInvoiceAmount decimalNumberByAdding:inv.amount];
+    }
 }
 
 - (void)viewDidUnload
