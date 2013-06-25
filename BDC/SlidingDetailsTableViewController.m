@@ -355,7 +355,7 @@ static double animatedDistance = 0;
                                        img.image = image;
                                        [img setNeedsDisplay];
                                        
-                                       [UIView animateWithDuration:2.0
+                                       [UIView animateWithDuration:1.5
                                                         animations:^{
                                                             img.alpha = 1.0;
                                                         }

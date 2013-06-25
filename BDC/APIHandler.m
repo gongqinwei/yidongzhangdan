@@ -28,11 +28,13 @@ static Handler sessionValidatingHandler = nil;
     
     // info's dictionary entry stores url param as value=>key to handle multiple param with same key
     for(NSString *value in info) {
-        NSString *key = [info objectForKey:value];
-        if ([params length] > 0) {
-            [params appendString:@"&"];
+        if (value) {
+            NSString *key = [info objectForKey:value];
+            if ([params length] > 0) {
+                [params appendString:@"&"];
+            }
+            [params appendFormat:@"%@=%@", key, value];
         }
-        [params appendFormat:@"%@=%@", key, value];
     }
     
     NSLog(@"params: %@", params);

@@ -1,4 +1,4 @@
-Mobill (the "App", "we", "us" or "our") is an iOS app which entirely relies on Bill.com's API for any operation. Mobill itself doesn't own any backend server to store any user data or document. The App is not responsible for any loss of data, unintended change of data or failure of transaction if it's caused by malfunction of Bill.com's API.<br>
+Mobill (the "App", "we", "us" or "our") is an iOS app which entirely relies on Bill.com's API for any operation. Mobill itself doesn't own any backend server to store or retain any user data or document. The App is not responsible for any loss of data, unintended change of data or failure of transaction if it's caused by malfunction of Bill.com's API.<br>
 <br>
 Hereby we are attaching the general terms of service by Bill.com. Please be adviced that these exact terms apply to Mobill.<br>
 <br>
