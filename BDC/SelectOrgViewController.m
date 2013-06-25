@@ -119,7 +119,8 @@
 
 //    cell.detailTextLabel.text = [NSString stringWithFormat:@"%d bills overdue", indexPath.row + 1];
     
-//    NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100&orgId=%@", DOMAIN_URL, ORG_LOGO_API, org.objectId]]];
+    NSString *imageName = @"CompanyIcon.png";
+    cell.imageView.image = [UIImage imageNamed:imageName];
     
     dispatch_async(dispatch_get_global_queue(0,0), ^{
         NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100&orgId=%@", DOMAIN_URL, ORG_LOGO_API, org.objectId]]];

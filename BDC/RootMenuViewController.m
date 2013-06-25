@@ -27,9 +27,8 @@
 
 @interface RootMenuViewController () <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate>
 
-//- (void)showView:(NSString *)identifier;
-
 @end
+
 
 @implementation RootMenuViewController
 
@@ -176,19 +175,18 @@ static RootMenuViewController * _sharedInstance = nil;
         cell.userInteractionEnabled = NO;
         
         NSString *imageName = @"ProfileIcon.png";
-        cell.imageView.frame = CGRectMake(3, 3, 37, 37);
         cell.imageView.image = [UIImage imageNamed:imageName];
-        
-//        NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100", DOMAIN_URL, ORG_LOGO_API]]];
-//        cell.imageView.image = [UIImage imageWithData: imageData];
 
         dispatch_async(dispatch_get_global_queue(0,0), ^{
-            NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100", DOMAIN_URL, ORG_LOGO_API]]];
-
+            NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100", DOMAIN_URL, ORG_LOGO_API]]];            
+            
             if (data != nil) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    cell.imageView.image = [UIImage imageWithData: data];
-                    cell.imageView.frame = CGRectMake(3, 3, 37, 37);
+                    UIImage *logo = [UIImage imageWithData: data];
+                    if (logo) {
+                        cell.imageView.image = [UIImage imageWithData: data];
+                        cell.imageView.frame = CGRectMake(3, 3, 37, 37);
+                    }
                 });
             }
         });

@@ -33,6 +33,7 @@
 		0E5F51401778329C001095C9 /* LogOutIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E5F513D1778329C001095C9 /* LogOutIcon.png */; };
 		0E5F51441778332F001095C9 /* ScannerIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E5F51431778332F001095C9 /* ScannerIcon.png */; };
 		0E68460F1609863C00716412 /* SplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E68460E1609863C00716412 /* SplashViewController.m */; };
+		0E6B083F177A5CC200681E9D /* CompanyIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E6B083E177A5CC200681E9D /* CompanyIcon.png */; };
 		0E761CFD1731EF310041292A /* PayBillViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E761CFC1731EF310041292A /* PayBillViewController.m */; };
 		0E7DCABB16030BD700D0B35E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E7DCABA16030BD700D0B35E /* Security.framework */; };
 		0E7DCAC11603A1DD00D0B35E /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7DCAC016030FCD00D0B35E /* KeychainItemWrapper.m */; };
@@ -157,6 +158,7 @@
 		0E5F51431778332F001095C9 /* ScannerIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ScannerIcon.png; sourceTree = "<group>"; };
 		0E68460D1609863B00716412 /* SplashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashViewController.h; sourceTree = "<group>"; };
 		0E68460E1609863C00716412 /* SplashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplashViewController.m; sourceTree = "<group>"; };
+		0E6B083E177A5CC200681E9D /* CompanyIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CompanyIcon.png; sourceTree = "<group>"; };
 		0E761CFB1731EF310041292A /* PayBillViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayBillViewController.h; sourceTree = "<group>"; };
 		0E761CFC1731EF310041292A /* PayBillViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PayBillViewController.m; sourceTree = "<group>"; };
 		0E7DCABA16030BD700D0B35E /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -321,18 +323,18 @@
 		0E2C0AAC15EC419A0059C739 /* TabBarImages */ = {
 			isa = PBXGroup;
 			children = (
-				0E3552D11778BE81007D1CB2 /* TermofServiceIcon.png */,
+				0E5F5129177813FB001095C9 /* ProfileIcon.png */,
 				0E5F51431778332F001095C9 /* ScannerIcon.png */,
-				0E5F513517782A95001095C9 /* MyCompaniesIcon.png */,
-				0E5F512B17782623001095C9 /* InvoicesIcon.png */,
+				0EE2C128162CEB9100BB00DA /* InboxIcon.png */,
 				0E5F512C17782623001095C9 /* BillsIcon.png */,
 				0E3552CB1778B7F9007D1CB2 /* VendorsIcon.png */,
+				0E5F512B17782623001095C9 /* InvoicesIcon.png */,
 				0E5F512F177827D7001095C9 /* CustomersIcon.png */,
 				0E5F5131177827D8001095C9 /* ItemsIcon.png */,
-				0E5F5129177813FB001095C9 /* ProfileIcon.png */,
+				0E5F513517782A95001095C9 /* MyCompaniesIcon.png */,
 				0E5F513B1778329C001095C9 /* FeedbackIcon.png */,
+				0E3552D11778BE81007D1CB2 /* TermofServiceIcon.png */,
 				0E5F513D1778329C001095C9 /* LogOutIcon.png */,
-				0EE2C128162CEB9100BB00DA /* InboxIcon.png */,
 			);
 			name = TabBarImages;
 			sourceTree = "<group>";
@@ -709,6 +711,7 @@
 				0E847CE8170E203C00C7FA53 /* MenuIcon.png */,
 				0E14EC5E1603ED960098EB03 /* warning.png */,
 				0E14EC5F1603ED960098EB03 /* success.png */,
+				0E6B083E177A5CC200681E9D /* CompanyIcon.png */,
 				0EB2190917472E1A00382C44 /* FileIcons */,
 			);
 			name = Images;
@@ -814,6 +817,7 @@
 				0E5F51441778332F001095C9 /* ScannerIcon.png in Resources */,
 				0E3552CC1778B7F9007D1CB2 /* VendorsIcon.png in Resources */,
 				0E3552D21778BE81007D1CB2 /* TermofServiceIcon.png in Resources */,
+				0E6B083F177A5CC200681E9D /* CompanyIcon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
