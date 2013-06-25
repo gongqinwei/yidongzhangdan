@@ -18,8 +18,8 @@
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
-#define DOMAIN_URL          @"http://10.1.10.153"
-//#define DOMAIN_URL          @"http://192.168.1.90"
+//#define DOMAIN_URL          @"http://10.1.10.153"
+#define DOMAIN_URL          @"http://192.168.1.90"
 #define APP_KEY             @"devKey"
 #endif
 
@@ -114,7 +114,8 @@
 #define RESPONSE_SUCCESS    0
 #define RESPONSE_FALURE     1
 #define RESPONSE_TIMEOUT    2
-#define RESPONSE_ORG_NO_API 1105
+#define ORG_NO_API          @"1105"
+#define INVALID_SESSION     @"1109"
 #define RESPONSE_DATA_KEY   @"response_data"
 #define RESPONSE_STATUS_KEY @"response_status"
 #define RESPONSE_ERROR_CODE @"error_code"
