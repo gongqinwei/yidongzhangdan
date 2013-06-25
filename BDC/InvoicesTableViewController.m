@@ -180,7 +180,7 @@
     self.totalInvoiceAmount = [NSDecimalNumber zero];
     
     for(Invoice *inv in self.invoices) {
-        self.totalInvoiceAmount = [self.totalInvoiceAmount decimalNumberByAdding:inv.amount];
+        self.totalInvoiceAmount = [self.totalInvoiceAmount decimalNumberByAdding:inv.amountDue];
     }
 }
 
