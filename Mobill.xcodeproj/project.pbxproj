@@ -666,6 +666,7 @@
 		7E91E3F515927C15005104AF /* BDC */ = {
 			isa = PBXGroup;
 			children = (
+				7E9CF4971779785F00BA43DC /* BDC */,
 				0E999E0C16DE5E6B00F1E39F /* Categories */,
 				7E579F5F15A37CFF009D1455 /* Models */,
 				7E579F6115A37DD3009D1455 /* Views */,
@@ -712,6 +713,13 @@
 				0EB2190917472E1A00382C44 /* FileIcons */,
 			);
 			name = Images;
+			sourceTree = "<group>";
+		};
+		7E9CF4971779785F00BA43DC /* BDC */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = BDC;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
