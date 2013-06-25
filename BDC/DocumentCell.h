@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Document.h"
+#import "SlidingCollectionViewController.h"
 
 @class DocumentCell;
 
@@ -25,6 +26,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *documentCreatedDate;
 
 @property (nonatomic, strong) Document *document;
+@property (nonatomic, strong) SlidingCollectionViewController *parentVC;
 @property (nonatomic, strong) id<DocumentCellDelegate> selectDelegate;
 
 - (void)toggleInfoDisplay:(BOOL)show;

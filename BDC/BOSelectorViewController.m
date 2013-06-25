@@ -35,6 +35,11 @@
 #define ATTACH_TO_NEW_CUSTOMER_SEGUE                @"AttachToNewCustomer"
 #define ATTACH_TO_EXISTING_CUSTOMER_SEGUE           @"AttachToExistingCustomer"
 
+#define AttachToNewSegues       [NSArray arrayWithObjects: \
+                                    [NSArray arrayWithObjects:ATTACH_TO_NEW_BILL_SEGUE, ATTACH_TO_NEW_VENDOR_SEGUE, nil], \
+                                    [NSArray arrayWithObjects:ATTACH_TO_NEW_INVOICE_SEGUE, ATTACH_TO_NEW_CUSTOMER_SEGUE, nil], \
+                                nil]
+
 
 @interface BOSelectorViewController ()
 
@@ -176,6 +181,13 @@
         
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
         cell.accessoryView = self.uploadIndicator;
+    }
+}
+
+- (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    if ([self tryTap]) {
+        NSString *segueId = AttachToNewSegues[indexPath.section][indexPath.row];
+        [self performSegueWithIdentifier:segueId sender:self];
     }
 }
 

@@ -24,6 +24,7 @@
 @synthesize documentName;
 @synthesize document = _document;
 @synthesize selectDelegate;
+@synthesize parentVC;
 
 - (void)toggleInfoDisplay:(BOOL)hidden {
     self.documentName.hidden = hidden;
@@ -32,18 +33,20 @@
 }
 
 - (IBAction)showDocumentInfo:(UIButton *)sender {
-    if (!self.infoOverlay) {
-        self.infoOverlay = [[UIView alloc] initWithFrame:self.documentImageView.frame];
-        self.infoOverlay.backgroundColor = [UIColor darkGrayColor];
-        self.infoOverlay.alpha = 0.8f;
-        self.infoOverlay.layer.masksToBounds = YES;
-        self.infoOverlay.hidden = YES;
-        [self.documentImageView addSubview:self.infoOverlay];
+    if ([self.parentVC tryTap]) {
+        if (!self.infoOverlay) {
+            self.infoOverlay = [[UIView alloc] initWithFrame:self.documentImageView.frame];
+            self.infoOverlay.backgroundColor = [UIColor darkGrayColor];
+            self.infoOverlay.alpha = 0.8f;
+            self.infoOverlay.layer.masksToBounds = YES;
+            self.infoOverlay.hidden = YES;
+            [self.documentImageView addSubview:self.infoOverlay];
+        }
+        
+        [self toggleInfoDisplay: !self.infoOverlay.hidden];
+        
+        [self.selectDelegate didSelectCell:self];
     }
-    
-    [self toggleInfoDisplay: !self.infoOverlay.hidden];
-    
-    [self.selectDelegate didSelectCell:self];
 }
 
 - (void)setDocument:(Document *)document {

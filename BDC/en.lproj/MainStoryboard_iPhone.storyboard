@@ -1659,7 +1659,6 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <connections>
-                                            <segue destination="WEK-Fn-naN" kind="push" identifier="AttachToNewBill" trigger="accessoryAction" id="pSF-WP-nLH"/>
                                             <segue destination="k1G-B2-MSF" kind="push" identifier="AttachToExistingBill" id="6WH-3o-pdK"/>
                                         </connections>
                                     </tableViewCell>
@@ -1685,7 +1684,6 @@
                                         </view>
                                         <connections>
                                             <segue destination="cTU-5g-PB7" kind="push" identifier="AttachToExistingVendor" id="ivu-fh-H7y"/>
-                                            <segue destination="Crd-D4-0GL" kind="push" identifier="AttachToNewVendor" trigger="accessoryAction" id="8fW-Jo-T4w"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
@@ -1714,7 +1712,6 @@
                                         </view>
                                         <connections>
                                             <segue destination="Auy-Fb-tfc" kind="push" identifier="AttachToExistingInvoice" id="KBb-Vt-s99"/>
-                                            <segue destination="W2n-Tn-iyx" kind="push" identifier="AttachToNewInvoice" trigger="accessoryAction" id="Rma-aH-Vy6"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="detailDisclosureButton" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="iT4-v0-kaa" imageView="qxP-oS-Pil" style="IBUITableViewCellStyleDefault" id="KLh-nA-Aev">
@@ -1739,7 +1736,6 @@
                                         </view>
                                         <connections>
                                             <segue destination="3zY-p5-ksg" kind="push" identifier="AttachToExistingCustomer" id="0JS-Uf-rWu"/>
-                                            <segue destination="eKR-Kb-X4l" kind="push" identifier="AttachToNewCustomer" trigger="accessoryAction" id="tg6-FB-p4D"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
@@ -1775,14 +1771,14 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Company" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="38i-EZ-9Ao">
-                                                    <rect key="frame" x="36" y="0.0" width="254" height="39"/>
+                                                    <rect key="frame" x="41" y="0.0" width="249" height="39"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
-                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="OrganizationsIcon.png" id="Rlt-v5-409">
-                                                    <rect key="frame" x="10" y="11" width="16" height="16"/>
+                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="MyCompaniesIcon.png" id="Rlt-v5-409">
+                                                    <rect key="frame" x="7" y="7" width="24" height="24"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </imageView>
                                             </subviews>
@@ -1798,6 +1794,12 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="R0J-YT-C50"/>
+                    <connections>
+                        <segue destination="WEK-Fn-naN" kind="push" identifier="AttachToNewBill" id="v63-Az-wLD"/>
+                        <segue destination="Crd-D4-0GL" kind="push" identifier="AttachToNewVendor" id="Hnb-9H-Um4"/>
+                        <segue destination="W2n-Tn-iyx" kind="push" identifier="AttachToNewInvoice" id="CeX-f9-mSc"/>
+                        <segue destination="eKR-Kb-X4l" kind="push" identifier="AttachToNewCustomer" id="nLD-mQ-6wj"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tum-Ku-ahY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2452,7 +2454,7 @@
         <image name="InboxIcon.png" width="24" height="24"/>
         <image name="InvoicesIcon.png" width="24" height="24"/>
         <image name="MenuIcon.png" width="30" height="20"/>
-        <image name="OrganizationsIcon.png" width="16" height="16"/>
+        <image name="MyCompaniesIcon.png" width="24" height="24"/>
         <image name="VendorsIcon.png" width="22" height="24"/>
         <image name="bill.png" width="16" height="16"/>
     </resources>
@@ -2494,6 +2496,9 @@
         </class>
         <class className="BOSelectorViewController" superclassName="SlidingTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/BOSelectorViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="uploadToInbox:"/>
+            </relationships>
         </class>
         <class className="BillsTableViewController" superclassName="SlidingListTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/BillsTableViewController.h"/>
@@ -2501,17 +2506,20 @@
         <class className="CreateBillViewController" superclassName="SlidingViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CreateBillViewController.h"/>
             <relationships>
+                <relationship kind="action" name="saveBill:" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="attachment" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="infoTable" candidateClass="UITableView"/>
             </relationships>
         </class>
         <class className="CustomersTableViewController" superclassName="SlidingListTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CustomersTableViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="editCustomers:" candidateClass="UIBarButtonItem"/>
+            </relationships>
         </class>
         <class className="DocumentCell" superclassName="UICollectionViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DocumentCell.h"/>
             <relationships>
-                <relationship kind="action" name="showDocumentInfo:" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="documentCreatedDate" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="documentImageView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="documentName" candidateClass="UILabel"/>
@@ -2519,9 +2527,15 @@
         </class>
         <class className="EditBillViewController" superclassName="SlidingDetailsTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EditBillViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="saveBusObj:" candidateClass="UIBarButtonItem"/>
+            </relationships>
         </class>
         <class className="EditCustomerViewController" superclassName="SlidingDetailsTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EditCustomerViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="saveBusObj:" candidateClass="UIBarButtonItem"/>
+            </relationships>
         </class>
         <class className="EditInvoiceViewController" superclassName="SlidingDetailsTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EditInvoiceViewController.h"/>
@@ -2566,6 +2580,8 @@
         <class className="PayBillViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PayBillViewController.h"/>
             <relationships>
+                <relationship kind="action" name="cancelPay:" candidateClass="UIBarButtonItem"/>
+                <relationship kind="action" name="payBill:"/>
                 <relationship kind="outlet" name="bankAccountLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="billAmountLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="dueDateLabel" candidateClass="UILabel"/>
@@ -2646,6 +2662,9 @@
         </class>
         <class className="VendorsTableViewController" superclassName="SlidingListTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/VendorsTableViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="editVendors:" candidateClass="UIBarButtonItem"/>
+            </relationships>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
@@ -2654,21 +2673,21 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="jJm-5t-hI9"/>
-        <segue reference="Rma-aH-Vy6"/>
+        <segue reference="v63-Az-wLD"/>
         <segue reference="ifQ-ST-XVY"/>
-        <segue reference="6WH-3o-pdK"/>
-        <segue reference="pSF-WP-nLH"/>
+        <segue reference="CeX-f9-mSc"/>
+        <segue reference="ivu-fh-H7y"/>
         <segue reference="KBb-Vt-s99"/>
-        <segue reference="e1N-Gr-piF"/>
+        <segue reference="6WH-3o-pdK"/>
+        <segue reference="0JS-Uf-rWu"/>
+        <segue reference="Hnb-9H-Um4"/>
+        <segue reference="nLD-mQ-6wj"/>
         <segue reference="qdh-4f-Obl"/>
         <segue reference="rn3-5G-Kbh"/>
-        <segue reference="fqJ-Rf-CsZ"/>
         <segue reference="fR5-hZ-eeX"/>
-        <segue reference="aVE-b3-xHu"/>
-        <segue reference="xP7-Be-EUo"/>
-        <segue reference="5Ki-uI-G54"/>
-        <segue reference="2iZ-iS-Zfa"/>
+        <segue reference="fqJ-Rf-CsZ"/>
         <segue reference="ysq-5e-jjh"/>
+        <segue reference="2iZ-iS-Zfa"/>
+        <segue reference="5Ki-uI-G54"/>
     </inferredMetricsTieBreakers>
 </document>

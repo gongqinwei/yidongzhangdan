@@ -95,6 +95,7 @@
     cell.documentName.adjustsFontSizeToFitWidth = YES;
     cell.documentName.minimumFontSize = 8;
     cell.documentCreatedDate.text = [Util formatDate:doc.createdDate format:nil];
+    cell.parentVC = self;
     cell.selectDelegate = self;
     [cell toggleInfoDisplay:YES];
     
