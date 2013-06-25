@@ -128,7 +128,7 @@ typedef enum {
     
     [super setMode:mode];
     
-    [self setBillActions];
+    [self setActions];
 }
 
 #pragma mark - private methods
@@ -195,7 +195,7 @@ typedef enum {
     }
 }
 
-- (void)setBillActions {
+- (void)setActions {
     if (self.mode == kViewMode) {
         self.crudActions = nil;
         
@@ -207,7 +207,6 @@ typedef enum {
             } else {
                 self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
             }
-            
         }
         
         if (self.isActive) {
@@ -234,7 +233,7 @@ typedef enum {
     
     [super viewDidLoad];
     
-    [self setBillActions];
+    [self setActions];
     
     if (self.mode == kViewMode) {
         self.modeChanged = NO;

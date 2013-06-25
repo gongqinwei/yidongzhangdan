@@ -113,6 +113,23 @@ typedef enum {
     self.totalAmount = [NSDecimalNumber zero];
     
     [super setMode:mode];
+    
+    [self setActions];
+}
+
+- (void)setActions {
+    if (self.mode == kViewMode) {
+        self.crudActions = nil;
+
+        if (self.isActive) {
+            self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
+            if (self.pdfReady) {
+                self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];
+            }
+        } else {
+            self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
+        }
+    }
 }
 
 #pragma mark - private methods
@@ -339,22 +356,47 @@ typedef enum {
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.activityIndicator.hidesWhenStopped = YES;
     
+    [self addPDFAttachment];
+    
     if (self.mode == kViewMode) {
-        // retrieve PDF in view mode
-        self.invoicePDFData = [NSMutableData data];
-        
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@=%@&%@=%@", DOMAIN_URL, INV_2_PDF_API, Id, self.busObj.objectId, PRESENT_TYPE, PDF_TYPE]];
-        NSURLRequest *req = [NSURLRequest  requestWithURL:url
-                                              cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                          timeoutInterval:API_TIMEOUT];
-        
-        NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
-        
-        if (!theConnection) {
-            NSLog(@"Failed to establish URL connection to retrieve PDF");
-        } else {
-            [self addPDFAttachment];
-        }
+        [self downloadPDF];
+    }
+}
+
+- (void)downloadPDF {
+    // retrieve PDF in view mode
+    self.pdfReady = NO;
+    self.invoicePDFData = [NSMutableData data];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@=%@&%@=%@", DOMAIN_URL, INV_2_PDF_API, Id, self.busObj.objectId, PRESENT_TYPE, PDF_TYPE]];
+    NSURLRequest *req = [NSURLRequest  requestWithURL:url
+                                          cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                      timeoutInterval:API_TIMEOUT];
+    
+    [NSURLConnection sendAsynchronousRequest:req
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                               self.pdfReady = YES;                               
+                               self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];
+//                               NSLog(@"Succeeded! Received %d bytes of data for PDF", [self.invoicePDFData length]);
+                           }];
+}
+
+- (void)downloadPDF_Deprecated {
+    // retrieve PDF in view mode
+    self.invoicePDFData = [NSMutableData data];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@=%@&%@=%@", DOMAIN_URL, INV_2_PDF_API, Id, self.busObj.objectId, PRESENT_TYPE, PDF_TYPE]];
+    NSURLRequest *req = [NSURLRequest  requestWithURL:url
+                                          cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                      timeoutInterval:API_TIMEOUT];
+    
+    NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
+    
+    if (!theConnection) {
+        NSLog(@"Failed to establish URL connection to retrieve PDF");
+    } else {
+        [self addPDFAttachment];
     }
 }
 
@@ -546,24 +588,13 @@ typedef enum {
             break;
         case kInvoiceLineItems:
         {
-            if (self.modeChanged) {
-                if (self.mode == kViewMode) {
-                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:INV_ITEM_CELL_ID];
-                } else {
-                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:INV_ITEM_CELL_ID];
+//            cell = [tableView dequeueReusableCellWithIdentifier:INV_ITEM_CELL_ID];
+//            if (!cell) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:INV_ITEM_CELL_ID];
+                if (self.mode != kViewMode) {
                     cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 }
-            } else {
-                cell = [tableView dequeueReusableCellWithIdentifier:INV_ITEM_CELL_ID];
-                if (!cell) {
-                    if (self.mode == kViewMode) {
-                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:INV_ITEM_CELL_ID];
-                    } else {
-                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:INV_ITEM_CELL_ID];
-                        cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    }
-                }
-            }
+//            }
             
 //            NSString *itemId = [self.lineItems objectAtIndex:indexPath.row];
 //            Item *item = [((Invoice *)self.shaddowBusObj).lineItems objectForKey:itemId];
@@ -588,6 +619,11 @@ typedef enum {
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             
             if (self.mode == kViewMode) {
+//                for (UIView *view in cell.subviews) {
+//                    if ([view isKindOfClass:[UITextField class]]) {
+//                        [view removeFromSuperview];
+//                    }
+//                }
                 cell.detailTextLabel.text = [[Util formatCurrency:amount] stringByAppendingFormat:@"  (%d pcs)", item.qty];
             } else {
                 UITextField *itemAmountTextField = [[UITextField alloc] initWithFrame:INV_ITEM_AMOUNT_RECT];
@@ -980,7 +1016,7 @@ typedef enum {
     }
 }
 
-#pragma mark - NSURLConnection delegate
+#pragma mark - NSURLConnection delegate - All Deprecated!
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     [self.invoicePDFData setLength:0];
@@ -1033,6 +1069,11 @@ typedef enum {
 - (void)didReadObject {
     self.totalAmount = [NSDecimalNumber zero];
     [super didReadObject];
+}
+
+- (void)didUpdateObject {
+    [self downloadPDF];
+    [super didUpdateObject];
 }
 
 - (void)didSelectCustomer:(NSString *)customerId {
