@@ -84,8 +84,8 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="menuTableView" destination="mNn-4A-kLC" id="exq-7w-bPr"/>
-                        <segue destination="Rf8-hn-Kkj" kind="push" identifier="Organizations" id="5Ki-uI-G54"/>
-                        <segue destination="XOh-NM-Vno" kind="push" identifier="LogOut" id="ysq-5e-jjh"/>
+                        <segue destination="Rf8-hn-Kkj" kind="push" identifier="My Companies" id="5Ki-uI-G54"/>
+                        <segue destination="XOh-NM-Vno" kind="push" identifier="Log Out" id="ysq-5e-jjh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4fb-cg-7eP" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -610,25 +610,25 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="InvoiceLineItem" editingAccessoryType="disclosureIndicator" textLabel="yRE-iT-7Bc" detailTextLabel="WBB-cy-2KI" style="IBUITableViewCellStyleValue2" id="D6U-hM-KKC">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="InvoiceLineItem" editingAccessoryType="disclosureIndicator" textLabel="yRE-iT-7Bc" detailTextLabel="WBB-cy-2KI" style="IBUITableViewCellStyleValue1" id="D6U-hM-KKC">
                                 <rect key="frame" x="0.0" y="91" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="10" y="0.0" width="300" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="yRE-iT-7Bc">
-                                            <rect key="frame" x="10" y="15" width="67" height="15"/>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="yRE-iT-7Bc">
+                                            <rect key="frame" x="10" y="11" width="35" height="21"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
-                                            <color key="textColor" red="0.32156862745098042" green="0.40000000000000002" blue="0.56862745098039214" alpha="1" colorSpace="calibratedRGB"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Detail" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="WBB-cy-2KI">
-                                            <rect key="frame" x="83" y="12" width="41" height="19"/>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="WBB-cy-2KI">
+                                            <rect key="frame" x="246" y="11" width="44" height="21"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.2196078431372549" green="0.32941176470588235" blue="0.52941176470588236" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </label>
                                     </subviews>
@@ -1646,13 +1646,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Bill" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="lYf-qv-40h">
-                                                    <rect key="frame" x="36" y="0.0" width="241" height="39"/>
+                                                    <rect key="frame" x="41" y="0.0" width="236" height="39"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="BillsIcon.png" id="Vqu-pk-StC">
-                                                    <rect key="frame" x="10" y="11" width="16" height="16"/>
+                                                    <rect key="frame" x="7" y="7" width="24" height="24"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </imageView>
                                             </subviews>
@@ -1671,13 +1671,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Vendor" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Yv2-Nn-9BC">
-                                                    <rect key="frame" x="36" y="0.0" width="241" height="39"/>
+                                                    <rect key="frame" x="39" y="0.0" width="238" height="39"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="VendorsIcon.png" id="XaZ-ZV-8nb">
-                                                    <rect key="frame" x="10" y="11" width="16" height="16"/>
+                                                    <rect key="frame" x="7" y="7" width="22" height="24"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </imageView>
                                             </subviews>
@@ -1700,13 +1700,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Invoice" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="gxx-oI-Urd">
-                                                    <rect key="frame" x="36" y="0.0" width="241" height="39"/>
+                                                    <rect key="frame" x="41" y="0.0" width="236" height="39"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="InvoicesIcon.png" id="Lh6-Aj-Q7O">
-                                                    <rect key="frame" x="10" y="11" width="16" height="16"/>
+                                                    <rect key="frame" x="7" y="7" width="24" height="24"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </imageView>
                                             </subviews>
@@ -1725,13 +1725,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Customer" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="iT4-v0-kaa">
-                                                    <rect key="frame" x="36" y="0.0" width="241" height="39"/>
+                                                    <rect key="frame" x="41" y="0.0" width="236" height="39"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="CustomersIcon.png" id="qxP-oS-Pil">
-                                                    <rect key="frame" x="10" y="11" width="16" height="16"/>
+                                                    <rect key="frame" x="7" y="7" width="24" height="24"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </imageView>
                                             </subviews>
@@ -2448,13 +2448,13 @@
     </scenes>
     <resources>
         <image name="BDClogo.png" width="134" height="37"/>
-        <image name="BillsIcon.png" width="16" height="16"/>
-        <image name="CustomersIcon.png" width="16" height="16"/>
+        <image name="BillsIcon.png" width="24" height="24"/>
+        <image name="CustomersIcon.png" width="24" height="24"/>
         <image name="InboxIcon.png" width="24" height="24"/>
-        <image name="InvoicesIcon.png" width="16" height="16"/>
+        <image name="InvoicesIcon.png" width="24" height="24"/>
         <image name="MenuIcon.png" width="30" height="20"/>
         <image name="OrganizationsIcon.png" width="16" height="16"/>
-        <image name="VendorsIcon.png" width="16" height="16"/>
+        <image name="VendorsIcon.png" width="22" height="24"/>
         <image name="bill.png" width="16" height="16"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
@@ -2463,21 +2463,21 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="rn3-5G-Kbh"/>
+        <segue reference="jJm-5t-hI9"/>
         <segue reference="Rma-aH-Vy6"/>
         <segue reference="ifQ-ST-XVY"/>
-        <segue reference="KBb-Vt-s99"/>
         <segue reference="6WH-3o-pdK"/>
         <segue reference="pSF-WP-nLH"/>
-        <segue reference="fqJ-Rf-CsZ"/>
+        <segue reference="KBb-Vt-s99"/>
         <segue reference="e1N-Gr-piF"/>
         <segue reference="qdh-4f-Obl"/>
-        <segue reference="jJm-5t-hI9"/>
+        <segue reference="rn3-5G-Kbh"/>
+        <segue reference="fqJ-Rf-CsZ"/>
         <segue reference="fR5-hZ-eeX"/>
-        <segue reference="4YZ-nK-Ds9"/>
-        <segue reference="01U-I1-ojU"/>
-        <segue reference="2iZ-iS-Zfa"/>
         <segue reference="aVE-b3-xHu"/>
         <segue reference="xP7-Be-EUo"/>
+        <segue reference="5Ki-uI-G54"/>
+        <segue reference="2iZ-iS-Zfa"/>
+        <segue reference="ysq-5e-jjh"/>
     </inferredMetricsTieBreakers>
 </document>

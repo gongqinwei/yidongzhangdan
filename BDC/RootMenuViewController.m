@@ -171,10 +171,12 @@ static RootMenuViewController * _sharedInstance = nil;
     if (indexPath.section == 0 && indexPath.row == 0) {
         cell.textLabel.text = [Organization getSelectedOrg].name;
         cell.textLabel.font = [UIFont boldSystemFontOfSize:20.0];
-        cell.selectionStyle = UITableViewCellEditingStyleNone;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.accessoryType = UITableViewCellAccessoryNone;
         cell.userInteractionEnabled = NO;
         
-        NSString *imageName = @"ProfileIcon.png";               //TODO: use a default org icon to replace
+        NSString *imageName = @"ProfileIcon.png";
+        cell.imageView.frame = CGRectMake(3, 3, 37, 37);
         cell.imageView.image = [UIImage imageNamed:imageName];
         
 //        NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100", DOMAIN_URL, ORG_LOGO_API]]];
@@ -196,6 +198,10 @@ static RootMenuViewController * _sharedInstance = nil;
         menuName = [menuName stringByReplacingOccurrencesOfString:@" " withString:@""];
         NSString *imageName = [menuName stringByAppendingString:@"Icon.png"];
         cell.imageView.image = [UIImage imageNamed:imageName];
+        cell.textLabel.font = [UIFont systemFontOfSize:17.0];
+        cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.userInteractionEnabled = YES;
         
         UIView *bgColorView = [[UIView alloc] init];
         [bgColorView setBackgroundColor:[UIColor colorWithRed:100/255.f green:100/255.f blue:100/255.f alpha:0.75]];

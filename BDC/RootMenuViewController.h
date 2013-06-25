@@ -26,7 +26,7 @@
 #define MENU_ITEMS      @"Items"
 
 #define CATEGORY_MORE   @"More"
-#define MENU_ORGS       @"Organizations"
+#define MENU_ORGS       @"My Companies"
 #define MENU_FEEDBACK   @"Feedback"
 #define MENU_LEGAL      @"Term of Service"
 #define MENU_LOGOUT     @"Log Out"

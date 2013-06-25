@@ -86,6 +86,7 @@ static ActionMenuViewController * _sharedInstance = nil;
     }
     
     [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
+    [self.tableView reloadData];
 }
 
 - (void)viewDidLoad

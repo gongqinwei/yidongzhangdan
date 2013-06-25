@@ -74,7 +74,10 @@
         
         NSMutableDictionary *info = [NSMutableDictionary dictionary];
         
-        [info setObject:ORG_ID forKey:selectedOrgId];
+        if (selectedOrgId) {
+            [info setObject:ORG_ID forKey:selectedOrgId];
+        }
+        
         [info setObject:USERNAME forKey:[Util URLEncode:self.username]];
         [info setObject:PASSWORD forKey:[Util URLEncode:self.password]];
         

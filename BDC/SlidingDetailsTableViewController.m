@@ -278,6 +278,9 @@ static double animatedDistance = 0;
             
             NSLog(@"docs w/ no id size: %d", docsWithoutId.count);
             
+            // reset scroll view first!
+            [self ressetScrollView];
+            
             int i = 0;
             for (NSDictionary *dict in jsonDocs) {
                 NSString *docId = [dict objectForKey:ID];
@@ -750,11 +753,9 @@ static double animatedDistance = 0;
     self.shaddowBusObj.attachments = [NSMutableArray array];
     [self.shaddowBusObj cloneTo:self.busObj];
     
-    [self ressetScrollView];
     [self retrieveDocAttachments];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        
         [self.tableView reloadData];
         
         self.refreshControl.attributedTitle = LAST_REFRESHED;
