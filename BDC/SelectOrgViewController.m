@@ -34,7 +34,13 @@
 }
 
 - (void)logout {
-    [self performSegueWithIdentifier:LOG_OUT_FROM_SELECT_ORGS_SEGUE sender:self];
+    [self performSegueWithIdentifier:LOG_OUT_FROM_SELECT_ORGS_SEGUE sender:nil];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:LOG_OUT_FROM_SELECT_ORGS_SEGUE]) {
+        [Util logout];
+    }
 }
 
 - (id)initWithStyle:(UITableViewStyle)style

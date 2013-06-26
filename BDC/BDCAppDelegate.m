@@ -65,7 +65,9 @@
     } else {
         NSString *selectedOrgId = [Util getSelectedOrgId];
         NSMutableDictionary *info = [NSMutableDictionary dictionary];
-        [info setObject:ORG_ID forKey:selectedOrgId];
+        if (selectedOrgId) {
+            [info setObject:ORG_ID forKey:selectedOrgId];
+        }
         [info setObject:USERNAME forKey:userName];
         [info setObject:PASSWORD forKey:password];
         
@@ -93,7 +95,7 @@
             } else {
                 self.window.rootViewController = initialController;
                 [self.window makeKeyAndVisible];
-                [splashScreen performSegueWithIdentifier:@"PresentLogin" sender:splashScreen];
+                [splashScreen performSegueWithIdentifier:@"PresentLogin" sender:nil];
             }
         }];
     }

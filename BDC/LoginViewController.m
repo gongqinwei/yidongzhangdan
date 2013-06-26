@@ -63,7 +63,7 @@
     [super viewDidLoad];
     
     self.email.text = [Util getUsername];
-    self.password.text = [Util getPassword];
+//    self.password.text = [Util getPassword];
     
     UIButton *signUpUrl = [UIButton buttonWithType:UIButtonTypeCustom];
     signUpUrl.frame = CGRectMake(80.0, 280.0, 160.0, 20.0);
