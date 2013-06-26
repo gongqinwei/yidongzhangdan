@@ -7,12 +7,12 @@
 //
 
 #import "BDCBusinessObjectWithAttachments.h"
-#import "Document.h"
 
 @implementation BDCBusinessObjectWithAttachments
 
 @synthesize attachments;
 @synthesize attachmentDict;
+@synthesize attachmentDelegate;
 
 - (id)init {
     if (self = [super init]) {

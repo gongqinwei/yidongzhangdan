@@ -984,6 +984,7 @@
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=*]" = "";
 				SKIP_INSTALL = NO;
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -991,17 +992,18 @@
 		7E91E40E15927C15005104AF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Bill.com";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Bill.com";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Bill.com";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Bill.com (CJFVC5WQBE)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Bill.com (CJFVC5WQBE)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Bill.com (CJFVC5WQBE)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BDC/BDC-Prefix.pch";
 				INFOPLIST_FILE = "BDC/BDC-Info.plist";
 				PRODUCT_NAME = Mobill;
-				PROVISIONING_PROFILE = "D6967091-038F-40DF-90A8-420AC24E4275";
-				"PROVISIONING_PROFILE[sdk=*]" = "D6967091-038F-40DF-90A8-420AC24E4275";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D6967091-038F-40DF-90A8-420AC24E4275";
+				PROVISIONING_PROFILE = "32A25266-2CCF-4E41-B9CE-1A07FA10226F";
+				"PROVISIONING_PROFILE[sdk=*]" = "32A25266-2CCF-4E41-B9CE-1A07FA10226F";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "32A25266-2CCF-4E41-B9CE-1A07FA10226F";
 				SKIP_INSTALL = NO;
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

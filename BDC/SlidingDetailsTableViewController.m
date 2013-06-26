@@ -407,6 +407,7 @@ static double animatedDistance = 0;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.busObj.attachmentDelegate = self;
     [self ressetScrollView];
     
     self.attachmentPageControl = [[UIPageControl alloc] initWithFrame:ATTACHMENT_PV_RECT];
@@ -577,6 +578,19 @@ static double animatedDistance = 0;
 - (void)handleRemovalForDocument:(Document *)doc {
 }
 
+- (void)doneProcessingDocs {
+    [self.busObjClass clone:self.shaddowBusObj to:self.busObj];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.mode == kAttachMode) {
+            [self quitAttachMode];
+        } else {
+            self.mode = kViewMode;
+            self.title = self.shaddowBusObj.name;
+        }
+    });
+}
+
 - (void)doneSaveObject {
     NSMutableArray *original = [NSMutableArray arrayWithArray:[self.busObj.attachmentDict allKeys]];
     NSMutableArray *current = [NSMutableArray arrayWithArray:[self.attachmentDict allKeys]];
@@ -630,16 +644,7 @@ static double animatedDistance = 0;
                     [toBeDeleted removeObject:docId];
                     
                     if (toBeDeleted.count == 0 && numNotYetAdded == 0 && toBeAttached.count == 0) {
-                        [self.busObjClass clone:self.shaddowBusObj to:self.busObj];
-                        
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (self.mode == kAttachMode) {
-                                [self quitAttachMode];
-                            } else {
-                                self.mode = kViewMode;
-                                self.title = self.shaddowBusObj.name;
-                            }
-                        });
+                        [self doneProcessingDocs];
                     }
                     
                     [doneLock unlock];
@@ -669,16 +674,7 @@ static double animatedDistance = 0;
                     numNotYetAdded--;
                     
                     if (toBeDeleted.count == 0 && numNotYetAdded == 0 && toBeAttached.count == 0) {
-                        [self.busObjClass clone:self.shaddowBusObj to:self.busObj];
-                        
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (self.mode == kAttachMode) {
-                                [self quitAttachMode];
-                            } else {
-                                self.mode = kViewMode;
-                                self.title = self.shaddowBusObj.name;
-                            }
-                        });
+                        [self doneProcessingDocs];
                     }
                     
                     [doneLock unlock];
@@ -713,16 +709,7 @@ static double animatedDistance = 0;
                     [toBeAttached removeObject:doc];
                     
                     if (toBeDeleted.count == 0 && numNotYetAdded == 0 && toBeAttached.count == 0) {
-                        [self.busObjClass clone:self.shaddowBusObj to:self.busObj];
-                        
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (self.mode == kAttachMode) {
-                                [self quitAttachMode];
-                            } else {
-                                self.mode = kViewMode;
-                                self.title = self.shaddowBusObj.name;
-                            }
-                        });
+                        [self doneProcessingDocs];
                     }
                     
                     [doneLock unlock];
