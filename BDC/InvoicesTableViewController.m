@@ -505,6 +505,12 @@
     }
 }
 
+- (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    if ([self tryTap]) {
+        [self performSegueWithIdentifier:VIEW_INVOICE_SEGUE sender:[self.invoices objectAtIndex:indexPath.row]];
+    }
+}
+
 #pragma mark - Invoice delegate
 
 - (void)didGetInvoices:(NSArray *)invoiceList {

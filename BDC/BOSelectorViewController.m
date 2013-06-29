@@ -24,16 +24,21 @@
 #import "UIHelper.h"
 
 #define RESET_SCANNER_FROM_BO_SELECT_SEGUE          @"ResetScanner"
-#define ATTACH_TO_NEW_INVOICE_SEGUE                 @"AttachToNewInvoice"
-#define ATTACH_TO_EXISTING_INVOICE_SEGUE            @"AttachToExistingInvoice"
 #define ATTACH_TO_NEW_BILL_SEGUE                    @"AttachToNewBill"
 #define ATTACH_TO_EXISTING_BILL_SEGUE               @"AttachToExistingBill"
 #define ATTACH_TO_NEW_VENDCREDIT_SEGUE              @"AttachToNewVendorCredit"
 #define ATTACH_TO_EXISTING_VENDCREDIT_SEGUE         @"AttachToExistingVendorCredit"
 #define ATTACH_TO_NEW_VENDOR_SEGUE                  @"AttachToNewVendor"
 #define ATTACH_TO_EXISTING_VENDOR_SEGUE             @"AttachToExistingVendor"
+#define ATTACH_TO_NEW_INVOICE_SEGUE                 @"AttachToNewInvoice"
+#define ATTACH_TO_EXISTING_INVOICE_SEGUE            @"AttachToExistingInvoice"
 #define ATTACH_TO_NEW_CUSTOMER_SEGUE                @"AttachToNewCustomer"
 #define ATTACH_TO_EXISTING_CUSTOMER_SEGUE           @"AttachToExistingCustomer"
+
+#define AttachToExistingSegues  [NSArray arrayWithObjects: \
+                                    [NSArray arrayWithObjects:ATTACH_TO_EXISTING_BILL_SEGUE, ATTACH_TO_EXISTING_VENDOR_SEGUE, nil], \
+                                    [NSArray arrayWithObjects:ATTACH_TO_EXISTING_INVOICE_SEGUE, ATTACH_TO_EXISTING_CUSTOMER_SEGUE, nil], \
+                                nil]
 
 #define AttachToNewSegues       [NSArray arrayWithObjects: \
                                     [NSArray arrayWithObjects:ATTACH_TO_NEW_BILL_SEGUE, ATTACH_TO_NEW_VENDOR_SEGUE, nil], \
@@ -52,15 +57,14 @@
 
 @synthesize document;
 @synthesize uploadIndicator;
+@synthesize pickOrCreateSwitch;
 
 
 - (IBAction)uploadToInbox:(id)sender {
     if (!self.document.objectId) {
         self.uploadIndicator.hidden = NO;
         [self.uploadIndicator startAnimating];
-        
-        __weak BOSelectorViewController *weakSelf = self;
-        
+                
         [Uploader uploadFile:self.document.name data:self.document.data objectId:nil handler:^(NSURLResponse * response, NSData * data, NSError * err) {
             NSInteger status;
             NSString *info = [APIHandler getResponse:response data:data error:&err status:&status];
@@ -71,15 +75,8 @@
                 }
                 
                 [Document addToInbox:self.document];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf.uploadIndicator stopAnimating];
-                    [self resetScanner];
-                });
             } else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf.uploadIndicator stopAnimating];
-                    [UIHelper showInfo:@"Failed to upload picture to Inbox!" withStatus:kFailure];
-                });
+                [UIHelper showInfo:@"Failed to upload picture to Inbox!" withStatus:kFailure];
             }
         }];
     }
@@ -96,11 +93,11 @@
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    if ([segue.identifier isEqualToString:ATTACH_TO_NEW_INVOICE_SEGUE] || [segue.identifier isEqualToString:ATTACH_TO_NEW_BILL_SEGUE] || [segue.identifier isEqualToString:ATTACH_TO_NEW_VENDCREDIT_SEGUE]) {
     if ([segue.destinationViewController isKindOfClass:[SlidingDetailsTableViewController class]]) {
+        [segue.destinationViewController resetScrollView];
         [segue.destinationViewController addDocument:self.document];
         [segue.destinationViewController setMode:kAttachMode];
-    } else if ([segue.destinationViewController isKindOfClass:[SlidingTableViewController class]]) {
+    } else if ([segue.destinationViewController isKindOfClass:[SlidingListTableViewController class]]) {
         [segue.destinationViewController setDocument:self.document];
         [segue.destinationViewController setMode:kAttachMode];
         
@@ -112,6 +109,29 @@
             [segue.destinationViewController setVendors:[Vendor list]];
         } else if ([segue.identifier isEqualToString:ATTACH_TO_EXISTING_CUSTOMER_SEGUE]) {
             [segue.destinationViewController setCustomers:[Customer list]];
+        }
+    }
+}
+
+- (void)performNewSegueForCell:(UIButton *)button {
+    int i = button.tag / 10;
+    int j = button.tag % 10;
+    NSString *segueId = AttachToNewSegues[i][j];
+    [self performSegueWithIdentifier:segueId sender:self];
+}
+
+- (void)switchPickOrCreate {
+    for (int i = 0; i < [AttachToExistingSegues count]; i++) {
+        for (int j = 0; j < [[AttachToExistingSegues objectAtIndex:i] count]; j++) {
+            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:j inSection:i]];
+            if (self.pickOrCreateSwitch.selectedSegmentIndex == 0) {
+                cell.accessoryView = nil;
+            } else {
+                UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeContactAdd];
+                addBtn.tag = i * 10 + j;
+                [addBtn addTarget:self action:@selector(performNewSegueForCell:) forControlEvents:UIControlEventTouchUpInside];
+                cell.accessoryView = addBtn;
+            }
         }
     }
 }
@@ -134,12 +154,15 @@
     [self.uploadIndicator stopAnimating];
     
     self.title = self.document.name;
+    
+    [self.pickOrCreateSwitch addTarget:self action:@selector(switchPickOrCreate) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)viewDidUnload
 {
     [self setUploadIndicator:nil];
     [self setDocument:nil];
+    [self setPickOrCreateSwitch:nil];
     [super viewDidUnload];
 }
 
@@ -176,19 +199,28 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 2 && indexPath.row == 0) {
+    if (indexPath.section < [AttachToExistingSegues count]) {
+        NSString *segueId;
+        if (self.pickOrCreateSwitch.selectedSegmentIndex == 0) {
+            segueId = AttachToExistingSegues[indexPath.section][indexPath.row];
+        } else {
+            segueId = AttachToNewSegues[indexPath.section][indexPath.row];
+        }
+        [self performSegueWithIdentifier:segueId sender:self];
+    } else if (indexPath.row == 0) {
         [self uploadToInbox:self];
         
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
         cell.accessoryView = self.uploadIndicator;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.uploadIndicator stopAnimating];
+            [self resetScanner];
+        });
+        
+        [UIHelper showInfo:@"Document upload in progress.\n\nI'll show up in Inbox once uploaded." withStatus:kInfo];
     }
 }
 
-- (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    if ([self tryTap]) {
-        NSString *segueId = AttachToNewSegues[indexPath.section][indexPath.row];
-        [self performSegueWithIdentifier:segueId sender:self];
-    }
-}
 
 @end

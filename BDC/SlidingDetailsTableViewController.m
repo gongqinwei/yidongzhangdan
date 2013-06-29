@@ -24,7 +24,6 @@
 static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
 static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
-// adjust this following value to account for the height of your toolbar, too
 static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 216;
 static double animatedDistance = 0;
 
@@ -45,6 +44,7 @@ static double animatedDistance = 0;
 @synthesize activityIndicator;
 @synthesize inputAccessoryView;
 @synthesize attachmentDict;
+@synthesize docsUploading;
 @synthesize attachmentScrollView;
 @synthesize attachmentPageControl;
 @synthesize currAttachment;
@@ -78,37 +78,38 @@ static double animatedDistance = 0;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
         self.navigationItem.rightBarButtonItem.tag = 1;
         self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
+        
+        UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
+        [refresh addTarget:self action:@selector(refreshView) forControlEvents:UIControlEventValueChanged];
+        refresh.attributedTitle = PULL_TO_REFRESH;
+        self.refreshControl = refresh;
     } else {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveBusObj:)];
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelEdit:)];
+        
+        self.refreshControl = nil;
     }
     
     // retrieve attachments
     // clean up first
-//    for (UIView *subview in [self.attachmentScrollView subviews]) {
-//        if ([subview isKindOfClass:[UIImageView class]]) {
-//            NSLog(@"-------------- deleting attachment view from scroll view ================");
-//            [subview removeFromSuperview];
-//        }
-//    }
-    [self ressetScrollView];
-    
-    [self.tableView reloadData];
-    NSLog(@"---- shaddow.attachments: %d", [self.shaddowBusObj.attachments count]);
-    NSLog(@"---- shaddow.attachmentDict: %d", [self.shaddowBusObj.attachmentDict count]);
-    
-    for (Document * doc in self.shaddowBusObj.attachments) {
-        NSLog(@":: %@", doc.objectId);
-        
-        NSString *ext = [[doc.name pathExtension] lowercaseString];
-        [self addAttachment:ext data:doc.data];
+    @synchronized (self) {
+        for (UIView *subview in [self.attachmentScrollView subviews]) {
+            if ([subview isKindOfClass:[UIImageView class]]) {
+                [subview removeFromSuperview];
+            }
+        }
+
+        for (Document * doc in self.shaddowBusObj.attachments) {
+            NSLog(@":: %@", doc.objectId);
+            
+            NSString *ext = [[doc.name pathExtension] lowercaseString];
+            [self addAttachment:ext data:doc.data];
+        }
     }
     
     [self layoutScrollImages:NO];
     
-    if (mode != kAttachMode) {
-        [self retrieveDocAttachments];
-    }
+    [self.tableView reloadData];
 }
 
 - (void)cancelEdit:(UIBarButtonItem *)sender {
@@ -126,52 +127,28 @@ static double animatedDistance = 0;
     return nil;
 }
 
+// There's no way to call this method concurrently
+// So no need to synchronize
 - (void)addDocument:(Document *)document {
-    if (self.shaddowBusObj == nil) {
+    if (!self.shaddowBusObj) {
         self.shaddowBusObj = [[self.busObjClass alloc] init];
     }
     
-    if (self.busObj == nil) {
+    if (!self.busObj) {
         self.busObj = [[self.busObjClass alloc] init];
+    }
+    
+    if (!self.attachmentDict) {
+        self.attachmentDict = [NSMutableDictionary dictionary];
     }
     
     if (document) {
         [self.shaddowBusObj.attachments addObject:document];
-                NSLog(@"shaddow obj's attachment: %@", self.shaddowBusObj.attachments);
+        [self.previewController reloadData];
     }
 }
 
-// deprecated
-//- (void)addAttachmentData:(NSData *)attachmentData name:(NSString *)attachmentName {
-//    if (self.shaddowBusObj == nil) {
-//        self.shaddowBusObj = [[self.busObjClass alloc] init];
-//    }
-//    
-//    if (self.busObj == nil) {
-//        self.busObj = [[self.busObjClass alloc] init];
-//    }
-//    
-//    Document *doc = [[Document alloc] init];
-//    doc.name = attachmentName;
-//    doc.data = attachmentData;
-//    
-//    [self.shaddowBusObj.attachments addObject:doc];
-//}
-
 - (void)addAttachment:(NSString *)ext data:(NSData *)attachmentData {
-//    UIImage *image;
-//    
-//    if (attachmentData && [IMAGE_TYPE_SET containsObject:ext]) {
-//        image = [UIImage imageWithData:attachmentData];
-//    } else {
-//        NSString *iconFileName = [NSString stringWithFormat:@"%@_icon.png", ext];
-//        image = [UIImage imageNamed:iconFileName];
-//        
-//        if (!image) {
-//            image = [UIImage imageNamed:@"unknown_file_icon.png"];
-//        }
-//    }
-    
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[Document getIconForType:ext data:attachmentData]];
     
     CGRect rect = imageView.frame;
@@ -233,13 +210,18 @@ static double animatedDistance = 0;
                              }
                              completion:^ (BOOL finished) {
                                  if (finished) {
-                                     [self.shaddowBusObj.attachments removeObjectAtIndex:idx];
-                                     
-                                     if (doc.objectId) {
-                                         [self.attachmentDict removeObjectForKey:doc.objectId];
+                                     @synchronized (self) {
+                                         [self.shaddowBusObj.attachments removeObjectAtIndex:idx];
+                                         [self.previewController reloadData];
+                                         
+                                         if (doc.objectId) {
+                                             [self.attachmentDict removeObjectForKey:doc.objectId];
+                                         }
+                                         
+                                         [self.currAttachment removeFromSuperview];
+                                         [self layoutScrollImages:NO];
                                      }
-                                     [self.currAttachment removeFromSuperview];
-                                     [self layoutScrollImages:NO];
+
                                      self.currAttachment = nil;
                                  }
                              }];
@@ -261,70 +243,71 @@ static double animatedDistance = 0;
         NSArray *jsonDocs = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         if(response_status == RESPONSE_SUCCESS) {
-            if (!self.busObj.attachmentDict) {
-                self.busObj.attachmentDict = [NSMutableDictionary dictionary];
-            }
-            
-            self.attachmentDict = [NSMutableDictionary dictionaryWithDictionary:self.busObj.attachmentDict];
-            
-            NSMutableDictionary *docsWithoutId = [NSMutableDictionary dictionary];
-            for (Document *doc in self.shaddowBusObj.attachments) {
-//                if (![self.attachmentDict objectForKey:doc.objectId]) {
-                if (!doc.objectId) {
-                    [docsWithoutId setObject:doc forKey:doc.name];
-                    NSLog(@"-- doc w/ no id: %@", doc.name);
+            @synchronized (self) {
+                if (!self.busObj.attachmentDict) {
+                    self.busObj.attachmentDict = [NSMutableDictionary dictionary];
                 }
-            }
-            
-            NSLog(@"docs w/ no id size: %d", docsWithoutId.count);
-            
-            // reset scroll view first!
-            [self ressetScrollView];
-            
-            int i = 0;
-            for (NSDictionary *dict in jsonDocs) {
-                NSString *docId = [dict objectForKey:ID];
                 
-                if (![self.attachmentDict objectForKey:docId]) {
+                self.attachmentDict = [NSMutableDictionary dictionaryWithDictionary:self.busObj.attachmentDict];
+                
+                self.docsUploading = [NSMutableDictionary dictionary];
+                for (Document *doc in self.shaddowBusObj.attachments) {
+                    if (!doc.objectId) {
+                        // Assumption: fileName is unique.
+                        // This is a hack to work around the documentUploaded -> document/documentPage problem
+                        [self.docsUploading setObject:doc forKey:doc.name];
+                    }
+                }
+                            
+                // reset scroll view first!
+                [self resetScrollView];
+                
+                int i = 0;
+                for (NSDictionary *dict in jsonDocs) {
+                    NSString *docId = [dict objectForKey:ID];
+                    
                     Document *doc;
-                    
-                    NSString *docName = [dict objectForKey:@"fileName"];    //Assumption: fileNames are unique. this is a hack to work around the documentUploaded -> document/documentPage problem
-                    NSLog(@"== new doc: %@, %@", docId, docName);
-                    
-                    if ([docsWithoutId objectForKey:docName]) {
-                        doc = [docsWithoutId objectForKey:docName];
-                        doc.objectId = docId;
-                        [self.attachmentDict setObject:doc forKey:docId];
-                        [self.shaddowBusObj.attachmentDict setObject:doc forKey:docId];
-                        [self.busObj.attachmentDict setObject:doc forKey:docId];
-                        NSLog(@"adding...%@", docId);
-                        continue;
+                    if (![self.attachmentDict objectForKey:docId]) {
+                        NSString *docName = [dict objectForKey:FILE_NAME];
+                        doc = [self.docsUploading objectForKey:docName];
+                        
+                        if (doc) {
+                            doc.objectId = docId;
+                            [self.attachmentDict setObject:doc forKey:docId];
+                            [self.shaddowBusObj.attachmentDict setObject:doc forKey:docId];
+                            [self.busObj.attachmentDict setObject:doc forKey:docId];
+                        } else {
+                            doc = [[Document alloc] init];
+                            doc.objectId = docId;
+                            doc.name = docName;
+                            doc.fileUrl = [dict objectForKey:@"fileUrl"];
+                            doc.isPublic = [[dict objectForKey:@"isPublic"] intValue];
+                            doc.page = [[dict objectForKey:@"page"] intValue];
+                            
+                            [self.busObj.attachmentDict setObject:doc forKey:docId];
+                            [self.attachmentDict setObject:doc forKey:docId];
+                            [self.busObj.attachments insertObject:doc atIndex:i];
+                            [self.shaddowBusObj.attachments insertObject:doc atIndex:i];
+                        }
+                    } else {
+                        doc = [self.attachmentDict objectForKey:docId];
                     }
                     
-                    doc = [[Document alloc] init];
-                    doc.objectId = docId;
-                    doc.name = docName;
-                    doc.fileUrl = [dict objectForKey:@"fileUrl"];
-                    doc.isPublic = [[dict objectForKey:@"isPublic"] intValue];
-                    doc.page = [[dict objectForKey:@"page"] intValue];
-                    
-                    [self.busObj.attachmentDict setObject:doc forKey:docId];
-                    [self.attachmentDict setObject:doc forKey:docId];
-                    [self.busObj.attachments insertObject:doc atIndex:i];
-                    [self.shaddowBusObj.attachments insertObject:doc atIndex:i];
-
                     [self addAttachment:[[doc.name pathExtension] lowercaseString] data:nil];
                     [self layoutScrollImages:NO];
+                    if (!doc.data) {
+                        [self downloadDocument:doc forAttachmentAtIndex:i];
+                    }
                     
-                    [self downloadDocument:doc forAttachmentAtIndex:i];
+                    i++;
                 }
-                i++;
             }
 
             NSIndexPath *path = [self getAttachmentPath];
             if (path) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:YES];
+                    [self.previewController reloadData];
                 });
             }
         } else {
@@ -344,24 +327,26 @@ static double animatedDistance = 0;
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                doc.data = data;
                                
-                               UIImageView *img = [self.attachmentScrollView.subviews objectAtIndex: idx];
-                               NSString *ext = [[doc.name pathExtension] lowercaseString];
-                               
-                               if ([IMAGE_TYPE_SET containsObject:ext]) {
-                                   UIImage *image = [UIImage imageWithData:data];
+                               if ([self.attachmentDict objectForKey:doc.objectId]) {
+                                   NSString *ext = [[doc.name pathExtension] lowercaseString];
                                    
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       img.alpha = 0.0;
-                                       img.image = image;
-                                       [img setNeedsDisplay];
+                                   if ([IMAGE_TYPE_SET containsObject:ext]) {
+                                       UIImage *image = [UIImage imageWithData:data];
                                        
-                                       [UIView animateWithDuration:1.5
-                                                        animations:^{
-                                                            img.alpha = 1.0;
-                                                        }
-                                                        completion:^ (BOOL finished) {
-                                                        }];
-                                   });
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           UIImageView *img = [self.attachmentScrollView.subviews objectAtIndex: idx];
+                                           img.alpha = 0.0;
+                                           img.image = image;
+                                           [img setNeedsDisplay];
+                                                                                      
+                                           [UIView animateWithDuration:1.5
+                                                            animations:^{
+                                                                img.alpha = 1.0;
+                                                            }
+                                                            completion:^ (BOOL finished) {
+                                                            }];
+                                       });
+                                   }
                                }
                            }];
 }
@@ -408,7 +393,6 @@ static double animatedDistance = 0;
     [super viewDidLoad];
     
     self.busObj.attachmentDelegate = self;
-    [self ressetScrollView];
     
     self.attachmentPageControl = [[UIPageControl alloc] initWithFrame:ATTACHMENT_PV_RECT];
     self.attachmentPageControl.currentPage = 0;
@@ -423,12 +407,6 @@ static double animatedDistance = 0;
                                                                   action:@selector(inputAccessoryDoneAction:)];
     self.inputAccessoryView.items = [NSArray arrayWithObjects:flexibleSpace, doneButton, nil];
     
-//    if (self.mode == kViewMode) {
-//        self.isActive = self.busObj.isActive;
-//        self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
-//        self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
-//    }
-    
     self.previewController = [[QLPreviewController alloc] init];
     self.previewController.delegate = self;
     self.previewController.dataSource = self;
@@ -436,15 +414,11 @@ static double animatedDistance = 0;
     self.title = self.shaddowBusObj.name;
     
     if (self.mode == kViewMode) {
-        UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
-        [refresh addTarget:self action:@selector(refreshView) forControlEvents:UIControlEventValueChanged];
-        refresh.attributedTitle = PULL_TO_REFRESH;
-        self.refreshControl = refresh;
+        [self retrieveDocAttachments];
     }
-
 }
 
-- (void)ressetScrollView {
+- (void)resetScrollView {
     [self.attachmentScrollView removeFromSuperview];
     self.attachmentScrollView = [[UIScrollView alloc] initWithFrame:ATTACHMENT_RECT];
     self.attachmentScrollView.pagingEnabled = YES;
@@ -499,6 +473,7 @@ static double animatedDistance = 0;
 
 - (NSInteger) numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller {
     if (controller == self.previewController) {
+        NSLog(@"============== preview has %d", self.shaddowBusObj.attachments.count);
         return [self.shaddowBusObj.attachments count];
     } else {
         return 1;
@@ -578,8 +553,10 @@ static double animatedDistance = 0;
 - (void)handleRemovalForDocument:(Document *)doc {
 }
 
-- (void)doneProcessingDocs {
-    [self.busObjClass clone:self.shaddowBusObj to:self.busObj];
+- (void)transitToViewMode {
+    @synchronized (self) {
+        [self.busObjClass clone:self.shaddowBusObj to:self.busObj];
+    }
     
     dispatch_async(dispatch_get_main_queue(), ^{
         if (self.mode == kAttachMode) {
@@ -587,143 +564,147 @@ static double animatedDistance = 0;
         } else {
             self.mode = kViewMode;
             self.title = self.shaddowBusObj.name;
+            [self.previewController reloadData];
         }
     });
 }
 
 - (void)doneSaveObject {
-    NSMutableArray *original = [NSMutableArray arrayWithArray:[self.busObj.attachmentDict allKeys]];
-    NSMutableArray *current = [NSMutableArray arrayWithArray:[self.attachmentDict allKeys]];
-    [original removeObjectsInArray:current];
-    NSMutableArray *toBeDeleted = [NSMutableArray arrayWithArray:original];
-    
-    NSMutableArray *toBeAttached = [NSMutableArray array];
-    NSMutableArray *toBeAdded = [NSMutableArray array];
-    
-    for (Document *doc in self.shaddowBusObj.attachments) {
-        if (doc.objectId == nil) {
-            [toBeAdded addObject:doc];
-        } else {
-            if (![self.attachmentDict valueForKey:doc.objectId]) {
-//                if (self.shaddowBusObj.class == [Bill class]) {     //TODO: for Vendor Credit also once implemented
+    @synchronized (self) {
+        NSMutableArray *original = [NSMutableArray arrayWithArray:[self.busObj.attachmentDict allKeys]];
+        NSMutableArray *current = [NSMutableArray arrayWithArray:[self.attachmentDict allKeys]];
+        [original removeObjectsInArray:current];
+        NSMutableArray *toBeDeleted = [NSMutableArray arrayWithArray:original];
+        
+        NSMutableArray *toBeAttached = [NSMutableArray array];
+        NSMutableArray *toBeAdded = [NSMutableArray array];
+        
+        for (Document *doc in self.shaddowBusObj.attachments) {
+            if (doc.objectId == nil) {
+                if (![self.docsUploading objectForKey:doc.name]) {
+                    [toBeAdded addObject:doc];
+                }
+            } else {
+                if (![self.attachmentDict valueForKey:doc.objectId]) {
+                    //                if (self.shaddowBusObj.class == [Bill class]) {     //TODO: for Vendor Credit also once implemented
                     [toBeAttached addObject:doc];
-//                } else {
-//                    [toBeAdded addObject:doc];
-//                }
+                    //                } else {
+                    //                    [toBeAdded addObject:doc];
+                    //                }
+                }
             }
         }
-    }
-    __block int numNotYetAdded = [toBeAdded count];
-    
-    if ([toBeDeleted count] == 0 && numNotYetAdded == 0 && toBeAttached.count == 0) {
-        [self.busObjClass clone:self.shaddowBusObj to:self.busObj];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.mode = kViewMode;
-            self.title = self.shaddowBusObj.name;
-        });
-    } else {
-        NSLock *doneLock = [[NSLock alloc] init];
+        //    __block int numNotYetAdded = [toBeAdded count];
         
-        // 1. remove deleted attachments
-        for (NSString *docId in toBeDeleted) {
-            Document *doc = [self.busObj.attachmentDict objectForKey:docId];
-            NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"objId\" : \"%@\", \"page\" : %d}", ID, docId, self.busObj.objectId, doc.page];
-            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
-            
-            [APIHandler asyncCallWithAction:REMOVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
-                NSInteger response_status;
-                [APIHandler getResponse:response data:data error:&err status:&response_status];
-                
-                if(response_status == RESPONSE_SUCCESS) {
-                    [self.shaddowBusObj.attachmentDict removeObjectForKey:doc.objectId]; //TODO: needed?
-                    [self handleRemovalForDocument:doc];
-                    
-                    [doneLock lock];
-                    
-                    [toBeDeleted removeObject:docId];
-                    
-                    if (toBeDeleted.count == 0 && numNotYetAdded == 0 && toBeAttached.count == 0) {
-                        [self doneProcessingDocs];
-                    }
-                    
-                    [doneLock unlock];
-                    
-                    NSLog(@"Successfully deleted attachment %@", doc.name);
-                } else {
-                    [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-                    NSLog(@"Failed to delete attachment %@: %@", docId, [err localizedDescription]);
-                }
-            }];
+        // 1. upload new attachments
+        if (toBeAdded.count > 0) {
+            [UIHelper showInfo:@"Documents upload in progress." withStatus:kInfo];
         }
         
-        // 2. add new attachments
         for (Document *doc in toBeAdded) {
             [Uploader uploadFile:doc.name data:doc.data objectId:self.shaddowBusObj.objectId handler:^(NSURLResponse * response, NSData * data, NSError * err) {
                 NSInteger response_status;
                 NSString *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
                 
-                if(response_status == RESPONSE_SUCCESS) {                    
+                if(response_status == RESPONSE_SUCCESS) {
                     if (![info isEqualToString:EMPTY_ID]) {
                         doc.objectId = info;
                         [self.shaddowBusObj.attachmentDict setObject:doc forKey:doc.objectId];
                     }
                     
-                    [doneLock lock];
+                    [self.busObj.attachmentDelegate didUploadDocument:doc needUI:NO];
                     
-                    numNotYetAdded--;
-                    
-                    if (toBeDeleted.count == 0 && numNotYetAdded == 0 && toBeAttached.count == 0) {
-                        [self doneProcessingDocs];
-                    }
-                    
-                    [doneLock unlock];
+                    //                    [doneLock lock];
+                    //
+                    //                    numNotYetAdded--;
+                    //
+                    //                    if (toBeDeleted.count == 0 && toBeAttached.count == 0) {
+                    //                        [UIHelper showInfo:@"Done uploading all documents" withStatus:kInfo];
+                    //                    }
+                    //
+                    //                    [doneLock unlock];
                     
                     NSLog(@"Successfully added attachment %@", doc.name);
                 } else {
-                    [UIHelper showInfo:[NSString stringWithFormat:@"Failed to save %@", doc.name] withStatus:kFailure];
+                    [UIHelper showInfo:[NSString stringWithFormat:@"Failed to upload %@", doc.name] withStatus:kFailure];
                 }
             }];
         }
         
-        // 3. attach documents
-        for (Document *doc in toBeAttached) {
-//            Document *doc = [self.shaddowBusObj.attachmentDict objectForKey:docId];
-            NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"name\" : \"%@\", \"objId\" : \"%@\"}", ID, doc.objectId, doc.name, self.shaddowBusObj.objectId];
-            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+        if (toBeDeleted.count == 0 && toBeAttached.count == 0) {
+            [self transitToViewMode];
+        } else {
+            NSLock *doneLock = [[NSLock alloc] init];
             
-            [APIHandler asyncCallWithAction:ASSIGN_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
-                NSInteger response_status;
-                NSString *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
+            // 2. remove deleted attachments
+            for (NSString *docId in toBeDeleted) {
+                Document *doc = [self.busObj.attachmentDict objectForKey:docId];
+                NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"objId\" : \"%@\", \"page\" : %d}", ID, docId, self.busObj.objectId, doc.page];
+                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
                 
-                if(response_status == RESPONSE_SUCCESS) {
-                    if (![info isEqualToString:EMPTY_ID]) {
-                        doc.objectId = info;    //could become an attachment id!
-                        [self.shaddowBusObj.attachmentDict setObject:doc forKey:doc.objectId];
+                [APIHandler asyncCallWithAction:REMOVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+                    NSInteger response_status;
+                    [APIHandler getResponse:response data:data error:&err status:&response_status];
+                    
+                    if(response_status == RESPONSE_SUCCESS) {
+                        [self.shaddowBusObj.attachmentDict removeObjectForKey:doc.objectId]; //TODO: needed?
+                        [self handleRemovalForDocument:doc];
+                        
+                        [doneLock lock];
+                        
+                        [toBeDeleted removeObject:docId];
+                        
+                        if (toBeDeleted.count == 0 && toBeAttached.count == 0) {
+                            [self transitToViewMode];
+                        }
+                        
+                        [doneLock unlock];
+                        
+                        NSLog(@"Successfully deleted attachment %@", doc.name);
+                    } else {
+                        [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+                        NSLog(@"Failed to delete attachment %@: %@", docId, [err localizedDescription]);
                     }
+                }];
+            }
+            
+            // 3. attach documents
+            for (Document *doc in toBeAttached) {
+                NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"name\" : \"%@\", \"objId\" : \"%@\"}", ID, doc.objectId, doc.name, self.shaddowBusObj.objectId];
+                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+                
+                [APIHandler asyncCallWithAction:ASSIGN_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+                    NSInteger response_status;
+                    NSString *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
                     
-                    [Document removeFromInbox:doc];
-                    
-                    [doneLock lock];
-                    
-                    [toBeAttached removeObject:doc];
-                    
-                    if (toBeDeleted.count == 0 && numNotYetAdded == 0 && toBeAttached.count == 0) {
-                        [self doneProcessingDocs];
+                    if(response_status == RESPONSE_SUCCESS) {
+                        if (![info isEqualToString:EMPTY_ID]) {
+                            doc.objectId = info;    //could become an attachment id!
+                            [self.shaddowBusObj.attachmentDict setObject:doc forKey:doc.objectId];
+                        }
+                        
+                        [Document removeFromInbox:doc];
+                        
+                        [doneLock lock];
+                        
+                        [toBeAttached removeObject:doc];
+                        
+                        if (toBeDeleted.count == 0 && toBeAttached.count == 0) {
+                            [self transitToViewMode];
+                        }
+                        
+                        [doneLock unlock];
+                        
+                        NSLog(@"Successfully associate document %@", doc.name);
+                    } else {
+                        [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+                        NSLog(@"Failed to associate document %@: %@", doc.name, [err localizedDescription]);
                     }
-                    
-                    [doneLock unlock];
-                    
-                    NSLog(@"Successfully associate document %@", doc.name);
-                } else {
-                    [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-                    NSLog(@"Failed to associate document %@: %@", doc.name, [err localizedDescription]);
-                }
-            }];
+                }];
+            }
         }
     }
-    
-    //    self.navigationItem.rightBarButtonItem.customView = nil;
 }
 
 - (void)didCreateObject:(NSString *)newObjectId {
@@ -736,15 +717,17 @@ static double animatedDistance = 0;
 }
 
 - (void)didReadObject {
-    self.shaddowBusObj.attachmentDict = [NSMutableDictionary dictionary];
-    self.shaddowBusObj.attachments = [NSMutableArray array];
-    [self.shaddowBusObj cloneTo:self.busObj];
+    @synchronized (self) {
+        self.shaddowBusObj.attachmentDict = [NSMutableDictionary dictionary];
+        self.shaddowBusObj.attachments = [NSMutableArray array];
+        [self.shaddowBusObj cloneTo:self.busObj];
+    }
     
     [self retrieveDocAttachments];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
-        
+
         self.refreshControl.attributedTitle = LAST_REFRESHED;
         [self.refreshControl endRefreshing];
     });
@@ -829,9 +812,67 @@ static double animatedDistance = 0;
     doc.name = photoName;
     doc.data = photoData;
     [self addDocument:doc];
-//    [self addAttachmentData:photoData name:photoName];
-    [self addAttachment:@"jpg" data:photoData];
+    @synchronized (self) {
+        [self addAttachment:@"jpg" data:photoData];
+    }
     [self layoutScrollImages:YES];
 }
+
+#pragma mark - Attachment delegate
+
+- (void)didUploadDocument:(Document *)doc needUI:(BOOL)needUI {
+    @synchronized(self) {
+        if (doc.objectId && ![EMPTY_ID isEqualToString:doc.objectId]) {
+            [self.shaddowBusObj.attachmentDict setObject:doc forKey:doc.objectId];
+            [self.busObj.attachmentDict setObject:doc forKey:doc.objectId];
+            [self.attachmentDict setObject:doc forKey:doc.objectId];
+        } else {
+            if (!self.docsUploading) {
+                self.docsUploading = [NSMutableDictionary dictionary];
+            }
+            
+            [self.docsUploading setObject:doc forKey:doc.name];
+        }
+        
+        if (needUI) {
+            [self.shaddowBusObj.attachments addObject:doc];
+            [self addAttachment:[[doc.name pathExtension] lowercaseString] data:doc.data];
+            [self layoutScrollImages:YES];
+            [self.previewController reloadData];
+        }
+        
+        [self.busObj.attachments addObject:doc];
+    }
+}
+
+//- (void)didAttachDocument:(Document *)doc {
+//    [self.shaddowBusObj.attachmentDict setObject:doc forKey:doc.objectId];
+//    [self.busObj.attachmentDict setObject:doc forKey:doc.objectId];
+//    [self.attachmentDict setObject:doc forKey:doc.objectId];
+//    
+//    [self.busObj.attachments insertObject:doc atIndex:0];
+//    [self.shaddowBusObj.attachments insertObject:doc atIndex:0];
+//    
+//    [self addAttachment:[[doc.name pathExtension] lowercaseString] data:doc.data];
+//    [self layoutScrollImages:NO];
+//}
+
+//- (void)didDetachDocument:(Document *)doc {
+//    int idx = [self.shaddowBusObj.attachments indexOfObject:doc];
+//    
+//    [self.shaddowBusObj.attachments removeObject:doc];
+//    [self.busObj.attachments removeObject:doc];
+//    
+//    if (doc.objectId) {
+//        [self.attachmentDict removeObjectForKey:doc.objectId];
+//        [self.busObj.attachmentDict removeObjectForKey:doc.objectId];
+//        [self.shaddowBusObj.attachmentDict removeObjectForKey:doc.objectId];
+//    }
+//    
+//    UIImageView *imgView = [self.attachmentScrollView.subviews objectAtIndex:idx];
+//    [imgView removeFromSuperview];
+//    [self layoutScrollImages:NO];
+//}
+
 
 @end

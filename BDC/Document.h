@@ -13,6 +13,12 @@
 #define FILE_CATEGORY_DOCUMENT      @"document"
 #define FILE_CATEGORY_ATTACHMENT    @"attachment"
 
+#define FILE_NAME                   @"fileName"
+#define FILE_URL                    @"fileUrl"
+#define FILE_CREATED_DATE           @"createdDate"
+#define FILE_OWNER                  @"busObject"
+#define FILE_IS_PUBLIC              @"isPublic"
+
 
 @protocol DocumentDelegate <NSObject>
 

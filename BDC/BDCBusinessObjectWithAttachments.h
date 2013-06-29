@@ -13,7 +13,7 @@
 @protocol AttachmentDelegate
 
 @optional
-- (void)didUploadDocument:(Document *)doc;
+- (void)didUploadDocument:(Document *)doc needUI:(BOOL)needUI;
 - (void)didAttachDocument:(Document *)doc;
 - (void)didDetachDocument:(Document *)doc;
 

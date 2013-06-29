@@ -33,9 +33,11 @@
     [super changeCurrentDocumentTo:doc];
     
     NSArray *actionMenus = nil;
-    if (doc) {
+    if (doc && doc.objectId && doc.data) {
         actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], nil];
 //        actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], ACTION_DELETE, nil]; //TODO: need delete API
+    } else {
+        actionMenus = [NSArray array];
     }
     
     self.actionMenuVC.crudActions = self.crudActions = actionMenus;
@@ -96,7 +98,7 @@
     cell.documentName.minimumFontSize = 8;
     cell.documentCreatedDate.text = [Util formatDate:doc.createdDate format:nil];
     cell.parentVC = self;
-    cell.selectDelegate = self;
+    cell.docCellDelegate = self;
     [cell toggleInfoDisplay:YES];
     
     if (!doc.data) {
@@ -147,12 +149,14 @@
 }
 
 - (void)didAddDocument:(Document *)doc {
-    self.dataArray = [Document listForCategory:FILE_CATEGORY_DOCUMENT];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self changeCurrentDocumentTo:nil];
-        [self.collectionView insertItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]];
-        [self.previewController reloadData];
-    });
+    @synchronized(self) {
+        self.dataArray = [Document listForCategory:FILE_CATEGORY_DOCUMENT];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self changeCurrentDocumentTo:nil];
+            [self.collectionView insertItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]];
+            [self.previewController reloadData];
+        });
+    }
 }
 
 - (void)failedToGetDocuments {
@@ -165,6 +169,13 @@
 
 - (void)didSelectCell:(DocumentCell *)cell {
     [self changeCurrentDocumentTo:cell.document];
+}
+
+- (void)didLoadData:(DocumentCell *)cell {
+    if (cell.document == self.currentDocument) {
+        self.actionMenuVC.crudActions = self.crudActions = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], nil];
+        self.actionMenuVC.actionDelegate = self;
+    }
 }
 
 #pragma mark - Action Menu delegate

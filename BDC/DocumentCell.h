@@ -15,6 +15,7 @@
 @protocol DocumentCellDelegate <NSObject>
 
 - (void)didSelectCell:(DocumentCell *)cell;
+- (void)didLoadData:(DocumentCell *)cell;
 
 @end
 
@@ -27,7 +28,7 @@
 
 @property (nonatomic, strong) Document *document;
 @property (nonatomic, strong) SlidingCollectionViewController *parentVC;
-@property (nonatomic, strong) id<DocumentCellDelegate> selectDelegate;
+@property (nonatomic, strong) id<DocumentCellDelegate> docCellDelegate;
 
 - (void)toggleInfoDisplay:(BOOL)show;
 

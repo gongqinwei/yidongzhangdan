@@ -13,5 +13,6 @@
 @interface BOSelectorViewController : SlidingTableViewController
 
 @property (nonatomic, strong) Document *document;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *pickOrCreateSwitch;
 
 @end

@@ -24,7 +24,8 @@
 #define INFO_FONT_SIZE           14
 
 #define INFO_SHOW_INTERVAL       1.0
-#define INFO_FADEOUT_DURATION    2.0
+#define INFO_FADEOUT_DURATION    2.5
+#define ERROR_FADEOUT_DURATION   3.5
 
 #define SWITCH_TAB_DURATION      0.3
 
@@ -96,6 +97,7 @@
         
         [infoView addSubview:infoIcon];
         [infoView addSubview:infoLabel];
+        infoView.tag = status;
         
         [[[UIApplication sharedApplication] keyWindow] addSubview:infoView];
         
@@ -109,8 +111,15 @@
 
 + (void)fadeInfo:(NSTimer *)timer {
     UIView *infoView = timer.userInfo;
+    NSTimeInterval duration;
     
-    [UIView animateWithDuration:INFO_FADEOUT_DURATION
+    if (infoView.tag == kSuccess || infoView.tag == kInfo) {
+        duration = INFO_FADEOUT_DURATION;
+    } else {
+        duration = ERROR_FADEOUT_DURATION;
+    }
+    
+    [UIView animateWithDuration:duration
                      animations:^{
                          infoView.alpha = 0.0;
                      }

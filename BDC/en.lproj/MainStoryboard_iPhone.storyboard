@@ -1638,15 +1638,15 @@
                         <sections>
                             <tableViewSection headerTitle="Payables" id="tGt-QY-Mvb">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="detailDisclosureButton" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="lYf-qv-40h" imageView="Vqu-pk-StC" style="IBUITableViewCellStyleDefault" id="PUF-6g-FMy">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="lYf-qv-40h" imageView="Vqu-pk-StC" style="IBUITableViewCellStyleDefault" id="PUF-6g-FMy">
                                         <rect key="frame" x="0.0" y="22" width="320" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="39"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="300" height="39"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Bill" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="lYf-qv-40h">
-                                                    <rect key="frame" x="41" y="0.0" width="236" height="39"/>
+                                                    <rect key="frame" x="41" y="0.0" width="249" height="39"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -1658,19 +1658,16 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <connections>
-                                            <segue destination="k1G-B2-MSF" kind="push" identifier="AttachToExistingBill" id="6WH-3o-pdK"/>
-                                        </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="detailDisclosureButton" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="Yv2-Nn-9BC" imageView="XaZ-ZV-8nb" style="IBUITableViewCellStyleDefault" id="zNg-Ue-pUd">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="Yv2-Nn-9BC" imageView="XaZ-ZV-8nb" style="IBUITableViewCellStyleDefault" id="zNg-Ue-pUd">
                                         <rect key="frame" x="0.0" y="62" width="320" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="39"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="300" height="39"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Vendor" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Yv2-Nn-9BC">
-                                                    <rect key="frame" x="39" y="0.0" width="238" height="39"/>
+                                                    <rect key="frame" x="39" y="0.0" width="251" height="39"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -1682,23 +1679,20 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <connections>
-                                            <segue destination="cTU-5g-PB7" kind="push" identifier="AttachToExistingVendor" id="ivu-fh-H7y"/>
-                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="Receivables" id="uEm-Zn-Kyy">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="detailDisclosureButton" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="gxx-oI-Urd" imageView="Lh6-Aj-Q7O" style="IBUITableViewCellStyleDefault" id="82T-sl-rOV">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="gxx-oI-Urd" imageView="Lh6-Aj-Q7O" style="IBUITableViewCellStyleDefault" id="82T-sl-rOV">
                                         <rect key="frame" x="0.0" y="124" width="320" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="39"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="300" height="39"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Invoice" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="gxx-oI-Urd">
-                                                    <rect key="frame" x="41" y="0.0" width="236" height="39"/>
+                                                    <rect key="frame" x="41" y="0.0" width="249" height="39"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -1710,19 +1704,16 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <connections>
-                                            <segue destination="Auy-Fb-tfc" kind="push" identifier="AttachToExistingInvoice" id="KBb-Vt-s99"/>
-                                        </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="detailDisclosureButton" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="iT4-v0-kaa" imageView="qxP-oS-Pil" style="IBUITableViewCellStyleDefault" id="KLh-nA-Aev">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="iT4-v0-kaa" imageView="qxP-oS-Pil" style="IBUITableViewCellStyleDefault" id="KLh-nA-Aev">
                                         <rect key="frame" x="0.0" y="164" width="320" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="39"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="300" height="39"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Customer" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="iT4-v0-kaa">
-                                                    <rect key="frame" x="41" y="0.0" width="236" height="39"/>
+                                                    <rect key="frame" x="41" y="0.0" width="249" height="39"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -1734,9 +1725,6 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <connections>
-                                            <segue destination="3zY-p5-ksg" kind="push" identifier="AttachToExistingCustomer" id="0JS-Uf-rWu"/>
-                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -1793,12 +1781,28 @@
                             <outlet property="delegate" destination="ttA-Fa-UXM" id="UaO-4j-QgT"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="R0J-YT-C50"/>
+                    <navigationItem key="navigationItem" id="R0J-YT-C50">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="pZu-2C-N7Y">
+                            <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="1cd-yN-9OO">
+                                <rect key="frame" x="235" y="7" width="80" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Pick"/>
+                                    <segment title="New"/>
+                                </segments>
+                            </segmentedControl>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="pickOrCreateSwitch" destination="1cd-yN-9OO" id="AJz-28-kAu"/>
                         <segue destination="WEK-Fn-naN" kind="push" identifier="AttachToNewBill" id="v63-Az-wLD"/>
                         <segue destination="Crd-D4-0GL" kind="push" identifier="AttachToNewVendor" id="Hnb-9H-Um4"/>
                         <segue destination="W2n-Tn-iyx" kind="push" identifier="AttachToNewInvoice" id="CeX-f9-mSc"/>
                         <segue destination="eKR-Kb-X4l" kind="push" identifier="AttachToNewCustomer" id="nLD-mQ-6wj"/>
+                        <segue destination="k1G-B2-MSF" kind="push" identifier="AttachToExistingBill" id="3ag-eg-oXf"/>
+                        <segue destination="cTU-5g-PB7" kind="push" identifier="AttachToExistingVendor" id="GuY-KC-qoW"/>
+                        <segue destination="3zY-p5-ksg" kind="push" identifier="AttachToExistingCustomer" id="wxy-Zp-Lfl"/>
+                        <segue destination="Auy-Fb-tfc" kind="push" identifier="AttachToExistingInvoice" id="FTU-IK-7vF"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tum-Ku-ahY" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2458,25 +2462,226 @@
         <image name="VendorsIcon.png" width="22" height="24"/>
         <image name="bill.png" width="16" height="16"/>
     </resources>
+    <classes>
+        <class className="APViewController" superclassName="SlidingViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/APViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
+            </relationships>
+        </class>
+        <class className="AROverViewController" superclassName="SlidingTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AROverViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="dueIn7InvAmount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="dueIn7InvCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="dueOver7InvAmount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="dueOver7InvCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="overDueInvAmount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="overDueInvCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="totalInvAmount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="totalInvCount" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ActionMenuViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ActionMenuViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="searchBar" candidateClass="UISearchBar"/>
+            </relationships>
+        </class>
+        <class className="AttachmentPreviewViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AttachmentPreviewViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="photoImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="previewNavigationBar" candidateClass="UINavigationBar"/>
+            </relationships>
+        </class>
+        <class className="BDCViewController" superclassName="UITabBarController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BDCViewController.h"/>
+        </class>
+        <class className="BOSelectorViewController" superclassName="SlidingTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BOSelectorViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="pickOrCreateSwitch" candidateClass="UISegmentedControl"/>
+            </relationships>
+        </class>
+        <class className="BillsTableViewController" superclassName="SlidingListTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BillsTableViewController.h"/>
+        </class>
+        <class className="CreateBillViewController" superclassName="SlidingViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CreateBillViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="attachment" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="infoTable" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="CustomersTableViewController" superclassName="SlidingListTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CustomersTableViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="editCustomers:" candidateClass="UIBarButtonItem"/>
+            </relationships>
+        </class>
+        <class className="DocumentCell" superclassName="UICollectionViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/DocumentCell.h"/>
+            <relationships>
+                <relationship kind="action" name="showDocumentInfo:" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="documentCreatedDate" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="documentImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="documentName" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="EditBillViewController" superclassName="SlidingDetailsTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EditBillViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="saveBusObj:" candidateClass="UIBarButtonItem"/>
+            </relationships>
+        </class>
+        <class className="EditCustomerViewController" superclassName="SlidingDetailsTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EditCustomerViewController.h"/>
+        </class>
+        <class className="EditInvoiceViewController" superclassName="SlidingDetailsTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EditInvoiceViewController.h"/>
+        </class>
+        <class className="EditItemViewController" superclassName="SlidingDetailsTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EditItemViewController.h"/>
+        </class>
+        <class className="EditVendorViewController" superclassName="SlidingDetailsTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EditVendorViewController.h"/>
+        </class>
+        <class className="InboxViewController" superclassName="SlidingCollectionViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/InboxViewController.h"/>
+        </class>
+        <class className="InvoiceDetailsViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/InvoiceDetailsViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="InvoicePDFView" candidateClass="UIWebView"/>
+                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationBar"/>
+            </relationships>
+        </class>
+        <class className="InvoicesTableViewController" superclassName="SlidingListTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/InvoicesTableViewController.h"/>
+        </class>
+        <class className="ItemsTableViewController" superclassName="SlidingListTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ItemsTableViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="editItems:" candidateClass="UIBarButtonItem"/>
+            </relationships>
+        </class>
+        <class className="LoginViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LoginViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="email" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="indicator" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="password" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="warning" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="PayBillViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PayBillViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="bankAccountLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="billAmountLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="dueDateLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="invalidPayAmountLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="navBar" candidateClass="UINavigationItem"/>
+                <relationship kind="outlet" name="paidAmountLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="payAmountTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="processDateTextField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="RootMenuViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RootMenuViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="menuTableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="ScannerViewController" superclassName="SlidingViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ScannerViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="fileName" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="preview" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="submit" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="SelectOrgViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SelectOrgViewController.h"/>
+        </class>
+        <class className="SlidingCollectionViewController" superclassName="UICollectionViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SlidingCollectionViewController.h"/>
+        </class>
+        <class className="SlidingDetailsTableViewController" superclassName="SlidingTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SlidingDetailsTableViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="saveBusObj:" candidateClass="UIBarButtonItem"/>
+            </relationships>
+        </class>
+        <class className="SlidingListTableViewController" superclassName="SlidingTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SlidingListTableViewController.h"/>
+        </class>
+        <class className="SlidingTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SlidingTableViewController.h"/>
+        </class>
+        <class className="SlidingViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SlidingViewController.h"/>
+        </class>
+        <class className="SplashViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SplashViewController.h"/>
+        </class>
+        <class className="TermOfServiceViewController" superclassName="SlidingViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TermOfServiceViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="termOfServiceWebView" candidateClass="UIWebView"/>
+            </relationships>
+        </class>
+        <class className="UICollectionReusableView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionReusableView.h"/>
+        </class>
+        <class className="UICollectionViewCell" superclassName="UICollectionReusableView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewCell.h"/>
+        </class>
+        <class className="UICollectionViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewController.h"/>
+        </class>
+        <class className="UICollectionViewFlowLayout" superclassName="UICollectionViewLayout">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewFlowLayout.h"/>
+        </class>
+        <class className="UIRefreshControl" superclassName="UIControl">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UIRefreshControl.h"/>
+        </class>
+        <class className="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UIViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="toggleMenu:"/>
+            </relationships>
+        </class>
+        <class className="UserProfileViewController" superclassName="SlidingViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UserProfileViewController.h"/>
+        </class>
+        <class className="VendorsTableViewController" superclassName="SlidingListTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/VendorsTableViewController.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="v63-Az-wLD"/>
-        <segue reference="ifQ-ST-XVY"/>
         <segue reference="CeX-f9-mSc"/>
-        <segue reference="ivu-fh-H7y"/>
-        <segue reference="KBb-Vt-s99"/>
-        <segue reference="6WH-3o-pdK"/>
-        <segue reference="0JS-Uf-rWu"/>
-        <segue reference="Hnb-9H-Um4"/>
+        <segue reference="ifQ-ST-XVY"/>
+        <segue reference="3ag-eg-oXf"/>
+        <segue reference="GuY-KC-qoW"/>
+        <segue reference="wxy-Zp-Lfl"/>
+        <segue reference="v63-Az-wLD"/>
         <segue reference="nLD-mQ-6wj"/>
+        <segue reference="FTU-IK-7vF"/>
+        <segue reference="Hnb-9H-Um4"/>
+        <segue reference="fqJ-Rf-CsZ"/>
         <segue reference="qdh-4f-Obl"/>
         <segue reference="rn3-5G-Kbh"/>
         <segue reference="fR5-hZ-eeX"/>
-        <segue reference="fqJ-Rf-CsZ"/>
         <segue reference="dDE-iX-7BR"/>
         <segue reference="2iZ-iS-Zfa"/>
         <segue reference="5Ki-uI-G54"/>

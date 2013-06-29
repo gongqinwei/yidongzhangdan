@@ -8,6 +8,7 @@
 
 #import "SlidingListTableViewController.h"
 #import "ScannerViewController.h"
+#import "BDCBusinessObjectWithAttachments.h"
 #import "APIHandler.h"
 #import "Uploader.h"
 #import "UIHelper.h"
@@ -94,28 +95,13 @@
     }
 }
 
-- (void)handleAttachSuccess:(NSString *)info forObject:(BDCBusinessObject *)obj {
-    if (![info isEqualToString:EMPTY_ID]) {
-        self.document.objectId = info;
-    }
-    
-    [Document removeFromInbox:self.document];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.activityIndicator stopAnimating];
-        [self performSegueForObject:obj];
-    });
-    
-    NSLog(@"Successfully associate document %@ with %@", self.document.name, obj.name);
-}
-
 - (void)handleAttachFailure:(NSError *)err forObject:(BDCBusinessObject *)obj {
     [self.activityIndicator stopAnimating];
     [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
     NSLog(@"Failed to associate document %@ with %@: %@", self.document.name, obj.name, [err localizedDescription]);
 }
 
-- (void)attachDocumentForObject:(BDCBusinessObject *)obj {
+- (void)attachDocumentForObject:(BDCBusinessObjectWithAttachments *)obj {
     if (self.document.data && self.document.name) {
         if (self.document.objectId) {
             NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"name\" : \"%@\", \"objId\" : \"%@\"}", ID, self.document.objectId, self.document.name, obj.objectId];
@@ -123,10 +109,15 @@
             
             [APIHandler asyncCallWithAction:ASSIGN_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
                 NSInteger response_status;
-                NSString *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
+                [APIHandler getResponse:response data:data error:&err status:&response_status];
                 
                 if(response_status == RESPONSE_SUCCESS) {
-                    [self handleAttachSuccess:info forObject:obj];
+                    [Document removeFromInbox:self.document];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.activityIndicator stopAnimating];
+                        [self performSegueForObject:obj];
+                    });
                 } else {
                     [self handleAttachFailure:err forObject:obj];
                 }
@@ -137,11 +128,21 @@
                 NSString *info = [APIHandler getResponse:response data:data error:&err status:&status];
                 
                 if(status == RESPONSE_SUCCESS) {
-                    [self handleAttachSuccess:info forObject:obj];
+                    if (![info isEqualToString:EMPTY_ID]) {
+                        self.document.objectId = info;
+                    }
+                    [obj.attachmentDelegate didUploadDocument:self.document needUI:YES];
                 } else {
                     [self handleAttachFailure:err forObject:obj];
                 }
             }];
+            
+            [UIHelper showInfo:@"Documents upload in progress.\n\nI'll show up once uploaded." withStatus:kInfo];
+            [self.activityIndicator stopAnimating];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self performSegueForObject:obj];
+            });
         }
     }
 }

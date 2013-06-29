@@ -23,7 +23,7 @@
 @synthesize documentImageView;
 @synthesize documentName;
 @synthesize document = _document;
-@synthesize selectDelegate;
+@synthesize docCellDelegate;
 @synthesize parentVC;
 
 - (void)toggleInfoDisplay:(BOOL)hidden {
@@ -45,7 +45,7 @@
         
         [self toggleInfoDisplay: !self.infoOverlay.hidden];
         
-        [self.selectDelegate didSelectCell:self];
+        [self.docCellDelegate didSelectCell:self];
     }
 }
 
@@ -78,6 +78,7 @@
 
 - (void)didLoadData {
     self.document = self.document;  // to reload image
+    [self.docCellDelegate didLoadData:self];
 }
 
 - (void)didGetSelected {

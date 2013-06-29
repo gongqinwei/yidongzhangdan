@@ -17,6 +17,7 @@ static NSMutableArray *documents = nil;
 static NSMutableArray *attachments = nil;
 static id <DocumentListDelegate> DocumentListDelegate = nil;
 static id <DocumentListDelegate> AttachmentListDelegate = nil;
+static NSLock *DocumentsLock = nil;
 
 @implementation Document
 
@@ -28,9 +29,14 @@ static id <DocumentListDelegate> AttachmentListDelegate = nil;
 @synthesize createdDate;
 @synthesize documentDelegate;
 
+
 - (void)setData:(NSData *)data {
     _data = data;
     [self.documentDelegate didLoadData];
+}
+
++ (void)initialize {
+    DocumentsLock = [[NSLock alloc] init];
 }
 
 + (void)setDocumentListDelegate:(id<DocumentListDelegate>)theDelegate {
@@ -52,13 +58,17 @@ static id <DocumentListDelegate> AttachmentListDelegate = nil;
 }
 
 + (void)addToInbox:(Document *)doc {
+    [DocumentsLock lock];
     [documents insertObject:doc atIndex:0];
     [DocumentListDelegate didAddDocument:doc];
+    [DocumentsLock unlock];
 }
 
 + (void)removeFromInbox:(Document *)doc {
+    [DocumentsLock lock];
     [documents removeObject:doc];
     [DocumentListDelegate didGetDocuments];
+    [DocumentsLock unlock];
 }
 
 + (void)retrieveListForCategory:(NSString *)category {
@@ -91,13 +101,13 @@ static id <DocumentListDelegate> AttachmentListDelegate = nil;
             for (NSDictionary *dict in jsonDocs) {
                 Document *doc = [[Document alloc] init];
                 doc.objectId = [dict objectForKey:ID];
-                doc.name = [dict objectForKey:@"fileName"];
-                doc.fileUrl = [dict objectForKey:@"fileUrl"];
-                doc.createdDate = [Util getDate:[dict objectForKey:@"createdDate"] format:@"MM/dd/yy hh:mm a"];
+                doc.name = [dict objectForKey:FILE_NAME];
+                doc.fileUrl = [dict objectForKey:FILE_URL];
+                doc.createdDate = [Util getDate:[dict objectForKey:FILE_CREATED_DATE] format:@"MM/dd/yy hh:mm a"];
                 
                 if ([category isEqualToString:FILE_CATEGORY_ATTACHMENT]) {
-                    doc.associatedTo = [dict objectForKey:@"busObject"];
-                    doc.isPublic = [[dict objectForKey:@"isPublic"] intValue];
+                    doc.associatedTo = [dict objectForKey:FILE_OWNER];
+                    doc.isPublic = [[dict objectForKey:FILE_IS_PUBLIC] intValue];
                     [attachments addObject:doc];
                 } else if ([category isEqualToString:FILE_CATEGORY_DOCUMENT]) {
                     [documents addObject:doc];

@@ -26,6 +26,7 @@
 @property (nonatomic, strong) UIToolbar *inputAccessoryView;
 
 @property (nonatomic, strong) NSMutableDictionary *attachmentDict;
+@property (nonatomic, strong) NSMutableDictionary *docsUploading;
 
 @property (nonatomic, strong) UIScrollView *attachmentScrollView;
 @property (nonatomic, strong) UIPageControl *attachmentPageControl;
@@ -49,6 +50,7 @@
 - (void)doneSaveObject;
 - (void)handleRemovalForDocument:(Document *)doc;
 - (NSIndexPath *)getAttachmentPath;
+- (void)resetScrollView;
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField;
 - (void)textFieldDidEndEditing:(UITextField *)textField;

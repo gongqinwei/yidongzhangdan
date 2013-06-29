@@ -364,7 +364,11 @@ typedef enum {
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == kBillInfo) {
-        return [BillInfo count];
+        if (self.mode == kViewMode) {
+            return [BillInfo count];
+        } else {
+            return [BillInfo count] - 2;
+        }
     } else if (section == kBillLineItems) {
         return [((Bill *)self.shaddowBusObj).lineItems count];
     } else {

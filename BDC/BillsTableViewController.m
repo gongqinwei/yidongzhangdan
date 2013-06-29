@@ -519,6 +519,12 @@
     }
 }
 
+- (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    if ([self tryTap]) {
+        [self performSegueWithIdentifier:VIEW_BILL_SEGUE sender:[self.bills objectAtIndex:indexPath.row]];
+    }
+}
+
 #pragma mark - Bill delegate
 
 - (void)didGetBills:(NSArray *)billList {

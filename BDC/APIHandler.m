@@ -46,9 +46,7 @@ static Handler sessionValidatingHandler = nil;
                 
         if(response_status == RESPONSE_FALURE) {
             NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
-            if ([INVALID_SESSION isEqualToString:errCode]) {
-                NSLog(@"========== RENEWING SESSION =============");
-                
+            if ([INVALID_SESSION isEqualToString:errCode]) {                
                 NSMutableDictionary *signInInfo = [NSMutableDictionary dictionary];
                 [signInInfo setObject:ORG_ID forKey:[Util getSelectedOrgId]];
                 [signInInfo setObject:USERNAME forKey:[Util getUsername]];
