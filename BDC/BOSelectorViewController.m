@@ -75,6 +75,7 @@
                 }
                 
                 [Document addToInbox:self.document];
+                [UIHelper showInfo:[NSString stringWithFormat:@"Bill.com is still processing %@.\n\nNot available for association yet.", self.document.name] withStatus:kInfo];
             } else {
                 [UIHelper showInfo:@"Failed to upload picture to Inbox!" withStatus:kFailure];
             }

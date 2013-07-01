@@ -22,6 +22,26 @@
 @synthesize isActive;
 @synthesize editDelegate;
 
+
+-(NSUInteger) hash {
+    return [self.objectId hash];
+}
+
+-(BOOL) isEqual:(id)other {
+    if([other isKindOfClass:[self class]])
+        return [self.objectId isEqualToString:((BDCBusinessObject *)other).objectId];
+    else
+        return NO;
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    BDCBusinessObject *copy = [[[self class] allocWithZone: zone] init];
+    copy.objectId = self.objectId;
+    copy.name = self.name;
+    
+    return copy;
+}
+
 - (void)create {
     [self saveFor:CREATE];
 }

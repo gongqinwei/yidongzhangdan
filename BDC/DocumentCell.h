@@ -25,11 +25,13 @@
 @property (weak, nonatomic) IBOutlet UIImageView *documentImageView;
 @property (weak, nonatomic) IBOutlet UILabel *documentName;
 @property (weak, nonatomic) IBOutlet UILabel *documentCreatedDate;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *downloadingIndicator;
 
 @property (nonatomic, strong) Document *document;
 @property (nonatomic, strong) SlidingCollectionViewController *parentVC;
 @property (nonatomic, strong) id<DocumentCellDelegate> docCellDelegate;
 
 - (void)toggleInfoDisplay:(BOOL)show;
+
 
 @end

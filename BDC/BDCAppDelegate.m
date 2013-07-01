@@ -15,6 +15,7 @@
 #import "Document.h"
 #import "ChartOfAccount.h"
 #import "SplashViewController.h"
+#import "InboxViewController.h"
 #import "APIHandler.h"
 
 @interface BDCAppDelegate ()
@@ -120,6 +121,10 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+    [InboxViewController freeMem];
 }
 
 // increment numNetworkActivities

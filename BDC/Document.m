@@ -30,6 +30,19 @@ static NSLock *DocumentsLock = nil;
 @synthesize documentDelegate;
 
 
+- (id)copyWithZone:(NSZone *)zone {
+    Document *doc = [super copyWithZone:zone];
+    doc.data = self.data;
+    doc.fileUrl = self.fileUrl;
+    doc.isPublic = self.isPublic;
+    doc.page = self.page;
+    doc.associatedTo = self.associatedTo;
+    doc.createdDate = self.createdDate;
+    doc.documentDelegate = self.documentDelegate;
+    
+    return doc;
+}
+
 - (void)setData:(NSData *)data {
     _data = data;
     [self.documentDelegate didLoadData];

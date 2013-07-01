@@ -14,6 +14,7 @@
 
 #define DOCUMENT_ASSOCIATE_SEGUE        @"DocumentAssociatedWith"
 
+static LRU *InMemCache = nil;
 
 @interface InboxViewController () <DocumentListDelegate, DocumentCellDelegate>
 
@@ -22,6 +23,10 @@
 
 @implementation InboxViewController
 
++ (void)freeMem {
+    [InMemCache spit];
+}
+
 // Override
 - (void)refreshView {
     [super refreshView];
@@ -29,20 +34,24 @@
     [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
 }
 
-- (void)changeCurrentDocumentTo:(Document *)doc {
-    [super changeCurrentDocumentTo:doc];
+- (BOOL)changeCurrentDocumentTo:(Document *)doc {
+    BOOL docChanged = [super changeCurrentDocumentTo:doc];
     
-    NSArray *actionMenus = nil;
-    if (doc && doc.objectId && doc.data) {
-        actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], nil];
-//        actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], ACTION_DELETE, nil]; //TODO: need delete API
-    } else {
-        actionMenus = [NSArray array];
+    if (docChanged) {
+        NSArray *actionMenus = nil;
+        if (doc && doc.objectId && doc.data) {
+            actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], nil];
+            //        actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], ACTION_DELETE, nil]; //TODO: need delete API
+        } else {
+            actionMenus = [NSArray array];
+        }
+        
+        self.actionMenuVC.crudActions = self.crudActions = actionMenus;
+        self.actionMenuVC.actionDelegate = self;
+        [self.actionMenuVC.tableView reloadData];
     }
     
-    self.actionMenuVC.crudActions = self.crudActions = actionMenus;
-    self.actionMenuVC.actionDelegate = self;
-    [self.actionMenuVC.tableView reloadData];
+    return docChanged;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -61,6 +70,8 @@
     [Document setDocumentListDelegate:self];
     
     self.dataArray = [Document listForCategory:FILE_CATEGORY_DOCUMENT];
+    
+    InMemCache = self.dataInMemCache;
 }
 
 - (void)didReceiveMemoryWarning
@@ -88,7 +99,6 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"InboxCell";
-    
     DocumentCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
 
     Document *doc = self.dataArray[indexPath.row];
@@ -99,11 +109,10 @@
     cell.documentCreatedDate.text = [Util formatDate:doc.createdDate format:nil];
     cell.parentVC = self;
     cell.docCellDelegate = self;
-    [cell toggleInfoDisplay:YES];
     
-    if (!doc.data) {
-        [self downloadDocument:doc];
-    }
+//    if (!doc.data) {
+//        [self downloadDocument:doc];
+//    }
     
     return cell;
 }
@@ -116,14 +125,27 @@
 #pragma mark - UICollectionView Delegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    [self changeCurrentDocumentTo:self.dataArray[indexPath.row]];
+    BOOL docChanged = [self changeCurrentDocumentTo:self.dataArray[indexPath.row]];
     
-    self.previewController.currentPreviewItemIndex = indexPath.row;
-    [self presentModalViewController:self.previewController animated:YES];
+    Document *doc = self.currentDocument;
+    if (!doc.data) {
+        DocumentCell *cell = (DocumentCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+        [cell.downloadingIndicator startAnimating];
+        cell.downloadingIndicator.hidden = NO;
+        [self downloadDocument:doc];
+    } else {
+//        self.previewController.currentPreviewItemIndex = indexPath.row;
+        
+        [self presentModalViewController:self.previewController animated:YES];
+        if (docChanged) {
+            [self.previewController reloadData];
+        }
+        
+        [self.dataInMemCache cache:doc];
+    }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"- %d", indexPath.row);
 }
 
 #pragma mark – UICollectionView Delegate FlowLayout
@@ -173,6 +195,9 @@
 
 - (void)didLoadData:(DocumentCell *)cell {
     if (cell.document == self.currentDocument) {
+        [self presentModalViewController:self.previewController animated:YES];
+        [self.previewController reloadData];
+        
         self.actionMenuVC.crudActions = self.crudActions = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], nil];
         self.actionMenuVC.actionDelegate = self;
     }

@@ -12,7 +12,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #define INFO_VIEW_POSITION_Y     150
-#define INFO_VIEW_WIDTH          170
+#define INFO_VIEW_WIDTH          200
 #define INFO_VIEW_HEIGHT         150
 #define INFO_VIEW_MARGIN         12
 #define INFO_VIEW_PADDING        5
@@ -24,8 +24,8 @@
 #define INFO_FONT_SIZE           14
 
 #define INFO_SHOW_INTERVAL       1.0
-#define INFO_FADEOUT_DURATION    2.5
-#define ERROR_FADEOUT_DURATION   3.5
+#define INFO_FADEOUT_DURATION    4
+#define ERROR_FADEOUT_DURATION   5
 
 #define SWITCH_TAB_DURATION      0.3
 

@@ -63,6 +63,9 @@
 		0EAE1BAA170B9B780091B7FC /* UIViewController+Sliding.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EAE1BA9170B9B780091B7FC /* UIViewController+Sliding.m */; };
 		0EB2192917472EE600382C44 /* csv_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EB2192817472EE600382C44 /* csv_icon.png */; };
 		0EB21936174B3B2300382C44 /* BDCBusinessObjectWithAttachments.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB21935174B3B2300382C44 /* BDCBusinessObjectWithAttachments.m */; };
+		0EC19CA2177FFBE800D5B285 /* LRU.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EC19CA1177FFBE800D5B285 /* LRU.m */; };
+		0EC19CA5177FFD3F00D5B285 /* Node.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EC19CA4177FFD3F00D5B285 /* Node.m */; };
+		0EC19CA8177FFE0100D5B285 /* LinkedList.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EC19CA7177FFE0100D5B285 /* LinkedList.m */; };
 		0EC88C9715F1374900A490EE /* AROverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EC88C9615F1374900A490EE /* AROverViewController.m */; };
 		0EC88C9A15F139C100A490EE /* CustomersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EC88C9915F139C100A490EE /* CustomersTableViewController.m */; };
 		0ECF42B3175BC22A00BA7C7B /* doc_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ECF42B2175BC22A00BA7C7B /* doc_icon.png */; };
@@ -215,6 +218,12 @@
 		0EB2192817472EE600382C44 /* csv_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = csv_icon.png; sourceTree = "<group>"; };
 		0EB21934174B3B2300382C44 /* BDCBusinessObjectWithAttachments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDCBusinessObjectWithAttachments.h; sourceTree = "<group>"; };
 		0EB21935174B3B2300382C44 /* BDCBusinessObjectWithAttachments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDCBusinessObjectWithAttachments.m; sourceTree = "<group>"; };
+		0EC19CA0177FFBE800D5B285 /* LRU.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LRU.h; sourceTree = "<group>"; };
+		0EC19CA1177FFBE800D5B285 /* LRU.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LRU.m; sourceTree = "<group>"; };
+		0EC19CA3177FFD3F00D5B285 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
+		0EC19CA4177FFD3F00D5B285 /* Node.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Node.m; sourceTree = "<group>"; };
+		0EC19CA6177FFE0100D5B285 /* LinkedList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkedList.h; sourceTree = "<group>"; };
+		0EC19CA7177FFE0100D5B285 /* LinkedList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkedList.m; sourceTree = "<group>"; };
 		0EC88C9515F1374900A490EE /* AROverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AROverViewController.h; sourceTree = "<group>"; };
 		0EC88C9615F1374900A490EE /* AROverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AROverViewController.m; sourceTree = "<group>"; };
 		0EC88C9815F139C100A490EE /* CustomersTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomersTableViewController.h; sourceTree = "<group>"; };
@@ -371,15 +380,21 @@
 			name = Vendor;
 			sourceTree = "<group>";
 		};
-		0E999E0C16DE5E6B00F1E39F /* Categories */ = {
+		0E999E0C16DE5E6B00F1E39F /* Categories-DataStructure */ = {
 			isa = PBXGroup;
 			children = (
+				0EC19CA3177FFD3F00D5B285 /* Node.h */,
+				0EC19CA4177FFD3F00D5B285 /* Node.m */,
+				0EC19CA6177FFE0100D5B285 /* LinkedList.h */,
+				0EC19CA7177FFE0100D5B285 /* LinkedList.m */,
+				0EC19CA0177FFBE800D5B285 /* LRU.h */,
+				0EC19CA1177FFBE800D5B285 /* LRU.m */,
 				0E999E0D16DE5E8E00F1E39F /* UIView+FindAndResignFirstResponder.h */,
 				0E999E0E16DE5E8E00F1E39F /* UIView+FindAndResignFirstResponder.m */,
 				0EAE1BA8170B9B780091B7FC /* UIViewController+Sliding.h */,
 				0EAE1BA9170B9B780091B7FC /* UIViewController+Sliding.m */,
 			);
-			name = Categories;
+			name = "Categories-DataStructure";
 			sourceTree = "<group>";
 		};
 		0EA29AAF16D885E800386617 /* Customer */ = {
@@ -668,7 +683,7 @@
 		7E91E3F515927C15005104AF /* BDC */ = {
 			isa = PBXGroup;
 			children = (
-				0E999E0C16DE5E6B00F1E39F /* Categories */,
+				0E999E0C16DE5E6B00F1E39F /* Categories-DataStructure */,
 				7E579F5F15A37CFF009D1455 /* Models */,
 				7E579F6115A37DD3009D1455 /* Views */,
 				7E579F6315A37E3C009D1455 /* Controllers */,
@@ -884,6 +899,9 @@
 				0EEB9F7C1756B91300AAAC35 /* DocumentCell.m in Sources */,
 				0E188B8C176C435300493EE1 /* BDCBusinessObjectWithAttachmentsAndAddress.m in Sources */,
 				0E0B9E9D17751CE900C2AF30 /* TermOfServiceViewController.m in Sources */,
+				0EC19CA2177FFBE800D5B285 /* LRU.m in Sources */,
+				0EC19CA5177FFD3F00D5B285 /* Node.m in Sources */,
+				0EC19CA8177FFE0100D5B285 /* LinkedList.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,11 +16,16 @@
 @synthesize currentDocument;
 @synthesize refreshControl;
 @synthesize previewController;
+@synthesize dataInMemCache;
 
 
 - (void)refreshView {
     self.refreshControl.attributedTitle = REFRESHING;
     [self changeCurrentDocumentTo:nil];
+    
+    [self.dataInMemCache purge];
+    self.dataInMemCache = nil;
+    self.dataInMemCache = [[LRU alloc] init];
 }
 
 - (void)endRefreshView {
@@ -39,13 +44,19 @@
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                doc.data = data;
+                               [self.dataInMemCache cache:doc];
                            }];
 }
 
-- (void)changeCurrentDocumentTo:(Document *)doc {
-    [self.currentDocument.documentDelegate didGetDeselected];
-    self.currentDocument = doc;
-    [self.currentDocument.documentDelegate didGetSelected];
+- (BOOL)changeCurrentDocumentTo:(Document *)doc {
+    if (self.currentDocument != doc) {
+        [self.currentDocument.documentDelegate didGetDeselected];
+        self.currentDocument = doc;
+        [self.currentDocument.documentDelegate didGetSelected];
+        return YES;
+    } else {
+        return FALSE;
+    }
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -67,7 +78,10 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
+    Document *doc = [self.dataInMemCache spit];
+    doc.data = nil;
+    NSLog(@"=== Freed up data for Document: %@ ===", doc.name);
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -86,19 +100,21 @@
     self.previewController = [[QLPreviewController alloc] init];
     self.previewController.delegate = self;
     self.previewController.dataSource = self;
+    
+    self.dataInMemCache = [[LRU alloc] init];
 }
 
 #pragma mark - QuickLook Preview Controller Data Source
 
 - (NSInteger) numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller {
-    return self.dataArray.count;
+    return 1; //self.dataArray.count;
 }
 
 - (id<QLPreviewItem>) previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index {
     NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *docsDir = [dirPaths objectAtIndex:0];
     
-    Document *doc = self.dataArray[index];
+    Document *doc = self.currentDocument; //self.dataArray[index];
     
     NSString *filePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent:doc.name]];
     [doc.data writeToFile:filePath atomically:YES];

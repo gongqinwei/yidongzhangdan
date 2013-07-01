@@ -25,6 +25,7 @@
 @synthesize document = _document;
 @synthesize docCellDelegate;
 @synthesize parentVC;
+@synthesize downloadingIndicator;
 
 - (void)toggleInfoDisplay:(BOOL)hidden {
     self.documentName.hidden = hidden;
@@ -37,7 +38,7 @@
         if (!self.infoOverlay) {
             self.infoOverlay = [[UIView alloc] initWithFrame:self.documentImageView.frame];
             self.infoOverlay.backgroundColor = [UIColor darkGrayColor];
-            self.infoOverlay.alpha = 0.8f;
+            self.infoOverlay.alpha = 0.5f;
             self.infoOverlay.layer.masksToBounds = YES;
             self.infoOverlay.hidden = YES;
             [self.documentImageView addSubview:self.infoOverlay];
@@ -79,16 +80,21 @@
 - (void)didLoadData {
     self.document = self.document;  // to reload image
     [self.docCellDelegate didLoadData:self];
+    [self.downloadingIndicator stopAnimating];
 }
 
 - (void)didGetSelected {
-    self.documentImageView.layer.borderColor = [[UIColor orangeColor]CGColor];
-    self.documentImageView.layer.borderWidth = 3.0f;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.documentImageView.layer.borderColor = [[UIColor orangeColor]CGColor];
+        self.documentImageView.layer.borderWidth = 3.0f;
+    });
 }
 
 - (void)didGetDeselected {
-    self.documentImageView.layer.borderColor = [[UIColor clearColor]CGColor];
-    self.documentImageView.layer.borderWidth = 0.0f;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.documentImageView.layer.borderColor = [[UIColor clearColor]CGColor];
+        self.documentImageView.layer.borderWidth = 0.0f;
+    });
 }
 
 @end

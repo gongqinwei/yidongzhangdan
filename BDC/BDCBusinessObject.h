@@ -34,6 +34,9 @@
 - (void)update;
 - (void)remove;
 - (void)revive;
+- (NSUInteger) hash;
+- (BOOL) isEqual:(id)other;
+- (id)copyWithZone:(NSZone *)zone;
 
 // don't call this directly: used by remove/revive
 - (void)toggleActive:(Boolean)isActive;
