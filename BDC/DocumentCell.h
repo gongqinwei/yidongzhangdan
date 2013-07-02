@@ -20,7 +20,7 @@
 @end
 
 
-@interface DocumentCell : UICollectionViewCell
+@interface DocumentCell : UICollectionViewCell <DocumentDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *documentImageView;
 @property (weak, nonatomic) IBOutlet UILabel *documentName;

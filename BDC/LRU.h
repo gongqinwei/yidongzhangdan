@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "LinkedList.h"
 
+#define CACHE_THRESHOLD     100000
+
 @interface LRU : NSObject
 
 @property (nonatomic, strong) LinkedList *list;

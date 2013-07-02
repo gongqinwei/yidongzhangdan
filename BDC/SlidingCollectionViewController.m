@@ -43,8 +43,12 @@
     [NSURLConnection sendAsynchronousRequest:req
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-                               doc.data = data;
-                               [self.dataInMemCache cache:doc];
+                               doc.data = data;     // compression during setter
+                               
+                               // only cache big fish
+                               if (doc.data.length >= CACHE_THRESHOLD) {
+                                   [self.dataInMemCache cache:doc];
+                               }
                            }];
 }
 

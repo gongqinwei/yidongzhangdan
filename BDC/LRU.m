@@ -39,7 +39,6 @@
     if (obj) {
         [self.map removeObjectForKey:obj];
     }
-    
     return obj;
 }
 

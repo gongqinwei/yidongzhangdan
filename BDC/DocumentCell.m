@@ -10,7 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 
-@interface DocumentCell () <DocumentDelegate>
+@interface DocumentCell ()
 
 @property (nonatomic, strong) UIView *infoOverlay;
 

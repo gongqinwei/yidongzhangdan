@@ -100,7 +100,7 @@ static LRU *InMemCache = nil;
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"InboxCell";
     DocumentCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
-
+    
     Document *doc = self.dataArray[indexPath.row];
     cell.document = doc;
     cell.documentName.text = doc.name;
@@ -110,9 +110,13 @@ static LRU *InMemCache = nil;
     cell.parentVC = self;
     cell.docCellDelegate = self;
     
-//    if (!doc.data) {
-//        [self downloadDocument:doc];
-//    }
+    doc.documentDelegate = cell;
+    
+    if (!doc.data) {
+        [self downloadDocument:doc];
+        [cell.downloadingIndicator startAnimating];
+        cell.downloadingIndicator.hidden = NO;
+    }
     
     return cell;
 }
@@ -195,8 +199,10 @@ static LRU *InMemCache = nil;
 
 - (void)didLoadData:(DocumentCell *)cell {
     if (cell.document == self.currentDocument) {
-        [self presentModalViewController:self.previewController animated:YES];
-        [self.previewController reloadData];
+        if (self.presentedViewController != self.previewController) {
+            [self presentModalViewController:self.previewController animated:YES];
+            [self.previewController reloadData];
+        }
         
         self.actionMenuVC.crudActions = self.crudActions = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], nil];
         self.actionMenuVC.actionDelegate = self;

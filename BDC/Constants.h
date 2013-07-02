@@ -12,8 +12,9 @@
 #import "Labels.h"
 
 //#define LOCAL
-#define APPTEST
+//#define APPTEST
 //#define APPSTAGE
+#define PROD
 
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
@@ -34,7 +35,14 @@
 #define APP_KEY_VALUE       @"01AHJMDLVJQRYYRHWUV4"
 #define ERR_DOMAIN          @"App Stage"
 #define DOMAIN_URL          @"https://app-stage.bill.com"
-#define APP_KEY             @"appKey"
+#define APP_KEY             @"devKey"
+#endif
+
+#ifdef PROD
+#define APP_KEY_VALUE       @"01VWTMSCMXDIADIVY208"
+#define ERR_DOMAIN          @"PROD"
+#define DOMAIN_URL          @"https://app.bill.com"
+#define APP_KEY             @"devKey"
 #endif
 
 #define KEYCHAIN_ID         @"BDCLogin"

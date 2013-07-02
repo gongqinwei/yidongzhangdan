@@ -12,6 +12,8 @@
 #import "UIHelper.h"
 #import "Util.h"
 
+#define COMPRESSION_THRESHOLD       100000
+
 
 static NSMutableArray *documents = nil;
 static NSMutableArray *attachments = nil;
@@ -44,7 +46,20 @@ static NSLock *DocumentsLock = nil;
 }
 
 - (void)setData:(NSData *)data {
+    if (data) {
+        NSString *ext = [[self.name pathExtension] lowercaseString];
+        if ([IMAGE_TYPE_SET containsObject:ext]) {
+            int size = data.length;
+            if (size > COMPRESSION_THRESHOLD) {
+                UIImage *img = [UIImage imageWithData:data];
+                data = UIImageJPEGRepresentation(img, COMPRESSION_THRESHOLD / size / 10);
+            }
+        }        
+    }
+    
     _data = data;
+    
+    NSLog(@"=== document delegate: %@", self.documentDelegate);
     [self.documentDelegate didLoadData];
 }
 

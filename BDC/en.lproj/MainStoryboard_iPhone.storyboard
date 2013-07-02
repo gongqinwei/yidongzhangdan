@@ -2526,6 +2526,7 @@
         <class className="DocumentCell" superclassName="UICollectionViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DocumentCell.h"/>
             <relationships>
+                <relationship kind="action" name="showDocumentInfo:" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="documentCreatedDate" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="documentImageView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="documentName" candidateClass="UILabel"/>
@@ -2534,9 +2535,6 @@
         </class>
         <class className="EditBillViewController" superclassName="SlidingDetailsTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EditBillViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="saveBusObj:" candidateClass="UIBarButtonItem"/>
-            </relationships>
         </class>
         <class className="EditCustomerViewController" superclassName="SlidingDetailsTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EditCustomerViewController.h"/>
@@ -2587,6 +2585,8 @@
         <class className="PayBillViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PayBillViewController.h"/>
             <relationships>
+                <relationship kind="action" name="cancelPay:" candidateClass="UIBarButtonItem"/>
+                <relationship kind="action" name="payBill:"/>
                 <relationship kind="outlet" name="bankAccountLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="billAmountLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="dueDateLabel" candidateClass="UILabel"/>
