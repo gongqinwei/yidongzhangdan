@@ -59,6 +59,11 @@
 #define PRESENT_TYPE        @"PresentationType"
 #define FILE_NAME           @"fileName"
 #define DOCUMENT            @"document"
+#define ATTACH_ID           @"aid"
+#define PAGE_NUMBER         @"pageNumber"
+#define IMAGE_WIDTH         @"w"
+#define IMAGE_HEIGHT        @"h"
+#define DOCUMENT_CELL_DIMENTION     95
 
 #define API_TIMEOUT         30
 #define PDF_TYPE            @"PDF"
@@ -76,6 +81,8 @@
 #define INV_2_PDF_API       @"Invoice2PdfServlet"
 #define ATTACH_DOWNLOAD_API @"AttachDownload"       // not used any more
 #define DOC_DOWNLOAD_API    @"FileServlet"          // not used any more
+#define DOC_IMAGE_API       @"ImageServlet"
+#define ATTACH_IMAGE_API    @"AttachmentImageServlet"
 #define ORG_LOGO_API        @"InvoiceLogoImage"
 #define LOGIN_API           @"Login.json"
 #define LIST_ORG_API        @"ListOrgs.json"

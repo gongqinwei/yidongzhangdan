@@ -19,7 +19,7 @@
 #define IMG_PADDING                     10
 #define IMG_WIDTH                       CELL_WIDTH / 4
 #define IMG_HEIGHT                      IMG_WIDTH - IMG_PADDING
-#define NUM_ATTACHMENT_PER_PAGE         4
+//#define NUM_ATTACHMENT_PER_PAGE         4
 
 static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
@@ -253,9 +253,9 @@ static double animatedDistance = 0;
                 self.docsUploading = [NSMutableDictionary dictionary];
                 for (Document *doc in self.shaddowBusObj.attachments) {
                     if (!doc.objectId) {
-                        // Assumption: fileName is unique.
+                        // Assumption: fileName + filePageNumber is unique.
                         // This is a hack to work around the documentUploaded -> document/documentPage problem
-                        [self.docsUploading setObject:doc forKey:doc.name];
+                        [self.docsUploading setObject:doc forKey:[NSString stringWithFormat:@"%@%d", doc.name, doc.page]];
                     }
                 }
                             
@@ -269,7 +269,8 @@ static double animatedDistance = 0;
                     Document *doc;
                     if (![self.attachmentDict objectForKey:docId]) {
                         NSString *docName = [dict objectForKey:FILE_NAME];
-                        doc = [self.docsUploading objectForKey:docName];
+                        NSString *docPage = [dict objectForKey:FILE_PAGE_NUM];
+                        doc = [self.docsUploading objectForKey:[NSString stringWithFormat:@"%@%@", docName, docPage]];
                         
                         if (doc) {
                             doc.objectId = docId;
@@ -288,18 +289,19 @@ static double animatedDistance = 0;
                             [self.attachmentDict setObject:doc forKey:docId];
                             [self.busObj.attachments insertObject:doc atIndex:i];
                             [self.shaddowBusObj.attachments insertObject:doc atIndex:i];
+                            
+                            if (!doc.data) {
+                                [self downloadDocument:doc forAttachmentAtIndex:i];
+                            }
+                            
+                            i++;
+                            
+                            [self addAttachment:[[doc.name pathExtension] lowercaseString] data:nil];
+                            [self layoutScrollImages:NO];
                         }
                     } else {
-                        doc = [self.attachmentDict objectForKey:docId];
+//                        doc = [self.attachmentDict objectForKey:docId];
                     }
-                    
-                    [self addAttachment:[[doc.name pathExtension] lowercaseString] data:nil];
-                    [self layoutScrollImages:NO];
-                    if (!doc.data) {
-                        [self downloadDocument:doc forAttachmentAtIndex:i];
-                    }
-                    
-                    i++;
                 }
             }
 
@@ -473,7 +475,7 @@ static double animatedDistance = 0;
 
 - (NSInteger) numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller {
     if (controller == self.previewController) {
-        NSLog(@"============== preview has %d", self.shaddowBusObj.attachments.count);
+//        NSLog(@"============== preview has %d", self.shaddowBusObj.attachments.count);
         return [self.shaddowBusObj.attachments count];
     } else {
         return 1;

@@ -30,7 +30,6 @@ static LRU *InMemCache = nil;
 // Override
 - (void)refreshView {
     [super refreshView];
-    
     [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
 }
 
@@ -155,7 +154,7 @@ static LRU *InMemCache = nil;
 #pragma mark – UICollectionView Delegate FlowLayout
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    CGSize retval = CGSizeMake(95, 95);
+    CGSize retval = CGSizeMake(DOCUMENT_CELL_DIMENTION, DOCUMENT_CELL_DIMENTION);
     return retval;
 }
 

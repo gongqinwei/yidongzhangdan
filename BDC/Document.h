@@ -18,6 +18,7 @@
 #define FILE_CREATED_DATE           @"createdDate"
 #define FILE_OWNER                  @"busObject"
 #define FILE_IS_PUBLIC              @"isPublic"
+#define FILE_PAGE_NUM               @"page"
 
 
 @protocol DocumentDelegate <NSObject>

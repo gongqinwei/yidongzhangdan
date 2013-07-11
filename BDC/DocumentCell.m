@@ -77,8 +77,8 @@
 
 #pragma mark - Document Delegate
 
-- (void)didLoadData {
-    self.document = self.document;  // to reload image
+- (void)didLoadData {    
+    self.documentImageView.image = [Document getIconForType:[[self.document.name pathExtension] lowercaseString] data:self.document.data];
     [self.docCellDelegate didLoadData:self];
     [self.downloadingIndicator stopAnimating];
 }

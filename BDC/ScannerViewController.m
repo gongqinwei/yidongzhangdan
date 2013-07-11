@@ -133,6 +133,13 @@ enum PhotoSourceType {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+#pragma mark - Sliding Table View Controller delegate
+
+- (void)viewDidSlideIn {
+    [super viewDidSlideIn];
+    [self.actions showInView:self.view];
+}
+
 #pragma mark - Action sheet delegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
@@ -183,9 +190,11 @@ enum PhotoSourceType {
 
 - (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     UIImage * image = [info objectForKey:UIImagePickerControllerEditedImage];
-    if(!image) image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    if(!image) {
+        image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    }
     if(image) {
-        self.photoData = UIImageJPEGRepresentation(image, 1.0);
+        self.photoData = UIImageJPEGRepresentation(image, 0.1);
         UIImage *img = [UIImage imageWithData:self.photoData];
         self.preview.image = img;
     }

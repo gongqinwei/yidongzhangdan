@@ -12,7 +12,7 @@
 #import "UIHelper.h"
 #import "Util.h"
 
-#define COMPRESSION_THRESHOLD       100000
+#define COMPRESSION_THRESHOLD       500000
 
 
 static NSMutableArray *documents = nil;
@@ -52,14 +52,14 @@ static NSLock *DocumentsLock = nil;
             int size = data.length;
             if (size > COMPRESSION_THRESHOLD) {
                 UIImage *img = [UIImage imageWithData:data];
-                data = UIImageJPEGRepresentation(img, COMPRESSION_THRESHOLD / size / 10);
+                data = UIImageJPEGRepresentation(img, COMPRESSION_THRESHOLD / size);
             }
-        }        
+        }
     }
     
     _data = data;
     
-    NSLog(@"=== document delegate: %@", self.documentDelegate);
+//    NSLog(@"=== document delegate: %@", self.documentDelegate);
     [self.documentDelegate didLoadData];
 }
 
@@ -172,6 +172,7 @@ static NSLock *DocumentsLock = nil;
     
     if (attachmentData && [IMAGE_TYPE_SET containsObject:ext]) {
         image = [UIImage imageWithData:attachmentData];
+        image = [Document imageWithImage:image scaledToSize:CGSizeMake(DOCUMENT_CELL_DIMENTION, DOCUMENT_CELL_DIMENTION)];
     } else {
         NSString *iconFileName = [NSString stringWithFormat:@"%@_icon.png", ext];
         image = [UIImage imageNamed:iconFileName];
@@ -182,6 +183,15 @@ static NSLock *DocumentsLock = nil;
     }
     
     return image;
+}
+
++ (UIImage*)imageWithImage:(UIImage*)image scaledToSize:(CGSize)newSize {
+    UIGraphicsBeginImageContext(newSize);
+    [image drawInRect:CGRectMake(0, 0, DOCUMENT_CELL_DIMENTION, DOCUMENT_CELL_DIMENTION)];
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
 }
 
 @end

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "LinkedList.h"
 
-#define CACHE_THRESHOLD     100000
+#define CACHE_THRESHOLD     1000000
 
 @interface LRU : NSObject
 

@@ -85,7 +85,7 @@
                 [Bill retrieveListForActive:YES reload:YES];
                 [Customer retrieveListForActive:YES reload:YES];
                 [Vendor retrieveListForActive:YES reload:YES];
-                [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
+//                [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
                 [Item retrieveListForActive:YES reload:YES];
                 [ChartOfAccount retrieveList];
                 [Invoice retrieveListForActive:NO reload:NO];

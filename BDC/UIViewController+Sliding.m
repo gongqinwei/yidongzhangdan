@@ -79,6 +79,7 @@ static char const * const TapRecognizerKey = "tapRecognizer";
     
     self.actionMenuVC = nil;
     self.slidingOutDelegate = [RootMenuViewController sharedInstance];
+    self.slidingInDelegate = self;
 }
 
 - (BOOL)tryTap {
@@ -156,7 +157,8 @@ static char const * const TapRecognizerKey = "tapRecognizer";
     
     selfFrame.origin.x = 0;
     [self slideTo:selfFrame completion:^{
-        
+        NSLog(@"delegate: %@", self.slidingInDelegate);
+        [self.slidingInDelegate viewDidSlideIn];
     }];
 }
 

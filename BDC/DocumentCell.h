@@ -10,6 +10,7 @@
 #import "Document.h"
 #import "SlidingCollectionViewController.h"
 
+
 @class DocumentCell;
 
 @protocol DocumentCellDelegate <NSObject>
