@@ -111,11 +111,35 @@ static LRU *InMemCache = nil;
     
     doc.documentDelegate = cell;
     
-    if (!doc.data) {
-        [self downloadDocument:doc];
-        [cell.downloadingIndicator startAnimating];
-        cell.downloadingIndicator.hidden = NO;
+    if (doc.thumbnail) {
+        cell.documentImageView.image = [UIImage imageWithData:doc.thumbnail];
+    } else {
+        NSString *ext = [[doc.name pathExtension] lowercaseString];
+        if (doc.objectId && ([IMAGE_TYPE_SET containsObject:ext] || [ext isEqualToString:@"pdf"])) {
+                
+            dispatch_async(dispatch_get_global_queue(0,0), ^{
+                NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?%@=%@&%@=%d&%@=%d&%@=%d", DOMAIN_URL, DOC_IMAGE_API, ID, doc.objectId, PAGE_NUMBER, (doc.page <= 0 ? 1: doc.page), IMAGE_WIDTH, DOCUMENT_CELL_DIMENTION * 2, IMAGE_HEIGHT, DOCUMENT_CELL_DIMENTION * 2]]];
+
+                if (data != nil) {
+                    doc.thumbnail = data;
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIImage *icon = [UIImage imageWithData: data];
+                        
+                        if (icon) {
+                            cell.documentImageView.image = icon;
+                        }
+                    });
+                }
+            });
+        }
     }
+    
+//    if (!doc.data) {
+//        [self downloadDocument:doc];
+//        [cell.downloadingIndicator startAnimating];
+//        cell.downloadingIndicator.hidden = NO;
+//    }
     
     return cell;
 }
@@ -127,24 +151,28 @@ static LRU *InMemCache = nil;
 
 #pragma mark - UICollectionView Delegate
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {    
     BOOL docChanged = [self changeCurrentDocumentTo:self.dataArray[indexPath.row]];
     
     Document *doc = self.currentDocument;
-    if (!doc.data) {
-        DocumentCell *cell = (DocumentCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-        [cell.downloadingIndicator startAnimating];
-        cell.downloadingIndicator.hidden = NO;
-        [self downloadDocument:doc];
-    } else {
-//        self.previewController.currentPreviewItemIndex = indexPath.row;
-        
+    
+    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsDir = [dirPaths objectAtIndex:0];
+    NSString *filePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent:doc.name]];
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+    
+    if (exists) {
         [self presentModalViewController:self.previewController animated:YES];
         if (docChanged) {
             [self.previewController reloadData];
         }
-        
-        [self.dataInMemCache cache:doc];
+    } else {
+        if (!doc.data) {
+            DocumentCell *cell = (DocumentCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+            [cell.downloadingIndicator startAnimating];
+            cell.downloadingIndicator.hidden = NO;
+            [self downloadDocument:doc];
+        }
     }
 }
 
@@ -197,15 +225,27 @@ static LRU *InMemCache = nil;
 }
 
 - (void)didLoadData:(DocumentCell *)cell {
+    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsDir = [dirPaths objectAtIndex:0];
+    NSString *filePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent:cell.document.name]];
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+    if (exists) {
+        [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+    }
+    
+    [cell.document.data writeToFile:filePath atomically:YES];
+    
     if (cell.document == self.currentDocument) {
         if (self.presentedViewController != self.previewController) {
             [self presentModalViewController:self.previewController animated:YES];
-            [self.previewController reloadData];
         }
+        [self.previewController reloadData];
         
         self.actionMenuVC.crudActions = self.crudActions = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], nil];
         self.actionMenuVC.actionDelegate = self;
     }
+    
+    [self.dataInMemCache cache:cell.document];
 }
 
 #pragma mark - Action Menu delegate

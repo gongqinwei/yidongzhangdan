@@ -85,7 +85,7 @@
     
     Document *doc = [self.dataInMemCache spit];
     doc.data = nil;
-    NSLog(@"=== Freed up data for Document: %@ ===", doc.name);
+    NSLog(@"=== Freed up data for Document: %@ %d ===", doc.name, doc.data.length);
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -115,13 +115,16 @@
 }
 
 - (id<QLPreviewItem>) previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index {
-    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *docsDir = [dirPaths objectAtIndex:0];
-    
     Document *doc = self.currentDocument; //self.dataArray[index];
     
+    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsDir = [dirPaths objectAtIndex:0];
     NSString *filePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent:doc.name]];
-    [doc.data writeToFile:filePath atomically:YES];
+    
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+    if (!exists && doc.data) {
+        [doc.data writeToFile:filePath atomically:YES];
+    }
     
     return [NSURL fileURLWithPath:filePath];
 }

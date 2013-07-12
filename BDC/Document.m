@@ -24,6 +24,7 @@ static NSLock *DocumentsLock = nil;
 @implementation Document
 
 @synthesize data = _data;
+@synthesize thumbnail = _thumbnail;
 @synthesize fileUrl;
 @synthesize isPublic;
 @synthesize page;
@@ -59,7 +60,6 @@ static NSLock *DocumentsLock = nil;
     
     _data = data;
     
-//    NSLog(@"=== document delegate: %@", self.documentDelegate);
     [self.documentDelegate didLoadData];
 }
 

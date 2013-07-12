@@ -137,6 +137,7 @@
                         [weakSelf.indicator stopAnimating];
                         weakSelf.warning.hidden = YES;
                         [weakSelf performSegueWithIdentifier:@"Login" sender:weakSelf];
+                        [Organization selectOrg:firstOrg];
                     });
                 }
             } else {
