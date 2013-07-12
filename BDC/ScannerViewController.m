@@ -54,7 +54,7 @@ enum PhotoSourceType {
 //        [format setDateFormat:@"yyyyMMMddHHmmss"];
 //        file = [format stringFromDate:[NSDate date]];   //use timestamp as filename if it's not given
         
-        file = [Util formatDate:[NSDate date] format:@"yyyyMMMddHHmmss"];
+        file = [Util formatDate:[NSDate date] format:@"yyMMddHHmmss"];
     } else {
         file = [file lastPathComponent];
         file = [[file componentsSeparatedByString:@"."] objectAtIndex:0];

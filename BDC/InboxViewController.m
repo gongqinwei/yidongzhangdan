@@ -38,7 +38,10 @@ static LRU *InMemCache = nil;
     
     if (docChanged) {
         NSArray *actionMenus = nil;
-        if (doc && doc.objectId && doc.data) {
+        
+        NSString *ext = [[doc.name pathExtension] lowercaseString];
+            
+        if (doc && doc.objectId && (doc.thumbnail || ![IMAGE_TYPE_SET containsObject:ext])) {
             actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], nil];
             //        actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], ACTION_DELETE, nil]; //TODO: need delete API
         } else {
@@ -102,10 +105,10 @@ static LRU *InMemCache = nil;
     
     Document *doc = self.dataArray[indexPath.row];
     cell.document = doc;
-    cell.documentName.text = doc.name;
+    cell.documentName.text = [doc.name stringByDeletingPathExtension];
     cell.documentName.adjustsFontSizeToFitWidth = YES;
     cell.documentName.minimumFontSize = 8;
-    cell.documentCreatedDate.text = [Util formatDate:doc.createdDate format:nil];
+    cell.documentCreatedDate.text = doc.createdDate ? [Util formatDate:doc.createdDate format:nil] : @"Processing...";
     cell.parentVC = self;
     cell.docCellDelegate = self;
     
@@ -241,8 +244,8 @@ static LRU *InMemCache = nil;
         }
         [self.previewController reloadData];
         
-        self.actionMenuVC.crudActions = self.crudActions = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], nil];
-        self.actionMenuVC.actionDelegate = self;
+//        self.actionMenuVC.crudActions = self.crudActions = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], nil];
+//        self.actionMenuVC.actionDelegate = self;
     }
     
     [self.dataInMemCache cache:cell.document];
