@@ -237,6 +237,7 @@ static double animatedDistance = 0;
                                          }
                                          
                                          [self.currAttachment removeFromSuperview];
+                                         self.currAttachment = nil;
                                          [self layoutScrollImages:NO];
                                          
                                          self.currAttachment = nil;

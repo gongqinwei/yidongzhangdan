@@ -31,12 +31,20 @@
         target.attachmentDict = nil;
         target.attachmentDict = [NSMutableDictionary dictionary];
         
+//        NSMutableSet *targetAttachmentSet = [NSMutableSet setWithArray:target.attachments];
+//        NSSet *sourceAttachmentSet = [NSSet setWithArray:source.attachments];
+//        [targetAttachmentSet intersectSet:sourceAttachmentSet];
+        
         for (Document *doc in source.attachments) {
             [target.attachments addObject:doc];
             if (doc.objectId) {
                 [target.attachmentDict setObject:doc forKey:doc.objectId];
             }
         }
+        
+//        for (Document *doc in targetAttachmentSet) {
+//            doc.data = nil;
+//        }
     }
 }
 

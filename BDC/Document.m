@@ -210,7 +210,6 @@ static NSLock *DocumentsLock = nil;
             image = tmpImg;
         } else {
             image = [Document imageWithImage:tmpImg scaledToSize:CGSizeMake(DOCUMENT_CELL_DIMENTION, DOCUMENT_CELL_DIMENTION)];
-            tmpImg = nil;
         }
     } else {
         NSString *iconFileName = [NSString stringWithFormat:@"%@_icon.png", ext];
@@ -229,6 +228,8 @@ static NSLock *DocumentsLock = nil;
     [image drawInRect:CGRectMake(0, 0, DOCUMENT_CELL_DIMENTION, DOCUMENT_CELL_DIMENTION)];
     UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+    
+    image = nil;
     
     return newImage;
 }
