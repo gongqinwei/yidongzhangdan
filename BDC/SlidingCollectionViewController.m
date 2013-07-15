@@ -116,17 +116,11 @@
 
 - (id<QLPreviewItem>) previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index {
     Document *doc = self.currentDocument; //self.dataArray[index];
-    
-    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *docsDir = [dirPaths objectAtIndex:0];
-    NSString *filePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent:doc.name]];
-    
-    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
-    if (!exists && doc.data) {
-        [doc.data writeToFile:filePath atomically:YES];
+    if (doc) {
+        return [NSURL fileURLWithPath:[doc getDocFilePath]];
+    } else {
+        return nil;
     }
-    
-    return [NSURL fileURLWithPath:filePath];
 }
 
 #pragma mark - Action Menu delegate

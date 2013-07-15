@@ -102,27 +102,27 @@
 }
 
 - (void)attachDocumentForObject:(BDCBusinessObjectWithAttachments *)obj {
-    if (self.document.data && self.document.name) {
-        if (self.document.objectId) {
-            NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"name\" : \"%@\", \"objId\" : \"%@\"}", ID, self.document.objectId, self.document.name, obj.objectId];
-            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+    if (self.document.objectId) {
+        NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"name\" : \"%@\", \"objId\" : \"%@\"}", ID, self.document.objectId, self.document.name, obj.objectId];
+        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+        
+        [APIHandler asyncCallWithAction:ASSIGN_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+            NSInteger response_status;
+            [APIHandler getResponse:response data:data error:&err status:&response_status];
             
-            [APIHandler asyncCallWithAction:ASSIGN_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
-                NSInteger response_status;
-                [APIHandler getResponse:response data:data error:&err status:&response_status];
+            if(response_status == RESPONSE_SUCCESS) {
+                [Document removeFromInbox:self.document];
                 
-                if(response_status == RESPONSE_SUCCESS) {
-                    [Document removeFromInbox:self.document];
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.activityIndicator stopAnimating];
-                        [self performSegueForObject:obj];
-                    });
-                } else {
-                    [self handleAttachFailure:err forObject:obj];
-                }
-            }];
-        } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.activityIndicator stopAnimating];
+                    [self performSegueForObject:obj];
+                });
+            } else {
+                [self handleAttachFailure:err forObject:obj];
+            }
+        }];
+    } else {
+        if (self.document.data && self.document.name) {
             [Uploader uploadFile:self.document.name data:self.document.data objectId:obj.objectId handler:^(NSURLResponse * response, NSData * data, NSError * err) {
                 NSInteger status;
                 NSString *info = [APIHandler getResponse:response data:data error:&err status:&status];
@@ -137,7 +137,7 @@
                 }
             }];
             
-            [UIHelper showInfo:@"Documents upload in progress.\n\nI'll show up once uploaded." withStatus:kInfo];
+            [UIHelper showInfo:@"Documents upload in progress.\n\nIt'll show up once uploaded." withStatus:kInfo];
             [self.activityIndicator stopAnimating];
             
             dispatch_async(dispatch_get_main_queue(), ^{

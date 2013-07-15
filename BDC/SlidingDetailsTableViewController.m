@@ -103,7 +103,11 @@ static double animatedDistance = 0;
             NSLog(@":: %@", doc.objectId);
             
             NSString *ext = [[doc.name pathExtension] lowercaseString];
-            [self addAttachment:ext data:doc.data];
+            if (doc.thumbnail) {
+                [self addAttachment:ext data:doc.thumbnail needScale:NO];
+            } else {
+                [self addAttachment:ext data:doc.data needScale:YES];
+            }
         }
     }
     
@@ -124,6 +128,14 @@ static double animatedDistance = 0;
 }
 
 - (NSIndexPath *)getAttachmentPath {
+    return nil;
+}
+
+- (NSString *)getDocImageAPI {
+    return nil;
+}
+
+- (NSString *)getDocIDParam {
     return nil;
 }
 
@@ -148,8 +160,8 @@ static double animatedDistance = 0;
     }
 }
 
-- (void)addAttachment:(NSString *)ext data:(NSData *)attachmentData {
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:[Document getIconForType:ext data:attachmentData]];
+- (void)addAttachment:(NSString *)ext data:(NSData *)attachmentData needScale:(BOOL)needScale {
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[Document getIconForType:ext data:attachmentData needScale:needScale]];
     
     CGRect rect = imageView.frame;
     rect.size.height = IMG_HEIGHT;
@@ -187,12 +199,19 @@ static double animatedDistance = 0;
 - (void)imageTapped:(UITapGestureRecognizer *)gestureRecognizer {
     if ([self tryTap]) {
         UIImageView *imageView = (UIImageView *)gestureRecognizer.view;
-        
-        self.previewController.currentPreviewItemIndex = imageView.tag;
-        [self presentModalViewController:self.previewController animated:YES];
-        
         [self selectAttachment:imageView];
-//        [self performSegueWithIdentifier:BILL_PREVIEW_ATTACHMENT_SEGUE sender:imageView];
+        
+        int idx = imageView.tag;
+        Document *doc = self.shaddowBusObj.attachments[idx];
+        
+        if ([doc docFileExists] || doc.data) {
+            self.previewController.currentPreviewItemIndex = idx;
+            
+            [self presentModalViewController:self.previewController animated:YES];
+            [self.previewController reloadData];
+        } else {
+            [self downloadDocument:doc forImage:imageView];
+        }
     }
 }
 
@@ -212,7 +231,6 @@ static double animatedDistance = 0;
                                  if (finished) {
                                      @synchronized (self) {
                                          [self.shaddowBusObj.attachments removeObjectAtIndex:idx];
-                                         [self.previewController reloadData];
                                          
                                          if (doc.objectId) {
                                              [self.attachmentDict removeObjectForKey:doc.objectId];
@@ -220,9 +238,10 @@ static double animatedDistance = 0;
                                          
                                          [self.currAttachment removeFromSuperview];
                                          [self layoutScrollImages:NO];
+                                         
+                                         self.currAttachment = nil;
+                                         [self.previewController reloadData];
                                      }
-
-                                     self.currAttachment = nil;
                                  }
                              }];
         }
@@ -258,7 +277,7 @@ static double animatedDistance = 0;
                         [self.docsUploading setObject:doc forKey:[NSString stringWithFormat:@"%@%d", doc.name, doc.page]];
                     }
                 }
-                            
+                
                 // reset scroll view first!
                 [self resetScrollView];
                 
@@ -285,23 +304,47 @@ static double animatedDistance = 0;
                             doc.isPublic = [[dict objectForKey:@"isPublic"] intValue];
                             doc.page = [[dict objectForKey:@"page"] intValue];
                             
-                            [self.busObj.attachmentDict setObject:doc forKey:docId];
-                            [self.attachmentDict setObject:doc forKey:docId];
-                            [self.busObj.attachments insertObject:doc atIndex:i];
-                            [self.shaddowBusObj.attachments insertObject:doc atIndex:i];
-                            
-                            if (!doc.data) {
-                                [self downloadDocument:doc forAttachmentAtIndex:i];
+                            NSString *ext = [[doc.name pathExtension] lowercaseString];
+                            if ([IMAGE_TYPE_SET containsObject:ext] || [ext isEqualToString:@"pdf"]) {
+                                dispatch_async(dispatch_get_global_queue(0,0), ^{
+                                    NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?%@=%@&%@=%d&%@=%d&%@=%d", DOMAIN_URL, [self getDocImageAPI], [self getDocIDParam], doc.objectId, PAGE_NUMBER, (!doc.page || doc.page <= 0 ? 1: doc.page), IMAGE_WIDTH, DOCUMENT_CELL_DIMENTION * 2, IMAGE_HEIGHT, DOCUMENT_CELL_DIMENTION * 2]]];
+                                    
+                                    if (data != nil) {
+                                        doc.thumbnail = data;
+                                        
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            UIImageView *img = [self.attachmentScrollView.subviews objectAtIndex: i];
+                                            img.alpha = 0.0;
+                                            img.image = [UIImage imageWithData: data];
+                                            [img setNeedsDisplay];
+                                            
+                                            [UIView animateWithDuration:2.0
+                                                             animations:^{
+                                                                 img.alpha = 1.0;
+                                                             }
+                                                             completion:^ (BOOL finished) {
+                                                             }];
+                                        });
+                                    }
+                                });
                             }
-                            
-                            i++;
-                            
-                            [self addAttachment:[[doc.name pathExtension] lowercaseString] data:nil];
-                            [self layoutScrollImages:NO];
+                        
+                            [self.busObj.attachmentDict setObject:doc forKey:docId];
+                            [self.busObj.attachments insertObject:doc atIndex:i];
+                            [self.shaddowBusObj.attachmentDict setObject:doc forKey:docId];
+                            [self.shaddowBusObj.attachments insertObject:doc atIndex:i];
+                            [self.attachmentDict setObject:doc forKey:docId];
                         }
+                        
+                        [self addAttachment:[[doc.name pathExtension] lowercaseString] data:nil needScale:NO];
                     } else {
-//                        doc = [self.attachmentDict objectForKey:docId];
+                        doc = [self.attachmentDict objectForKey:docId];
+                        [self addAttachment:[[doc.name pathExtension] lowercaseString] data:doc.thumbnail needScale:NO];
                     }
+                    
+                    [self layoutScrollImages:NO];
+                    
+                    i++;
                 }
             }
 
@@ -318,7 +361,13 @@ static double animatedDistance = 0;
     }];
 }
 
-- (void)downloadDocument:(Document *)doc forAttachmentAtIndex:(int)idx {
+- (void)downloadDocument:(Document *)doc forImage:(UIImageView *)imgView {
+    UIActivityIndicatorView *downloadIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    downloadIndicator.frame = imgView.frame;
+    downloadIndicator.hidden = NO;
+    [downloadIndicator startAnimating];
+    [imgView addSubview:downloadIndicator];
+    
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", DOMAIN_URL, doc.fileUrl]];
     NSURLRequest *req = [NSURLRequest  requestWithURL:url
                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -329,26 +378,11 @@ static double animatedDistance = 0;
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                doc.data = data;
                                
-                               if ([self.attachmentDict objectForKey:doc.objectId]) {
-                                   NSString *ext = [[doc.name pathExtension] lowercaseString];
-                                   
-                                   if ([IMAGE_TYPE_SET containsObject:ext]) {
-                                       UIImage *image = [UIImage imageWithData:data];
-                                       
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           UIImageView *img = [self.attachmentScrollView.subviews objectAtIndex: idx];
-                                           img.alpha = 0.0;
-                                           img.image = image;
-                                           [img setNeedsDisplay];
-                                                                                      
-                                           [UIView animateWithDuration:1.5
-                                                            animations:^{
-                                                                img.alpha = 1.0;
-                                                            }
-                                                            completion:^ (BOOL finished) {
-                                                            }];
-                                       });
-                                   }
+//                               [downloadIndicator stopAnimating];
+                               
+                               if (self.currAttachment == imgView) {
+                                   [self presentModalViewController:self.previewController animated:YES];
+                                   [self.previewController reloadData];
                                }
                            }];
 }
@@ -474,24 +508,26 @@ static double animatedDistance = 0;
 #pragma mark - QuickLook Preview Controller Data Source
 
 - (NSInteger) numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller {
-    if (controller == self.previewController) {
-//        NSLog(@"============== preview has %d", self.shaddowBusObj.attachments.count);
-        return [self.shaddowBusObj.attachments count];
-    } else {
+//    if (controller == self.previewController) {
+//        return [self.shaddowBusObj.attachments count];
+//    } else {
+//        return 1;
+//    }
+    
+    if (self.shaddowBusObj.attachments && self.shaddowBusObj.attachments.count) {
         return 1;
+    } else {
+        return 0;
     }
 }
 
 - (id<QLPreviewItem>) previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index {
-    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *docsDir = [dirPaths objectAtIndex:0];
-    
-    Document *doc = self.shaddowBusObj.attachments[index];
-    
-    NSString *filePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent:doc.name]];
-    [doc.data writeToFile:filePath atomically:YES];
-    
-    return [NSURL fileURLWithPath:filePath];
+    if (self.shaddowBusObj.attachments && self.shaddowBusObj.attachments.count) {
+        Document *doc = self.shaddowBusObj.attachments[self.currAttachment.tag];
+        return [NSURL fileURLWithPath:[doc getDocFilePath]];
+    } else {
+        return nil;
+    }
 }
 
 #pragma mark - QuickLook Preview Controller Delegate
@@ -616,17 +652,6 @@ static double animatedDistance = 0;
                     }
                     
                     [self.busObj.attachmentDelegate didUploadDocument:doc needUI:NO];
-                    
-                    //                    [doneLock lock];
-                    //
-                    //                    numNotYetAdded--;
-                    //
-                    //                    if (toBeDeleted.count == 0 && toBeAttached.count == 0) {
-                    //                        [UIHelper showInfo:@"Done uploading all documents" withStatus:kInfo];
-                    //                    }
-                    //
-                    //                    [doneLock unlock];
-                    
                     NSLog(@"Successfully added attachment %@", doc.name);
                 } else {
                     [UIHelper showInfo:[NSString stringWithFormat:@"Failed to upload %@", doc.name] withStatus:kFailure];
@@ -815,7 +840,7 @@ static double animatedDistance = 0;
     doc.data = photoData;
     [self addDocument:doc];
     @synchronized (self) {
-        [self addAttachment:@"jpg" data:photoData];
+        [self addAttachment:@"jpg" data:photoData needScale:YES];
     }
     [self layoutScrollImages:YES];
 }
@@ -838,12 +863,34 @@ static double animatedDistance = 0;
         
         if (needUI) {
             [self.shaddowBusObj.attachments addObject:doc];
-            [self addAttachment:[[doc.name pathExtension] lowercaseString] data:doc.data];
-            [self layoutScrollImages:YES];
-            [self.previewController reloadData];
+            
+            if (doc.objectId && ![EMPTY_ID isEqualToString:doc.objectId]) {
+                NSString *ext = [[doc.name pathExtension] lowercaseString];
+                if ([IMAGE_TYPE_SET containsObject:ext] || [ext isEqualToString:@"pdf"]) {
+                    dispatch_async(dispatch_get_global_queue(0,0), ^{
+                        NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?%@=%@&%@=%d&%@=%d&%@=%d", DOMAIN_URL, [self getDocImageAPI], [self getDocIDParam], doc.objectId, PAGE_NUMBER, (!doc.page || doc.page <= 0 ? 1: doc.page), IMAGE_WIDTH, DOCUMENT_CELL_DIMENTION * 2, IMAGE_HEIGHT, DOCUMENT_CELL_DIMENTION * 2]]];
+                        
+                        if (data != nil) {
+                            doc.thumbnail = data;
+                            
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self addAttachment:[[doc.name pathExtension] lowercaseString] data:doc.thumbnail needScale:NO];
+                                [self layoutScrollImages:YES];
+                                [self.previewController reloadData];
+                            });
+                        }
+                    });
+                }
+            } else {
+                NSLog(@"<<< doc size: %d", doc.data.length);
+                doc.thumbnail = doc.data;
+                [self addAttachment:[[doc.name pathExtension] lowercaseString] data:doc.data needScale:YES];  //data already compressed
+                [self layoutScrollImages:YES];
+                [self.previewController reloadData];
+            }
         }
         
-        [self.busObj.attachments addObject:doc];
+//        [self.busObj.attachments addObject:doc];
     }
 }
 

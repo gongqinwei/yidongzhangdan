@@ -116,6 +116,12 @@ enum PhotoSourceType {
     
     self.actions = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
     [self.actions showInView:self.view];
+    
+//    if (self.mode == kAttachMode) {
+//        NSLog(@"nav bar: %@", self.navigationItem.leftBarButtonItem);
+//        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismissImagePicker)];
+//        self.navigationItem.leftBarButtonItem = nil;
+//    }
 }
 
 - (void)viewDidUnload
@@ -217,7 +223,9 @@ enum PhotoSourceType {
 }
 
 - (void) imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    [self dismissImagePicker];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self dismissImagePicker];
+    }];
 }
 
 @end

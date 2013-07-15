@@ -41,7 +41,7 @@
 
 - (void)cancelEdit:(UIBarButtonItem *)sender;
 - (void)addDocument:(Document *)document;
-- (void)addAttachment:(NSString *)ext data:(NSData *)attachmentData;
+- (void)addAttachment:(NSString *)ext data:(NSData *)attachmentData needScale:(BOOL)needScale;
 - (void)selectAttachment:(UIImageView *)imageView;
 - (void)imageTapped:(UITapGestureRecognizer *)gestureRecognizer;
 - (IBAction)saveBusObj:(UIBarButtonItem *)sender;
@@ -50,6 +50,8 @@
 - (void)doneSaveObject;
 - (void)handleRemovalForDocument:(Document *)doc;
 - (NSIndexPath *)getAttachmentPath;
+- (NSString *)getDocIDParam;
+- (NSString *)getDocImageAPI;
 - (void)resetScrollView;
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField;

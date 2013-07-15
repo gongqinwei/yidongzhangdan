@@ -54,6 +54,10 @@
 @property (nonatomic, strong) NSDate *createdDate;
 @property (nonatomic, strong) id<DocumentDelegate> documentDelegate;
 
+- (NSString *)getDocFilePath;
+- (BOOL)docFileExists;
+- (void)writeToFile;
+
 + (void)setDocumentListDelegate:(id<DocumentListDelegate>)listDelegate;
 + (void)setAttachmentListDelegate:(id<DocumentListDelegate>)listDelegate;
 
@@ -62,6 +66,6 @@
 + (void)addToInbox:(Document *)doc;
 + (void)removeFromInbox:(Document *)doc;
 
-+ (UIImage *)getIconForType:(NSString *)ext data:(NSData *)attachmentData;
++ (UIImage *)getIconForType:(NSString *)ext data:(NSData *)attachmentData needScale:(BOOL)needScale;
 
 @end

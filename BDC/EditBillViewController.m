@@ -119,6 +119,14 @@ typedef enum {
     return [NSIndexPath indexPathForRow:0 inSection:kBillDocs];
 }
 
+- (NSString *)getDocImageAPI {
+    return DOC_IMAGE_API;
+}
+
+- (NSString *)getDocIDParam {
+    return ID;
+}
+
 - (void)handleRemovalForDocument:(Document *)doc {
     [Document addToInbox:doc];
 }

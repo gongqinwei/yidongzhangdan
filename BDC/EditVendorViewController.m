@@ -86,6 +86,14 @@ enum VendorInfoType {
     return [NSIndexPath indexPathForRow:0 inSection:kVendorAttachments];
 }
 
+- (NSString *)getDocImageAPI {
+    return ATTACH_IMAGE_API;
+}
+
+- (NSString *)getDocIDParam {
+    return ATTACH_ID;
+}
+
 #pragma mark - Depricated: this method is no longer needed as the edit bar button will be moved to action menu
 - (void)editVendor:(UIBarButtonItem *)sender {
     if ([self tryTap]) {

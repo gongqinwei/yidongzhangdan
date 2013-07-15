@@ -54,6 +54,7 @@ static NSLock *DocumentsLock = nil;
             if (size > COMPRESSION_THRESHOLD) {
                 UIImage *img = [UIImage imageWithData:data];
                 data = UIImageJPEGRepresentation(img, COMPRESSION_THRESHOLD / size);
+                img = nil;
             }
         }
     }
@@ -61,6 +62,39 @@ static NSLock *DocumentsLock = nil;
     _data = data;
     
     [self.documentDelegate didLoadData];
+}
+
+//private
+- (NSString *)filePath {
+    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsDir = [dirPaths objectAtIndex:0];
+    return [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent:self.name]];
+}
+
+- (NSString *)getDocFilePath {
+    NSString *filePath = [self filePath];
+    
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+    
+    if (!exists && self.data) {
+        [self.data writeToFile:filePath atomically:YES];
+    }
+    
+    return filePath;
+}
+
+- (BOOL)docFileExists {
+    return [[NSFileManager defaultManager] fileExistsAtPath:[self filePath]];
+}
+
+- (void)writeToFile {
+    NSString *filePath = [self filePath];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+        [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+    }
+    
+    [self.data writeToFile:filePath atomically:YES];
 }
 
 + (void)initialize {
@@ -167,12 +201,17 @@ static NSLock *DocumentsLock = nil;
     }];
 }
 
-+ (UIImage *)getIconForType:(NSString *)ext data:(NSData *)attachmentData {
++ (UIImage *)getIconForType:(NSString *)ext data:(NSData *)attachmentData needScale:(BOOL)needScale {
     UIImage *image;
     
-    if (attachmentData && [IMAGE_TYPE_SET containsObject:ext]) {
-        image = [UIImage imageWithData:attachmentData];
-        image = [Document imageWithImage:image scaledToSize:CGSizeMake(DOCUMENT_CELL_DIMENTION, DOCUMENT_CELL_DIMENTION)];
+    if (attachmentData && ([IMAGE_TYPE_SET containsObject:ext] || [ext isEqualToString:@"pdf"])) {
+        UIImage * tmpImg = [UIImage imageWithData:attachmentData];
+        if (!needScale) {
+            image = tmpImg;
+        } else {
+            image = [Document imageWithImage:tmpImg scaledToSize:CGSizeMake(DOCUMENT_CELL_DIMENTION, DOCUMENT_CELL_DIMENTION)];
+            tmpImg = nil;
+        }
     } else {
         NSString *iconFileName = [NSString stringWithFormat:@"%@_icon.png", ext];
         image = [UIImage imageNamed:iconFileName];

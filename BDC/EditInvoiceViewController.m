@@ -109,6 +109,14 @@ typedef enum {
     return [NSIndexPath indexPathForRow:1 inSection:kInvoiceAttachments];
 }
 
+- (NSString *)getDocImageAPI {
+    return ATTACH_IMAGE_API;
+}
+
+- (NSString *)getDocIDParam {
+    return ATTACH_ID;
+}
+
 - (void)setMode:(ViewMode)mode {
     self.totalAmount = [NSDecimalNumber zero];
     

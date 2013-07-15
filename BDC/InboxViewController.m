@@ -121,7 +121,7 @@ static LRU *InMemCache = nil;
         if (doc.objectId && ([IMAGE_TYPE_SET containsObject:ext] || [ext isEqualToString:@"pdf"])) {
                 
             dispatch_async(dispatch_get_global_queue(0,0), ^{
-                NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?%@=%@&%@=%d&%@=%d&%@=%d", DOMAIN_URL, DOC_IMAGE_API, ID, doc.objectId, PAGE_NUMBER, (doc.page <= 0 ? 1: doc.page), IMAGE_WIDTH, DOCUMENT_CELL_DIMENTION * 2, IMAGE_HEIGHT, DOCUMENT_CELL_DIMENTION * 2]]];
+                NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?%@=%@&%@=%d&%@=%d&%@=%d", DOMAIN_URL, DOC_IMAGE_API, ID, doc.objectId, PAGE_NUMBER, (!doc.page || doc.page <= 0 ? 1: doc.page), IMAGE_WIDTH, DOCUMENT_CELL_DIMENTION * 2, IMAGE_HEIGHT, DOCUMENT_CELL_DIMENTION * 2]]];
 
                 if (data != nil) {
                     doc.thumbnail = data;
@@ -138,12 +138,6 @@ static LRU *InMemCache = nil;
         }
     }
     
-//    if (!doc.data) {
-//        [self downloadDocument:doc];
-//        [cell.downloadingIndicator startAnimating];
-//        cell.downloadingIndicator.hidden = NO;
-//    }
-    
     return cell;
 }
 
@@ -159,23 +153,16 @@ static LRU *InMemCache = nil;
     
     Document *doc = self.currentDocument;
     
-    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *docsDir = [dirPaths objectAtIndex:0];
-    NSString *filePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent:doc.name]];
-    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
-    
-    if (exists) {
+    if ([doc docFileExists] || doc.data) {
         [self presentModalViewController:self.previewController animated:YES];
         if (docChanged) {
             [self.previewController reloadData];
         }
     } else {
-        if (!doc.data) {
-            DocumentCell *cell = (DocumentCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-            [cell.downloadingIndicator startAnimating];
-            cell.downloadingIndicator.hidden = NO;
-            [self downloadDocument:doc];
-        }
+        DocumentCell *cell = (DocumentCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+        [cell.downloadingIndicator startAnimating];
+        cell.downloadingIndicator.hidden = NO;
+        [self downloadDocument:doc];
     }
 }
 
@@ -205,12 +192,12 @@ static LRU *InMemCache = nil;
 }
 
 - (void)didAddDocument:(Document *)doc {
+    self.dataArray = [Document listForCategory:FILE_CATEGORY_DOCUMENT];
     @synchronized(self) {
-        self.dataArray = [Document listForCategory:FILE_CATEGORY_DOCUMENT];
+        [self changeCurrentDocumentTo:nil];
+        [self.collectionView insertItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self changeCurrentDocumentTo:nil];
-            [self.collectionView insertItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]];
-            [self.previewController reloadData];
+        [self.previewController reloadData];
         });
     }
 }
@@ -228,15 +215,7 @@ static LRU *InMemCache = nil;
 }
 
 - (void)didLoadData:(DocumentCell *)cell {
-    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *docsDir = [dirPaths objectAtIndex:0];
-    NSString *filePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent:cell.document.name]];
-    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
-    if (exists) {
-        [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
-    }
-    
-    [cell.document.data writeToFile:filePath atomically:YES];
+    [cell.document writeToFile];
     
     if (cell.document == self.currentDocument) {
         if (self.presentedViewController != self.previewController) {

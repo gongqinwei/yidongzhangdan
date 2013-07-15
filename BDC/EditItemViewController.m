@@ -46,6 +46,14 @@ enum ItemInfoType {
     return [Item class];
 }
 
+- (NSString *)getDocImageAPI {
+    return ATTACH_IMAGE_API;
+}
+
+- (NSString *)getDocIDParam {
+    return ATTACH_ID;
+}
+
 #pragma mark - Depricated: this method is no longer needed as the edit bar button will be moved to action menu
 - (void)editItem:(UIBarButtonItem *)sender {
     if ([self tryTap]) {

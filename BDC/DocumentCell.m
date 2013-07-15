@@ -56,7 +56,7 @@
     }
     
     self.document.documentDelegate = self;
-    self.documentImageView.image = [Document getIconForType:[[document.name pathExtension] lowercaseString] data:document.data];
+    self.documentImageView.image = [Document getIconForType:[[document.name pathExtension] lowercaseString] data:document.data needScale:YES];
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -78,7 +78,6 @@
 #pragma mark - Document Delegate
 
 - (void)didLoadData {    
-//    self.documentImageView.image = [Document getIconForType:[[self.document.name pathExtension] lowercaseString] data:self.document.data];
     [self.docCellDelegate didLoadData:self];
     [self.downloadingIndicator stopAnimating];
 }
