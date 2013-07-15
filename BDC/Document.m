@@ -225,7 +225,8 @@ static NSLock *DocumentsLock = nil;
 
 + (UIImage*)imageWithImage:(UIImage*)image scaledToSize:(CGSize)newSize {
     UIGraphicsBeginImageContext(newSize);
-    [image drawInRect:CGRectMake(0, 0, DOCUMENT_CELL_DIMENTION, DOCUMENT_CELL_DIMENTION)];
+    CGRect rect = {CGPointMake(0, 0), newSize};
+    [image drawInRect:rect];
     UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     

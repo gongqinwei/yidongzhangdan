@@ -202,6 +202,7 @@ enum PhotoSourceType {
     if(image) {
         self.photoData = UIImageJPEGRepresentation(image, 0.1);
         UIImage *img = [UIImage imageWithData:self.photoData];
+        img = [Document imageWithImage:img scaledToSize:CGSizeMake(160, 160)];
         self.preview.image = img;
     }
     [self dismissImagePicker];

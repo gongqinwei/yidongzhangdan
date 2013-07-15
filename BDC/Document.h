@@ -67,5 +67,6 @@
 + (void)removeFromInbox:(Document *)doc;
 
 + (UIImage *)getIconForType:(NSString *)ext data:(NSData *)attachmentData needScale:(BOOL)needScale;
++ (UIImage*)imageWithImage:(UIImage*)image scaledToSize:(CGSize)newSize;
 
 @end
