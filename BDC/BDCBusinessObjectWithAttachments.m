@@ -13,6 +13,8 @@
 @synthesize attachments;
 @synthesize attachmentDict;
 @synthesize attachmentDelegate;
+@synthesize newBorn;
+
 
 - (id)init {
     if (self = [super init]) {
@@ -24,6 +26,8 @@
 
 + (void)clone:(BDCBusinessObjectWithAttachments *)source to:(BDCBusinessObjectWithAttachments *)target {
     [super clone:source to:target];
+    
+    target.newBorn = source.newBorn;
     
     if (source.attachments != nil) {
         target.attachments = nil;

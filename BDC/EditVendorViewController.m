@@ -141,9 +141,7 @@ enum VendorInfoType {
         
     [super viewDidLoad];
     
-    if (self.mode == kViewMode) {
-        self.modeChanged = NO;
-    } else {
+    if (self.mode != kViewMode) {
         self.crudActions = nil;
         
         if (self.mode == kCreateMode || self.mode == kAttachMode) {

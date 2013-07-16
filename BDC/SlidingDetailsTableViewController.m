@@ -19,7 +19,6 @@
 #define IMG_PADDING                     10
 #define IMG_WIDTH                       CELL_WIDTH / 4
 #define IMG_HEIGHT                      IMG_WIDTH - IMG_PADDING
-//#define NUM_ATTACHMENT_PER_PAGE         4
 
 static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
@@ -90,13 +89,15 @@ static double animatedDistance = 0;
         self.refreshControl = nil;
     }
     
-    // retrieve attachments
-    // clean up first
     @synchronized (self) {
         for (UIView *subview in [self.attachmentScrollView subviews]) {
             if ([subview isKindOfClass:[UIImageView class]]) {
                 [subview removeFromSuperview];
             }
+        }
+        
+        if (!self.attachmentScrollView) {
+            [self resetScrollView];
         }
 
         for (Document * doc in self.shaddowBusObj.attachments) {
@@ -434,7 +435,6 @@ static double animatedDistance = 0;
     self.attachmentPageControl = [[UIPageControl alloc] initWithFrame:ATTACHMENT_PV_RECT];
     self.attachmentPageControl.currentPage = 0;
     
-    
     self.inputAccessoryView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, ToolbarHeight)];
     self.inputAccessoryView.barStyle = UIBarStyleBlackTranslucent;
     UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -451,7 +451,14 @@ static double animatedDistance = 0;
     self.title = self.shaddowBusObj.name;
     
     if (self.mode == kViewMode) {
-        [self retrieveDocAttachments];
+        self.modeChanged = NO;
+        if (self.shaddowBusObj.newBorn) {
+            self.shaddowBusObj.newBorn = NO;
+        } else {
+            [self retrieveDocAttachments];
+        }
+    } else if (self.mode == kCreateMode) {
+        [self resetScrollView];
     }
 }
 
@@ -465,6 +472,9 @@ static double animatedDistance = 0;
     self.attachmentScrollView.showsHorizontalScrollIndicator = NO;
     self.attachmentScrollView.showsVerticalScrollIndicator = NO;
     self.attachmentScrollView.delegate = self;
+    
+//    self.attachmentPageControl = [[UIPageControl alloc] initWithFrame:ATTACHMENT_PV_RECT];
+//    self.attachmentPageControl.currentPage = 0;
 }
 
 - (void)refreshView {
@@ -582,6 +592,7 @@ static double animatedDistance = 0;
     SlidingTableViewController *vc = self.navigationController.childViewControllers[0];
     [self.navigationController popToRootViewControllerAnimated:NO];
     
+    self.busObj.newBorn = YES;
     [[ActionMenuViewController sharedInstance] performSegueForObject:self.busObj];
     [vc disappear];
     if ([vc isKindOfClass:[ScannerViewController class]]) {
@@ -873,25 +884,26 @@ static double animatedDistance = 0;
                         
                         if (data != nil) {
                             doc.thumbnail = data;
-                            
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                [self addAttachment:[[doc.name pathExtension] lowercaseString] data:doc.thumbnail needScale:NO];
-                                [self layoutScrollImages:YES];
-                                [self.previewController reloadData];
-                            });
+                        } else {
+                            doc.thumbnail = doc.data;
                         }
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self addAttachment:[[doc.name pathExtension] lowercaseString] data:doc.thumbnail needScale:NO];
+                            [self layoutScrollImages:YES];
+                            [self.previewController reloadData];
+                        });
                     });
                 }
             } else {
-                NSLog(@"<<< doc size: %d", doc.data.length);
                 doc.thumbnail = doc.data;
-                [self addAttachment:[[doc.name pathExtension] lowercaseString] data:doc.data needScale:YES];  //data already compressed
+                [self addAttachment:[[doc.name pathExtension] lowercaseString] data:doc.data needScale:YES];
                 [self layoutScrollImages:YES];
                 [self.previewController reloadData];
             }
         }
         
-//        [self.busObj.attachments addObject:doc];
+        [self.busObj.attachments addObject:doc];
     }
 }
 

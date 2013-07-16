@@ -25,5 +25,6 @@
 @property (nonatomic, strong) NSMutableArray *attachments;          // array of Document: used for ordering
 @property (nonatomic, strong) NSMutableDictionary *attachmentDict;  // map doc id => Document: used for lookup addition/deletion
 @property (nonatomic, strong) id<AttachmentDelegate> attachmentDelegate;
+@property (nonatomic, assign) BOOL newBorn;
 
 @end

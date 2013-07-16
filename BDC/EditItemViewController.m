@@ -112,9 +112,7 @@ enum ItemInfoType {
         
     [super viewDidLoad];
     
-    if (self.mode == kViewMode) {
-        self.modeChanged = NO;
-    } else if (self.mode == kCreateMode || self.mode == kAttachMode) {
+    if (self.mode == kCreateMode || self.mode == kAttachMode) {
         self.title = @"New Item";
     }
     

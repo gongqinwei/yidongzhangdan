@@ -243,20 +243,7 @@ typedef enum {
     
     [self setActions];
     
-    if (self.mode == kViewMode) {
-        self.modeChanged = NO;
-//        if (![((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]) {
-//            self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, nil];
-//        }
-//        
-//        //TODO: also allow pay if no need for approval
-//        if (([((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_UNASSIGNED]
-//             || [((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_APPROVED])
-//            && ([((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]
-//             || [((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_PARTIAL])) {
-//            self.crudActions = [@[ACTION_PAY] arrayByAddingObjectsFromArray:self.crudActions];
-//        }
-    } else {
+    if (self.mode != kViewMode) {
         self.crudActions = nil;
         
         if (self.mode == kCreateMode || self.mode == kAttachMode) {

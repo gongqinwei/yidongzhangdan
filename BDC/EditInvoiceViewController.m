@@ -316,9 +316,7 @@ typedef enum {
     
     [super viewDidLoad];
     
-    if (self.mode == kViewMode) {
-        self.modeChanged = NO;
-    } else {
+    if (self.mode != kViewMode) {
         self.crudActions = nil;
         
         if (self.mode == kCreateMode || self.mode == kAttachMode) {
@@ -467,7 +465,7 @@ typedef enum {
     } else if (section == kInvoiceLineItems) {
         return [((Invoice *)self.shaddowBusObj).lineItems count];
     } else if (section == kInvoiceAttachments) {
-        if (self.mode == kAttachMode) {
+        if (self.mode == kAttachMode || self.mode == kCreateMode) {
             return 1;
         } else {
             return 2;
