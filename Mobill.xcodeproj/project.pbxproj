@@ -735,9 +735,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		7E91E3EA15927C15005104AF /* BDC */ = {
+		7E91E3EA15927C15005104AF /* Mobill */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7E91E40C15927C15005104AF /* Build configuration list for PBXNativeTarget "BDC" */;
+			buildConfigurationList = 7E91E40C15927C15005104AF /* Build configuration list for PBXNativeTarget "Mobill" */;
 			buildPhases = (
 				7E91E3E715927C15005104AF /* Sources */,
 				7E91E3E815927C15005104AF /* Frameworks */,
@@ -747,7 +747,7 @@
 			);
 			dependencies = (
 			);
-			name = BDC;
+			name = Mobill;
 			productName = BDC;
 			productReference = 7E91E3EB15927C15005104AF /* Mobill.app */;
 			productType = "com.apple.product-type.application";
@@ -773,7 +773,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7E91E3EA15927C15005104AF /* BDC */,
+				7E91E3EA15927C15005104AF /* Mobill */,
 			);
 		};
 /* End PBXProject section */
@@ -1038,7 +1038,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7E91E40C15927C15005104AF /* Build configuration list for PBXNativeTarget "BDC" */ = {
+		7E91E40C15927C15005104AF /* Build configuration list for PBXNativeTarget "Mobill" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7E91E40D15927C15005104AF /* Debug */,
