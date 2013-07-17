@@ -42,6 +42,7 @@ enum PhotoSourceType {
 
 - (void)reset {
     self.fileName.text = nil;
+    self.photoData = nil;
     self.preview.image = nil;
     self.submit.hidden = YES;
 }
@@ -144,7 +145,10 @@ enum PhotoSourceType {
 
 - (void)viewDidSlideIn {
     [super viewDidSlideIn];
-    [self.actions showInView:self.view];
+    
+    if (!self.actions.window && !self.photoData) {
+        [self.actions showInView:self.view];
+    }
 }
 
 #pragma mark - Action sheet delegate
