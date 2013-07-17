@@ -112,12 +112,12 @@ static RootMenuViewController * _sharedInstance = nil;
 ////    [Invoice setARDelegate:(AROverViewController *)self.currVC];  //assumption: currVC is AROverViewController.
     
     [Invoice retrieveListForActive:YES reload:YES];
+    [ChartOfAccount retrieveList];
     [Bill retrieveListForActive:YES reload:YES];
     [Customer retrieveList];
     [Vendor retrieveList];
     [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
     [Item retrieveList];
-    [ChartOfAccount retrieveList];
     [Invoice retrieveListForActive:NO reload:NO];
     [Bill retrieveListForActive:NO reload:NO];
 //    [Document retrieveListForCategory:FILE_CATEGORY_ATTACHMENT];

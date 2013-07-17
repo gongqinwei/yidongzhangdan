@@ -160,7 +160,7 @@ enum VendorInfoType {
     self.vendorStatePickerView.showsSelectionIndicator = YES;
     self.vendorStatePickerView.tag = (kState + VENDOR_ADDR_TAG_OFFSET) * PICKER_TAG_BASE;
     if ([shaddowVendor.state isKindOfClass:[NSNumber class]] && [shaddowVendor.state intValue] != INVALID_OPTION) {
-        [self.vendorStatePickerView selectRow:[shaddowVendor.state intValue] + 1 inComponent:0 animated:YES];
+        [self.vendorStatePickerView selectRow:[shaddowVendor.state intValue] + 1 inComponent:0 animated:NO];
     }
     
     self.vendorCountryPickerView = [[UIPickerView alloc] initWithFrame:PICKER_RECT];
@@ -169,7 +169,7 @@ enum VendorInfoType {
     self.vendorCountryPickerView.showsSelectionIndicator = YES;
     self.vendorCountryPickerView.tag = (kCountry + VENDOR_ADDR_TAG_OFFSET) * PICKER_TAG_BASE;
     if (shaddowVendor.country != INVALID_OPTION) {
-        [self.vendorCountryPickerView selectRow:shaddowVendor.country + 1 inComponent:0 animated:YES];
+        [self.vendorCountryPickerView selectRow:shaddowVendor.country + 1 inComponent:0 animated:NO];
     }
     
     self.vendorNameTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];

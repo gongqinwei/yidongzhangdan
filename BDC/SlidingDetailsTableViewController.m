@@ -101,7 +101,7 @@ static double animatedDistance = 0;
         }
 
         for (Document * doc in self.shaddowBusObj.attachments) {
-            NSLog(@":: %@", doc.objectId);
+//            NSLog(@":: %@", doc.objectId);
             
             NSString *ext = [[doc.name pathExtension] lowercaseString];
             if (doc.thumbnail) {
@@ -224,6 +224,9 @@ static double animatedDistance = 0;
             int idx = self.currAttachment.tag;
             Document *doc = [self.shaddowBusObj.attachments objectAtIndex:idx];
             
+            if (!doc.objectId) {
+                [UIHelper showInfo:@"This document is still being processed by Bill.com.\nCannot delete at this time!" withStatus:kWarning];
+            } else {
             [UIView animateWithDuration:1.0
                              animations:^{
                                  self.currAttachment.alpha = 0.0;
@@ -246,6 +249,7 @@ static double animatedDistance = 0;
                                      }
                                  }
                              }];
+            }
         }
     }
 }
@@ -274,9 +278,9 @@ static double animatedDistance = 0;
                 self.docsUploading = [NSMutableDictionary dictionary];
                 for (Document *doc in self.shaddowBusObj.attachments) {
                     if (!doc.objectId) {
-                        // Assumption: fileName + filePageNumber is unique.
+                        // Assumption: fileName is unique.
                         // This is a hack to work around the documentUploaded -> document/documentPage problem
-                        [self.docsUploading setObject:doc forKey:[NSString stringWithFormat:@"%@%d", doc.name, doc.page]];
+                        [self.docsUploading setObject:doc forKey:doc.name];
                     }
                 }
                 
@@ -290,8 +294,7 @@ static double animatedDistance = 0;
                     Document *doc;
                     if (![self.attachmentDict objectForKey:docId]) {
                         NSString *docName = [dict objectForKey:FILE_NAME];
-                        NSString *docPage = [dict objectForKey:FILE_PAGE_NUM];
-                        doc = [self.docsUploading objectForKey:[NSString stringWithFormat:@"%@%@", docName, docPage]];
+                        doc = [self.docsUploading objectForKey:docName];
                         
                         if (doc) {
                             doc.objectId = docId;
@@ -364,8 +367,8 @@ static double animatedDistance = 0;
 }
 
 - (void)downloadDocument:(Document *)doc forImage:(UIImageView *)imgView {
-    UIActivityIndicatorView *downloadIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    downloadIndicator.frame = imgView.frame;
+    UIActivityIndicatorView *downloadIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    downloadIndicator.frame = imgView.bounds;
     downloadIndicator.hidden = NO;
     [downloadIndicator startAnimating];
     [imgView addSubview:downloadIndicator];
@@ -380,7 +383,7 @@ static double animatedDistance = 0;
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                doc.data = data;
                                
-//                               [downloadIndicator stopAnimating];
+                               [downloadIndicator stopAnimating];
                                
                                if (self.currAttachment == imgView) {
                                    [self presentModalViewController:self.previewController animated:YES];

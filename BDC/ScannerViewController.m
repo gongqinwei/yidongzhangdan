@@ -84,6 +84,7 @@ enum PhotoSourceType {
     Document *doc = [[Document alloc] init];
     doc.name = photoName;
     doc.data = self.photoData;
+    doc.page = 1;
     [segue.destinationViewController setDocument:doc];
     
     if ([segue.identifier isEqualToString:SELECT_BO_SEGUE]) {

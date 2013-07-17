@@ -310,12 +310,12 @@ typedef enum {
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.activityIndicator.hidesWhenStopped = YES;
     
+    self.chartOfAccounts = [ChartOfAccount listOrderBy:ACCOUNT_NAME ascending:YES active:YES];
+    
     self.accountPickerView = [[UIPickerView alloc] initWithFrame:PICKER_RECT];
     self.accountPickerView.delegate = self;
     self.accountPickerView.dataSource = self;
     self.accountPickerView.showsSelectionIndicator = YES;
-        
-    self.chartOfAccounts = [ChartOfAccount listOrderBy:ACCOUNT_NAME ascending:YES active:YES];
 }
 
 - (void)viewDidUnload {
@@ -414,7 +414,7 @@ typedef enum {
                         if (shaddowBill.vendorId != nil) {
                             cell.detailTextLabel.text = [Vendor objectForKey:shaddowBill.vendorId].name;
                         } else {
-                            cell.detailTextLabel.text = @"Select one";
+                            cell.detailTextLabel.text = SELECT_ONE;
                         }
                         
                         if (!shaddowBill.paymentStatus || [shaddowBill.paymentStatus isEqualToString:PAYMENT_UNPAID]) {
@@ -512,40 +512,39 @@ typedef enum {
             break;
         case kBillLineItems:
         {
-            if (self.modeChanged) {
-                if (self.mode == kViewMode) {
-                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:BILL_ITEM_CELL_ID];
-                } else {
+//            if (self.modeChanged) {
+//                if (self.mode == kViewMode) {
+//                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:BILL_ITEM_CELL_ID];
+//                } else {
                     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:BILL_ITEM_CELL_ID];
-//                    cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                }
-            } else {
-                cell = [tableView dequeueReusableCellWithIdentifier:BILL_ITEM_CELL_ID];
-                if (!cell) {
-                    if (self.mode == kViewMode) {
-                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:BILL_ITEM_CELL_ID];
-                    } else {
-                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:BILL_ITEM_CELL_ID];
-//                        cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    }
-                }
-            }
+//                }
+//            } else {
+//                cell = [tableView dequeueReusableCellWithIdentifier:BILL_ITEM_CELL_ID];
+//                if (!cell) {
+//                    if (self.mode == kViewMode) {
+//                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:BILL_ITEM_CELL_ID];
+//                    } else {
+//                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:BILL_ITEM_CELL_ID];
+//                    }
+//                }
+//            }
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.textLabel.numberOfLines = 2;
             cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
             
             APLineItem *item = [shaddowBill.lineItems objectAtIndex:indexPath.row];
+            ChartOfAccount *account = item.account;
             
             if (self.mode == kViewMode || (((Bill *)self.shaddowBusObj).paymentStatus && ![((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID])) {
-                cell.textLabel.text = item.account.name ? item.account.name : @" ";
-//                cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_LABEL_FONT_SIZE];
+                cell.textLabel.text = account ? account.name : @" ";
+                cell.textLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE];
                 [cell.textLabel sizeToFit];
                 
                 cell.detailTextLabel.text = [Util formatCurrency:item.amount];
                 cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE];
             } else {
                 UITextField *itemAccountField = [[UITextField alloc] initWithFrame:BILL_ITEM_ACCOUNT_RECT];
-                itemAccountField.text = item.account.name ? item.account.name : @"Select One";
+                itemAccountField.text = account ? account.name : @"None";
                 [self initializeTextField:itemAccountField];
                 itemAccountField.textAlignment = UITextAlignmentCenter;
                 itemAccountField.inputView = self.accountPickerView;
@@ -805,6 +804,18 @@ typedef enum {
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     self.currentField = textField;
     
+    if (textField.objectTag) {
+        APLineItem *item = textField.objectTag;
+        int row;
+        if (item.account) {
+            row = [self.chartOfAccounts indexOfObject:item.account] + 1;
+        } else {
+            row = 0;
+        }
+        
+        [self.accountPickerView selectRow:row inComponent:0 animated:NO];
+    }
+    
     [super textFieldDidBeginEditing:textField];
 }
 
@@ -869,21 +880,29 @@ typedef enum {
 }
 
 - (NSInteger) pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    return [self.chartOfAccounts count];
+    return [self.chartOfAccounts count] + 1;
 }
 
 - (NSString*) pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    return ((ChartOfAccount *)[self.chartOfAccounts objectAtIndex: row]).name;
+    if (row == 0) {
+        return @"None";
+    }
+    return ((ChartOfAccount *)[self.chartOfAccounts objectAtIndex: row - 1]).name;
 }
 
 #pragma mark - UIPickerView Delegate
 
 - (void) pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    self.currentField.text = ((ChartOfAccount *)[self.chartOfAccounts objectAtIndex:row]).name;
-    
     int idx = (self.currentField.tag - [BillInfo count] * TAG_BASE) / 2;
-    APLineItem * item = [((Bill *)self.shaddowBusObj).lineItems objectAtIndex:idx];    
-    item.account = [self.chartOfAccounts objectAtIndex:row];
+    APLineItem * item = [((Bill *)self.shaddowBusObj).lineItems objectAtIndex:idx];
+    
+    if (row == 0) {
+        self.currentField.text = @"";
+        item.account = nil;
+    } else {
+        self.currentField.text = ((ChartOfAccount *)[self.chartOfAccounts objectAtIndex:row - 1]).name;
+        item.account = [self.chartOfAccounts objectAtIndex:row - 1];
+    }
 }
 
 #pragma mark - model delegate

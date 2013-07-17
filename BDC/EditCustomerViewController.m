@@ -158,7 +158,7 @@ enum CustomerInfoType {
     self.customerStatePickerView.showsSelectionIndicator = YES;
     self.customerStatePickerView.tag = (kState + CUSTOMER_ADDR_TAG_OFFSET) * PICKER_TAG_BASE;
     if ([shaddowCustomer.state isKindOfClass:[NSNumber class]] && [shaddowCustomer.state intValue] != INVALID_OPTION) {
-        [self.customerStatePickerView selectRow:[shaddowCustomer.state intValue] + 1 inComponent:0 animated:YES];
+        [self.customerStatePickerView selectRow:[shaddowCustomer.state intValue] + 1 inComponent:0 animated:NO];
     }
     
     self.customerCountryPickerView = [[UIPickerView alloc] initWithFrame:PICKER_RECT];
@@ -167,7 +167,7 @@ enum CustomerInfoType {
     self.customerCountryPickerView.showsSelectionIndicator = YES;
     self.customerCountryPickerView.tag = (kCountry + CUSTOMER_ADDR_TAG_OFFSET) * PICKER_TAG_BASE;
     if (shaddowCustomer.country != INVALID_OPTION) {
-        [self.customerCountryPickerView selectRow:shaddowCustomer.country + 1 inComponent:0 animated:YES];
+        [self.customerCountryPickerView selectRow:shaddowCustomer.country + 1 inComponent:0 animated:NO];
     }
     
     self.customerNameTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];

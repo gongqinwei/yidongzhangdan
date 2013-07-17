@@ -84,7 +84,7 @@ static NSMutableArray *inactiveBills = nil;
     for (id lineItem in jsonItems) {
         APLineItem *item = [[APLineItem alloc] init];
         item.objectId = [lineItem objectForKey:ID];
-        item.account = [ChartOfAccount objectForKey:[lineItem objectForKey:LINE_ITEM_ACCOUNT]];
+        item.account = [ChartOfAccount objectForKey:[lineItem objectForKey:LINE_ITEM_ACCOUNT]];        
         item.amount = [Util id2Decimal:[lineItem objectForKey:LINE_ITEM_AMOUNT]];
         [self.lineItems addObject:item];
     }
