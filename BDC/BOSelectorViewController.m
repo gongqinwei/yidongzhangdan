@@ -154,7 +154,7 @@
     self.uploadIndicator.hidesWhenStopped = YES;
     [self.uploadIndicator stopAnimating];
     
-    self.title = self.document.name;
+//    self.title = self.document.name;
     
     [self.pickOrCreateSwitch addTarget:self action:@selector(switchPickOrCreate) forControlEvents:UIControlEventValueChanged];
 }

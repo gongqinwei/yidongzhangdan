@@ -34,6 +34,8 @@ static id<BillListDelegate> ListDelegate = nil;
 static NSMutableArray *bills = nil;
 static NSMutableArray *inactiveBills = nil;
 
+static NSLock *Lock = nil;
+
 @synthesize vendorId;
 @synthesize vendorName;
 @synthesize invoiceNumber;
@@ -75,7 +77,7 @@ static NSMutableArray *inactiveBills = nil;
     self.vendorId = [dict objectForKey:BILL_VENDOR_ID];
     self.invoiceDate = [Util getDate:[dict objectForKey:BILL_DATE] format:nil];
     self.dueDate = [Util getDate:[dict objectForKey:BILL_DUE_DATE] format:nil];
-    self.approvalStatus = [dict objectForKey:BILL_APPROVAL_STATUS];
+    self.approvalStatus = [dict objectForKey:BILL_APPROVAL_STATUS];    
     self.paymentStatus = [dict objectForKey:BILL_PAYMENT_STATUS];
     self.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
     
@@ -89,29 +91,6 @@ static NSMutableArray *inactiveBills = nil;
         [self.lineItems addObject:item];
     }
 }
-
-//- (void)read {
-//    NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, READ, BILL_API];
-//    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
-//    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
-//    
-//    __weak Bill *weakSelf = self;
-//    
-//    [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
-//        NSInteger response_status;
-//        NSDictionary *dict = [APIHandler getResponse:response data:data error:&err status:&response_status];
-//        
-//        if(response_status == RESPONSE_SUCCESS) {
-//            [self populateObjectWithInfo:dict];
-//            [weakSelf.editDelegate didUpdateObject];
-////            [ListDelegate didGetBills:<#(NSArray *)#>];
-//        } else {
-//            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-//            NSLog(@"Failed to read bill %@: %@", self.objectId, [err localizedDescription]);
-//        }
-//    }];
-//
-//}
 
 - (void)saveFor:(NSString *)action {
     NSString *theAction = [NSString stringWithString:action];
@@ -180,6 +159,7 @@ static NSMutableArray *inactiveBills = nil;
                 [weakSelf.editDelegate didUpdateObject];
                 [weakSelf.detailsDelegate didUpdateObject];
             } else {
+                self.newBorn = YES;
                 [weakSelf read];    //to get default approval info and line item id's
                 [weakSelf.editDelegate didCreateObject:billId];
             }

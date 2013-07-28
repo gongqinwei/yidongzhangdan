@@ -86,6 +86,10 @@ enum VendorInfoType {
     return [NSIndexPath indexPathForRow:0 inSection:kVendorAttachments];
 }
 
+- (NSIndexSet *)getNonAttachmentSections {
+    return [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(kVendorInfo, kVendorAddr)];
+}
+
 - (NSString *)getDocImageAPI {
     return ATTACH_IMAGE_API;
 }
@@ -765,6 +769,7 @@ enum VendorInfoType {
 - (void)didReadObject {
     [self formatAddr];
     [super didReadObject];
+    [self.shaddowBusObj cloneTo:self.busObj];
 }
 
 - (void)doneSaveObject {

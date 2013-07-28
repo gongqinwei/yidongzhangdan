@@ -119,6 +119,10 @@ typedef enum {
     return [NSIndexPath indexPathForRow:0 inSection:kBillDocs];
 }
 
+- (NSIndexSet *)getNonAttachmentSections {
+    return [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(kBillInfo, kBillLineItems)];
+}
+
 - (NSString *)getDocImageAPI {
     return DOC_IMAGE_API;
 }
@@ -138,6 +142,10 @@ typedef enum {
     
     [self setActions];
 }
+
+//- (void)quitAttachMode {
+//    [self.shaddowBusObj read];
+//}
 
 #pragma mark - private methods
 
@@ -237,6 +245,10 @@ typedef enum {
     if (!self.busObj) {
         self.busObj = [[Bill alloc] init];
         self.shaddowBusObj = [[Bill alloc] init];
+    }
+    
+    if (self.shaddowBusObj.newBorn) {
+        [self.shaddowBusObj read];
     }
     
     [super viewDidLoad];
@@ -358,7 +370,7 @@ typedef enum {
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section == kBillInfo) {
+    if (section == kBillInfo) {        
         if (self.mode == kViewMode) {
             return [BillInfo count];
         } else {
@@ -494,7 +506,7 @@ typedef enum {
                 case kBillPaymentStatus:
 //                    cell.textLabel.numberOfLines = 2;
 //                    cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-                    
+                            NSLog(@">>> %@", ((Bill *)self.shaddowBusObj).paymentStatus);
                     if (shaddowBill.paymentStatus != nil) {
                         cell.detailTextLabel.text = [PAYMENT_STATUSES objectForKey:shaddowBill.paymentStatus];
                     } else {
@@ -556,7 +568,9 @@ typedef enum {
                 [cell addSubview:itemAccountField];
                 
                 UITextField *itemAmountTextField = [[UITextField alloc] initWithFrame:BILL_ITEM_AMOUNT_RECT];
-                itemAmountTextField.text = [Util formatCurrency:item.amount];
+                if (self.mode != kCreateMode && self.mode != kAttachMode) {
+                    itemAmountTextField.text = [Util formatCurrency:item.amount];
+                }
                 [self initializeTextField:itemAmountTextField];
                 itemAmountTextField.keyboardType = UIKeyboardTypeDecimalPad;
                 itemAmountTextField.objectTag = item;
@@ -907,13 +921,40 @@ typedef enum {
 
 #pragma mark - model delegate
 
-- (void)didReadObject {
+- (void)didReadObject {    
     self.totalAmount = [NSDecimalNumber zero];
     [super didReadObject];
+
+    [self.shaddowBusObj cloneTo:self.busObj];
+    ((Bill *)self.busObj).amount = ((Bill *)self.shaddowBusObj).amount;
+    
+    [self setActions];
     [self.actionMenuVC.tableView reloadData];
 }
 
+- (void)didCreateObject:(NSString *)newObjectId {
+//    if (!self.docsUploading) {
+//        self.docsUploading = [NSMutableDictionary dictionary];
+//    }
+//    
+//    for (Document *doc in self.shaddowBusObj.attachments) {
+//        [self.docsUploading setObject:doc forKey:doc.name];
+//    }
+    
+    [super didCreateObject:newObjectId];
+}
+
 - (void)didUpdateObject {
+//    if (!self.docsUploading) {
+//        self.docsUploading = [NSMutableDictionary dictionary];
+//    }
+//    
+//    for (Document *doc in self.shaddowBusObj.attachments) {
+//        if (!doc.objectId) {
+//            [self.docsUploading setObject:doc forKey:doc.name];
+//        }
+//    }
+    
     [super didUpdateObject];
     
     ((Bill *)self.busObj).amount = self.totalAmount;

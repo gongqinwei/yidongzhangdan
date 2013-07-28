@@ -101,7 +101,7 @@ static double animatedDistance = 0;
         }
 
         for (Document * doc in self.shaddowBusObj.attachments) {
-//            NSLog(@":: %@", doc.objectId);
+            NSLog(@":: %@", doc.objectId);
             
             NSString *ext = [[doc.name pathExtension] lowercaseString];
             if (doc.thumbnail) {
@@ -130,6 +130,10 @@ static double animatedDistance = 0;
 
 - (NSIndexPath *)getAttachmentPath {
     return nil;
+}
+
+- (NSIndexSet *)getNonAttachmentSections {
+    return [NSIndexSet indexSetWithIndex:0];
 }
 
 - (NSString *)getDocImageAPI {
@@ -224,7 +228,7 @@ static double animatedDistance = 0;
             int idx = self.currAttachment.tag;
             Document *doc = [self.shaddowBusObj.attachments objectAtIndex:idx];
             
-            if (!doc.objectId) {
+            if (!doc.objectId && [self.docsUploading objectForKey:doc.name]) {
                 [UIHelper showInfo:@"This document is still being processed by Bill.com.\nCannot delete at this time!" withStatus:kWarning];
             } else {
             [UIView animateWithDuration:1.0
@@ -456,7 +460,7 @@ static double animatedDistance = 0;
     if (self.mode == kViewMode) {
         self.modeChanged = NO;
         if (self.shaddowBusObj.newBorn) {
-            self.shaddowBusObj.newBorn = NO;
+//            self.shaddowBusObj.newBorn = NO;
         } else {
             [self retrieveDocAttachments];
         }
@@ -590,7 +594,6 @@ static double animatedDistance = 0;
 
 #pragma mark - Model Delegate methods
 
-// private
 - (void)quitAttachMode {
     SlidingTableViewController *vc = self.navigationController.childViewControllers[0];
     [self.navigationController popToRootViewControllerAnimated:NO];
@@ -760,16 +763,22 @@ static double animatedDistance = 0;
 
 - (void)didReadObject {
     @synchronized (self) {
-        self.shaddowBusObj.attachmentDict = [NSMutableDictionary dictionary];
-        self.shaddowBusObj.attachments = [NSMutableArray array];
         [self.shaddowBusObj cloneTo:self.busObj];
     }
     
-    [self retrieveDocAttachments];
+    if (self.shaddowBusObj.newBorn) {
+        self.shaddowBusObj.newBorn = NO;
+    } else {
+        @synchronized (self) {
+            self.shaddowBusObj.attachmentDict = [NSMutableDictionary dictionary];
+            self.shaddowBusObj.attachments = [NSMutableArray array];
+            [self retrieveDocAttachments];
+        }
+    }
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.tableView reloadData];
-
+        [self.tableView reloadSections:[self getNonAttachmentSections] withRowAnimation:UITableViewRowAnimationAutomatic];
+        
         self.refreshControl.attributedTitle = LAST_REFRESHED;
         [self.refreshControl endRefreshing];
     });
@@ -868,17 +877,21 @@ static double animatedDistance = 0;
             [self.shaddowBusObj.attachmentDict setObject:doc forKey:doc.objectId];
             [self.busObj.attachmentDict setObject:doc forKey:doc.objectId];
             [self.attachmentDict setObject:doc forKey:doc.objectId];
+            if (needUI) {
+                [self.shaddowBusObj.attachments addObject:doc];
+                [self.busObj.attachments addObject:doc];
+            }
         } else {
             if (!self.docsUploading) {
                 self.docsUploading = [NSMutableDictionary dictionary];
             }
             
-            [self.docsUploading setObject:doc forKey:doc.name];
+            if (![self.docsUploading objectForKey:doc.name]) {
+                [self.docsUploading setObject:doc forKey:doc.name];
+            }
         }
         
         if (needUI) {
-            [self.shaddowBusObj.attachments addObject:doc];
-            
             if (doc.objectId && ![EMPTY_ID isEqualToString:doc.objectId]) {
                 NSString *ext = [[doc.name pathExtension] lowercaseString];
                 if ([IMAGE_TYPE_SET containsObject:ext] || [ext isEqualToString:@"pdf"]) {
@@ -902,11 +915,11 @@ static double animatedDistance = 0;
                 doc.thumbnail = doc.data;
                 [self addAttachment:[[doc.name pathExtension] lowercaseString] data:doc.data needScale:YES];
                 [self layoutScrollImages:YES];
+                [self.shaddowBusObj.attachments addObject:doc];
+                [self.busObj.attachments addObject:doc];
                 [self.previewController reloadData];
             }
         }
-        
-        [self.busObj.attachments addObject:doc];
     }
 }
 

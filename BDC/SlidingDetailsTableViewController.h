@@ -33,7 +33,6 @@
 @property (nonatomic, strong) UIImageView *currAttachment;
 @property (nonatomic, strong) QLPreviewController *previewController;
 
-
 - (void)navigateBack;
 - (void)didSelectCrudAction:(NSString *)action;
 - (void)initializeTextField:(UITextField *)textField;
@@ -50,12 +49,15 @@
 - (void)doneSaveObject;
 - (void)handleRemovalForDocument:(Document *)doc;
 - (NSIndexPath *)getAttachmentPath;
+- (NSIndexSet *)getNonAttachmentSections;
 - (NSString *)getDocIDParam;
 - (NSString *)getDocImageAPI;
 - (void)resetScrollView;
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField;
 - (void)textFieldDidEndEditing:(UITextField *)textField;
+
+- (void)quitAttachMode;
 
 
 @end

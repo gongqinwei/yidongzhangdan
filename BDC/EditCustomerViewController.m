@@ -84,6 +84,10 @@ enum CustomerInfoType {
     return [NSIndexPath indexPathForRow:0 inSection:kCustomerAttachments];
 }
 
+- (NSIndexSet *)getNonAttachmentSections {
+    return [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(kCustomerInfo, kCustomerAddr)];
+}
+
 - (NSString *)getDocImageAPI {
     return ATTACH_IMAGE_API;
 }
@@ -761,6 +765,7 @@ enum CustomerInfoType {
 - (void)didReadObject {
     [self formatAddr];
     [super didReadObject];
+    [self.shaddowBusObj cloneTo:self.busObj];
 }
 
 - (void)doneSaveObject {

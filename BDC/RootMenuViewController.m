@@ -269,7 +269,7 @@ static RootMenuViewController * _sharedInstance = nil;
         NSArray *toRecipients = [NSArray arrayWithObjects:@"customer.mobill@gmail.com", nil];
         [mailer setToRecipients:toRecipients];
         
-        [self presentModalViewController:mailer animated:YES];
+        [self presentViewController:mailer animated:YES completion:nil];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure"
                                                         message:@"Your device doesn't support the composer sheet"
@@ -299,7 +299,7 @@ static RootMenuViewController * _sharedInstance = nil;
     }
     
     // Remove the mail view
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

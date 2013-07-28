@@ -109,6 +109,10 @@ typedef enum {
     return [NSIndexPath indexPathForRow:1 inSection:kInvoiceAttachments];
 }
 
+- (NSIndexSet *)getNonAttachmentSections {
+    return [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(kInvoiceInfo, kInvoiceLineItems)];
+}
+
 - (NSString *)getDocImageAPI {
     return ATTACH_IMAGE_API;
 }
@@ -1075,6 +1079,7 @@ typedef enum {
 - (void)didReadObject {
     self.totalAmount = [NSDecimalNumber zero];
     [super didReadObject];
+    [self.shaddowBusObj cloneTo:self.busObj];
 }
 
 - (void)didUpdateObject {
