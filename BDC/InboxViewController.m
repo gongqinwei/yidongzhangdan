@@ -138,6 +138,12 @@ static LRU *InMemCache = nil;
         }
     }
     
+    if (doc == self.currentDocument) {
+        [cell didGetSelected];
+    } else {
+        [cell didGetDeselected];
+    }
+    
     return cell;
 }
 
