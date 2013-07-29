@@ -34,8 +34,6 @@ static id<BillListDelegate> ListDelegate = nil;
 static NSMutableArray *bills = nil;
 static NSMutableArray *inactiveBills = nil;
 
-static NSLock *Lock = nil;
-
 @synthesize vendorId;
 @synthesize vendorName;
 @synthesize invoiceNumber;

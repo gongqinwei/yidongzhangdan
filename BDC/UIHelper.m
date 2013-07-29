@@ -83,8 +83,8 @@
         infoLabel.text = info;
         infoLabel.textColor = [UIColor whiteColor];
         infoLabel.backgroundColor = [UIColor clearColor];
-        infoLabel.lineBreakMode = UILineBreakModeWordWrap;
-        infoLabel.textAlignment=UITextAlignmentLeft;
+        infoLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        infoLabel.textAlignment=NSTextAlignmentLeft;
         infoLabel.font=[UIFont fontWithName:APP_BOLD_FONT size:INFO_FONT_SIZE];
         infoLabel.numberOfLines = 0;
         [infoLabel sizeToFit];

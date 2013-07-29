@@ -28,7 +28,7 @@
 }
 
 - (IBAction)donePreview:(UIBarButtonItem *)sender {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

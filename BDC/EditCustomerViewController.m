@@ -401,7 +401,7 @@ enum CustomerInfoType {
                 cell.textLabel.text = @"Address";
                 cell.detailTextLabel.text = self.address;
                 cell.detailTextLabel.numberOfLines = self.numOfLinesInAddr;
-                cell.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
+                cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
             } else {
                 switch (indexPath.row) {
                     case kAddr1:

@@ -155,7 +155,7 @@ enum InfoType {
     UILabel * nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 2, 95, 25)];
     nameLabel.text = [self.info objectAtIndex:indexPath.row];
     nameLabel.font = [nameLabel.font fontWithSize:13];
-    nameLabel.textAlignment = UITextAlignmentRight;
+    nameLabel.textAlignment = NSTextAlignmentRight;
     [cell addSubview:nameLabel];
     
     UITextField * valueField = [[UITextField alloc] initWithFrame:CGRectMake(100, 0, 185, 30)];

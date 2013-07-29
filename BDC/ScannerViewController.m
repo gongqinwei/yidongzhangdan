@@ -70,7 +70,7 @@ enum PhotoSourceType {
 - (IBAction)submit:(id)sender {
     if (self.mode == kAttachMode) {
         [self.delegate didScanPhoto:self.photoData name:self.fileName.text];
-        [self dismissModalViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:nil];
     } else {
         [self performSegueWithIdentifier:SELECT_BO_SEGUE sender:self];
     }    
@@ -165,7 +165,7 @@ enum PhotoSourceType {
                     self.picker.sourceType = UIImagePickerControllerSourceTypeCamera;
                     self.picker.mediaTypes = [NSArray arrayWithObject:(NSString *)kUTTypeImage];
 //                    self.picker.allowsEditing = YES;
-                    [self presentModalViewController:self.picker animated:YES];
+                    [self presentViewController:self.picker animated:YES completion:nil];
                 }
             }
 
@@ -174,12 +174,12 @@ enum PhotoSourceType {
             self.picker = [[UIImagePickerController alloc] init];
             self.picker.delegate = self;
             self.picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-            [self presentModalViewController:self.picker animated:YES];
+            [self presentViewController:self.picker animated:YES completion:nil];
 
             break;
         default:
             if (self.mode == kAttachMode) {
-                [self dismissModalViewControllerAnimated:YES];
+                [self dismissViewControllerAnimated:YES completion:nil];
             }
             break;
     }
@@ -195,7 +195,7 @@ enum PhotoSourceType {
 #pragma mark - UIImagePickerController delegate
 
 - (void) dismissImagePicker {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
     [self.fileName resignFirstResponder];
 }
 

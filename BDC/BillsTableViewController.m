@@ -261,20 +261,20 @@
     UILabel * lblInvNum = [[UILabel alloc] initWithFrame:BILL_NUM_RECT];
     lblInvNum.text = bill.invoiceNumber;
     lblInvNum.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_NUM_FONT_SIZE];
-    lblInvNum.textAlignment = UITextAlignmentLeft;
+    lblInvNum.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblInvNum];
     
     UILabel * lblVendor = [[UILabel alloc] initWithFrame:VENDOR_RECT];
     Vendor *vendor = [Vendor objectForKey:bill.vendorId];
     lblVendor.text = vendor.name;
     lblVendor.font = [UIFont fontWithName:APP_FONT size:BILL_FONT_SIZE];
-    lblVendor.textAlignment = UITextAlignmentLeft;
+    lblVendor.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblVendor];
     
     UILabel * lblInvDate = [[UILabel alloc] initWithFrame:BILL_DATE_RECT];
     lblInvDate.text = [@"Inv Date " stringByAppendingString:[Util formatDate:bill.invoiceDate format:nil]];
     lblInvDate.font = [UIFont fontWithName:APP_FONT size:BILL_FONT_SIZE];
-    lblInvDate.textAlignment = UITextAlignmentLeft;
+    lblInvDate.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblInvDate];
     
     UILabel * lblStatus = [[UILabel alloc] initWithFrame:APPROVAL_STATUS_RECT];
@@ -291,13 +291,13 @@
     } else {
         lblStatus.font = [UIFont fontWithName:APP_FONT size:BILL_FONT_SIZE];
     }
-    lblStatus.textAlignment = UITextAlignmentLeft;
+    lblStatus.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblStatus];
     
     UILabel * lblDueDate = [[UILabel alloc] initWithFrame:DUE_DATE_RECT];
     lblDueDate.text = [@"Due " stringByAppendingString:[Util formatDate:bill.dueDate format:nil]];
     lblDueDate.font = [UIFont fontWithName:APP_FONT size:BILL_FONT_SIZE];
-    lblDueDate.textAlignment = UITextAlignmentLeft;
+    lblDueDate.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblDueDate];
     
     UILabel * lblPaymentStatus = [[UILabel alloc] initWithFrame:PAYMENT_STATUS_RECT];
@@ -321,19 +321,19 @@
     } else {
         lblPaymentStatus.font = [UIFont fontWithName:APP_FONT size:BILL_FONT_SIZE];
     }
-    lblPaymentStatus.textAlignment = UITextAlignmentLeft;
+    lblPaymentStatus.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblPaymentStatus];
     
 //    UILabel * lblAmountPaid = [[UILabel alloc] initWithFrame:PAYMENT_STATUS_RECT];
 //    lblAmountPaid.text = [@"Paid " stringByAppendingString:[Util formatCurrency:bill.paidAmount]];
 //    lblAmountPaid.font = [UIFont fontWithName:APP_FONT size:BILL_FONT_SIZE];
-//    lblAmountPaid.textAlignment = UITextAlignmentLeft;
+//    lblAmountPaid.textAlignment = NSTextAlignmentLeft;
 //    [cell addSubview:lblAmountPaid];
     
     UILabel * lblAmount = [[UILabel alloc] initWithFrame:AMOUNT_RECT];
     lblAmount.text = [@"Amount " stringByAppendingString:[Util formatCurrency:bill.amount]];
     lblAmount.font = [UIFont fontWithName:APP_FONT size:BILL_FONT_SIZE];
-    lblAmount.textAlignment = UITextAlignmentLeft;
+    lblAmount.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblAmount];
     
     if (self.mode == kAttachMode) {

@@ -301,21 +301,21 @@ typedef enum {
 //    self.billApprovalStatusLabel = [[UILabel alloc] initWithFrame:BILL_INFO_INPUT_RECT];
 //    self.billApprovalStatusLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE];
 //    self.billApprovalStatusLabel.textColor = APP_LABEL_BLUE_COLOR;
-//    self.billApprovalStatusLabel.textAlignment = UITextAlignmentRight;
+//    self.billApprovalStatusLabel.textAlignment = NSTextAlignmentRight;
 //    
 //    self.billPaymentStatusLabel = [[UILabel alloc] initWithFrame:BILL_INFO_INPUT_RECT];
 //    self.billPaymentStatusLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE];
 //    self.billPaymentStatusLabel.textColor = APP_LABEL_BLUE_COLOR;
-//    self.billPaymentStatusLabel.textAlignment = UITextAlignmentRight;
+//    self.billPaymentStatusLabel.textAlignment = NSTextAlignmentRight;
 
     self.billPaidAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(CELL_WIDTH - 100, 24, 100, 20)];
     self.billPaidAmountLabel.font = [UIFont fontWithName:APP_FONT size:14];
     self.billPaidAmountLabel.textColor = APP_LABEL_BLUE_COLOR;
-    self.billPaidAmountLabel.textAlignment = UITextAlignmentRight;
+    self.billPaidAmountLabel.textAlignment = NSTextAlignmentRight;
     self.billPaidAmountLabel.backgroundColor = [UIColor clearColor];
 
     self.billAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(CELL_WIDTH - 100, 3, 100, 20)];
-    self.billAmountLabel.textAlignment = UITextAlignmentRight;
+    self.billAmountLabel.textAlignment = NSTextAlignmentRight;
     self.billAmountLabel.font = [UIFont fontWithName:APP_FONT size:15];
     self.billAmountLabel.backgroundColor = [UIColor clearColor];
     
@@ -495,7 +495,7 @@ typedef enum {
                     break;
                 case kBillApprovalStatus:
 //                    cell.textLabel.numberOfLines = 2;
-//                    cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+//                    cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
                     
                     if (shaddowBill.approvalStatus != nil) {
                         cell.detailTextLabel.text = [APPROVAL_STATUSES objectForKey:shaddowBill.approvalStatus];
@@ -505,7 +505,7 @@ typedef enum {
                     break;
                 case kBillPaymentStatus:
 //                    cell.textLabel.numberOfLines = 2;
-//                    cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+//                    cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
                             NSLog(@">>> %@", ((Bill *)self.shaddowBusObj).paymentStatus);
                     if (shaddowBill.paymentStatus != nil) {
                         cell.detailTextLabel.text = [PAYMENT_STATUSES objectForKey:shaddowBill.paymentStatus];
@@ -542,7 +542,7 @@ typedef enum {
 //            }
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.textLabel.numberOfLines = 2;
-            cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+            cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
             
             APLineItem *item = [shaddowBill.lineItems objectAtIndex:indexPath.row];
             ChartOfAccount *account = item.account;
@@ -558,7 +558,7 @@ typedef enum {
                 UITextField *itemAccountField = [[UITextField alloc] initWithFrame:BILL_ITEM_ACCOUNT_RECT];
                 itemAccountField.text = account ? account.name : @"None";
                 [self initializeTextField:itemAccountField];
-                itemAccountField.textAlignment = UITextAlignmentCenter;
+                itemAccountField.textAlignment = NSTextAlignmentCenter;
                 itemAccountField.inputView = self.accountPickerView;
                 itemAccountField.rightViewMode = UITextFieldViewModeAlways;
                 itemAccountField.delegate = self;
@@ -703,7 +703,7 @@ typedef enum {
         amoutLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:14];
         amoutLabel.backgroundColor = [UIColor clearColor];
         amoutLabel.textColor = APP_LABEL_BLUE_COLOR;
-        amoutLabel.textAlignment = UITextAlignmentRight;
+        amoutLabel.textAlignment = NSTextAlignmentRight;
         [footerView addSubview:amoutLabel];
         
         self.billAmountLabel.text = [Util formatCurrency:self.totalAmount];        
@@ -715,7 +715,7 @@ typedef enum {
         paidAmountLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:13];
         paidAmountLabel.backgroundColor = [UIColor clearColor];
         paidAmountLabel.textColor = APP_LABEL_BLUE_COLOR;
-        paidAmountLabel.textAlignment = UITextAlignmentRight;
+        paidAmountLabel.textAlignment = NSTextAlignmentRight;
         [footerView addSubview:paidAmountLabel];
 
         self.billPaidAmountLabel.text = [Util formatCurrency:((Bill *)self.shaddowBusObj).paidAmount];

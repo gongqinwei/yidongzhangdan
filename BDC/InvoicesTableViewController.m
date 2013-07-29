@@ -264,20 +264,20 @@
     UILabel * lblInvNum = [[UILabel alloc] initWithFrame:INVOICE_NUM_RECT];
     lblInvNum.text = inv.invoiceNumber;
     lblInvNum.font = [UIFont fontWithName:APP_BOLD_FONT size:INVOICE_NUM_FONT_SIZE];
-    lblInvNum.textAlignment = UITextAlignmentLeft;
+    lblInvNum.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblInvNum];
     
     UILabel * lblCustomer = [[UILabel alloc] initWithFrame:CUSTOMER_RECT];
     Customer *customer = [Customer objectForKey:inv.customerId];
     lblCustomer.text = customer.name;
     lblCustomer.font = [UIFont fontWithName:APP_FONT size:INVOICE_FONT_SIZE];
-    lblCustomer.textAlignment = UITextAlignmentLeft;
+    lblCustomer.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblCustomer];
     
     UILabel * lblInvDate = [[UILabel alloc] initWithFrame:INVOICE_DATE_RECT];
     lblInvDate.text = [@"Inv Date " stringByAppendingString:[Util formatDate:inv.invoiceDate format:nil]];
     lblInvDate.font = [UIFont fontWithName:APP_FONT size:INVOICE_FONT_SIZE];
-    lblInvDate.textAlignment = UITextAlignmentLeft;
+    lblInvDate.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblInvDate];
     
     UILabel * lblStatus = [[UILabel alloc] initWithFrame:STATUS_RECT];
@@ -301,25 +301,25 @@
     } else {
         lblStatus.font = [UIFont fontWithName:APP_FONT size:INVOICE_FONT_SIZE];
     }
-    lblStatus.textAlignment = UITextAlignmentLeft;
+    lblStatus.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblStatus];
     
     UILabel * lblDueDate = [[UILabel alloc] initWithFrame:DUE_DATE_RECT];
     lblDueDate.text = [@"Due " stringByAppendingString:[Util formatDate:inv.dueDate format:nil]];
     lblDueDate.font = [UIFont fontWithName:APP_FONT size:INVOICE_FONT_SIZE];
-    lblDueDate.textAlignment = UITextAlignmentLeft;
+    lblDueDate.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblDueDate];
     
     UILabel * lblAmount = [[UILabel alloc] initWithFrame:AMOUNT_RECT];
     lblAmount.text = [@"Amount " stringByAppendingString:[Util formatCurrency:inv.amount]];
     lblAmount.font = [UIFont fontWithName:APP_FONT size:INVOICE_FONT_SIZE];
-    lblAmount.textAlignment = UITextAlignmentLeft;
+    lblAmount.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblAmount];
     
     UILabel * lblAmountDue = [[UILabel alloc] initWithFrame:AMOUNT_DUE_RECT];
     lblAmountDue.text = [Util formatCurrency:inv.amountDue];
     lblAmountDue.font = [UIFont fontWithName:APP_FONT size:INVOICE_FONT_SIZE];
-    lblAmountDue.textAlignment = UITextAlignmentLeft;
+    lblAmountDue.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblAmountDue];
     
     if (self.mode == kAttachMode) {

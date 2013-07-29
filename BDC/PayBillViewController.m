@@ -57,7 +57,7 @@
         if(response_status == RESPONSE_SUCCESS) {                        
             [UIHelper showInfo:[NSString stringWithFormat:@"Successfully paid %@ for bill %@", [Util formatCurrency:payAmount], bill.name] withStatus:kSuccess];
             dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf dismissModalViewControllerAnimated:YES];
+                [weakSelf dismissViewControllerAnimated:YES completion:nil];
             });
             
             // refresh details page for the change in payment status
@@ -70,7 +70,7 @@
 }
 
 - (IBAction)cancelPay:(UIBarButtonItem *)sender {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style

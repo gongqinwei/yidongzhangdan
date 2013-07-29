@@ -107,7 +107,7 @@ static LRU *InMemCache = nil;
     cell.document = doc;
     cell.documentName.text = [doc.name stringByDeletingPathExtension];
     cell.documentName.adjustsFontSizeToFitWidth = YES;
-    cell.documentName.minimumFontSize = 8;
+    cell.documentName.minimumScaleFactor = 8;
     cell.documentCreatedDate.text = doc.createdDate ? [Util formatDate:doc.createdDate format:nil] : @"Processing...";
     cell.parentVC = self;
     cell.docCellDelegate = self;
@@ -154,7 +154,7 @@ static LRU *InMemCache = nil;
     Document *doc = self.currentDocument;
     
     if ([doc docFileExists] || doc.data) {
-        [self presentModalViewController:self.previewController animated:YES];
+        [self presentViewController:self.previewController animated:YES completion:nil];
         if (docChanged) {
             [self.previewController reloadData];
         }
@@ -219,7 +219,7 @@ static LRU *InMemCache = nil;
     
     if (cell.document == self.currentDocument) {
         if (self.presentedViewController != self.previewController) {
-            [self presentModalViewController:self.previewController animated:YES];
+            [self presentViewController:self.previewController animated:YES completion:nil];
         }
         [self.previewController reloadData];
         

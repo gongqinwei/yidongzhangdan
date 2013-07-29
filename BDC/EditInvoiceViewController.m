@@ -182,7 +182,7 @@ typedef enum {
             }
         }
         
-        [self presentModalViewController:self.mailer animated:YES];
+        [self presentViewController:self.mailer animated:YES completion:nil];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure"
                                                         message:@"Your device doesn't support the composer sheet"
@@ -644,7 +644,7 @@ typedef enum {
                 itemAmountTextField.backgroundColor = cell.backgroundColor;
                 itemAmountTextField.autocorrectionType = UITextAutocorrectionTypeNo; // no auto correction support
                 itemAmountTextField.autocapitalizationType = UITextAutocapitalizationTypeNone; // no auto capitalization support
-                itemAmountTextField.textAlignment = UITextAlignmentRight;
+                itemAmountTextField.textAlignment = NSTextAlignmentRight;
                 itemAmountTextField.enabled = NO;
                 itemAmountTextField.borderStyle = UITextBorderStyleNone;
                 [cell addSubview:itemAmountTextField];
@@ -658,7 +658,7 @@ typedef enum {
 //                itemQtytField.backgroundColor = cell.backgroundColor;
 //                itemQtytField.autocorrectionType = UITextAutocorrectionTypeNo;
 //                itemQtytField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-//                itemQtytField.textAlignment = UITextAlignmentRight;
+//                itemQtytField.textAlignment = NSTextAlignmentRight;
 //                itemQtytField.tag = indexPath.row + [InvoiceInfo count] * TAG_BASE;
 //                            
 //                itemQtytField.delegate = self;
@@ -814,7 +814,7 @@ typedef enum {
         
         UILabel *amount = [[UILabel alloc] initWithFrame:CGRectMake(CELL_WIDTH - 100, 3, 100, 20)];
         amount.text = [Util formatCurrency:self.totalAmount];
-        amount.textAlignment = UITextAlignmentRight;
+        amount.textAlignment = NSTextAlignmentRight;
         amount.font = [UIFont fontWithName:APP_FONT size:15];
         amount.backgroundColor = [UIColor clearColor];
         
@@ -1071,7 +1071,7 @@ typedef enum {
     }
     
     // Remove the mail view
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - model delegate

@@ -212,7 +212,7 @@ static double animatedDistance = 0;
         if ([doc docFileExists] || doc.data) {
             self.previewController.currentPreviewItemIndex = idx;
             
-            [self presentModalViewController:self.previewController animated:YES];
+            [self presentViewController:self.previewController animated:YES completion:nil];
             [self.previewController reloadData];
         } else {
             [self downloadDocument:doc forImage:imageView];
@@ -390,7 +390,7 @@ static double animatedDistance = 0;
                                [downloadIndicator stopAnimating];
                                
                                if (self.currAttachment == imgView) {
-                                   [self presentModalViewController:self.previewController animated:YES];
+                                   [self presentViewController:self.previewController animated:YES completion:nil];
                                    [self.previewController reloadData];
                                }
                            }];
@@ -503,7 +503,7 @@ static double animatedDistance = 0;
     textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     textField.autocorrectionType = UITextAutocorrectionTypeNo; // no auto correction support
     textField.autocapitalizationType = UITextAutocapitalizationTypeNone; // no auto capitalization support
-    textField.textAlignment = UITextAlignmentRight;
+    textField.textAlignment = NSTextAlignmentRight;
     textField.enabled = YES;
     textField.layer.cornerRadius = 8.0f;
     textField.layer.masksToBounds = YES;

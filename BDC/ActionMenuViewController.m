@@ -281,7 +281,7 @@ static ActionMenuViewController * _sharedInstance = nil;
             NSString *action = [self.crudActions objectAtIndex:indexPath.row];
             cell.textLabel.text = action;
             cell.textLabel.adjustsFontSizeToFitWidth = YES;
-            cell.textLabel.minimumFontSize = 10;
+            cell.textLabel.minimumScaleFactor = 10;
             [self addSelectedBackGroundForCell:cell];
             
             if ([action isEqualToString:ACTION_PAY]) {
@@ -295,7 +295,7 @@ static ActionMenuViewController * _sharedInstance = nil;
 //                payAmountTextField.font = [UIFont fontWithName:APP_FONT size:16];
 //                payAmountTextField.textColor = APP_SYSTEM_BLUE_COLOR;
 //                payAmountTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-//                payAmountTextField.textAlignment = UITextAlignmentRight;
+//                payAmountTextField.textAlignment = NSTextAlignmentRight;
 //                payAmountTextField.enabled = YES;
 //                payAmountTextField.layer.cornerRadius = 8.0f;
 //                payAmountTextField.layer.masksToBounds = NO;
@@ -307,7 +307,7 @@ static ActionMenuViewController * _sharedInstance = nil;
                 [self.payAmountLabel removeFromSuperview];
                 self.payAmountLabel = nil;
                 self.payAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 7, 170, cell.viewForBaselineLayout.bounds.size.height - 12)];
-                self.payAmountLabel.textAlignment = UITextAlignmentRight;
+                self.payAmountLabel.textAlignment = NSTextAlignmentRight;
                 
                 if ([((NSArray *)[BankAccount list]) count]) {
                     Bill *bill = (Bill *)((EditBillViewController *)self.targetViewController).busObj;

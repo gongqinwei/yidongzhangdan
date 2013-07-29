@@ -11,16 +11,16 @@
 
 #import "Labels.h"
 
-//#define LOCAL
+#define LOCAL
 //#define APPTEST
 //#define APPSTAGE
-#define PROD
+//#define PROD
 
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
-#define DOMAIN_URL          @"http://10.1.9.114"
-//#define DOMAIN_URL          @"http://192.168.1.7"
+//#define DOMAIN_URL          @"http://10.1.9.114"
+#define DOMAIN_URL          @"http://192.168.1.14"
 #define APP_KEY             @"devKey"
 #endif
 

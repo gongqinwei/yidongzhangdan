@@ -22,7 +22,7 @@
 @synthesize navigationBar;
 
 - (IBAction)donePreview:(UIBarButtonItem *)sender {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Private methods
