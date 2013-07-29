@@ -116,7 +116,7 @@ static NSLock *Lock = nil;
     for (APLineItem *lineItem in self.lineItems) {
         [objStr appendString:@"{"];
         [objStr appendFormat:@"\"%@\" : \"%@\", ", ENTITY, BILL_LINE_ITEM];
-        if ([theAction isEqualToString:UPDATE]) {
+        if ([theAction isEqualToString:UPDATE] && lineItem.objectId) {
             [objStr appendFormat:@"\"%@\" : \"%@\", ", ID, lineItem.objectId];
         }
         if (lineItem.account.objectId) {
