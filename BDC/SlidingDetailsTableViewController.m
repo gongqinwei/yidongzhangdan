@@ -229,30 +229,30 @@ static double animatedDistance = 0;
             Document *doc = [self.shaddowBusObj.attachments objectAtIndex:idx];
             
             if (!doc.objectId && [self.docsUploading objectForKey:doc.name]) {
-                [UIHelper showInfo:@"This document is still being processed by Bill.com.\nCannot delete at this time!" withStatus:kWarning];
+                [UIHelper showInfo:@"This document is still being processed by Bill.com.\n\nCannot delete at this time!" withStatus:kWarning];
             } else {
-            [UIView animateWithDuration:1.0
-                             animations:^{
-                                 self.currAttachment.alpha = 0.0;
-                             }
-                             completion:^ (BOOL finished) {
-                                 if (finished) {
-                                     @synchronized (self) {
-                                         [self.shaddowBusObj.attachments removeObjectAtIndex:idx];
-                                         
-                                         if (doc.objectId) {
-                                             [self.attachmentDict removeObjectForKey:doc.objectId];
-                                         }
-                                         
-                                         [self.currAttachment removeFromSuperview];
-                                         self.currAttachment = nil;
-                                         [self layoutScrollImages:NO];
-                                         
-                                         self.currAttachment = nil;
-                                         [self.previewController reloadData];
-                                     }
+                [UIView animateWithDuration:1.0
+                                 animations:^{
+                                     self.currAttachment.alpha = 0.0;
                                  }
-                             }];
+                                 completion:^ (BOOL finished) {
+                                     if (finished) {
+                                         @synchronized (self) {
+                                             [self.shaddowBusObj.attachments removeObjectAtIndex:idx];
+                                             
+                                             if (doc.objectId) {
+                                                 [self.attachmentDict removeObjectForKey:doc.objectId];
+                                             }
+                                             
+                                             [self.currAttachment removeFromSuperview];
+                                             self.currAttachment = nil;
+                                             [self layoutScrollImages:NO];
+                                             
+                                             self.currAttachment = nil;
+                                             [self.previewController reloadData];
+                                         }
+                                     }
+                                 }];
             }
         }
     }

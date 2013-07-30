@@ -24,8 +24,8 @@
 #define INFO_FONT_SIZE           14
 
 #define INFO_SHOW_INTERVAL       1.0
-#define INFO_FADEOUT_DURATION    4
-#define ERROR_FADEOUT_DURATION   5
+#define INFO_FADEOUT_DURATION    3.5
+#define ERROR_FADEOUT_DURATION   4
 
 #define SWITCH_TAB_DURATION      0.3
 

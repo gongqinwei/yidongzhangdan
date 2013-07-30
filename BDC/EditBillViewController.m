@@ -506,7 +506,6 @@ typedef enum {
                 case kBillPaymentStatus:
 //                    cell.textLabel.numberOfLines = 2;
 //                    cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
-                            NSLog(@">>> %@", ((Bill *)self.shaddowBusObj).paymentStatus);
                     if (shaddowBill.paymentStatus != nil) {
                         cell.detailTextLabel.text = [PAYMENT_STATUSES objectForKey:shaddowBill.paymentStatus];
                     } else {
@@ -556,7 +555,7 @@ typedef enum {
                 cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE];
             } else {
                 UITextField *itemAccountField = [[UITextField alloc] initWithFrame:BILL_ITEM_ACCOUNT_RECT];
-                itemAccountField.text = account ? account.name : @"None";
+                itemAccountField.text = account && account.name.length ? account.name : @"None";
                 [self initializeTextField:itemAccountField];
                 itemAccountField.textAlignment = NSTextAlignmentCenter;
                 itemAccountField.inputView = self.accountPickerView;
@@ -568,12 +567,12 @@ typedef enum {
                 [cell addSubview:itemAccountField];
                 
                 UITextField *itemAmountTextField = [[UITextField alloc] initWithFrame:BILL_ITEM_AMOUNT_RECT];
-                if (self.mode != kCreateMode && self.mode != kAttachMode) {
+                if ((self.mode != kCreateMode && self.mode != kAttachMode) || [item.amount isEqualToNumber:0]) {
                     itemAmountTextField.text = [Util formatCurrency:item.amount];
                 }
                 [self initializeTextField:itemAmountTextField];
                 itemAmountTextField.keyboardType = UIKeyboardTypeDecimalPad;
-                itemAmountTextField.objectTag = item;
+//                itemAmountTextField.objectTag = item;
                 itemAmountTextField.delegate = self;
                 itemAmountTextField.tag = [BillInfo count] * TAG_BASE + indexPath.row * 2 + 1;
                 itemAmountTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -821,12 +820,13 @@ typedef enum {
     if (textField.objectTag) {
         APLineItem *item = textField.objectTag;
         int row;
-        if (item.account) {
+        
+        if (item.account.objectId) {
             row = [self.chartOfAccounts indexOfObject:item.account] + 1;
         } else {
             row = 0;
         }
-        
+
         [self.accountPickerView selectRow:row inComponent:0 animated:NO];
     }
     
@@ -911,7 +911,7 @@ typedef enum {
     APLineItem * item = [((Bill *)self.shaddowBusObj).lineItems objectAtIndex:idx];
     
     if (row == 0) {
-        self.currentField.text = @"";
+        self.currentField.text = @"None";
         item.account = nil;
     } else {
         self.currentField.text = ((ChartOfAccount *)[self.chartOfAccounts objectAtIndex:row - 1]).name;
@@ -932,33 +932,17 @@ typedef enum {
     [self.actionMenuVC.tableView reloadData];
 }
 
-- (void)didCreateObject:(NSString *)newObjectId {
-//    if (!self.docsUploading) {
-//        self.docsUploading = [NSMutableDictionary dictionary];
-//    }
-//    
-//    for (Document *doc in self.shaddowBusObj.attachments) {
-//        [self.docsUploading setObject:doc forKey:doc.name];
-//    }
-    
-    [super didCreateObject:newObjectId];
-}
+//- (void)didCreateObject:(NSString *)newObjectId {
+//    [super didCreateObject:newObjectId];
+//}
 
 - (void)didUpdateObject {
-//    if (!self.docsUploading) {
-//        self.docsUploading = [NSMutableDictionary dictionary];
-//    }
-//    
-//    for (Document *doc in self.shaddowBusObj.attachments) {
-//        if (!doc.objectId) {
-//            [self.docsUploading setObject:doc forKey:doc.name];
-//        }
-//    }
-    
     [super didUpdateObject];
     
     ((Bill *)self.busObj).amount = self.totalAmount;
-    [self.actionMenuVC.tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.actionMenuVC.tableView reloadData];
+    });
 }
 
 - (void)didSelectVendor:(NSString *)vendorId {
