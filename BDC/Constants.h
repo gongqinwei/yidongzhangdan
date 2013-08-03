@@ -20,7 +20,7 @@
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
 //#define DOMAIN_URL          @"http://10.1.9.114"
-#define DOMAIN_URL          @"http://192.168.1.14"
+#define DOMAIN_URL          @"http://192.168.1.10"
 #define APP_KEY             @"devKey"
 #endif
 
@@ -100,6 +100,7 @@
 #define ACCOUNT_API         @"ChartOfAccount.json"
 #define BANK_ACCOUNT_API    @"BankAccount.json"
 #define ENUM_API            @"Enum.json"
+#define ORG_PAY_NEED_APPROVAL_API   @"OrgBillPayNeedApproval.json"
 
 #define ENTITY              @"entity"
 

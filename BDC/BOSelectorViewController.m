@@ -221,6 +221,14 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.uploadIndicator stopAnimating];
             [self resetScanner];
+            
+            UINavigationController *navVC = [[RootMenuViewController sharedInstance].menuItems objectForKey:MENU_INBOX];
+            SlidingTableViewController *vc = [navVC.childViewControllers objectAtIndex:0];
+            
+            [RootMenuViewController sharedInstance].currVC = vc;
+            [RootMenuViewController sharedInstance].currVC.navigation = navVC;
+            [RootMenuViewController sharedInstance].currVC.navigationId = MENU_INBOX;
+
         });
     }
 }

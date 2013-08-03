@@ -7,6 +7,7 @@
 //
 
 #import "BDCAppDelegate.h"
+#import "Organization.h"
 #import "Invoice.h"
 #import "Customer.h"
 #import "Item.h"
@@ -93,6 +94,9 @@
                 [Customer retrieveListForActive:NO reload:NO];
                 [Vendor retrieveListForActive:NO reload:NO];
                 [Item retrieveListForActive:NO reload:NO];
+                
+                Organization *org = [Organization getSelectedOrg];
+                [org retrieveNeedApprovalToPayBill];
             } else {
                 self.window.rootViewController = initialController;
                 [self.window makeKeyAndVisible];
@@ -124,7 +128,7 @@
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
-    [InboxViewController freeMem];
+//    [InboxViewController freeMem];
 }
 
 // increment numNetworkActivities

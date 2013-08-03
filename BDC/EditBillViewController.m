@@ -143,6 +143,13 @@ typedef enum {
     [self setActions];
 }
 
+- (void)refreshView {
+    [super refreshView];
+    
+    Organization *org = [Organization getSelectedOrg];
+    [org retrieveNeedApprovalToPayBill];
+}
+
 //- (void)quitAttachMode {
 //    [self.shaddowBusObj read];
 //}
@@ -226,8 +233,10 @@ typedef enum {
         }
         
         if (self.isActive) {
-            //TODO: also allow pay if no need for approval
-            if (([((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_UNASSIGNED]
+            Organization *org = [Organization getSelectedOrg];
+            
+            if ((!org.needApprovalToPayBill
+                 || [((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_UNASSIGNED]
                  || [((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_APPROVED])
                 && ([((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]
                     || [((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_PARTIAL]))

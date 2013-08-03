@@ -14,7 +14,8 @@
 
 #define DOCUMENT_ASSOCIATE_SEGUE        @"DocumentAssociatedWith"
 
-static LRU *InMemCache = nil;
+//static LRU *InMemCache = nil;
+//static NSLock *accessLock = nil;
 
 @interface InboxViewController () <DocumentListDelegate, DocumentCellDelegate>
 
@@ -23,9 +24,9 @@ static LRU *InMemCache = nil;
 
 @implementation InboxViewController
 
-+ (void)freeMem {
-    [InMemCache spit];
-}
+//+ (void)freeMem {
+//    [InMemCache spit];
+//}
 
 // Override
 - (void)refreshView {
@@ -73,7 +74,7 @@ static LRU *InMemCache = nil;
     
     self.dataArray = [Document listForCategory:FILE_CATEGORY_DOCUMENT];
     
-    InMemCache = self.dataInMemCache;
+//    InMemCache = self.dataInMemCache;
 }
 
 - (void)didReceiveMemoryWarning
@@ -201,9 +202,10 @@ static LRU *InMemCache = nil;
     self.dataArray = [Document listForCategory:FILE_CATEGORY_DOCUMENT];
     @synchronized(self) {
         [self changeCurrentDocumentTo:nil];
-        [self.collectionView insertItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
-        [self.previewController reloadData];
+            [self.collectionView insertItemsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:0 inSection:0]]];
+            [self.previewController reloadData];
         });
     }
 }
@@ -233,7 +235,7 @@ static LRU *InMemCache = nil;
 //        self.actionMenuVC.actionDelegate = self;
     }
     
-    [self.dataInMemCache cache:cell.document];
+//    [self.dataInMemCache cache:cell.document];
 }
 
 #pragma mark - Action Menu delegate

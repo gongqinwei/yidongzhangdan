@@ -14,6 +14,7 @@
 #import "Vendor.h"
 #import "ChartOfAccount.h"
 #import "BankAccount.h"
+#import "Organization.h"
 #import "Constants.h"
 #import "Util.h"
 #import "Uploader.h"
@@ -113,6 +114,13 @@
 - (void)navigateAttach {
     [super navigateAttach];
     [self attachDocumentForObject:self.bills[self.lastSelected.row]];
+}
+
+- (void)refreshView {
+    [super refreshView];
+    
+    Organization *org = [Organization getSelectedOrg];
+    [org retrieveNeedApprovalToPayBill];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style

@@ -20,6 +20,10 @@
 
 @interface Organization : BDCBusinessObjectWithAttachments
 
+@property (nonatomic, assign) BOOL needApprovalToPayBill;
+
+- (void)retrieveNeedApprovalToPayBill;
+
 + (void)setDelegate:(id<OrgDelegate>)theDelegate;
 
 + (Organization *)getSelectedOrg;

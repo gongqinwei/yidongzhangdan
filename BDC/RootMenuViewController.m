@@ -44,7 +44,7 @@ static RootMenuViewController * _sharedInstance = nil;
 
 - (UINavigationController *)showView:(NSString *)identifier {
     identifier = [identifier stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
+        
     if (!self.currVC) {
         UINavigationController *navVC = [self.menuItems objectForKey:identifier];
         self.currVC = [navVC.childViewControllers objectAtIndex:0];

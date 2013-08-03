@@ -10,6 +10,6 @@
 
 @interface InboxViewController : SlidingCollectionViewController
 
-+ (void)freeMem;
+//+ (void)freeMem;
 
 @end
