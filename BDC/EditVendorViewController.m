@@ -139,8 +139,6 @@ enum VendorInfoType {
     if (!self.busObj) {
         self.busObj = [[Vendor alloc] init];
         self.shaddowBusObj = [[Vendor alloc] init];
-        ((Vendor *)self.shaddowBusObj).state = nil;
-        ((Vendor *)self.shaddowBusObj).country = INVALID_OPTION;
     }
         
     [super viewDidLoad];

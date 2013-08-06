@@ -218,7 +218,6 @@
         [segue.destinationViewController setBusObj:sender];
         [segue.destinationViewController setMode:kViewMode];
     } else if ([segue.identifier isEqualToString:VENDOR_CREATE_VENDOR_SEGUE]) {
-        //        [segue.destinationViewController setTitle:@"New Vendor"];
         [segue.destinationViewController setMode:kCreateMode];
     }
 }

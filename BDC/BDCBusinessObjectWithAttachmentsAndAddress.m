@@ -22,6 +22,14 @@
 @synthesize zip;
 
 
+- (id) init {
+    if (self = [super init]) {
+        self.country = US_FULL_INDEX;
+        self.state = [NSNumber numberWithInt:INVALID_OPTION];
+    }
+    return self;
+}
+
 - (int)formatAddress:(NSMutableString *)addr {
     int numOfLines = 0;
     BOOL hasCity = NO;

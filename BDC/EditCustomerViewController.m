@@ -137,8 +137,6 @@ enum CustomerInfoType {
     if (!self.busObj) {
         self.busObj = [[Customer alloc] init];
         self.shaddowBusObj = [[Customer alloc] init];
-        ((Customer *)self.shaddowBusObj).state = nil;
-        ((Customer *)self.shaddowBusObj).country = INVALID_OPTION;
     }
         
     [super viewDidLoad];
