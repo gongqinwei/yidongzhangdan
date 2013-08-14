@@ -576,12 +576,11 @@ typedef enum {
                 [cell addSubview:itemAccountField];
                 
                 UITextField *itemAmountTextField = [[UITextField alloc] initWithFrame:BILL_ITEM_AMOUNT_RECT];
-                if ((self.mode != kCreateMode && self.mode != kAttachMode) || [item.amount isEqualToNumber:0]) {
+                if ((self.mode != kCreateMode && self.mode != kAttachMode) || ![item.amount isEqualToNumber:[NSDecimalNumber zero]]) {
                     itemAmountTextField.text = [Util formatCurrency:item.amount];
                 }
                 [self initializeTextField:itemAmountTextField];
                 itemAmountTextField.keyboardType = UIKeyboardTypeDecimalPad;
-//                itemAmountTextField.objectTag = item;
                 itemAmountTextField.delegate = self;
                 itemAmountTextField.tag = [BillInfo count] * TAG_BASE + indexPath.row * 2 + 1;
                 itemAmountTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -714,10 +713,6 @@ typedef enum {
         amoutLabel.textAlignment = NSTextAlignmentRight;
         [footerView addSubview:amoutLabel];
         
-        self.billAmountLabel.text = [Util formatCurrency:self.totalAmount];        
-        ((Bill *)self.shaddowBusObj).amount = self.totalAmount;
-        [footerView addSubview:self.billAmountLabel];
-        
         UILabel *paidAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 24, 85, 20)];
         paidAmountLabel.text = @"Paid:";
         paidAmountLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:13];
@@ -725,8 +720,18 @@ typedef enum {
         paidAmountLabel.textColor = APP_LABEL_BLUE_COLOR;
         paidAmountLabel.textAlignment = NSTextAlignmentRight;
         [footerView addSubview:paidAmountLabel];
-
-        self.billPaidAmountLabel.text = [Util formatCurrency:((Bill *)self.shaddowBusObj).paidAmount];
+        
+        Bill *bill = (Bill *)self.shaddowBusObj;
+        
+        if ([self.totalAmount isEqualToNumber:[NSDecimalNumber zero]] && bill.amount) {
+            self.billAmountLabel.text = [Util formatCurrency:bill.amount];
+        } else {
+            self.billAmountLabel.text = [Util formatCurrency:self.totalAmount];        
+            bill.amount = self.totalAmount;
+        }
+        [footerView addSubview:self.billAmountLabel];
+        
+        self.billPaidAmountLabel.text = [Util formatCurrency:bill.paidAmount];
         [footerView addSubview:self.billPaidAmountLabel];
         
         return footerView;

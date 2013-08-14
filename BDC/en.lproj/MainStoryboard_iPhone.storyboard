@@ -886,24 +886,35 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="UBD-Xf-9wk"/>
+                                        <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="eBill" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FEB-zc-lkY">
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="40" id="bsx-2N-N5I"/>
+                                                <constraint firstAttribute="height" constant="15" id="sMB-xZ-1na"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                            <color key="textColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="38P-Wr-idu" firstAttribute="bottom" secondItem="J77-YV-wUd" secondAttribute="bottom" type="default" id="2HZ-DK-mSh"/>
-                                    <constraint firstAttribute="trailing" secondItem="CRc-ud-gF2" secondAttribute="trailing" constant="7" id="51A-3x-iBQ"/>
+                                    <constraint firstItem="FoQ-Jh-dq7" firstAttribute="leading" secondItem="J77-YV-wUd" secondAttribute="leading" type="default" id="5G4-qd-nGQ"/>
                                     <constraint firstItem="7YF-1R-CSB" firstAttribute="trailing" secondItem="78Y-Io-o3l" secondAttribute="trailing" type="default" id="CDG-f8-IZ5"/>
-                                    <constraint firstItem="38P-Wr-idu" firstAttribute="trailing" secondItem="J77-YV-wUd" secondAttribute="trailing" type="default" id="Dpa-5N-xs9"/>
                                     <constraint firstItem="7YF-1R-CSB" firstAttribute="top" secondItem="J77-YV-wUd" secondAttribute="top" constant="30" id="FNs-BW-me3"/>
-                                    <constraint firstItem="38P-Wr-idu" firstAttribute="leading" secondItem="J77-YV-wUd" secondAttribute="leading" type="default" id="Fet-Vg-fgl"/>
-                                    <constraint firstItem="78Y-Io-o3l" firstAttribute="centerX" secondItem="38P-Wr-idu" secondAttribute="centerX" type="default" id="KPa-7u-nEv"/>
-                                    <constraint firstItem="38P-Wr-idu" firstAttribute="leading" secondItem="FoQ-Jh-dq7" secondAttribute="leading" type="default" id="M2p-rT-Ib6"/>
-                                    <constraint firstItem="CRc-ud-gF2" firstAttribute="top" secondItem="J77-YV-wUd" secondAttribute="top" constant="6" id="UdV-gC-cZa"/>
+                                    <constraint firstItem="FEB-zc-lkY" firstAttribute="top" secondItem="J77-YV-wUd" secondAttribute="top" constant="15" id="Iar-lY-TDh"/>
+                                    <constraint firstItem="CRc-ud-gF2" firstAttribute="top" secondItem="J77-YV-wUd" secondAttribute="top" constant="6" id="Q97-WJ-iO2"/>
+                                    <constraint firstItem="38P-Wr-idu" firstAttribute="leading" secondItem="J77-YV-wUd" secondAttribute="leading" type="default" id="YcU-FT-oJl"/>
+                                    <constraint firstItem="FEB-zc-lkY" firstAttribute="centerX" secondItem="38P-Wr-idu" secondAttribute="centerX" type="default" id="ZFu-RN-HeH"/>
                                     <constraint firstItem="FoQ-Jh-dq7" firstAttribute="top" secondItem="J77-YV-wUd" secondAttribute="top" constant="198" id="c82-OT-Iw8"/>
                                     <constraint firstAttribute="bottom" secondItem="78Y-Io-o3l" secondAttribute="bottom" constant="5" id="fz6-Rw-Gw1"/>
+                                    <constraint firstItem="FEB-zc-lkY" firstAttribute="centerX" secondItem="7YF-1R-CSB" secondAttribute="centerX" type="default" id="iSe-ai-WGs"/>
+                                    <constraint firstItem="FEB-zc-lkY" firstAttribute="centerX" secondItem="J77-YV-wUd" secondAttribute="centerX" type="default" id="jqT-y4-uZh"/>
+                                    <constraint firstItem="38P-Wr-idu" firstAttribute="bottom" secondItem="J77-YV-wUd" secondAttribute="bottom" type="default" id="l3I-0X-yj6"/>
                                     <constraint firstItem="7YF-1R-CSB" firstAttribute="centerX" secondItem="UBD-Xf-9wk" secondAttribute="centerX" type="default" id="nK9-ll-5qi"/>
-                                    <constraint firstItem="38P-Wr-idu" firstAttribute="top" secondItem="J77-YV-wUd" secondAttribute="top" type="default" id="skQ-yj-eho"/>
+                                    <constraint firstItem="38P-Wr-idu" firstAttribute="top" secondItem="J77-YV-wUd" secondAttribute="top" type="default" id="tjb-a8-w3J"/>
+                                    <constraint firstAttribute="trailing" secondItem="CRc-ud-gF2" secondAttribute="trailing" constant="7" id="uHz-pl-MIV"/>
                                     <constraint firstItem="UBD-Xf-9wk" firstAttribute="centerY" secondItem="38P-Wr-idu" secondAttribute="centerY" type="default" id="wX2-8w-d9W"/>
                                     <constraint firstItem="7YF-1R-CSB" firstAttribute="leading" secondItem="78Y-Io-o3l" secondAttribute="leading" type="default" id="zsP-2z-OwB"/>
                                 </constraints>
@@ -913,6 +924,7 @@
                                     <outlet property="documentImageView" destination="38P-Wr-idu" id="eZK-Oe-97U"/>
                                     <outlet property="documentName" destination="7YF-1R-CSB" id="NY6-DM-uzw"/>
                                     <outlet property="downloadingIndicator" destination="UBD-Xf-9wk" id="Wme-ud-6dD"/>
+                                    <outlet property="ebillLabel" destination="FEB-zc-lkY" id="FQ3-IX-spS"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -935,6 +947,7 @@
                     </navigationItem>
                     <connections>
                         <segue destination="ttA-Fa-UXM" kind="push" identifier="DocumentAssociatedWith" id="ifQ-ST-XVY"/>
+                        <segue destination="WEK-Fn-naN" kind="push" identifier="AcceptEBill" id="iJL-HJ-34E"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RLM-1H-5Ft" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -946,7 +959,7 @@
             <objects>
                 <tableViewController id="3zY-p5-ksg" customClass="CustomersTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="yRU-ey-91V">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -1551,7 +1564,7 @@
             <objects>
                 <viewController id="X9Q-mH-q7t" customClass="ScannerViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cFi-0e-wJM">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Q4-CU-btu">
@@ -2527,10 +2540,12 @@
         <class className="DocumentCell" superclassName="UICollectionViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DocumentCell.h"/>
             <relationships>
+                <relationship kind="action" name="showDocumentInfo:" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="documentCreatedDate" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="documentImageView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="documentName" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="downloadingIndicator" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="ebillLabel" candidateClass="UILabel"/>
             </relationships>
         </class>
         <class className="EditBillViewController" superclassName="SlidingDetailsTableViewController">
@@ -2547,6 +2562,9 @@
         </class>
         <class className="EditInvoiceViewController" superclassName="SlidingDetailsTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EditInvoiceViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="saveBusObj:" candidateClass="UIBarButtonItem"/>
+            </relationships>
         </class>
         <class className="EditItemViewController" superclassName="SlidingDetailsTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EditItemViewController.h"/>
@@ -2588,6 +2606,8 @@
         <class className="PayBillViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PayBillViewController.h"/>
             <relationships>
+                <relationship kind="action" name="cancelPay:" candidateClass="UIBarButtonItem"/>
+                <relationship kind="action" name="payBill:"/>
                 <relationship kind="outlet" name="bankAccountLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="billAmountLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="dueDateLabel" candidateClass="UILabel"/>
@@ -2607,8 +2627,6 @@
         <class className="ScannerViewController" superclassName="SlidingViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ScannerViewController.h"/>
             <relationships>
-                <relationship kind="action" name="submit:"/>
-                <relationship kind="action" name="takePhoto:" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="fileName" candidateClass="UITextField"/>
                 <relationship kind="outlet" name="preview" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="submit" candidateClass="UIButton"/>
@@ -2670,6 +2688,9 @@
         </class>
         <class className="VendorsTableViewController" superclassName="SlidingListTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/VendorsTableViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="editVendors:" candidateClass="UIBarButtonItem"/>
+            </relationships>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
@@ -2678,21 +2699,21 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="FTU-IK-7vF"/>
-        <segue reference="znb-5y-98g"/>
-        <segue reference="ncd-XN-35f"/>
         <segue reference="Hnb-9H-Um4"/>
-        <segue reference="zBW-fL-edY"/>
+        <segue reference="ifQ-ST-XVY"/>
+        <segue reference="iJL-HJ-34E"/>
         <segue reference="nLD-mQ-6wj"/>
-        <segue reference="v63-Az-wLD"/>
-        <segue reference="GuY-KC-qoW"/>
-        <segue reference="wxy-Zp-Lfl"/>
         <segue reference="3ag-eg-oXf"/>
         <segue reference="CeX-f9-mSc"/>
-        <segue reference="fqJ-Rf-CsZ"/>
+        <segue reference="FTU-IK-7vF"/>
+        <segue reference="wxy-Zp-Lfl"/>
+        <segue reference="GuY-KC-qoW"/>
         <segue reference="qdh-4f-Obl"/>
-        <segue reference="4YZ-nK-Ds9"/>
-        <segue reference="dDE-iX-7BR"/>
+        <segue reference="fqJ-Rf-CsZ"/>
+        <segue reference="ncd-XN-35f"/>
+        <segue reference="zBW-fL-edY"/>
         <segue reference="cZK-q2-u6g"/>
+        <segue reference="dDE-iX-7BR"/>
+        <segue reference="4YZ-nK-Ds9"/>
     </inferredMetricsTieBreakers>
 </document>

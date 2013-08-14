@@ -308,6 +308,7 @@ static NSMutableArray *inactiveBills = nil;
     target.dueDate = source.dueDate;
     target.approvalStatus = source.approvalStatus;
     target.paymentStatus = source.paymentStatus;
+    target.amount = source.amount;
     target.paidAmount = source.paidAmount;
     target.editDelegate = source.editDelegate;
     target.detailsDelegate = source.detailsDelegate;

@@ -27,6 +27,9 @@
 #define ACTION_MENU_CELL_HEIGHT                 40
 #define ASCENDING                               @"Asc"
 #define DESCENDIDNG                             @"Desc"
+#define SECTION_HEADER_LABEL_RECT               CGRectMake(15, 7, 70, 15)
+#define TOGGLE_ARROW_RECT                       CGRectMake(80, 10, 10, 10)
+#define TOGGLE_ARROW_CENTER                     CGPointMake(85, 15)
 
 
 @interface ActionMenuViewController () <UISearchBarDelegate, UISearchDisplayDelegate>
@@ -35,6 +38,9 @@
 @property (nonatomic, strong) NSMutableArray *searchResultTypes;
 @property (nonatomic, strong) UILabel *ascLabel;
 @property (nonatomic, strong) UILabel *payAmountLabel;
+@property (nonatomic, strong) UIImageView *orderSectionToggleImage;
+@property (nonatomic, strong) UIButton *orderSectionToggleButton;
+@property (nonatomic, assign) BOOL orderSectionCollapsed;
 
 @end
 
@@ -52,6 +58,10 @@
 @synthesize ascLabel;
 @synthesize payAmountLabel;
 @synthesize crudActions;
+@synthesize orderSectionToggleImage;
+@synthesize orderSectionToggleButton;
+@synthesize orderSectionCollapsed;
+
 
 static ActionMenuViewController * _sharedInstance = nil;
 
@@ -148,6 +158,17 @@ static ActionMenuViewController * _sharedInstance = nil;
         }
     }
     
+    self.orderSectionCollapsed = YES;
+    
+    self.orderSectionToggleImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:TOGGLE_ARROW_IMG_NAME]];
+    self.orderSectionToggleImage.frame = TOGGLE_ARROW_RECT;
+    self.orderSectionToggleImage.center = TOGGLE_ARROW_CENTER;
+    self.orderSectionToggleImage.transform = CGAffineTransformMakeRotation(-M_PI_2);
+    
+    self.orderSectionToggleButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SLIDING_DISTANCE - 110, ACTION_MENU_SECTION_HEADER_HEIGHT)];
+    self.orderSectionToggleButton.alpha = 0.1;
+    [self.orderSectionToggleButton addTarget:self action:@selector(toggleOrderSection:) forControlEvents:UIControlEventTouchUpInside];
+    
     _sharedInstance = self;
 }
 
@@ -164,6 +185,15 @@ static ActionMenuViewController * _sharedInstance = nil;
     // Dispose of any resources that can be recreated.
 }
 
+- (void)toggleOrderSection:(UIButton *)sender {
+    self.orderSectionCollapsed = !self.orderSectionCollapsed;
+    self.orderSectionToggleImage.transform = CGAffineTransformMakeRotation(- M_PI_2 * self.orderSectionCollapsed);
+
+    NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:1];
+    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];    
+}
+
+                
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -197,7 +227,7 @@ static ActionMenuViewController * _sharedInstance = nil;
             } else {
                 if (section == 1) {
                     if (self.targetViewController.sortAttributes.count > 0) {
-                        return self.targetViewController.sortAttributes.count;
+                        return self.orderSectionCollapsed ? 1 : self.targetViewController.sortAttributes.count;
                     } else {
                         return self.crudActions.count;
                     }
@@ -262,12 +292,18 @@ static ActionMenuViewController * _sharedInstance = nil;
             } else {
                 if (indexPath.section == 1) {
                     if (self.targetViewController.sortAttributes.count > 0) {
-                        cell.textLabel.text = [self.targetViewController.sortAttributeLabels objectForKey:[self.targetViewController.sortAttributes objectAtIndex:indexPath.row]];
-
-                        if ([indexPath isEqual:self.lastSortAttribute]) {
+                        if (self.orderSectionCollapsed) {
+                            cell.textLabel.text = [self.targetViewController.sortAttributeLabels objectForKey:[self.targetViewController.sortAttributes objectAtIndex:self.lastSortAttribute.row]];
                             cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                        } else {
+                            cell.textLabel.text = [self.targetViewController.sortAttributeLabels objectForKey:[self.targetViewController.sortAttributes objectAtIndex:indexPath.row]];
+
+                            if ([indexPath isEqual:self.lastSortAttribute]) {
+                                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                            } else {
+                                cell.accessoryType = UITableViewCellAccessoryNone;
+                            }
                         }
-                        cell.selectionStyle = UITableViewCellSelectionStyleNone;
                     } else {
                         cell.textLabel.text = [self.crudActions objectAtIndex:indexPath.row];
                         [self addSelectedBackGroundForCell:cell];
@@ -280,8 +316,16 @@ static ActionMenuViewController * _sharedInstance = nil;
         } else {
             NSString *action = [self.crudActions objectAtIndex:indexPath.row];
             cell.textLabel.text = action;
-            cell.textLabel.adjustsFontSizeToFitWidth = YES;
-            cell.textLabel.minimumScaleFactor = 10;
+            cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
+            if ([action isEqualToString:ACTION_BDC_PROCESSING] || [action isEqualToString:ACTION_BDC_PROCESSING2]) {
+                cell.textLabel.numberOfLines = 3;
+                cell.textLabel.font = [UIFont systemFontOfSize:14];
+            } else {
+                cell.textLabel.numberOfLines = 1;
+                cell.textLabel.adjustsFontSizeToFitWidth = YES;
+                cell.textLabel.minimumScaleFactor = 10;
+            }
+            
             [self addSelectedBackGroundForCell:cell];
             
             if ([action isEqualToString:ACTION_PAY]) {
@@ -426,13 +470,15 @@ static ActionMenuViewController * _sharedInstance = nil;
         if (self.targetViewController.sortAttributes) {
             if (indexPath.section == 1) {
                 if (self.targetViewController.sortAttributes.count > 0) {
-                    [self.tableView cellForRowAtIndexPath:self.lastSortAttribute].accessoryType = UITableViewCellAccessoryNone;
-                    self.lastSortAttribute = indexPath;
-                    [self.tableView cellForRowAtIndexPath:self.lastSortAttribute].accessoryType = UITableViewCellAccessoryCheckmark;
-                    
-                    [self.actionDelegate didSelectSortAttribute:[self.targetViewController.sortAttributes objectAtIndex:self.lastSortAttribute.row]
-                                                    ascending:self.ascSwitch.on
-                                                       active:!self.activenessSwitch.selectedSegmentIndex];
+                    if (!self.orderSectionCollapsed) {
+                        [self.tableView cellForRowAtIndexPath:self.lastSortAttribute].accessoryType = UITableViewCellAccessoryNone;
+                        self.lastSortAttribute = indexPath;
+                        [self.tableView cellForRowAtIndexPath:self.lastSortAttribute].accessoryType = UITableViewCellAccessoryCheckmark;
+                        
+                        [self.actionDelegate didSelectSortAttribute:[self.targetViewController.sortAttributes objectAtIndex:self.lastSortAttribute.row]
+                                                          ascending:self.ascSwitch.on
+                                                             active:!self.activenessSwitch.selectedSegmentIndex];
+                    }
                 } else {
                     [self.actionDelegate didSelectCrudAction:[self.crudActions objectAtIndex:indexPath.row]];
                 }
@@ -463,7 +509,7 @@ static ActionMenuViewController * _sharedInstance = nil;
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, ACTION_MENU_SECTION_HEADER_HEIGHT)];
     headerView.backgroundColor = [UIColor darkGrayColor];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 7, 100, 15)];
+    UILabel *label = [[UILabel alloc] initWithFrame:SECTION_HEADER_LABEL_RECT];
     [UIHelper initializeHeaderLabel:label];
 
     if (tableView == self.searchDisplayController.searchResultsTableView) {
@@ -476,7 +522,8 @@ static ActionMenuViewController * _sharedInstance = nil;
                 if (section == 1) {
                     if (self.targetViewController.sortAttributes.count > 0) {
                         label.text = ACTION_ORDER;
-                        
+                        [headerView addSubview:self.orderSectionToggleImage];
+                        [headerView addSubview:self.orderSectionToggleButton];
                         [headerView addSubview:self.ascLabel];
                         [headerView addSubview:self.ascSwitch];
                     } else {

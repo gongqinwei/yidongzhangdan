@@ -11,6 +11,8 @@
 #import "APIHandler.h"
 #import "UIHelper.h"
 #import "Util.h"
+#import "Bill.h"
+#import "APLineItem.h"
 
 #define COMPRESSION_THRESHOLD       500000
 
@@ -31,6 +33,15 @@ static NSLock *DocumentsLock = nil;
 @synthesize associatedTo;
 @synthesize createdDate;
 @synthesize documentDelegate;
+
+@synthesize showInfo;
+@synthesize eBill;
+
+//@synthesize invNum;
+//@synthesize invDate;
+//@synthesize dueDate;
+//@synthesize amount;
+//@synthesize vendor;
 
 
 - (id)copyWithZone:(NSZone *)zone {
@@ -142,6 +153,7 @@ static NSLock *DocumentsLock = nil;
     [APIHandler asyncCallWithAction:RETRIEVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
         NSArray *jsonDocs = [APIHandler getResponse:response data:data error:&err status:&response_status];
+//        NSLog(@"%@", jsonDocs);
         
         [UIAppDelegate decrNetworkActivities];
         
@@ -166,6 +178,33 @@ static NSLock *DocumentsLock = nil;
                 doc.name = [dict objectForKey:FILE_NAME];
                 doc.fileUrl = [dict objectForKey:FILE_URL];
                 doc.createdDate = [Util getDate:[dict objectForKey:FILE_CREATED_DATE] format:@"MM/dd/yy hh:mm a"];
+                
+                NSDictionary *jsonEBill = [dict objectForKey:EBILL];
+                if (jsonEBill) {
+                    NSDictionary *jsonEventBag = [jsonEBill objectForKey:EBILL_EVENT];
+                    NSString *eventType = [jsonEventBag objectForKey:EBILL_EVENT_TYPE];
+                    
+                    if ([eventType isEqualToString:EBILL_SEND_INVOICE_TYPE]) {
+                        doc.eBill = [[Bill alloc] init];
+                        
+                        NSDictionary *jsonPayload = [jsonEventBag objectForKey:EBILL_PAYLOAD];
+                        NSDictionary *jsonBO = [jsonPayload objectForKey:EBILL_BO];
+                        
+                        doc.eBill.invoiceNumber = [jsonBO objectForKey:BILL_NUMBER];
+                        doc.eBill.invoiceDate = [Util getDate:[jsonBO objectForKey:BILL_DATE] format:@"MM/dd/yy"];
+                        doc.eBill.dueDate = [Util getDate:[jsonBO objectForKey:BILL_DUE_DATE] format:@"MM/dd/yy"];
+                        doc.eBill.vendorId = [[jsonBO objectForKey:EBILL_CUSTOMER] objectForKey:EBILL_NET_VENDOR_ID];                        
+                        doc.eBillVendorOrgName = [jsonBO objectForKey:EBILL_INV_ORG_NAME];
+                        
+                        doc.eBill.amount = [Util id2Decimal:[jsonBO objectForKey:BILL_AMOUNT]];
+                        NSDecimalNumber *amountDue = [Util id2Decimal:[jsonBO objectForKey:EBILL_AMOUNT_DUE]];
+                        doc.eBill.paidAmount = [doc.eBill.amount decimalNumberBySubtracting:amountDue];
+                        
+                        APLineItem *item = [[APLineItem alloc] init];
+                        item.amount = doc.eBill.amount;
+                        [doc.eBill.lineItems addObject:item];
+                    }
+                }
                 
                 if ([category isEqualToString:FILE_CATEGORY_ATTACHMENT]) {
                     doc.associatedTo = [dict objectForKey:FILE_OWNER];

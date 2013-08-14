@@ -20,6 +20,9 @@
 #define ACTION_ORDER            @"Order by"
 #define ACTION_PAY              @"Pay"
 #define ACTION_ASSOCIATE        @"Associate %@ with..."
+#define ACTION_ACCEPT_EBILL     @"Accept eBill"
+#define ACTION_BDC_PROCESSING   @"Bill.com is still processing this document, so it's not available"
+#define ACTION_BDC_PROCESSING2  @"for association now. Please refresh Inbox in a minute."
 
 
 @protocol SlideDelegate <NSObject>

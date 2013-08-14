@@ -10,9 +10,11 @@
 #import "DocumentCell.h"
 #import "Util.h"
 #import "BOSelectorViewController.h"
+#import "EditBillViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
 #define DOCUMENT_ASSOCIATE_SEGUE        @"DocumentAssociatedWith"
+#define DOCUMENT_ACCEPT_EBILL           @"AcceptEBill"
 
 //static LRU *InMemCache = nil;
 //static NSLock *accessLock = nil;
@@ -43,10 +45,14 @@
         NSString *ext = [[doc.name pathExtension] lowercaseString];
             
         if (doc && doc.objectId && (doc.thumbnail || ![IMAGE_TYPE_SET containsObject:ext])) {
-            actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], nil];
-            //        actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], ACTION_DELETE, nil]; //TODO: need delete API
+            if (doc.eBill) {
+                actionMenus = [NSArray arrayWithObjects:ACTION_ACCEPT_EBILL, nil];
+            } else {
+                actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], nil];
+//          actionMenus = [NSArray arrayWithObjects:[NSString stringWithFormat:ACTION_ASSOCIATE, self.currentDocument.name], ACTION_DELETE, nil]; //TODO: need delete API
+            }
         } else {
-            actionMenus = [NSArray array];
+            actionMenus = [NSArray arrayWithObjects:ACTION_BDC_PROCESSING, ACTION_BDC_PROCESSING2, nil];
         }
         
         self.actionMenuVC.crudActions = self.crudActions = actionMenus;
@@ -87,6 +93,11 @@
     if ([segue.identifier isEqualToString:DOCUMENT_ASSOCIATE_SEGUE]) {
         [segue.destinationViewController setDocument:self.currentDocument];
         [segue.destinationViewController setMode:kAttachMode];
+    } else if ([segue.identifier isEqualToString:DOCUMENT_ACCEPT_EBILL]) {
+        [segue.destinationViewController setBusObj:(BDCBusinessObjectWithAttachments *)self.currentDocument.eBill];
+        [segue.destinationViewController addDocument:self.currentDocument];
+        [segue.destinationViewController setMode:kAttachMode];
+        [segue.destinationViewController setTitle:@"New eBill"];
     }
 }
 
@@ -106,10 +117,26 @@
     
     Document *doc = self.dataArray[indexPath.row];
     cell.document = doc;
-    cell.documentName.text = [doc.name stringByDeletingPathExtension];
+    if (doc.eBill) {
+        cell.documentName.text = doc.eBillVendorOrgName;
+    } else {
+        cell.documentName.text = [doc.name stringByDeletingPathExtension];
+    }
     cell.documentName.adjustsFontSizeToFitWidth = YES;
     cell.documentName.minimumScaleFactor = 8;
-    cell.documentCreatedDate.text = doc.createdDate ? [Util formatDate:doc.createdDate format:nil] : @"Processing...";
+    if (doc.createdDate) {
+        cell.documentCreatedDate.text = [Util formatDate:doc.createdDate format:nil];
+        cell.documentCreatedDate.font = [UIFont systemFontOfSize:11];
+    } else {
+        cell.documentCreatedDate.text = @"Processing...";
+        cell.documentCreatedDate.font = [UIFont fontWithName:@"Arial-BoldMT" size:13];
+    }
+    if (cell.document.eBill) {
+        cell.ebillLabel.hidden = NO;
+    } else {
+        cell.ebillLabel.hidden = YES;
+    }
+    
     cell.parentVC = self;
     cell.docCellDelegate = self;
     
@@ -144,6 +171,8 @@
     } else {
         [cell didGetDeselected];
     }
+    
+    [cell toggleInfoDisplay:!cell.document.showInfo];
     
     return cell;
 }
@@ -245,6 +274,8 @@
     
     if ([action hasPrefix:@"Associate"]) {
         [self performSegueWithIdentifier:DOCUMENT_ASSOCIATE_SEGUE sender:self];
+    } else if ([action isEqualToString:ACTION_ACCEPT_EBILL]) {
+        [self performSegueWithIdentifier:DOCUMENT_ACCEPT_EBILL sender:self];
     }
 }
 

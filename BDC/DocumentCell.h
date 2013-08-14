@@ -27,6 +27,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *documentName;
 @property (weak, nonatomic) IBOutlet UILabel *documentCreatedDate;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *downloadingIndicator;
+@property (weak, nonatomic) IBOutlet UILabel *ebillLabel;
 
 @property (nonatomic, strong) Document *document;
 @property (nonatomic, strong) SlidingCollectionViewController *parentVC;

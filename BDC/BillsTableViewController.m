@@ -35,8 +35,12 @@
 #define PAYMENT_STATUS_RECT                 CGRectMake(10, 65, BILL_TABLE_LABEL_WIDTH, BILL_TABLE_LABEL_HEIGHT)
 #define AMOUNT_RECT                         CGRectMake(160, 65, BILL_TABLE_LABEL_WIDTH, BILL_TABLE_LABEL_HEIGHT)
 #define SECTION_HEADER_RECT                 CGRectMake(0, 0, SCREEN_WIDTH, BILL_TABLE_SECTION_HEADER_HEIGHT)
+#define SECTION_HEADER_LABEL_RECT           CGRectMake(10, 7, 150, 15)
+#define SECTION_HEADER_LABEL_RECT2          CGRectMake(20, 7, 150, 15)
 #define SECTION_HEADER_QTY_AMT_RECT         CGRectMake(SCREEN_WIDTH - 170, 7, 170, 15)
 #define SECTION_ACCESSORY_RECT              CGRectMake(SCREEN_WIDTH - 30, 7, 30, 15)
+#define TOGGLE_ARROW_RECT                   CGRectMake(5, 10, 10, 10)
+#define TOGGLE_ARROW_CENTER                 CGPointMake(10, 15)
 #define BILL_NUM_FONT_SIZE                  16
 #define BILL_FONT_SIZE                      13
 
@@ -359,55 +363,68 @@
     UIView *headerView = [[UIView alloc] initWithFrame:SECTION_HEADER_RECT];
     [UIHelper addGradientForView:headerView];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 7, 150, 15)];
-    [UIHelper initializeHeaderLabel:label];
-    
+    UILabel *label;
     UIButton *sectionButton = nil;
     
     if (!self.isActive) {
+        label = [[UILabel alloc] initWithFrame:SECTION_HEADER_LABEL_RECT];
+        [UIHelper initializeHeaderLabel:label];
         label.text = ALL_INACTIVE_BILLS;
     } else {
-        if ([self.sortAttribute isEqualToString:BILL_VENDOR_NAME]) {
-            //            label.text = [Vendor objectForKey:((Bill *)[[self.vendorBills objectAtIndex:section] objectAtIndex:0]).vendorId].name;
-            label.text = [self.vendorSectionLabels objectAtIndex:section];
+        if ([self.sortAttribute isEqualToString:BILL_VENDOR_NAME] || [self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
+            label = [[UILabel alloc] initWithFrame:SECTION_HEADER_LABEL_RECT2];
+            [UIHelper initializeHeaderLabel:label];
             
-            UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
-            [UIHelper initializeHeaderLabel:qtyAndAmountLabel];
-            NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %d / ", ((NSArray *)[self.billListsCopy objectAtIndex:section]).count];
-            [qtyAndAmount appendString:[Util formatCurrency:[self.vendorTotalBillAmounts objectAtIndex:section]]];
-            
-            qtyAndAmountLabel.text = qtyAndAmount;
-            [headerView addSubview:qtyAndAmountLabel];
-            
-            UIButton *btn = [self.vendorSectionButtons objectAtIndex:section];
-            btn.tag = section;
-            sectionButton = btn;
-            
-            //            UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Accessory_disclosure.png"]];
-            //            accessoryImage.frame = SECTION_ACCESSORY_RECT;
-            //            [headerView addSubview:accessoryImage];
-        } else if ([self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
-            NSArray *bills = nil;
-            NSDecimalNumber *amt = nil;
-            
-            label.text = [self.dueDateSectionLabels objectAtIndex:section];
-            bills = [self.dueDateBills objectAtIndex:section];
-            amt = [self.dueDateAmounts objectAtIndex:section];
-            
-            UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
-            [UIHelper initializeHeaderLabel:qtyAndAmountLabel];
-            NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %d / ", ((NSArray *)[self.billListsCopy objectAtIndex:section]).count];
-            if (amt) {
-                [qtyAndAmount appendString:[Util formatCurrency:amt]];
+            if ([self.sortAttribute isEqualToString:BILL_VENDOR_NAME]) {
+                //            label.text = [Vendor objectForKey:((Bill *)[[self.vendorBills objectAtIndex:section] objectAtIndex:0]).vendorId].name;
+                label.text = [self.vendorSectionLabels objectAtIndex:section];
+                
+                UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
+                [UIHelper initializeHeaderLabel:qtyAndAmountLabel];
+                NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %d / ", ((NSArray *)[self.billListsCopy objectAtIndex:section]).count];
+                [qtyAndAmount appendString:[Util formatCurrency:[self.vendorTotalBillAmounts objectAtIndex:section]]];
+                
+                qtyAndAmountLabel.text = qtyAndAmount;
+                [headerView addSubview:qtyAndAmountLabel];
+                
+                UIButton *btn = [self.vendorSectionButtons objectAtIndex:section];
+                btn.tag = section;
+                sectionButton = btn;
+                
+                //            UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Accessory_disclosure.png"]];
+                //            accessoryImage.frame = SECTION_ACCESSORY_RECT;
+                //            [headerView addSubview:accessoryImage];
+            } else if ([self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
+                NSArray *bills = nil;
+                NSDecimalNumber *amt = nil;
+                
+                label.text = [self.dueDateSectionLabels objectAtIndex:section];
+                bills = [self.dueDateBills objectAtIndex:section];
+                amt = [self.dueDateAmounts objectAtIndex:section];
+                
+                UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
+                [UIHelper initializeHeaderLabel:qtyAndAmountLabel];
+                NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %d / ", ((NSArray *)[self.billListsCopy objectAtIndex:section]).count];
+                if (amt) {
+                    [qtyAndAmount appendString:[Util formatCurrency:amt]];
+                }
+                
+                qtyAndAmountLabel.text = qtyAndAmount;
+                [headerView addSubview:qtyAndAmountLabel];
+                
+                UIButton *btn = [self.dueDateSectionButtons objectAtIndex:section];
+                btn.tag = section;
+                sectionButton = btn;
             }
             
-            qtyAndAmountLabel.text = qtyAndAmount;
-            [headerView addSubview:qtyAndAmountLabel];
-            
-            UIButton *btn = [self.dueDateSectionButtons objectAtIndex:section];
-            btn.tag = section;
-            sectionButton = btn;
+            UIImageView *arrowImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:TOGGLE_ARROW_IMG_NAME]];
+            arrowImage.frame = TOGGLE_ARROW_RECT;
+            arrowImage.center = TOGGLE_ARROW_CENTER;
+            arrowImage.transform = CGAffineTransformMakeRotation(- M_PI_2 * ([self.tableView numberOfRowsInSection:section] == 0));
+            [headerView addSubview:arrowImage];
         } else {
+            label = [[UILabel alloc] initWithFrame:SECTION_HEADER_LABEL_RECT];
+            [UIHelper initializeHeaderLabel:label];
             label.text = ALL_OPEN_BILLS;
             
             UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
@@ -598,21 +615,30 @@
         NSInteger section = sender.tag;
         NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:section];
         
-        if ([self.sortAttribute isEqualToString:BILL_VENDOR_NAME]) {
-            if ([self.tableView numberOfRowsInSection:section] > 0) {
-                [self.vendorBills replaceObjectAtIndex:section withObject:[NSMutableArray array]];
-                [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-            } else {
-                [self.vendorBills replaceObjectAtIndex:section withObject:[self.billListsCopy objectAtIndex:section]];
-                [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+        if ([self.sortAttribute isEqualToString:BILL_VENDOR_NAME] || [self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
+            if ([self.sortAttribute isEqualToString:BILL_VENDOR_NAME]) {
+                if ([self.tableView numberOfRowsInSection:section] > 0) {
+                    [self.vendorBills replaceObjectAtIndex:section withObject:[NSMutableArray array]];
+                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+                } else {
+                    [self.vendorBills replaceObjectAtIndex:section withObject:[self.billListsCopy objectAtIndex:section]];
+                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+                }
+            } else if ([self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
+                if ([self.tableView numberOfRowsInSection:section] > 0) {
+                    [self.dueDateBills replaceObjectAtIndex:section withObject:[NSMutableArray array]];
+                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+                } else {
+                    [self.dueDateBills replaceObjectAtIndex:section withObject:[self.billListsCopy objectAtIndex:section]];
+                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+                }
             }
-        } else if ([self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
-            if ([self.tableView numberOfRowsInSection:section] > 0) {
-                [self.dueDateBills replaceObjectAtIndex:section withObject:[NSMutableArray array]];
-                [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-            } else {
-                [self.dueDateBills replaceObjectAtIndex:section withObject:[self.billListsCopy objectAtIndex:section]];
-                [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+            
+            for (UIView *view in sender.superview.subviews) {
+                if ([view isMemberOfClass:[UIImageView class]]) {
+                    UIImageView *toggleImage = (UIImageView *)view;
+                    toggleImage.transform = CGAffineTransformMakeRotation(- M_PI_2 * ([self.tableView numberOfRowsInSection:section] == 0));
+                }
             }
         }
     }

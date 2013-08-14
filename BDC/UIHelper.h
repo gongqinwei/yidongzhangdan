@@ -16,6 +16,9 @@ typedef enum {
     kError,
 } NotificationStatus;
 
+#define TOGGLE_ARROW_IMG_NAME                   @"arrow_down_gray.png"
+
+
 @interface UIHelper : NSObject
 
 + (void)showInfo:(NSString *)info withStatus:(NotificationStatus)status;

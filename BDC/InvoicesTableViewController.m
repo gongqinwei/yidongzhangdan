@@ -33,6 +33,10 @@
 #define AMOUNT_RECT                         CGRectMake(10, 65, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
 #define AMOUNT_DUE_RECT                     CGRectMake(188, 65, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
 #define SECTION_HEADER_RECT                 CGRectMake(0, 0, SCREEN_WIDTH, INVOICE_TABLE_SECTION_HEADER_HEIGHT)
+#define SECTION_HEADER_LABEL_RECT           CGRectMake(10, 7, 150, 15)
+#define SECTION_HEADER_LABEL_RECT2          CGRectMake(20, 7, 150, 15)
+#define TOGGLE_ARROW_RECT                   CGRectMake(5, 10, 10, 10)
+#define TOGGLE_ARROW_CENTER                 CGPointMake(10, 15)
 #define SECTION_HEADER_QTY_AMT_RECT         CGRectMake(SCREEN_WIDTH - 170, 7, 170, 15)
 #define SECTION_ACCESSORY_RECT              CGRectMake(SCREEN_WIDTH - 30, 7, 30, 15)
 #define INVOICE_NUM_FONT_SIZE               16
@@ -337,55 +341,68 @@
     UIView *headerView = [[UIView alloc] initWithFrame:SECTION_HEADER_RECT];
     [UIHelper addGradientForView:headerView];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 7, 150, 15)];
-    [UIHelper initializeHeaderLabel:label];
-    
+    UILabel *label;
     UIButton *sectionButton = nil;
     
     if (!self.isActive) {
+        label = [[UILabel alloc] initWithFrame:SECTION_HEADER_LABEL_RECT];
+        [UIHelper initializeHeaderLabel:label];
         label.text = ALL_INACTIVE_INVS;
     } else {
-        if ([self.sortAttribute isEqualToString:INV_CUSTOMER_NAME]) {
-//            label.text = [Customer objectForKey:((Invoice *)[[self.customerInvoices objectAtIndex:section] objectAtIndex:0]).customerId].name;
-            label.text = [self.customerSectionLabels objectAtIndex:section];
+        if ([self.sortAttribute isEqualToString:INV_CUSTOMER_NAME] || [self.sortAttribute isEqualToString:INV_DUE_DATE]) {
+            label = [[UILabel alloc] initWithFrame:SECTION_HEADER_LABEL_RECT2];
+            [UIHelper initializeHeaderLabel:label];
             
-            UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
-            [UIHelper initializeHeaderLabel:qtyAndAmountLabel];
-            NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %d / ", ((NSArray *)[self.invoiceListsCopy objectAtIndex:section]).count];
-            [qtyAndAmount appendString:[Util formatCurrency:[self.customerTotalInvoiceAmounts objectAtIndex:section]]];
-            
-            qtyAndAmountLabel.text = qtyAndAmount;
-            [headerView addSubview:qtyAndAmountLabel];
-            
-            UIButton *btn = [self.customerSectionButtons objectAtIndex:section];
-            btn.tag = section;
-            sectionButton = btn;
-            
-//            UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Accessory_disclosure.png"]];
-//            accessoryImage.frame = SECTION_ACCESSORY_RECT;
-//            [headerView addSubview:accessoryImage];
-        } else if ([self.sortAttribute isEqualToString:INV_DUE_DATE]) {
-            NSArray *invs = nil;
-            NSDecimalNumber *amt = nil;
-            
-            label.text = [self.dueDateSectionLabels objectAtIndex:section];
-            invs = [self.dueDateInvoices objectAtIndex:section];
-            amt = [self.dueDateAmounts objectAtIndex:section];            
-                        
-            UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
-            [UIHelper initializeHeaderLabel:qtyAndAmountLabel];
-            NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %d / ", ((NSArray *)[self.invoiceListsCopy objectAtIndex:section]).count];
-            if (amt) {
-                [qtyAndAmount appendString:[Util formatCurrency:amt]];
+            if ([self.sortAttribute isEqualToString:INV_CUSTOMER_NAME]) {
+    //            label.text = [Customer objectForKey:((Invoice *)[[self.customerInvoices objectAtIndex:section] objectAtIndex:0]).customerId].name;
+                label.text = [self.customerSectionLabels objectAtIndex:section];
+                
+                UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
+                [UIHelper initializeHeaderLabel:qtyAndAmountLabel];
+                NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %d / ", ((NSArray *)[self.invoiceListsCopy objectAtIndex:section]).count];
+                [qtyAndAmount appendString:[Util formatCurrency:[self.customerTotalInvoiceAmounts objectAtIndex:section]]];
+                
+                qtyAndAmountLabel.text = qtyAndAmount;
+                [headerView addSubview:qtyAndAmountLabel];
+                
+                UIButton *btn = [self.customerSectionButtons objectAtIndex:section];
+                btn.tag = section;
+                sectionButton = btn;
+                
+    //            UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Accessory_disclosure.png"]];
+    //            accessoryImage.frame = SECTION_ACCESSORY_RECT;
+    //            [headerView addSubview:accessoryImage];
+            } else if ([self.sortAttribute isEqualToString:INV_DUE_DATE]) {
+                NSArray *invs = nil;
+                NSDecimalNumber *amt = nil;
+                
+                label.text = [self.dueDateSectionLabels objectAtIndex:section];
+                invs = [self.dueDateInvoices objectAtIndex:section];
+                amt = [self.dueDateAmounts objectAtIndex:section];            
+                            
+                UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
+                [UIHelper initializeHeaderLabel:qtyAndAmountLabel];
+                NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %d / ", ((NSArray *)[self.invoiceListsCopy objectAtIndex:section]).count];
+                if (amt) {
+                    [qtyAndAmount appendString:[Util formatCurrency:amt]];
+                }
+                
+                qtyAndAmountLabel.text = qtyAndAmount;
+                [headerView addSubview:qtyAndAmountLabel];
+                
+                UIButton *btn = [self.dueDateSectionButtons objectAtIndex:section];
+                btn.tag = section;
+                sectionButton = btn;
             }
             
-            qtyAndAmountLabel.text = qtyAndAmount;
-            [headerView addSubview:qtyAndAmountLabel];
-            
-            UIButton *btn = [self.dueDateSectionButtons objectAtIndex:section];
-            btn.tag = section;
-            sectionButton = btn;
+            UIImageView *arrowImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:TOGGLE_ARROW_IMG_NAME]];
+            arrowImage.frame = TOGGLE_ARROW_RECT;
+            arrowImage.center = TOGGLE_ARROW_CENTER;
+            arrowImage.transform = CGAffineTransformMakeRotation(- M_PI_2 * ([self.tableView numberOfRowsInSection:section] == 0));
+            [headerView addSubview:arrowImage];
         } else {
+            label = [[UILabel alloc] initWithFrame:SECTION_HEADER_LABEL_RECT];
+            [UIHelper initializeHeaderLabel:label];
             label.text = ALL_OPEN_INVS;
             
             UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
@@ -585,21 +602,30 @@
         NSInteger section = sender.tag;
         NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:section];
         
-        if ([self.sortAttribute isEqualToString:INV_CUSTOMER_NAME]) {
-            if ([self.tableView numberOfRowsInSection:section] > 0) {
-                [self.customerInvoices replaceObjectAtIndex:section withObject:[NSMutableArray array]];
-                [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-            } else {
-                [self.customerInvoices replaceObjectAtIndex:section withObject:[self.invoiceListsCopy objectAtIndex:section]];
-                [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+        if ([self.sortAttribute isEqualToString:INV_CUSTOMER_NAME] || [self.sortAttribute isEqualToString:INV_DUE_DATE]) {
+            if ([self.sortAttribute isEqualToString:INV_CUSTOMER_NAME]) {
+                if ([self.tableView numberOfRowsInSection:section] > 0) {
+                    [self.customerInvoices replaceObjectAtIndex:section withObject:[NSMutableArray array]];
+                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+                } else {
+                    [self.customerInvoices replaceObjectAtIndex:section withObject:[self.invoiceListsCopy objectAtIndex:section]];
+                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+                }
+            } else if ([self.sortAttribute isEqualToString:INV_DUE_DATE]) {
+                if ([self.tableView numberOfRowsInSection:section] > 0) {
+                    [self.dueDateInvoices replaceObjectAtIndex:section withObject:[NSMutableArray array]];
+                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+                } else {
+                    [self.dueDateInvoices replaceObjectAtIndex:section withObject:[self.invoiceListsCopy objectAtIndex:section]];
+                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+                }
             }
-        } else if ([self.sortAttribute isEqualToString:INV_DUE_DATE]) {
-            if ([self.tableView numberOfRowsInSection:section] > 0) {
-                [self.dueDateInvoices replaceObjectAtIndex:section withObject:[NSMutableArray array]];
-                [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-            } else {
-                [self.dueDateInvoices replaceObjectAtIndex:section withObject:[self.invoiceListsCopy objectAtIndex:section]];
-                [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+            
+            for (UIView *view in sender.superview.subviews) {
+                if ([view isMemberOfClass:[UIImageView class]]) {
+                    UIImageView *toggleImage = (UIImageView *)view;
+                    toggleImage.transform = CGAffineTransformMakeRotation(- M_PI_2 * ([self.tableView numberOfRowsInSection:section] == 0));
+                }
             }
         }
     }

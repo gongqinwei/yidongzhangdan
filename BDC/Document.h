@@ -20,6 +20,24 @@
 #define FILE_IS_PUBLIC              @"isPublic"
 #define FILE_PAGE_NUM               @"page"
 
+#define EBILL                       @"eBill"
+#define EBILL_EVENT                 @"event"
+#define EBILL_EVENT_TYPE            @"type"
+#define EBILL_PAYLOAD               @"payload"
+#define EBILL_BO                    @"bo"
+#define EBILL_INV_ORG_NAME          @"invoicingOrgName"
+#define EBILL_CUSTOMER              @"customer"
+#define EBILL_NET_VENDOR_ID         @"netVendorId"
+#define EBILL_AMOUNT_DUE            @"amountDue"
+
+#define EBILL_SEND_INVOICE_TYPE     @"SEND_INVOICE"
+
+//#define EBILL_INV_NUM               @"invNum"
+//#define EBILL_INV_DATE              @"invDate"
+//#define EBILL_DUE_DATE              @"dueDate"
+//#define EBILL_AMOUNT                @"amount"
+//#define EBILL_VENDOR                @"vendorName"
+
 
 @protocol DocumentDelegate <NSObject>
 
@@ -42,6 +60,7 @@
 
 @end
 
+@class Bill;
 
 @interface Document : BDCBusinessObject
 
@@ -53,6 +72,17 @@
 @property (nonatomic, strong) NSString *associatedTo;
 @property (nonatomic, strong) NSDate *createdDate;
 @property (nonatomic, strong) id<DocumentDelegate> documentDelegate;
+
+@property (nonatomic, strong) Bill *eBill;
+@property (nonatomic, strong) NSString *eBillVendorOrgName;
+
+@property (nonatomic, assign) BOOL showInfo;    //used in Inbox View
+
+//@property (nonatomic, strong) NSString *invNum;
+//@property (nonatomic, strong) NSDate *invDate;
+//@property (nonatomic, strong) NSDate *dueDate;
+//@property (nonatomic, strong) NSDecimalNumber *amount;
+//@property (nonatomic, strong) NSString *vendor;
 
 - (NSString *)getDocFilePath;
 - (BOOL)docFileExists;
