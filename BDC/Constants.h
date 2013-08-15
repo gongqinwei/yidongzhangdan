@@ -11,10 +11,10 @@
 
 #import "Labels.h"
 
-#define LOCAL
+//#define LOCAL
 //#define APPTEST
 //#define APPSTAGE
-//#define PROD
+#define PROD
 
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"

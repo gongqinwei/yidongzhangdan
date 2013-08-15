@@ -49,20 +49,40 @@
 
 @interface BillsTableViewController () <BillListDelegate>
 
-@property (nonatomic, strong) NSMutableArray *overDueBills;
+@property (nonatomic, strong) NSArray *readyToPayBills;
+@property (nonatomic, strong) NSMutableArray *approvingBills;
+@property (nonatomic, strong) NSMutableArray *assignedBills;
+@property (nonatomic, strong) NSMutableArray *deniedBills;
+
+@property (nonatomic, strong) NSDecimalNumber *readyToPayBillAmount;
+@property (nonatomic, strong) NSDecimalNumber *approvingBillAmount;
+@property (nonatomic, strong) NSDecimalNumber *assignedBillAmount;
+@property (nonatomic, strong) NSDecimalNumber *deniedBillAmount;
+
+@property (nonatomic, strong) UIButton *readyToPaySectionButton;
+@property (nonatomic, strong) UIButton *approvingSectionButton;
+@property (nonatomic, strong) UIButton *assignedSectionButton;
+@property (nonatomic, strong) UIButton *deniedSectionButton;
+
+@property (nonatomic, strong) NSMutableArray *approvalBills;
+@property (nonatomic, strong) NSArray *approvalAmounts;
+@property (nonatomic, strong) NSArray *approvalSectionButtons;
+@property (nonatomic, strong) NSArray *approvalSectionLabels;
+
 @property (nonatomic, strong) NSMutableArray *dueIn7DaysBills;
 @property (nonatomic, strong) NSMutableArray *dueOver7DaysBills;
-@property (nonatomic, strong) NSMutableArray *dueDateBills;
+@property (nonatomic, strong) NSMutableArray *overDueBills;
 
 @property (nonatomic, strong) NSDecimalNumber *overDueBillAmount;
 @property (nonatomic, strong) NSDecimalNumber *dueIn7DaysBillAmount;
 @property (nonatomic, strong) NSDecimalNumber *dueOver7DaysBillAmount;
-@property (nonatomic, strong) NSArray *dueDateAmounts;
-@property (nonatomic, strong) NSDecimalNumber *totalBillAmount;
 
 @property (nonatomic, strong) UIButton *overDueSectionButton;
 @property (nonatomic, strong) UIButton *dueIn7DaysSectionButton;
 @property (nonatomic, strong) UIButton *dueOver7DaysSectionButton;
+
+@property (nonatomic, strong) NSMutableArray *dueDateBills;
+@property (nonatomic, strong) NSArray *dueDateAmounts;
 @property (nonatomic, strong) NSArray *dueDateSectionButtons;
 @property (nonatomic, strong) NSArray *dueDateSectionLabels;
 
@@ -70,6 +90,8 @@
 @property (nonatomic, strong) NSMutableArray *vendorTotalBillAmounts;
 @property (nonatomic, strong) NSMutableArray *vendorSectionButtons;
 @property (nonatomic, strong) NSMutableArray *vendorSectionLabels;
+
+@property (nonatomic, strong) NSDecimalNumber *totalBillAmount;
 
 @property (nonatomic, strong) NSMutableArray *billListsCopy;
 
@@ -79,6 +101,26 @@
 @implementation BillsTableViewController
 
 @synthesize bills = _bills;
+
+@synthesize approvalBills;
+@synthesize approvalAmounts;
+@synthesize approvalSectionButtons;
+@synthesize approvalSectionLabels;
+
+@synthesize readyToPayBills;
+@synthesize approvingBills;
+@synthesize assignedBills;
+@synthesize deniedBills;
+
+@synthesize readyToPayBillAmount;
+@synthesize approvingBillAmount;
+@synthesize assignedBillAmount;
+@synthesize deniedBillAmount;
+
+@synthesize readyToPaySectionButton;
+@synthesize approvingSectionButton;
+@synthesize assignedSectionButton;
+@synthesize deniedSectionButton;
 
 @synthesize overDueBills;
 @synthesize dueIn7DaysBills;
@@ -173,7 +215,7 @@
     [Bill setListDelegate:self];
     
     if (self.mode != kAttachMode) {
-        self.sortAttributes = [NSArray arrayWithObjects:BILL_VENDOR_NAME, BILL_NUMBER, BILL_DATE, BILL_DUE_DATE, BILL_AMOUNT, BILL_AMOUNT_PAID, BILL_APPROVAL_STATUS, nil];
+        self.sortAttributes = [NSArray arrayWithObjects:BILL_APPROVAL_STATUS, BILL_VENDOR_NAME, BILL_NUMBER, BILL_DATE, BILL_DUE_DATE, BILL_AMOUNT, BILL_AMOUNT_PAID, nil];
         self.sortAttributeLabels = BILL_LABELS;
         
         self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
@@ -226,6 +268,8 @@
             return self.vendorBills.count;
         } else if ([self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
             return 3;
+        } else if ([self.sortAttribute isEqualToString:BILL_APPROVAL_STATUS]) {
+            return 4;
         } else {
             return 1;
         }
@@ -241,6 +285,8 @@
             return ((NSArray*)[self.vendorBills objectAtIndex:section]).count;
         } else if ([self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
             return ((NSArray *)[self.dueDateBills objectAtIndex:section]).count;
+        } else if ([self.sortAttribute isEqualToString:BILL_APPROVAL_STATUS]) {
+            return ((NSArray *)[self.approvalBills objectAtIndex:section]).count;
         } else {
             return [self.bills count];
         }
@@ -265,6 +311,8 @@
             bill = [[self.vendorBills objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
         } else if ([self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
             bill = [((NSArray *)[self.dueDateBills objectAtIndex:indexPath.section]) objectAtIndex:indexPath.row];
+        } else if ([self.sortAttribute isEqualToString:BILL_APPROVAL_STATUS]) {
+            bill = [((NSArray *)[self.approvalBills objectAtIndex:indexPath.section]) objectAtIndex:indexPath.row];
         } else {
             bill = [self.bills objectAtIndex:indexPath.row];
         }
@@ -371,7 +419,7 @@
         [UIHelper initializeHeaderLabel:label];
         label.text = ALL_INACTIVE_BILLS;
     } else {
-        if ([self.sortAttribute isEqualToString:BILL_VENDOR_NAME] || [self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
+        if ([self.sortAttribute isEqualToString:BILL_VENDOR_NAME] || [self.sortAttribute isEqualToString:BILL_DUE_DATE] || [self.sortAttribute isEqualToString:BILL_APPROVAL_STATUS]) {
             label = [[UILabel alloc] initWithFrame:SECTION_HEADER_LABEL_RECT2];
             [UIHelper initializeHeaderLabel:label];
             
@@ -395,11 +443,11 @@
                 //            accessoryImage.frame = SECTION_ACCESSORY_RECT;
                 //            [headerView addSubview:accessoryImage];
             } else if ([self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
-                NSArray *bills = nil;
+//                NSArray *bills = nil;
                 NSDecimalNumber *amt = nil;
                 
                 label.text = [self.dueDateSectionLabels objectAtIndex:section];
-                bills = [self.dueDateBills objectAtIndex:section];
+//                bills = [self.dueDateBills objectAtIndex:section];
                 amt = [self.dueDateAmounts objectAtIndex:section];
                 
                 UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
@@ -413,6 +461,25 @@
                 [headerView addSubview:qtyAndAmountLabel];
                 
                 UIButton *btn = [self.dueDateSectionButtons objectAtIndex:section];
+                btn.tag = section;
+                sectionButton = btn;
+            } else {    // approval status
+                NSDecimalNumber *amt = nil;
+                
+                label.text = [self.approvalSectionLabels objectAtIndex:section];
+                amt = [self.approvalAmounts objectAtIndex:section];
+                
+                UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
+                [UIHelper initializeHeaderLabel:qtyAndAmountLabel];
+                NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %d / ", ((NSArray *)[self.billListsCopy objectAtIndex:section]).count];
+                if (amt) {
+                    [qtyAndAmount appendString:[Util formatCurrency:amt]];
+                }
+                
+                qtyAndAmountLabel.text = qtyAndAmount;
+                [headerView addSubview:qtyAndAmountLabel];
+                
+                UIButton *btn = [self.approvalSectionButtons objectAtIndex:section];
                 btn.tag = section;
                 sectionButton = btn;
             }
@@ -615,7 +682,7 @@
         NSInteger section = sender.tag;
         NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:section];
         
-        if ([self.sortAttribute isEqualToString:BILL_VENDOR_NAME] || [self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
+        if ([self.sortAttribute isEqualToString:BILL_VENDOR_NAME] || [self.sortAttribute isEqualToString:BILL_DUE_DATE] || [self.sortAttribute isEqualToString:BILL_APPROVAL_STATUS]) {
             if ([self.sortAttribute isEqualToString:BILL_VENDOR_NAME]) {
                 if ([self.tableView numberOfRowsInSection:section] > 0) {
                     [self.vendorBills replaceObjectAtIndex:section withObject:[NSMutableArray array]];
@@ -632,6 +699,14 @@
                     [self.dueDateBills replaceObjectAtIndex:section withObject:[self.billListsCopy objectAtIndex:section]];
                     [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
                 }
+            } else {    // approval status
+                if ([self.tableView numberOfRowsInSection:section] > 0) {
+                    [self.approvalBills replaceObjectAtIndex:section withObject:[NSMutableArray array]];
+                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+                } else {
+                    [self.approvalBills replaceObjectAtIndex:section withObject:[self.billListsCopy objectAtIndex:section]];
+                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+                }
             }
             
             for (UIView *view in sender.superview.subviews) {
@@ -642,6 +717,13 @@
             }
         }
     }
+}
+
+- (UIButton *)createSectionButton {
+    UIButton *button = [[UIButton alloc] initWithFrame:SECTION_HEADER_RECT];
+    button.alpha = 0.1;
+    [button addTarget:self action:@selector(toggleSection:) forControlEvents:UIControlEventTouchUpInside];
+    return button;
 }
 
 - (NSMutableArray *)sortBills:(NSArray *)billArr  {
@@ -656,17 +738,9 @@
         self.dueIn7DaysBillAmount = [NSDecimalNumber zero];
         self.dueOver7DaysBillAmount = [NSDecimalNumber zero];
         
-        self.overDueSectionButton = [[UIButton alloc] initWithFrame:SECTION_HEADER_RECT];
-        self.overDueSectionButton.alpha = 0.1;
-        [self.overDueSectionButton addTarget:self action:@selector(toggleSection:) forControlEvents:UIControlEventTouchUpInside];
-        
-        self.dueIn7DaysSectionButton = [[UIButton alloc] initWithFrame:SECTION_HEADER_RECT];
-        self.dueIn7DaysSectionButton.alpha = 0.1;
-        [self.dueIn7DaysSectionButton addTarget:self action:@selector(toggleSection:) forControlEvents:UIControlEventTouchUpInside];
-        
-        self.dueOver7DaysSectionButton = [[UIButton alloc] initWithFrame:SECTION_HEADER_RECT];
-        self.dueOver7DaysSectionButton.alpha = 0.1;
-        [self.dueOver7DaysSectionButton addTarget:self action:@selector(toggleSection:) forControlEvents:UIControlEventTouchUpInside];
+        self.overDueSectionButton = [self createSectionButton];
+        self.dueIn7DaysSectionButton = [self createSectionButton];
+        self.dueOver7DaysSectionButton = [self createSectionButton];
         
         NSDate *today = [NSDate date];
         NSDate *nextWeek = [NSDate dateWithTimeIntervalSinceNow: 3600 * 24 * 7];
@@ -725,18 +799,77 @@
                 amt = [amt decimalNumberByAdding:bill.amount];
                 [self.vendorTotalBillAmounts addObject:amt];
                 
-                UIButton *btn = [[UIButton alloc] initWithFrame:SECTION_HEADER_RECT];
-                btn.alpha = 0.1;
-                //                btn.tag = self.vendorSectionButtons.count;
-                [btn addTarget:self action:@selector(toggleSection:) forControlEvents:UIControlEventTouchUpInside];
+                UIButton *btn = [self createSectionButton];
                 [self.vendorSectionButtons addObject:btn];
-                
                 [self.vendorSectionLabels addObject:currName];
             }
         }
         
         self.billListsCopy = [NSMutableArray array];
         for (NSArray *bills in self.vendorBills) {
+            [self.billListsCopy addObject:bills];
+        }
+    } else if ([self.sortAttribute isEqualToString:BILL_APPROVAL_STATUS]) {
+        self.approvingBills = [NSMutableArray array];
+        self.assignedBills = [NSMutableArray array];
+        self.deniedBills = [NSMutableArray array];
+        
+        self.readyToPayBillAmount = [NSDecimalNumber zero];
+        self.approvingBillAmount = [NSDecimalNumber zero];
+        self.assignedBillAmount = [NSDecimalNumber zero];
+        self.deniedBillAmount = [NSDecimalNumber zero];
+        
+        self.readyToPaySectionButton = [self createSectionButton];
+        self.approvingSectionButton = [self createSectionButton];
+        self.assignedSectionButton = [self createSectionButton];
+        self.deniedSectionButton = [self createSectionButton];
+        
+        NSMutableArray *approvedBills = [NSMutableArray array];
+        NSMutableArray *unassignedBills = [NSMutableArray array];
+        
+        for(Bill *bill in billList) {
+            if ([APPROVAL_APPROVED isEqualToString:bill.approvalStatus]) {
+                [approvedBills addObject:bill];
+                self.readyToPayBillAmount = [self.readyToPayBillAmount decimalNumberByAdding:bill.amount];
+            } else if ([APPROVAL_UNASSIGNED isEqualToString:bill.approvalStatus]) {
+                [unassignedBills addObject:bill];
+                self.readyToPayBillAmount = [self.readyToPayBillAmount decimalNumberByAdding:bill.amount];
+            } else if ([APPROVAL_APPROVING isEqualToString:bill.approvalStatus]) {
+                [self.approvingBills addObject:bill];
+                self.approvingBillAmount = [self.approvingBillAmount decimalNumberByAdding:bill.amount];
+            } else if ([APPROVAL_ASSIGNED isEqualToString:bill.approvalStatus]) {
+                [self.assignedBills addObject:bill];
+                self.assignedBillAmount = [self.assignedBillAmount decimalNumberByAdding:bill.amount];
+            } else if ([APPROVAL_DENIED isEqualToString:bill.approvalStatus]) {
+                [self.deniedBills addObject:bill];
+                self.deniedBillAmount = [self.deniedBillAmount decimalNumberByAdding:bill.amount];
+            }
+        }
+        
+        Organization *org = [Organization getSelectedOrg];
+        NSString *readyToPaySectionLabel;
+        if (org.needApprovalToPayBill) {
+            readyToPaySectionLabel = @"Ready to Pay";
+        } else {
+            readyToPaySectionLabel = @"Cleared";
+        }
+        
+        self.readyToPayBills = [approvedBills arrayByAddingObjectsFromArray:unassignedBills];
+        
+        if (self.isAsc) {
+            self.approvalBills = [NSMutableArray arrayWithObjects:self.readyToPayBills, self.approvingBills, self.assignedBills, self.deniedBills, nil];
+            self.approvalAmounts = [NSArray arrayWithObjects:self.readyToPayBillAmount, self.approvingBillAmount, self.assignedBillAmount, self.deniedBillAmount, nil];
+            self.approvalSectionButtons = @[self.readyToPaySectionButton, self.approvingSectionButton, self.assignedSectionButton, self.deniedSectionButton];
+            self.approvalSectionLabels = @[readyToPaySectionLabel, @"Approving", @"Assigned", @"Denied"];
+        } else {
+            self.approvalBills = [NSMutableArray arrayWithObjects:self.deniedBills, self.assignedBills, self.approvingBills, self.readyToPayBills, nil];
+            self.approvalAmounts = [NSArray arrayWithObjects:self.deniedBillAmount, self.assignedBillAmount, self.approvingBillAmount, self.readyToPayBillAmount, nil];
+            self.approvalSectionButtons = @[self.deniedSectionButton, self.assignedSectionButton, self.approvingSectionButton, self.readyToPaySectionButton];
+            self.approvalSectionLabels = @[@"Denied", @"Assigned", @"Approving", readyToPaySectionLabel];
+        }
+        
+        self.billListsCopy = [NSMutableArray array];
+        for (NSArray *bills in self.approvalBills) {
             [self.billListsCopy addObject:bills];
         }
     } else {
