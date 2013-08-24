@@ -68,6 +68,9 @@
 		0EC19CA8177FFE0100D5B285 /* LinkedList.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EC19CA7177FFE0100D5B285 /* LinkedList.m */; };
 		0EC49AFB17B9F6950043B37A /* arrow_down_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EC49AF917B9F6940043B37A /* arrow_down_gray.png */; };
 		0EC49AFC17B9F6950043B37A /* arrow_down_blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EC49AFA17B9F6950043B37A /* arrow_down_blue.png */; };
+		0EC49B0217C5E49F0043B37A /* Mobill_logo57.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EC49B0117C5E49E0043B37A /* Mobill_logo57.png */; };
+		0EC49B0417C5E4AF0043B37A /* Mobill_logo114.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EC49B0317C5E4AF0043B37A /* Mobill_logo114.png */; };
+		0EC49B0617C5E57B0043B37A /* Mobill_full80.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EC49B0517C5E57B0043B37A /* Mobill_full80.png */; };
 		0EC88C9715F1374900A490EE /* AROverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EC88C9615F1374900A490EE /* AROverViewController.m */; };
 		0EC88C9A15F139C100A490EE /* CustomersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EC88C9915F139C100A490EE /* CustomersTableViewController.m */; };
 		0ECF42B3175BC22A00BA7C7B /* doc_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ECF42B2175BC22A00BA7C7B /* doc_icon.png */; };
@@ -104,9 +107,7 @@
 		7E579F5A15A21F1E009D1455 /* Bill.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F5915A21F1E009D1455 /* Bill.m */; };
 		7E579F5E15A234EB009D1455 /* APIHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F5D15A234EB009D1455 /* APIHandler.m */; };
 		7E579F6515A80C8F009D1455 /* BDClogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E579F6415A80C8F009D1455 /* BDClogo.png */; };
-		7E579F7915A969A6009D1455 /* BDC-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E579F7815A969A5009D1455 /* BDC-icon.png */; };
 		7E579F7B15A96B71009D1455 /* BDC-icon-big.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E579F7A15A96B71009D1455 /* BDC-icon-big.png */; };
-		7E579F8115A97263009D1455 /* billcom.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E579F8015A97262009D1455 /* billcom.png */; };
 		7E579F8415AB9561009D1455 /* SelectOrgViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F8315AB9561009D1455 /* SelectOrgViewController.m */; };
 		7E579F8715ABA91A009D1455 /* Organization.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F8615ABA91A009D1455 /* Organization.m */; };
 		7E579F8A15ACE571009D1455 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F8915ACE571009D1455 /* UserProfileViewController.m */; };
@@ -227,6 +228,9 @@
 		0EC19CA7177FFE0100D5B285 /* LinkedList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkedList.m; sourceTree = "<group>"; };
 		0EC49AF917B9F6940043B37A /* arrow_down_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_down_gray.png; sourceTree = "<group>"; };
 		0EC49AFA17B9F6950043B37A /* arrow_down_blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_down_blue.png; sourceTree = "<group>"; };
+		0EC49B0117C5E49E0043B37A /* Mobill_logo57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill_logo57.png; sourceTree = "<group>"; };
+		0EC49B0317C5E4AF0043B37A /* Mobill_logo114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill_logo114.png; sourceTree = "<group>"; };
+		0EC49B0517C5E57B0043B37A /* Mobill_full80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill_full80.png; sourceTree = "<group>"; };
 		0EC88C9515F1374900A490EE /* AROverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AROverViewController.h; sourceTree = "<group>"; };
 		0EC88C9615F1374900A490EE /* AROverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AROverViewController.m; sourceTree = "<group>"; };
 		0EC88C9815F139C100A490EE /* CustomersTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomersTableViewController.h; sourceTree = "<group>"; };
@@ -648,6 +652,8 @@
 		7E91E3E015927C15005104AF = {
 			isa = PBXGroup;
 			children = (
+				0EC49B0317C5E4AF0043B37A /* Mobill_logo114.png */,
+				0EC49B0117C5E49E0043B37A /* Mobill_logo57.png */,
 				0E3A157C17455CA0007F2DC6 /* QuickLook.framework */,
 				0E01C34E172214FF00184702 /* .gitignore */,
 				0EE9B10B160A6D83002A5950 /* Default-568h@2x.png */,
@@ -724,6 +730,7 @@
 			children = (
 				0E2C0AAC15EC419A0059C739 /* TabBarImages */,
 				7E579F6415A80C8F009D1455 /* BDClogo.png */,
+				0EC49B0517C5E57B0043B37A /* Mobill_full80.png */,
 				0E847CE8170E203C00C7FA53 /* MenuIcon.png */,
 				0E14EC5E1603ED960098EB03 /* warning.png */,
 				0E14EC5F1603ED960098EB03 /* success.png */,
@@ -790,9 +797,7 @@
 				7E91E40315927C15005104AF /* MainStoryboard_iPhone.storyboard in Resources */,
 				7E91E40615927C15005104AF /* MainStoryboard_iPad.storyboard in Resources */,
 				7E579F6515A80C8F009D1455 /* BDClogo.png in Resources */,
-				7E579F7915A969A6009D1455 /* BDC-icon.png in Resources */,
 				7E579F7B15A96B71009D1455 /* BDC-icon-big.png in Resources */,
-				7E579F8115A97263009D1455 /* billcom.png in Resources */,
 				0E14EC601603ED960098EB03 /* warning.png in Resources */,
 				0E14EC611603ED960098EB03 /* success.png in Resources */,
 				0EE9B10C160A6D83002A5950 /* Default-568h@2x.png in Resources */,
@@ -837,6 +842,9 @@
 				0E6B083F177A5CC200681E9D /* CompanyIcon.png in Resources */,
 				0EC49AFB17B9F6950043B37A /* arrow_down_gray.png in Resources */,
 				0EC49AFC17B9F6950043B37A /* arrow_down_blue.png in Resources */,
+				0EC49B0217C5E49F0043B37A /* Mobill_logo57.png in Resources */,
+				0EC49B0417C5E4AF0043B37A /* Mobill_logo114.png in Resources */,
+				0EC49B0617C5E57B0043B37A /* Mobill_full80.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

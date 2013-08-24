@@ -26,6 +26,7 @@
 @synthesize password;
 @synthesize warning;
 @synthesize indicator;
+@synthesize signUpButton;
 
 - (IBAction)login:(id)sender {
     [self.email resignFirstResponder];
@@ -39,10 +40,26 @@
     [Organization retrieveList];
 }
 
-- (void)launchSignup {
+- (IBAction)toggleSignUp:(UIButton *)sender {
+    self.signUpButton.alpha = self.signUpButton.hidden ? 0.0 : 1.0;
+    self.signUpButton.hidden = !self.signUpButton.hidden;
+    
+    [UIView animateWithDuration:0.5
+                     animations:^{
+                         self.signUpButton.alpha = self.signUpButton.hidden ? 0.0 : 1.0;
+                     }
+     ];
+}
+
+- (IBAction)signUpWithBDC:(UIButton *)sender {
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/Signup", DOMAIN_URL]];
     [[UIApplication sharedApplication] openURL:url];
 }
+
+//- (void)launchSignup {
+//    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/Signup", DOMAIN_URL]];
+//    [[UIApplication sharedApplication] openURL:url];
+//}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -65,14 +82,14 @@
     self.email.text = [Util getUsername];
 //    self.password.text = [Util getPassword];
     
-    UIButton *signUpUrl = [UIButton buttonWithType:UIButtonTypeCustom];
-    signUpUrl.frame = CGRectMake(80.0, 280.0, 160.0, 20.0);
-    signUpUrl.titleLabel.font = [UIFont fontWithName:APP_FONT size:17.0];
-    signUpUrl.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    [signUpUrl setTitle:@"Sign up for Bill.com" forState:UIControlStateNormal];
-    [signUpUrl setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    [signUpUrl addTarget:self action:@selector(launchSignup) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:signUpUrl];
+//    UIButton *signUpUrl = [UIButton buttonWithType:UIButtonTypeCustom];
+//    signUpUrl.frame = CGRectMake(80.0, 280.0, 160.0, 20.0);
+//    signUpUrl.titleLabel.font = [UIFont fontWithName:APP_FONT size:17.0];
+//    signUpUrl.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+//    [signUpUrl setTitle:@"Sign up for Bill.com" forState:UIControlStateNormal];
+//    [signUpUrl setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+//    [signUpUrl addTarget:self action:@selector(launchSignup) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:signUpUrl];
     
     [Organization setDelegate:self];
 }
