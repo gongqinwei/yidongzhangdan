@@ -99,8 +99,11 @@ static char const * const TapRecognizerKey = "tapRecognizer";
 
 - (IBAction)toggleMenu:(id)sender {
     CGRect destination = self.navigationController.view.frame;
-    if (destination.origin.x == 0) {        
-        if (([sender isKindOfClass:[UIBarButtonItem class]] && ((UIBarButtonItem*)sender).tag == 0) || ([sender isKindOfClass:[UISwipeGestureRecognizer class]] && ((UISwipeGestureRecognizer *)sender).direction == UISwipeGestureRecognizerDirectionRight)) {
+    if (destination.origin.x == 0) {
+        if (([sender isKindOfClass:[UIButton class]] && ((UIButton*)sender).tag == 0)
+         || ([sender isKindOfClass:[UIBarButtonItem class]] && ((UIBarButtonItem*)sender).tag == 0)
+         || ([sender isKindOfClass:[UISwipeGestureRecognizer class]] && ((UISwipeGestureRecognizer *)sender).direction == UISwipeGestureRecognizerDirectionRight))
+        {
             destination.origin.x += SLIDING_DISTANCE;
             [self.view findAndResignFirstResponder];
             [self slideTo:destination completion:^(BOOL finished) {
@@ -108,7 +111,7 @@ static char const * const TapRecognizerKey = "tapRecognizer";
                 self.navigationItem.hidesBackButton = YES;
                 [self.view addGestureRecognizer:self.tapRecognizer];
             }];
-        } else { //if ([sender isKindOfClass:[UISwipeGestureRecognizer class]] && ((UISwipeGestureRecognizer *)sender).direction == UISwipeGestureRecognizerDirectionLeft) {
+        } else {
             if (self.actionMenuVC == nil) {
                 self.actionMenuVC = [self.storyboard instantiateViewControllerWithIdentifier:@"ActionMenu"];
                 self.actionMenuVC.targetViewController = self;
@@ -162,8 +165,8 @@ static char const * const TapRecognizerKey = "tapRecognizer";
     }];
 }
 
-// synchronous version of slideOut; TODO: refactor
-- (void)disappear {
+// slide out without calling delegate
+- (void)slideOutOnly {
     [self.actionMenuVC.view removeFromSuperview];
     
     self.navigationItem.hidesBackButton = NO;
@@ -184,10 +187,15 @@ static char const * const TapRecognizerKey = "tapRecognizer";
     
     [self.navigationController removeFromParentViewController];
     [UIHelper removeShaddowForView:self.navigationController.view];
+}
+
+// synchronous version of slideOut
+- (void)disappear {
+    [self slideOutOnly];
     [self.slidingOutDelegate viewDidSlideOut];
 }
 
-
+// slide out and then call delegate
 - (void)slideOut {
     [self.actionMenuVC.view removeFromSuperview];
     
@@ -210,6 +218,32 @@ static char const * const TapRecognizerKey = "tapRecognizer";
         [self.slidingOutDelegate viewDidSlideOut];
         [UIHelper removeShaddowForView:self.navigationController.view];
     }];
+}
+
+- (void)setSlidingMenuLeftBarButton {
+    UIImage *logoImage = [UIImage imageNamed:@"SlidingMenu30.png"];
+    CGRect frameLogoImg = CGRectMake(0, 0, logoImage.size.width, logoImage.size.height);
+
+    UIButton *logoButton = [[UIButton alloc] initWithFrame:frameLogoImg];
+    [logoButton setBackgroundImage:logoImage forState:UIControlStateNormal];
+    [logoButton addTarget:self action:@selector(toggleMenu:) forControlEvents:UIControlEventTouchUpInside];
+    [logoButton setShowsTouchWhenHighlighted:YES];
+    logoButton.tag = 0;
+    UIBarButtonItem *menuBarButton =[[UIBarButtonItem alloc] initWithCustomView:logoButton];
+    self.navigationItem.leftBarButtonItem = menuBarButton;
+}
+
+- (void)setActionMenuRightBarButton {
+    UIImage *actionImage = [UIImage imageNamed:@"ActionMenu30.png"];
+    CGRect frameActionImg = CGRectMake(0, 0, actionImage.size.width, actionImage.size.height);
+
+    UIButton *actionButton = [[UIButton alloc] initWithFrame:frameActionImg];
+    [actionButton setBackgroundImage:actionImage forState:UIControlStateNormal];
+    [actionButton addTarget:self action:@selector(toggleMenu:) forControlEvents:UIControlEventTouchUpInside];
+    [actionButton setShowsTouchWhenHighlighted:YES];
+    actionButton.tag = 1;
+    UIBarButtonItem *actionBarButton =[[UIBarButtonItem alloc] initWithCustomView:actionButton];
+    self.navigationItem.rightBarButtonItem = actionBarButton;
 }
 
 - (void)enterEditMode {}

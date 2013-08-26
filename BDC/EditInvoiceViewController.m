@@ -1123,7 +1123,13 @@ typedef enum {
     [super didSelectCrudAction:action];
     
     if ([action isEqualToString:ACTION_EMAIL]) {
-        [self sendInvoiceEmail];
+        Customer *customer = [Customer objectForKey:((Invoice *)self.shaddowBusObj).customerId];
+        if (customer.email) {
+            [self sendInvoiceEmail];
+        } else {
+            [UIHelper showInfo:@"Fill in an email for this customer before you send them the invoice." withStatus:kInfo];
+            [self performSegueWithIdentifier:INV_VIEW_CUSTOMER_DETAILS_SEGUE sender:customer];
+        }
     }
 }
 

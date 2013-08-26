@@ -125,7 +125,7 @@
     for (int i = 0; i < [AttachToExistingSegues count]; i++) {
         for (int j = 0; j < [[AttachToExistingSegues objectAtIndex:i] count]; j++) {
             UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:j inSection:i]];
-            if (self.pickOrCreateSwitch.selectedSegmentIndex == 0) {
+            if (self.pickOrCreateSwitch.selectedSegmentIndex == 1) {
                 cell.accessoryView = nil;
             } else {
                 UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeContactAdd];
@@ -144,6 +144,10 @@
         // Custom initialization
     }
     return self;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [self switchPickOrCreate];
 }
 
 - (void)viewDidLoad
@@ -202,7 +206,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section < [AttachToExistingSegues count]) {
         NSString *segueId;
-        if (self.pickOrCreateSwitch.selectedSegmentIndex == 0) {
+        if (self.pickOrCreateSwitch.selectedSegmentIndex == 1) {
             segueId = AttachToExistingSegues[indexPath.section][indexPath.row];
         } else {
             segueId = AttachToNewSegues[indexPath.section][indexPath.row];

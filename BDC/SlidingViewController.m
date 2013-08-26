@@ -31,6 +31,8 @@
     [super viewDidLoad];
     
     [self initialize];
+
+    [self setSlidingMenuLeftBarButton];
 }
 
 - (void)didReceiveMemoryWarning

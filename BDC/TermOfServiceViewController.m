@@ -34,6 +34,8 @@
     NSString* htmlString = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&err];
 
     [self.termOfServiceWebView loadHTMLString:htmlString baseURL:nil];
+    
+    [self setActionMenuRightBarButton];
 }
 
 - (void)didReceiveMemoryWarning

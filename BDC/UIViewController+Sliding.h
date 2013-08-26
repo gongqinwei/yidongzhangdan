@@ -69,11 +69,14 @@
 - (void)slideIn;
 - (void)slideOut;
 - (void)disappear;
+- (void)slideOutOnly;
 - (IBAction)toggleMenu:(id)sender;
 //- (void)removeTapGesture;
 - (void)enterEditMode;
 - (void)exitEditMode;
 - (void)refreshView;
 - (BOOL)tryTap;
+- (void)setSlidingMenuLeftBarButton;
+- (void)setActionMenuRightBarButton;
 
 @end

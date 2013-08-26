@@ -106,6 +106,9 @@
     self.previewController.dataSource = self;
     
     self.dataInMemCache = [[LRU alloc] init];
+    
+    [self setSlidingMenuLeftBarButton];
+    [self setActionMenuRightBarButton];
 }
 
 #pragma mark - QuickLook Preview Controller Data Source

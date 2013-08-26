@@ -54,6 +54,9 @@
         refresh.attributedTitle = PULL_TO_REFRESH;
         self.refreshControl = refresh;
     }
+    
+    [self setSlidingMenuLeftBarButton];
+    [self setActionMenuRightBarButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -168,10 +171,11 @@
 }
 
 - (void)exitEditMode {
-    UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
-    actionButton.tag = 1;
-    [self.navigationItem setRightBarButtonItem:actionButton];
-    
+//    UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
+//    actionButton.tag = 1;
+//    [self.navigationItem setRightBarButtonItem:actionButton];
+
+    [self setActionMenuRightBarButton];
     [self.tableView setEditing:NO animated:YES];
 }
 

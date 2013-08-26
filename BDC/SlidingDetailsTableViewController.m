@@ -74,8 +74,9 @@ static double animatedDistance = 0;
         }
         [self.actionMenuVC.tableView reloadData];
         
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
-        self.navigationItem.rightBarButtonItem.tag = 1;
+//        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
+//        self.navigationItem.rightBarButtonItem.tag = 1;
+        [self setActionMenuRightBarButton];
         self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
         
         UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
@@ -467,6 +468,8 @@ static double animatedDistance = 0;
     } else if (self.mode == kCreateMode) {
         [self resetScrollView];
     }
+    
+    [self setActionMenuRightBarButton];
 }
 
 - (void)resetScrollView {

@@ -44,7 +44,7 @@ static RootMenuViewController * _sharedInstance = nil;
 
 - (UINavigationController *)showView:(NSString *)identifier {
     identifier = [identifier stringByReplacingOccurrencesOfString:@" " withString:@""];
-        
+    
     if (!self.currVC) {
         UINavigationController *navVC = [self.menuItems objectForKey:identifier];
         self.currVC = [navVC.childViewControllers objectAtIndex:0];
@@ -219,6 +219,9 @@ static RootMenuViewController * _sharedInstance = nil;
         } else if (indexPath.row == kMoreLegal) {
             [self showView:[[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
         } else if (indexPath.row == kMoreFeedback) {
+            SlidingViewController *currentVC = (SlidingViewController*)[RootMenuViewController sharedInstance].currVC;
+            [currentVC slideOutOnly];
+            
             [self sendFeedbackEmail];
         }
     } else if (indexPath.section != 0 || indexPath.row != 0) {
@@ -299,7 +302,9 @@ static RootMenuViewController * _sharedInstance = nil;
     }
     
     // Remove the mail view
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        NSLog(@"... %@", self.currVC);
+    }];
 }
 
 @end
