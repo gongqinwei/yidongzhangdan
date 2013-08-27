@@ -12,6 +12,7 @@
 #import "Organization.h"
 #import "Util.h"
 #import "SelectOrgViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 #define INVALID_CREDENTIAL          @"Wrong username/password!"
 #define FAIL_LIST_ORGS              @"Failed to retrieve Org list!"
@@ -80,16 +81,12 @@
     [super viewDidLoad];
     
     self.email.text = [Util getUsername];
-//    self.password.text = [Util getPassword];
     
-//    UIButton *signUpUrl = [UIButton buttonWithType:UIButtonTypeCustom];
-//    signUpUrl.frame = CGRectMake(80.0, 280.0, 160.0, 20.0);
-//    signUpUrl.titleLabel.font = [UIFont fontWithName:APP_FONT size:17.0];
-//    signUpUrl.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-//    [signUpUrl setTitle:@"Sign up for Bill.com" forState:UIControlStateNormal];
-//    [signUpUrl setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-//    [signUpUrl addTarget:self action:@selector(launchSignup) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:signUpUrl];
+    self.email.layer.borderColor = [[UIColor grayColor] CGColor];
+    self.email.layer.borderWidth = 1.0f;
+    
+    self.password.layer.borderColor = [[UIColor grayColor] CGColor];
+    self.password.layer.borderWidth = 1.0f;
     
     [Organization setDelegate:self];
 }

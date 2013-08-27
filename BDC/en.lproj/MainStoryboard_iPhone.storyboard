@@ -24,13 +24,7 @@
                             <constraint firstItem="wsX-OW-uoq" firstAttribute="leading" secondItem="BAT-Qm-M33" secondAttribute="leading" type="default" id="cgn-rh-JzW"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Payables (unfinished)" id="C9h-2g-oj1">
-                        <barButtonItem key="leftBarButtonItem" image="MenuIcon.png" id="Kh8-ND-jZj">
-                            <connections>
-                                <action selector="toggleMenu:" destination="M27-b0-PNU" id="2OH-Yr-yft"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Payables (unfinished)" id="C9h-2g-oj1"/>
                     <connections>
                         <outlet property="webView" destination="wsX-OW-uoq" id="ulp-Ln-oKl"/>
                     </connections>
@@ -391,13 +385,7 @@
                             <outlet property="delegate" destination="gDA-GN-8J4" id="KBL-O3-Wgr"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Receivables" id="c1a-ZW-fJC">
-                        <barButtonItem key="leftBarButtonItem" image="MenuIcon.png" id="ehR-So-ERg">
-                            <connections>
-                                <action selector="toggleMenu:" destination="gDA-GN-8J4" id="C5F-QF-DPJ"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Receivables" id="c1a-ZW-fJC"/>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="Nvs-kt-51V">
                         <autoresizingMask key="autoresizingMask"/>
                     </refreshControl>
@@ -455,18 +443,7 @@
                             <outlet property="delegate" destination="Auy-Fb-tfc" id="LaO-zv-5Dk"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Invoices" id="Q6D-W3-rFu">
-                        <barButtonItem key="leftBarButtonItem" image="MenuIcon.png" id="DXm-0a-mEJ">
-                            <connections>
-                                <action selector="toggleMenu:" destination="Auy-Fb-tfc" id="ouW-4k-8F1"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" tag="1" systemItem="action" id="2mU-Bz-iy5">
-                            <connections>
-                                <action selector="toggleMenu:" destination="Auy-Fb-tfc" id="CiZ-eP-rSD"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Invoices" id="Q6D-W3-rFu"/>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="fgb-7e-B6f">
                         <autoresizingMask key="autoresizingMask"/>
                         <attributedString key="attributedTitle"/>
@@ -650,13 +627,7 @@
                             <outlet property="delegate" destination="W2n-Tn-iyx" id="i8M-B6-kef"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Invoice" id="Qd4-ty-vKb">
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="gNP-66-dY2">
-                            <connections>
-                                <action selector="toggleMenu:" destination="W2n-Tn-iyx" id="d6E-bt-YEF"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Invoice" id="Qd4-ty-vKb"/>
                     <connections>
                         <segue destination="3zY-p5-ksg" kind="push" identifier="SelectCustomerForInvoice" id="jJm-5t-hI9"/>
                         <segue destination="ejF-hn-A7T" kind="push" identifier="SelectItemsForInvoice" id="fqJ-Rf-CsZ"/>
@@ -795,13 +766,7 @@
                             <outlet property="delegate" destination="Crd-D4-0GL" id="01Y-ld-coB"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Vendor" id="un7-PJ-Izn">
-                        <barButtonItem key="rightBarButtonItem" tag="1" systemItem="action" id="iRo-Af-WmE">
-                            <connections>
-                                <action selector="toggleMenu:" destination="Crd-D4-0GL" id="o7S-W2-S8d"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Vendor" id="un7-PJ-Izn"/>
                     <connections>
                         <segue destination="X9Q-mH-q7t" kind="modal" identifier="ScanMoreVendorPhoto" id="ncd-XN-35f"/>
                     </connections>
@@ -922,18 +887,7 @@
                             <outlet property="delegate" destination="aQd-ff-dma" id="7pj-SB-xP1"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" title="Inbox" id="me0-2t-pxA">
-                        <barButtonItem key="leftBarButtonItem" image="MenuIcon.png" id="ANS-yy-G2G">
-                            <connections>
-                                <action selector="toggleMenu:" destination="aQd-ff-dma" id="3Uq-7m-Ynx"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" tag="1" systemItem="action" id="OOn-yr-sn5">
-                            <connections>
-                                <action selector="toggleMenu:" destination="aQd-ff-dma" id="8EX-Rv-jL9"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Inbox" id="me0-2t-pxA"/>
                     <connections>
                         <segue destination="ttA-Fa-UXM" kind="push" identifier="DocumentAssociatedWith" id="ifQ-ST-XVY"/>
                         <segue destination="WEK-Fn-naN" kind="push" identifier="AcceptEBill" id="iJL-HJ-34E"/>
@@ -983,18 +937,7 @@
                             <outlet property="delegate" destination="3zY-p5-ksg" id="Gbg-7E-H2d"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Customers" id="cWN-uZ-TuT">
-                        <barButtonItem key="leftBarButtonItem" image="MenuIcon.png" id="zqg-gN-7qm">
-                            <connections>
-                                <action selector="toggleMenu:" destination="3zY-p5-ksg" id="tAm-xV-GpS"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" tag="1" systemItem="action" id="srY-cu-Lsy">
-                            <connections>
-                                <action selector="toggleMenu:" destination="3zY-p5-ksg" id="S2a-hG-qJI"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Customers" id="cWN-uZ-TuT"/>
                     <connections>
                         <segue destination="eKR-Kb-X4l" kind="push" identifier="ViewCustomer" id="KsZ-gK-WK3"/>
                         <segue destination="eKR-Kb-X4l" kind="push" identifier="CreateCustomer" id="h3l-fG-uY0"/>
@@ -1044,18 +987,7 @@
                             <outlet property="delegate" destination="ejF-hn-A7T" id="8L0-l4-Ak2"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Items" id="byB-gz-JXF">
-                        <barButtonItem key="leftBarButtonItem" image="MenuIcon.png" id="3Xb-P1-v8J">
-                            <connections>
-                                <action selector="toggleMenu:" destination="ejF-hn-A7T" id="L8J-Kw-XIB"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" tag="1" systemItem="action" id="P7c-gy-Ang">
-                            <connections>
-                                <action selector="toggleMenu:" destination="ejF-hn-A7T" id="tRG-fO-dgD"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Items" id="byB-gz-JXF"/>
                     <connections>
                         <segue destination="Huj-sl-FUL" kind="push" identifier="ViewItem" id="FHh-4L-vXk"/>
                         <segue destination="Huj-sl-FUL" kind="push" identifier="CreateItem" id="MxB-88-6ki"/>
@@ -1115,13 +1047,7 @@
                             <outlet property="delegate" destination="Huj-sl-FUL" id="uNk-rM-frV"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Item Details" id="6uW-Jz-5tH">
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="kWY-jO-Ho4">
-                            <connections>
-                                <action selector="saveItem:" destination="Huj-sl-FUL" id="pzm-r3-lLD"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Item Details" id="6uW-Jz-5tH"/>
                     <connections>
                         <segue destination="X9Q-mH-q7t" kind="modal" identifier="ScanMoreItemPhoto" id="ir9-QL-Nz9"/>
                     </connections>
@@ -1139,13 +1065,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Profile (unfinished)" id="OYc-BR-Lfh">
-                        <barButtonItem key="leftBarButtonItem" image="MenuIcon.png" id="ktV-tZ-bvu">
-                            <connections>
-                                <action selector="toggleMenu:" destination="Eat-hH-ziO" id="8fm-7G-P6a"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Profile (unfinished)" id="OYc-BR-Lfh"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XM0-lV-J7A" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1156,7 +1076,7 @@
             <objects>
                 <tableViewController id="Rf8-hn-Kkj" customClass="SelectOrgViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="RWR-zJ-2iQ">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Search Company" id="i4W-5B-Qt7">
@@ -1218,10 +1138,9 @@
                                     <constraint firstAttribute="width" constant="120" id="sdv-r6-DF0"/>
                                 </constraints>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="Mobill_full80.png" translatesAutoresizingMaskIntoConstraints="NO" id="FSC-Fx-6CY">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="Mobill50.png" translatesAutoresizingMaskIntoConstraints="NO" id="FSC-Fx-6CY">
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="2lc-tZ-LQX"/>
-                                    <constraint firstAttribute="width" constant="134" id="eHS-cb-1GR"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Built for" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KUy-v4-oU3">
@@ -1239,8 +1158,8 @@
                             <constraint firstItem="dZf-7r-V4q" firstAttribute="centerX" secondItem="GEC-fj-tyv" secondAttribute="centerX" type="default" id="2Fj-ft-ZWA"/>
                             <constraint firstItem="dZf-7r-V4q" firstAttribute="centerX" secondItem="KUy-v4-oU3" secondAttribute="centerX" type="default" id="O1E-xm-fnc"/>
                             <constraint firstItem="FSC-Fx-6CY" firstAttribute="top" secondItem="GEC-fj-tyv" secondAttribute="top" constant="100" id="VeH-Qi-U49"/>
-                            <constraint firstItem="KUy-v4-oU3" firstAttribute="centerX" secondItem="FSC-Fx-6CY" secondAttribute="centerX" type="default" id="XUY-8T-6CE"/>
                             <constraint firstAttribute="bottom" secondItem="KUy-v4-oU3" secondAttribute="bottom" constant="155" id="egh-qV-ds1"/>
+                            <constraint firstItem="FSC-Fx-6CY" firstAttribute="centerX" secondItem="KUy-v4-oU3" secondAttribute="centerX" type="default" id="jgC-oJ-Jdh"/>
                             <constraint firstAttribute="bottom" secondItem="dZf-7r-V4q" secondAttribute="bottom" constant="106" id="uWH-Tv-fuz"/>
                         </constraints>
                     </view>
@@ -1274,18 +1193,7 @@
                             <constraint firstItem="zzB-yt-tZN" firstAttribute="leading" secondItem="bPQ-d5-vGb" secondAttribute="leading" type="default" id="wXw-Fy-OPa"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Term of Service" id="c4n-X3-7KP">
-                        <barButtonItem key="leftBarButtonItem" image="MenuIcon.png" id="tDj-EZ-ipj">
-                            <connections>
-                                <action selector="toggleMenu:" destination="lt9-Ky-mg5" id="geq-Tf-oXw"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" tag="1" systemItem="action" id="uei-sc-HJK">
-                            <connections>
-                                <action selector="toggleMenu:" destination="lt9-Ky-mg5" id="fgZ-FB-M0f"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Term of Service" id="c4n-X3-7KP"/>
                     <connections>
                         <outlet property="termOfServiceWebView" destination="zzB-yt-tZN" id="7ZC-Z9-2Lx"/>
                     </connections>
@@ -1299,7 +1207,7 @@
             <objects>
                 <viewController storyboardIdentifier="LoginScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="XOh-NM-Vno" customClass="LoginViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Iu8-SC-Rm6">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="d7S-lN-bOA">
@@ -1307,6 +1215,7 @@
                                     <constraint firstAttribute="width" constant="170" id="Viy-RA-OfG"/>
                                     <constraint firstAttribute="height" constant="30" id="ppv-w0-Nhr"/>
                                 </constraints>
+                                <color key="textColor" white="0.19810675180000001" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress"/>
                             </textField>
@@ -1314,6 +1223,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="PhH-Ul-nTq"/>
                                 </constraints>
+                                <color key="textColor" white="0.20000000000000001" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" secureTextEntry="YES"/>
                             </textField>
@@ -1324,7 +1234,7 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" size="button"/>
                                 <state key="normal" title="Login">
-                                    <color key="titleColor" red="0.19607843137254902" green="0.30980392156862746" blue="0.52156862745098043" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" red="0.86055086096938771" green="0.55843494323916287" blue="0.1232070130459933" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="highlighted">
@@ -1352,11 +1262,7 @@
                                 <color key="textColor" red="0.86080994899999996" green="0.71468240049999998" blue="0.33627085289999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="Mobill_full80.png" translatesAutoresizingMaskIntoConstraints="NO" id="riI-Vc-Som">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="aVQ-l5-6sx"/>
-                                </constraints>
-                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="Mobill40.png" translatesAutoresizingMaskIntoConstraints="NO" id="riI-Vc-Som"/>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="py4-N5-DxX">
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="BPe-Xs-E1u"/>
@@ -1376,8 +1282,8 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qnm-vj-qSr">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="100" id="B1K-4Q-ukl"/>
                                     <constraint firstAttribute="height" constant="30" id="dZs-7y-wgP"/>
+                                    <constraint firstAttribute="width" constant="100" id="zNt-Vq-SRH"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Button" image="BDClogo.png">
@@ -1400,29 +1306,28 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="a47-UT-Iw8" secondAttribute="bottom" constant="89" id="2SG-nJ-a3W"/>
                             <constraint firstItem="WV1-6a-X4J" firstAttribute="centerX" secondItem="EU0-aE-9mq" secondAttribute="centerX" type="default" id="2dk-Gi-Xcm"/>
-                            <constraint firstItem="riI-Vc-Som" firstAttribute="trailing" secondItem="5Qh-oG-zAA" secondAttribute="trailing" type="default" id="6rj-Ki-ji6"/>
+                            <constraint firstAttribute="bottom" secondItem="a47-UT-Iw8" secondAttribute="bottom" constant="70" id="4wi-Xw-ChJ"/>
+                            <constraint firstAttribute="bottom" secondItem="py4-N5-DxX" secondAttribute="bottom" constant="43" id="6sX-6O-kax"/>
                             <constraint firstItem="cUF-Tm-CdY" firstAttribute="top" secondItem="Iu8-SC-Rm6" secondAttribute="top" constant="185" id="AXS-b5-pwY"/>
-                            <constraint firstAttribute="bottom" secondItem="py4-N5-DxX" secondAttribute="bottom" constant="62" id="AtW-hC-hai"/>
                             <constraint firstItem="U1U-NZ-usc" firstAttribute="leading" secondItem="cUF-Tm-CdY" secondAttribute="leading" type="default" id="BnY-6k-5cb"/>
-                            <constraint firstItem="riI-Vc-Som" firstAttribute="top" secondItem="Iu8-SC-Rm6" secondAttribute="top" constant="45" id="C6b-GD-ucs"/>
                             <constraint firstItem="cUF-Tm-CdY" firstAttribute="trailing" secondItem="U1U-NZ-usc" secondAttribute="trailing" type="default" id="D4r-n1-zKr"/>
                             <constraint firstItem="d7S-lN-bOA" firstAttribute="leading" secondItem="U1U-NZ-usc" secondAttribute="leading" type="default" id="GoJ-UM-RTu"/>
                             <constraint firstItem="EU0-aE-9mq" firstAttribute="top" secondItem="Iu8-SC-Rm6" secondAttribute="top" constant="210" id="HXT-KJ-gkX"/>
-                            <constraint firstItem="EU0-aE-9mq" firstAttribute="leading" secondItem="Iu8-SC-Rm6" secondAttribute="leading" constant="122" id="Obl-LQ-4z2"/>
-                            <constraint firstAttribute="bottom" secondItem="5Qh-oG-zAA" secondAttribute="bottom" constant="132" id="SIg-2W-YL3"/>
-                            <constraint firstItem="U1U-NZ-usc" firstAttribute="top" secondItem="Iu8-SC-Rm6" secondAttribute="top" constant="139" id="T12-50-nNF"/>
+                            <constraint firstItem="riI-Vc-Som" firstAttribute="centerX" secondItem="WV1-6a-X4J" secondAttribute="centerX" type="default" id="Ue4-0K-fGs"/>
+                            <constraint firstItem="riI-Vc-Som" firstAttribute="top" secondItem="Iu8-SC-Rm6" secondAttribute="top" constant="49" id="Xpl-pt-bY2"/>
                             <constraint firstItem="qnm-vj-qSr" firstAttribute="centerX" secondItem="5Qh-oG-zAA" secondAttribute="centerX" type="default" id="ZI4-em-fa3"/>
-                            <constraint firstAttribute="bottom" secondItem="qnm-vj-qSr" secondAttribute="bottom" constant="101" id="eGR-QF-a0l"/>
+                            <constraint firstItem="a47-UT-Iw8" firstAttribute="centerX" secondItem="Iu8-SC-Rm6" secondAttribute="centerX" type="default" id="aRq-W6-Aph"/>
+                            <constraint firstAttribute="bottom" secondItem="5Qh-oG-zAA" secondAttribute="bottom" constant="113" id="dkO-HD-x32"/>
+                            <constraint firstItem="U1U-NZ-usc" firstAttribute="top" secondItem="Iu8-SC-Rm6" secondAttribute="top" constant="145" id="fgA-pl-4ad"/>
                             <constraint firstItem="WV1-6a-X4J" firstAttribute="top" secondItem="Iu8-SC-Rm6" secondAttribute="top" constant="215" id="hYg-Tn-NG3"/>
                             <constraint firstItem="a47-UT-Iw8" firstAttribute="centerX" secondItem="qnm-vj-qSr" secondAttribute="centerX" type="default" id="hkN-na-XXL"/>
                             <constraint firstItem="U1U-NZ-usc" firstAttribute="trailing" secondItem="d7S-lN-bOA" secondAttribute="trailing" type="default" id="iub-kk-ug5"/>
-                            <constraint firstItem="U1U-NZ-usc" firstAttribute="centerX" secondItem="Iu8-SC-Rm6" secondAttribute="centerX" type="default" id="kYK-wr-bL3"/>
-                            <constraint firstItem="d7S-lN-bOA" firstAttribute="top" secondItem="Iu8-SC-Rm6" secondAttribute="top" constant="110" id="nfj-gQ-FDu"/>
                             <constraint firstItem="5Qh-oG-zAA" firstAttribute="centerX" secondItem="cUF-Tm-CdY" secondAttribute="centerX" type="default" id="sJC-ea-mZG"/>
                             <constraint firstItem="a47-UT-Iw8" firstAttribute="centerX" secondItem="py4-N5-DxX" secondAttribute="centerX" type="default" id="tlt-hc-Djx"/>
-                            <constraint firstItem="riI-Vc-Som" firstAttribute="centerX" secondItem="d7S-lN-bOA" secondAttribute="centerX" type="default" id="wlz-ej-c0B"/>
+                            <constraint firstItem="d7S-lN-bOA" firstAttribute="top" secondItem="Iu8-SC-Rm6" secondAttribute="top" constant="116" id="weO-Xo-6b0"/>
+                            <constraint firstAttribute="bottom" secondItem="qnm-vj-qSr" secondAttribute="bottom" constant="82" id="wsh-gY-Kfs"/>
+                            <constraint firstItem="riI-Vc-Som" firstAttribute="trailing" secondItem="qnm-vj-qSr" secondAttribute="trailing" type="default" id="wyy-gT-jop"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="okF-c4-h5k"/>
@@ -1464,18 +1369,7 @@
                             <outlet property="delegate" destination="k1G-B2-MSF" id="4Wn-mX-I4H"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Bills" id="E4V-X9-eEx">
-                        <barButtonItem key="leftBarButtonItem" image="MenuIcon.png" id="aZ7-eM-q58">
-                            <connections>
-                                <action selector="toggleMenu:" destination="k1G-B2-MSF" id="x2n-JA-KEp"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" tag="1" systemItem="action" id="lZe-5r-9vd">
-                            <connections>
-                                <action selector="toggleMenu:" destination="k1G-B2-MSF" id="fLu-Rv-tmX"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Bills" id="E4V-X9-eEx"/>
                     <connections>
                         <segue destination="WEK-Fn-naN" kind="push" identifier="ViewBill" id="0I6-iw-p0z"/>
                         <segue destination="WEK-Fn-naN" kind="push" identifier="CreateNewBill" id="3HC-XA-11p"/>
@@ -1559,9 +1453,7 @@
                             <outlet property="delegate" destination="WEK-Fn-naN" id="zqi-II-ZNW"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Bill" id="Ezx-bx-R8n">
-                        <barButtonItem key="rightBarButtonItem" tag="1" systemItem="action" id="1Jn-kZ-COQ"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Bill" id="Ezx-bx-R8n"/>
                     <connections>
                         <segue destination="X9Q-mH-q7t" kind="modal" identifier="ScanMoreBillPhoto" id="WRK-Bd-AdY"/>
                         <segue destination="cTU-5g-PB7" kind="push" identifier="SelectVendorForBill" id="Vyp-zG-ZzN"/>
@@ -2393,13 +2285,7 @@
                             <outlet property="delegate" destination="eKR-Kb-X4l" id="8I3-EX-hwf"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="UL4-rK-3md">
-                        <barButtonItem key="rightBarButtonItem" tag="1" systemItem="action" id="fht-aP-b2r">
-                            <connections>
-                                <action selector="saveCustomer:" destination="eKR-Kb-X4l" id="1OM-L2-VSu"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="UL4-rK-3md"/>
                     <connections>
                         <segue destination="X9Q-mH-q7t" kind="modal" identifier="ScanMoreCustomerPhoto" id="dpQ-hQ-ASQ"/>
                     </connections>
@@ -2548,7 +2434,8 @@
         <image name="InboxIcon.png" width="24" height="24"/>
         <image name="InvoicesIcon.png" width="24" height="24"/>
         <image name="MenuIcon.png" width="16" height="16"/>
-        <image name="Mobill_full80.png" width="178" height="80"/>
+        <image name="Mobill40.png" width="106" height="40"/>
+        <image name="Mobill50.png" width="132" height="50"/>
         <image name="MyCompaniesIcon.png" width="24" height="24"/>
         <image name="PlusIcon.png" width="20" height="20"/>
         <image name="VendorsIcon.png" width="22" height="24"/>
@@ -2755,21 +2642,21 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="ysq-5e-jjh"/>
-        <segue reference="cZK-q2-u6g"/>
-        <segue reference="5Ki-uI-G54"/>
-        <segue reference="fqJ-Rf-CsZ"/>
-        <segue reference="CeX-f9-mSc"/>
+        <segue reference="dP9-hw-whd"/>
+        <segue reference="iJL-HJ-34E"/>
         <segue reference="ifQ-ST-XVY"/>
-        <segue reference="FTU-IK-7vF"/>
-        <segue reference="v63-Az-wLD"/>
-        <segue reference="Hnb-9H-Um4"/>
         <segue reference="3ag-eg-oXf"/>
-        <segue reference="GuY-KC-qoW"/>
-        <segue reference="e1N-Gr-piF"/>
+        <segue reference="Vyp-zG-ZzN"/>
+        <segue reference="bpG-n7-YKA"/>
+        <segue reference="fqJ-Rf-CsZ"/>
+        <segue reference="hJK-x6-GnQ"/>
+        <segue reference="j7f-6N-lkm"/>
         <segue reference="jJm-5t-hI9"/>
-        <segue reference="qdh-4f-Obl"/>
-        <segue reference="rn3-5G-Kbh"/>
         <segue reference="fR5-hZ-eeX"/>
+        <segue reference="h3l-fG-uY0"/>
+        <segue reference="ir9-QL-Nz9"/>
+        <segue reference="dDE-iX-7BR"/>
+        <segue reference="2iZ-iS-Zfa"/>
+        <segue reference="4YZ-nK-Ds9"/>
     </inferredMetricsTieBreakers>
 </document>
