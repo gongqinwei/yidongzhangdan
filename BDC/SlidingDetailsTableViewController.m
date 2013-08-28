@@ -263,7 +263,7 @@ static double animatedDistance = 0;
 }
 
 - (void)retrieveDocAttachments {
-    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.busObj.objectId];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"%@\" : \"%@\"}", ID, self.busObj.objectId, OBJ_ID, self.busObj.objectId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
     [APIHandler asyncCallWithAction:RETRIEVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {

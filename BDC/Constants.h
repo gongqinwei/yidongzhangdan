@@ -137,6 +137,7 @@
 #define RESPONSE_ERROR_CODE @"error_code"
 #define RESPONSE_ERROR_MSG  @"error_message"
 #define ID                  @"id"
+#define OBJ_ID              @"objectId"
 #define IS_ACTIVE           @"isActive"
 #define SESSION_ID_KEY      @"sessionId"
 
