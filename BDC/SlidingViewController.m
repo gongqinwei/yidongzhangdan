@@ -23,7 +23,7 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-//    [RootMenuViewController sharedInstance].currVC = self;
+    [RootMenuViewController sharedInstance].currVC = self;
 }
 
 - (void)viewDidLoad

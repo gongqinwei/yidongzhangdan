@@ -1026,14 +1026,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Qinwei Gong (K58J8M72MU)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BDC/BDC-Prefix.pch";
 				INFOPLIST_FILE = "BDC/BDC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = Mobill;
 				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=*]" = "";
+				"PROVISIONING_PROFILE[sdk=*]" = "31B75EC6-CC9B-4118-907F-729CB24B87B3";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

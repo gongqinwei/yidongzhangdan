@@ -101,9 +101,7 @@ static double animatedDistance = 0;
             [self resetScrollView];
         }
 
-        for (Document * doc in self.shaddowBusObj.attachments) {
-            NSLog(@":: %@", doc.objectId);
-            
+        for (Document * doc in self.shaddowBusObj.attachments) {            
             NSString *ext = [[doc.name pathExtension] lowercaseString];
             if (doc.thumbnail) {
                 [self addAttachment:ext data:doc.thumbnail needScale:NO];
@@ -120,7 +118,7 @@ static double animatedDistance = 0;
 
 - (void)cancelEdit:(UIBarButtonItem *)sender {
     if ([self tryTap]) {
-        if (self.mode == kCreateMode || self.mode == kAttachMode) {
+        if (self.mode == kCreateMode || self.mode == kAttachMode || self.mode == kModifyMode) {
             [self navigateBack];
         } else {
             [self setBusObj:self.busObj];
@@ -465,11 +463,11 @@ static double animatedDistance = 0;
         } else {
             [self retrieveDocAttachments];
         }
+        
+        [self setActionMenuRightBarButton];
     } else if (self.mode == kCreateMode) {
         [self resetScrollView];
     }
-    
-    [self setActionMenuRightBarButton];
 }
 
 - (void)resetScrollView {

@@ -190,20 +190,6 @@
     if (self.mode == kAttachMode) {
         self.title = @"Select Bill";
         [super viewWillAppear:animated];
-        
-//        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]
-//                                         initWithTitle: @"Cancel"
-//                                         style: UIBarButtonItemStyleBordered
-//                                         target: self action:@selector(navigateCancel)];
-//        
-//        self.navigationItem.leftBarButtonItem = cancelButton;
-//        
-//        UIBarButtonItem *attachButton = [[UIBarButtonItem alloc]
-//                                       initWithTitle: @"Attach"
-//                                       style: UIBarButtonItemStyleBordered
-//                                       target: self action:@selector(navigateAttach)];
-//        
-//        self.navigationItem.rightBarButtonItem = attachButton;
     }
 }
 

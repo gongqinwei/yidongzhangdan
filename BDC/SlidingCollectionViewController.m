@@ -85,7 +85,7 @@
     
     Document *doc = [self.dataInMemCache spit];
     doc.data = nil;
-    NSLog(@"=== Freed up data for Document: %@ %d ===", doc.name, doc.data.length);
+//    NSLog(@"=== Freed up data for Document: %@ %d ===", doc.name, doc.data.length);
 }
 
 - (void)viewDidAppear:(BOOL)animated {

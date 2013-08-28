@@ -72,14 +72,14 @@
     if (self.mode == kSelectMode) {
         UIBarButtonItem *doneButton = [[UIBarButtonItem alloc]
                                        initWithTitle: @"Done"
-                                       style: UIBarButtonItemStyleBordered
+                                       style: UIBarButtonItemStyleDone
                                        target: self action:@selector(navigateDone)];
         
         self.navigationItem.rightBarButtonItem = doneButton;
     } else if (self.mode == kAttachMode) {
         UIBarButtonItem *attachButton = [[UIBarButtonItem alloc]
                                          initWithTitle: @"Attach"
-                                         style: UIBarButtonItemStyleBordered
+                                         style: UIBarButtonItemStyleDone
                                          target: self action:@selector(navigateAttach)];
         
         self.navigationItem.rightBarButtonItem = attachButton;

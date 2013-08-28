@@ -160,7 +160,6 @@ static char const * const TapRecognizerKey = "tapRecognizer";
     
     selfFrame.origin.x = 0;
     [self slideTo:selfFrame completion:^{
-        NSLog(@"delegate: %@", self.slidingInDelegate);
         [self.slidingInDelegate viewDidSlideIn];
     }];
 }

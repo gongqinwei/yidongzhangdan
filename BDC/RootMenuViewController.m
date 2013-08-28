@@ -303,7 +303,6 @@ static RootMenuViewController * _sharedInstance = nil;
     
     // Remove the mail view
     [self dismissViewControllerAnimated:YES completion:^{
-        NSLog(@"... %@", self.currVC);
     }];
 }
 
