@@ -1532,8 +1532,8 @@
                         <subviews>
                             <imageView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Q4-CU-btu">
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="160" id="Yf5-cW-JaE"/>
-                                    <constraint firstAttribute="width" constant="160" id="xGb-wT-pfY"/>
+                                    <constraint firstAttribute="height" constant="240" id="CHE-j7-oyI"/>
+                                    <constraint firstAttribute="width" constant="200" id="hD1-Vg-hXI"/>
                                 </constraints>
                             </imageView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="file name" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hv4-K4-0ti">
@@ -1573,14 +1573,14 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="1Q4-CU-btu" firstAttribute="top" secondItem="cFi-0e-wJM" secondAttribute="top" constant="100" id="4mh-EC-ABy"/>
-                            <constraint firstItem="hv4-K4-0ti" firstAttribute="leading" secondItem="cFi-0e-wJM" secondAttribute="leading" constant="80" id="HTk-vz-AKP"/>
+                            <constraint firstItem="1Q4-CU-btu" firstAttribute="leading" secondItem="cFi-0e-wJM" secondAttribute="leading" constant="65" id="Ji8-8l-uLb"/>
                             <constraint firstItem="mz6-0I-i2N" firstAttribute="leading" secondItem="cFi-0e-wJM" secondAttribute="leading" constant="37" id="L57-ty-mz4"/>
-                            <constraint firstItem="1Q4-CU-btu" firstAttribute="centerX" secondItem="hv4-K4-0ti" secondAttribute="centerX" type="default" id="MeA-XM-udt"/>
-                            <constraint firstItem="hv4-K4-0ti" firstAttribute="centerY" secondItem="mz6-0I-i2N" secondAttribute="centerY" type="default" id="aCk-Hu-k4Q"/>
-                            <constraint firstItem="1Q4-CU-btu" firstAttribute="centerX" secondItem="Cp7-x4-SfR" secondAttribute="centerX" type="default" id="juF-Tz-vGa"/>
-                            <constraint firstAttribute="bottom" secondItem="Cp7-x4-SfR" secondAttribute="bottom" constant="100" id="qch-Oa-iYB"/>
-                            <constraint firstItem="hv4-K4-0ti" firstAttribute="top" secondItem="cFi-0e-wJM" secondAttribute="top" constant="50" id="zWO-uA-6bm"/>
+                            <constraint firstAttribute="bottom" secondItem="Cp7-x4-SfR" secondAttribute="bottom" constant="49" id="SRe-IB-JNN"/>
+                            <constraint firstItem="Cp7-x4-SfR" firstAttribute="centerX" secondItem="1Q4-CU-btu" secondAttribute="centerX" type="default" id="hY6-t4-LHY"/>
+                            <constraint firstItem="mz6-0I-i2N" firstAttribute="centerY" secondItem="hv4-K4-0ti" secondAttribute="centerY" type="default" id="jWi-V2-815"/>
+                            <constraint firstItem="hv4-K4-0ti" firstAttribute="top" secondItem="cFi-0e-wJM" secondAttribute="top" constant="30" id="nNv-Av-ni4"/>
+                            <constraint firstItem="1Q4-CU-btu" firstAttribute="top" secondItem="cFi-0e-wJM" secondAttribute="top" constant="75" id="r03-ej-urk"/>
+                            <constraint firstItem="1Q4-CU-btu" firstAttribute="centerX" secondItem="hv4-K4-0ti" secondAttribute="centerX" type="default" id="y13-Rq-f5g"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Scan" id="5gV-Kt-A5h">
@@ -2442,6 +2442,200 @@
         <image name="arrow_down_gray.png" width="16" height="16"/>
         <image name="bill.png" width="16" height="16"/>
     </resources>
+    <classes>
+        <class className="APViewController" superclassName="SlidingViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/APViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
+            </relationships>
+        </class>
+        <class className="AROverViewController" superclassName="SlidingTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AROverViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="dueIn7InvAmount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="dueIn7InvCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="dueOver7InvAmount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="dueOver7InvCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="overDueInvAmount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="overDueInvCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="totalInvAmount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="totalInvCount" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ActionMenuViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ActionMenuViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="searchBar" candidateClass="UISearchBar"/>
+            </relationships>
+        </class>
+        <class className="AttachmentPreviewViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AttachmentPreviewViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="photoImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="previewNavigationBar" candidateClass="UINavigationBar"/>
+            </relationships>
+        </class>
+        <class className="BDCViewController" superclassName="UITabBarController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BDCViewController.h"/>
+        </class>
+        <class className="BOSelectorViewController" superclassName="SlidingTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BOSelectorViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="pickOrCreateSwitch" candidateClass="UISegmentedControl"/>
+            </relationships>
+        </class>
+        <class className="BillsTableViewController" superclassName="SlidingListTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BillsTableViewController.h"/>
+        </class>
+        <class className="CreateBillViewController" superclassName="SlidingViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CreateBillViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="attachment" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="infoTable" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="CustomersTableViewController" superclassName="SlidingListTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CustomersTableViewController.h"/>
+        </class>
+        <class className="DocumentCell" superclassName="UICollectionViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/DocumentCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="documentCreatedDate" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="documentImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="documentName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="downloadingIndicator" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="ebillLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="EditBillViewController" superclassName="SlidingDetailsTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EditBillViewController.h"/>
+        </class>
+        <class className="EditCustomerViewController" superclassName="SlidingDetailsTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EditCustomerViewController.h"/>
+        </class>
+        <class className="EditInvoiceViewController" superclassName="SlidingDetailsTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EditInvoiceViewController.h"/>
+        </class>
+        <class className="EditItemViewController" superclassName="SlidingDetailsTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EditItemViewController.h"/>
+        </class>
+        <class className="EditVendorViewController" superclassName="SlidingDetailsTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EditVendorViewController.h"/>
+        </class>
+        <class className="InboxViewController" superclassName="SlidingCollectionViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/InboxViewController.h"/>
+        </class>
+        <class className="InvoiceDetailsViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/InvoiceDetailsViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="InvoicePDFView" candidateClass="UIWebView"/>
+                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationBar"/>
+            </relationships>
+        </class>
+        <class className="InvoicesTableViewController" superclassName="SlidingListTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/InvoicesTableViewController.h"/>
+        </class>
+        <class className="ItemsTableViewController" superclassName="SlidingListTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ItemsTableViewController.h"/>
+        </class>
+        <class className="LoginViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LoginViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="email" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="indicator" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="password" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="signUpButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="warning" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="PayBillViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PayBillViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="bankAccountLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="billAmountLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="dueDateLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="invalidPayAmountLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="navBar" candidateClass="UINavigationItem"/>
+                <relationship kind="outlet" name="paidAmountLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="payAmountTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="processDateTextField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="RootMenuViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RootMenuViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="menuTableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="ScannerViewController" superclassName="SlidingViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ScannerViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="fileName" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="preview" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="submit" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="SelectOrgViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SelectOrgViewController.h"/>
+        </class>
+        <class className="SlidingCollectionViewController" superclassName="UICollectionViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SlidingCollectionViewController.h"/>
+        </class>
+        <class className="SlidingDetailsTableViewController" superclassName="SlidingTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SlidingDetailsTableViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="saveBusObj:" candidateClass="UIBarButtonItem"/>
+            </relationships>
+        </class>
+        <class className="SlidingListTableViewController" superclassName="SlidingTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SlidingListTableViewController.h"/>
+        </class>
+        <class className="SlidingTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SlidingTableViewController.h"/>
+        </class>
+        <class className="SlidingViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SlidingViewController.h"/>
+        </class>
+        <class className="SplashViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SplashViewController.h"/>
+        </class>
+        <class className="TermOfServiceViewController" superclassName="SlidingViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TermOfServiceViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="termOfServiceWebView" candidateClass="UIWebView"/>
+            </relationships>
+        </class>
+        <class className="UICollectionReusableView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionReusableView.h"/>
+        </class>
+        <class className="UICollectionViewCell" superclassName="UICollectionReusableView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewCell.h"/>
+        </class>
+        <class className="UICollectionViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewController.h"/>
+        </class>
+        <class className="UICollectionViewFlowLayout" superclassName="UICollectionViewLayout">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewFlowLayout.h"/>
+        </class>
+        <class className="UIRefreshControl" superclassName="UIControl">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UIRefreshControl.h"/>
+        </class>
+        <class className="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UIViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="toggleMenu:"/>
+            </relationships>
+        </class>
+        <class className="UserProfileViewController" superclassName="SlidingViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UserProfileViewController.h"/>
+        </class>
+        <class className="VendorsTableViewController" superclassName="SlidingListTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/VendorsTableViewController.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
