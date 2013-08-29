@@ -49,6 +49,7 @@
 @interface BOSelectorViewController ()
 
 @property (nonatomic, strong) UIActivityIndicatorView *uploadIndicator;
+@property (nonatomic, assign) BOOL isNavigateBack;
 
 @end
 
@@ -58,6 +59,7 @@
 @synthesize document;
 @synthesize uploadIndicator;
 @synthesize pickOrCreateSwitch;
+@synthesize isNavigateBack;
 
 
 - (IBAction)uploadToInbox:(id)sender {
@@ -112,6 +114,8 @@
             [segue.destinationViewController setCustomers:[Customer list]];
         }
     }
+    
+    self.isNavigateBack = false;
 }
 
 - (void)performNewSegueForCell:(UIButton *)button {
@@ -148,6 +152,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [self switchPickOrCreate];
+    self.isNavigateBack = true;
 }
 
 - (void)viewDidLoad
@@ -160,7 +165,19 @@
     
 //    self.title = self.document.name;
     
-    [self.pickOrCreateSwitch addTarget:self action:@selector(switchPickOrCreate) forControlEvents:UIControlEventValueChanged];
+    [self.pickOrCreateSwitch addTarget:self action:@selector(switchPickOrCreate) forControlEvents:UIControlEventValueChanged];    
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    if (animated && self.isNavigateBack) {
+        UINavigationController *navVC = [[RootMenuViewController sharedInstance].menuItems objectForKey:MENU_SCANNER];
+        SlidingTableViewController *vc = [navVC.childViewControllers objectAtIndex:0];
+        [RootMenuViewController sharedInstance].currVC = vc;
+        [RootMenuViewController sharedInstance].currVC.navigation = navVC;
+        [RootMenuViewController sharedInstance].currVC.navigationId = MENU_SCANNER;
+    }
 }
 
 - (void)viewDidUnload

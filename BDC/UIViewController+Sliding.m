@@ -164,8 +164,8 @@ static char const * const TapRecognizerKey = "tapRecognizer";
     }];
 }
 
-// slide out without calling delegate
-- (void)slideOutOnly {
+// private auxiliary
+- (CGRect)removeSelfAux {
     [self.actionMenuVC.view removeFromSuperview];
     
     self.navigationItem.hidesBackButton = NO;
@@ -178,7 +178,12 @@ static char const * const TapRecognizerKey = "tapRecognizer";
         destination.origin.x = [UIScreen mainScreen].bounds.size.width * -1;
     }
     
-    self.navigationController.view.frame = destination;
+    return destination;
+}
+
+// No animation; No calling delegate
+- (void)disappearOnly {
+    self.navigationController.view.frame = [self removeSelfAux];
     
     UIViewController *topVC = self.navigationController.topViewController;
     [topVC.view removeGestureRecognizer:topVC.tapRecognizer];
@@ -188,27 +193,27 @@ static char const * const TapRecognizerKey = "tapRecognizer";
     [UIHelper removeShaddowForView:self.navigationController.view];
 }
 
-// synchronous version of slideOut
+// No animation; calling delegate
 - (void)disappear {
-    [self slideOutOnly];
+    [self disappearOnly];
     [self.slidingOutDelegate viewDidSlideOut];
 }
 
-// slide out and then call delegate
+// Slide out with animation; No calling delegate
+- (void)slideOutOnly {
+    [self slideTo:[self removeSelfAux] completion:^(BOOL finished) {
+        UIViewController *topVC = self.navigationController.topViewController;
+        [topVC.view removeGestureRecognizer:topVC.tapRecognizer];
+        topVC.navigationItem.hidesBackButton = NO;
+        
+        [self.navigationController removeFromParentViewController];
+        [UIHelper removeShaddowForView:self.navigationController.view];
+    }];
+}
+
+// Slide out with animation and then call delegate
 - (void)slideOut {
-    [self.actionMenuVC.view removeFromSuperview];
-    
-    self.navigationItem.hidesBackButton = NO;
-    [self.view removeGestureRecognizer:self.tapRecognizer];
-    
-    CGRect destination = self.navigationController.view.frame;
-    if (destination.origin.x > 0) {
-        destination.origin.x = [UIScreen mainScreen].bounds.size.width;
-    } else {
-        destination.origin.x = [UIScreen mainScreen].bounds.size.width * -1;
-    }
-    
-    [self slideTo:destination completion:^(BOOL finished) {
+    [self slideTo:[self removeSelfAux] completion:^(BOOL finished) {
         UIViewController *topVC = self.navigationController.topViewController;
         [topVC.view removeGestureRecognizer:topVC.tapRecognizer];
         topVC.navigationItem.hidesBackButton = NO;

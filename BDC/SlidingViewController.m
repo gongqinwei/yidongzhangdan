@@ -22,9 +22,13 @@
     return self;
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
     [RootMenuViewController sharedInstance].currVC = self;
 }
+
+//- (void)viewDidAppear:(BOOL)animated {
+//    [RootMenuViewController sharedInstance].currVC = self;
+//}
 
 - (void)viewDidLoad
 {
