@@ -10,6 +10,7 @@
 #import "Constants.h"
 #import "RootMenuViewController.h"
 #import "UIHelper.h"
+#import "Util.h"
 
 static Handler sessionValidatingHandler = nil;
 
@@ -19,7 +20,8 @@ static Handler sessionValidatingHandler = nil;
     NSString *urlStr = [NSString stringWithFormat:@"%@/%@/%@", DOMAIN_URL, API_BASE, action];
     NSURL *url = [NSURL URLWithString:urlStr];
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:API_TIMEOUT];
-//    NSLog(@"url: %@", urlStr);
+    Debug(@"url: %@", urlStr);
+
     
     [req setHTTPMethod:@"POST"];
     
@@ -37,7 +39,7 @@ static Handler sessionValidatingHandler = nil;
         }
     }
     
-//    NSLog(@"params: %@", params);
+    Debug(@"params: %@", params);
     [req setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
     
     sessionValidatingHandler = ^(NSURLResponse * response, NSData * data, NSError * err) {

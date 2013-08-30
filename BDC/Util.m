@@ -76,12 +76,12 @@
     NSDateComponents *comp1 = [calendar components:unitFlags fromDate:date1];
     NSDateComponents *comp2 = [calendar components:unitFlags fromDate:date2];
     
-//    NSLog(@"%d", [comp1 year]);
-//    NSLog(@"%d", [comp1 month]);
-//    NSLog(@"%d", [comp1 day]);
-//    NSLog(@"%d", [comp2 year]);
-//    NSLog(@"%d", [comp2 month]);
-//    NSLog(@"%d", [comp2 day]);
+//    Debug(@"%d", [comp1 year]);
+//    Debug(@"%d", [comp1 month]);
+//    Debug(@"%d", [comp1 day]);
+//    Debug(@"%d", [comp2 year]);
+//    Debug(@"%d", [comp2 month]);
+//    Debug(@"%d", [comp2 day]);
     
     if ([comp1 year] != [comp2 year]) {
         return [comp1 year] < [comp2 year];
@@ -101,9 +101,9 @@
 //        }
 //    } else {
 //        if([comp1 day] < [comp2 day]) {
-//            NSLog(@"true");
+//            Debug(@"true");
 //        } else {
-//            NSLog(@"false");
+//            Debug(@"false");
 //        }
 //        return [comp1 day] < [comp2 day];
 //    }

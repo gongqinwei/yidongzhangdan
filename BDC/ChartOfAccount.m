@@ -81,9 +81,9 @@ static NSMutableDictionary *inactiveAccounts = nil;
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             
             if ([theAction isEqualToString:UPDATE]) {
-                NSLog(@"Failed to update account %@: %@", self.objectId, [err localizedDescription]);
+                Debug(@"Failed to update account %@: %@", self.objectId, [err localizedDescription]);
             } else {
-                NSLog(@"Failed to create account: %@", [err localizedDescription]);
+                Debug(@"Failed to create account: %@", [err localizedDescription]);
             }
         }
     }];
@@ -164,11 +164,11 @@ static NSMutableDictionary *inactiveAccounts = nil;
         } else if (response_status == RESPONSE_TIMEOUT) {
             [ListDelegate failedToGetAccounts];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            NSLog(@"Time out when retrieving list of accounts!");
+            Debug(@"Time out when retrieving list of accounts!");
         } else {
             [ListDelegate failedToGetAccounts];
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"Failed to retrieve list of accounts for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
+            Debug(@"Failed to retrieve list of accounts for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
         }
     }];
 }

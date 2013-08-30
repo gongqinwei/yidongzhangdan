@@ -153,7 +153,7 @@ static NSLock *DocumentsLock = nil;
     [APIHandler asyncCallWithAction:RETRIEVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
         NSArray *jsonDocs = [APIHandler getResponse:response data:data error:&err status:&response_status];
-//        NSLog(@"%@", jsonDocs);
+//        Debug(@"%@", jsonDocs);
         
         [UIAppDelegate decrNetworkActivities];
         
@@ -227,7 +227,7 @@ static NSLock *DocumentsLock = nil;
                 [DocumentListDelegate failedToGetDocuments];
             }
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            NSLog(@"Time out when retrieving list of documents!");
+            Debug(@"Time out when retrieving list of documents!");
         } else {
             if ([category isEqualToString:FILE_CATEGORY_ATTACHMENT]) {
                 [AttachmentListDelegate failedToGetDocuments];
@@ -235,7 +235,7 @@ static NSLock *DocumentsLock = nil;
                 [DocumentListDelegate failedToGetDocuments];
             }
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"Failed to retrieve list of %@! %@", category, [err localizedDescription]);
+            Debug(@"Failed to retrieve list of %@! %@", category, [err localizedDescription]);
         }
     }];
 }

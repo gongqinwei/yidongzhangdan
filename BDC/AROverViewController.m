@@ -182,7 +182,7 @@
 //        [segue.destinationViewController setHeaderTitle:ALL_OPEN_INVS];
 //        [segue.destinationViewController setInvoices:self.totalInvoices];
 //    } else {
-//        NSLog(@"wrong invoices segue!");
+//        Debug(@"wrong invoices segue!");
 //    }
 }
 

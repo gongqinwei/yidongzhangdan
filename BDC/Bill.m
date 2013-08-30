@@ -166,9 +166,9 @@ static NSMutableArray *inactiveBills = nil;
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             
             if ([theAction isEqualToString:UPDATE]) {
-                NSLog(@"Failed to update bill %@: %@", self.name, [err localizedDescription]);
+                Debug(@"Failed to update bill %@: %@", self.name, [err localizedDescription]);
             } else {
-                NSLog(@"Failed to create bill: %@", [err localizedDescription]);
+                Debug(@"Failed to create bill: %@", [err localizedDescription]);
             }
         }
     }];
@@ -202,7 +202,7 @@ static NSMutableArray *inactiveBills = nil;
             [ListDelegate didDeleteObject];
         } else {
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"Failed to %@ bill %@: %@", act, self.objectId, [err localizedDescription]);
+            Debug(@"Failed to %@ bill %@: %@", act, self.objectId, [err localizedDescription]);
         }
     }];
 }
@@ -286,11 +286,11 @@ static NSMutableArray *inactiveBills = nil;
         } else if (response_status == RESPONSE_TIMEOUT) {
             [ListDelegate failedToGetBills];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            NSLog(@"Time out when retrieving list of bill for %@!", isActive ? @"active" : @"inactive");
+            Debug(@"Time out when retrieving list of bill for %@!", isActive ? @"active" : @"inactive");
         } else {
             [ListDelegate failedToGetBills];
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"Failed to retrieve list of bill for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
+            Debug(@"Failed to retrieve list of bill for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
         }
     }];
 }
@@ -378,7 +378,7 @@ static NSMutableArray *inactiveBills = nil;
 //        } else {
 //            NSString * msg = @"Failed to create new bill! ";
 //            [UIHelper showInfo:[msg stringByAppendingString:[err localizedDescription]] withStatus:kFailure];
-//            NSLog(@"%@ %@", msg, [err localizedDescription]);
+//            Debug(@"%@ %@", msg, [err localizedDescription]);
 //        }
 //    }];
 //}
@@ -409,11 +409,11 @@ static NSMutableArray *inactiveBills = nil;
 //        
 //        if(response_status == RESPONSE_SUCCESS) {
 //            //TODO: display overlay here?
-//            NSLog(@"Succeeded in attaching photo to bill");
+//            Debug(@"Succeeded in attaching photo to bill");
 //        } else {
-//            NSLog(@"Failed to attaching photo to bill");
+//            Debug(@"Failed to attaching photo to bill");
 //            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-//            NSLog(@"Failed to attaching photo to bill: %@", [err localizedDescription]);
+//            Debug(@"Failed to attaching photo to bill: %@", [err localizedDescription]);
 //        }
 //    }];
 //}

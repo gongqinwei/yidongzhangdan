@@ -157,11 +157,11 @@ static NSMutableDictionary * inactiveVendors = nil;
         } else if (response_status == RESPONSE_TIMEOUT) {
             [ListDelegate failedToGetVendors];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            NSLog(@"Time out when retrieving list of vendors");
+            Debug(@"Time out when retrieving list of vendors");
         } else {
             [ListDelegate failedToGetVendors];
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"Failed to retrieve list of vendors for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
+            Debug(@"Failed to retrieve list of vendors for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
         }
     }];
 }
@@ -267,9 +267,9 @@ static NSMutableDictionary * inactiveVendors = nil;
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             
             if ([theAction isEqualToString:UPDATE]) {
-                NSLog(@"Failed to update vendor %@: %@", self.objectId, [err localizedDescription]);
+                Debug(@"Failed to update vendor %@: %@", self.objectId, [err localizedDescription]);
             } else {
-                NSLog(@"Failed to create vendor: %@", [err localizedDescription]);
+                Debug(@"Failed to create vendor: %@", [err localizedDescription]);
             }
         }
     }];
@@ -304,7 +304,7 @@ static NSMutableDictionary * inactiveVendors = nil;
             [ListDelegate didDeleteObject];
         } else {
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"Failed to %@ vendor %@: %@", act, self.objectId, [err localizedDescription]);
+            Debug(@"Failed to %@ vendor %@: %@", act, self.objectId, [err localizedDescription]);
         }
     }];
 }

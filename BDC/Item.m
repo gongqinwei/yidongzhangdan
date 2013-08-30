@@ -86,9 +86,9 @@ static NSMutableDictionary *inactiveItems = nil;
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             
             if ([theAction isEqualToString:UPDATE]) {
-                NSLog(@"Failed to update item %@: %@", self.objectId, [err localizedDescription]);
+                Debug(@"Failed to update item %@: %@", self.objectId, [err localizedDescription]);
             } else {
-                NSLog(@"Failed to create item: %@", [err localizedDescription]);
+                Debug(@"Failed to create item: %@", [err localizedDescription]);
             }
         }
     }];
@@ -123,7 +123,7 @@ static NSMutableDictionary *inactiveItems = nil;
             [ListDelegate didDeleteObject];
         } else {
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"Failed to %@ item %@: %@", act, self.objectId, [err localizedDescription]);
+            Debug(@"Failed to %@ item %@: %@", act, self.objectId, [err localizedDescription]);
         }
     }];
 }
@@ -221,11 +221,11 @@ static NSMutableDictionary *inactiveItems = nil;
         } else if (response_status == RESPONSE_TIMEOUT) {
             [ListDelegate failedToGetItems];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            NSLog(@"Time out when retrieving list of items!");
+            Debug(@"Time out when retrieving list of items!");
         } else {
             [ListDelegate failedToGetItems];
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"Failed to retrieve list of items for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
+            Debug(@"Failed to retrieve list of items for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
         }
     }];
 }

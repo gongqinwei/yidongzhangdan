@@ -64,7 +64,7 @@
             [self.bill read];
         } else {
             [UIHelper showInfo:[NSString stringWithFormat:@"Failed to pay bill %@: %@", self.bill.name, [err localizedDescription]] withStatus:kFailure];
-            NSLog(@"Failed to pay bill %@: %@", self.bill.name, [err localizedDescription]);
+            Debug(@"Failed to pay bill %@: %@", self.bill.name, [err localizedDescription]);
         }
     }];
 }

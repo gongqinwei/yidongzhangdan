@@ -124,6 +124,7 @@
 		7E91E4231593FA34005104AF /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E91E4221593FA34005104AF /* MobileCoreServices.framework */; };
 		7E91E42E15993E6D005104AF /* BOSelectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E91E42D15993E6D005104AF /* BOSelectorViewController.m */; };
 		7E91E449159D2E1E005104AF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E91E448159D2E1E005104AF /* QuartzCore.framework */; };
+		7E98A99917D07B3000698ED4 /* MenuIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E98A99817D07B3000698ED4 /* MenuIcon.png */; };
 		7EA5BF3217C98DCE0075EEF3 /* Mobill_logo29.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF3117C98DCE0075EEF3 /* Mobill_logo29.png */; };
 		7EA5BF3A17C9D6880075EEF3 /* SlidingMenu30.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF3917C9D6880075EEF3 /* SlidingMenu30.png */; };
 		7EA5BF3E17C9DF2E0075EEF3 /* ActionMenu30.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF3D17C9DF2E0075EEF3 /* ActionMenu30.png */; };
@@ -317,6 +318,7 @@
 		7E91E42D15993E6D005104AF /* BOSelectorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOSelectorViewController.m; sourceTree = "<group>"; };
 		7E91E441159BCC2F005104AF /* CreateBillViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateBillViewController.h; sourceTree = "<group>"; };
 		7E91E448159D2E1E005104AF /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		7E98A99817D07B3000698ED4 /* MenuIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIcon.png; sourceTree = "<group>"; };
 		7EA5BF3117C98DCE0075EEF3 /* Mobill_logo29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill_logo29.png; sourceTree = "<group>"; };
 		7EA5BF3917C9D6880075EEF3 /* SlidingMenu30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SlidingMenu30.png; sourceTree = "<group>"; };
 		7EA5BF3D17C9DF2E0075EEF3 /* ActionMenu30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ActionMenu30.png; sourceTree = "<group>"; };
@@ -743,6 +745,7 @@
 				7EA5BF3117C98DCE0075EEF3 /* Mobill_logo29.png */,
 				7EA5BF4B17CC7D820075EEF3 /* Mobill40.png */,
 				7EA5BF4917CC7CCF0075EEF3 /* Mobill50.png */,
+				7E98A99817D07B3000698ED4 /* MenuIcon.png */,
 				7EA5BF3917C9D6880075EEF3 /* SlidingMenu30.png */,
 				7EA5BF3D17C9DF2E0075EEF3 /* ActionMenu30.png */,
 				7EA5BF4117CB07D50075EEF3 /* PlusIcon.png */,
@@ -865,6 +868,7 @@
 				7EA5BF4817CB0E290075EEF3 /* CheckMarkIcon.png in Resources */,
 				7EA5BF4A17CC7CCF0075EEF3 /* Mobill50.png in Resources */,
 				7EA5BF4C17CC7D830075EEF3 /* Mobill40.png in Resources */,
+				7E98A99917D07B3000698ED4 /* MenuIcon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1043,17 +1047,17 @@
 		7E91E40E15927C15005104AF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Bill.com (CJFVC5WQBE)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Bill.com (CJFVC5WQBE)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Bill.com (CJFVC5WQBE)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Qinwei Gong (DQ29659ZU2)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Qinwei Gong (DQ29659ZU2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Qinwei Gong (DQ29659ZU2)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BDC/BDC-Prefix.pch";
 				INFOPLIST_FILE = "BDC/BDC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = Mobill;
-				PROVISIONING_PROFILE = "215CD8FA-289C-40F3-8077-C84C7F0F2BCF";
-				"PROVISIONING_PROFILE[sdk=*]" = "215CD8FA-289C-40F3-8077-C84C7F0F2BCF";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "215CD8FA-289C-40F3-8077-C84C7F0F2BCF";
+				PROVISIONING_PROFILE = "80B73EF6-78BF-4E6D-B269-4E93CED89D97";
+				"PROVISIONING_PROFILE[sdk=*]" = "80B73EF6-78BF-4E6D-B269-4E93CED89D97";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "80B73EF6-78BF-4E6D-B269-4E93CED89D97";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

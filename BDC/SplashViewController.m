@@ -40,7 +40,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     [Organization setDelegate:self];
     
     self.username = [Util getUsername];
@@ -94,19 +94,19 @@
                     [weakSelf performSegueWithIdentifier:@"EnterBDC" sender:weakSelf];
                 });
             } else {
-                NSLog(@"Splash View Controller: Failed to login!");
+                Debug(@"Splash View Controller: Failed to login!");
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [weakSelf performSegueWithIdentifier:@"PresentLogin" sender:self];
                 });
             }
         }];
     } else if (status == kFailListOrgs) {
-        NSLog(@"Splash View Controller: Failed to list orgs!");
+        Debug(@"Splash View Controller: Failed to list orgs!");
         dispatch_async(dispatch_get_main_queue(), ^{
             [self performSegueWithIdentifier:@"PresentLogin" sender:self];
         });
     } else {
-        NSLog(@"Splash View Controller: Failed to login!");
+        Debug(@"Splash View Controller: Failed to login!");
         dispatch_async(dispatch_get_main_queue(), ^{
             [self performSegueWithIdentifier:@"PresentLogin" sender:self];
         });

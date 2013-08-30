@@ -184,11 +184,11 @@ static NSMutableDictionary * inactiveCustomers = nil;
         } else if (response_status == RESPONSE_TIMEOUT) {
             [ListDelegate failedToGetCustomers];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            NSLog(@"Time out when retrieving list of customers");
+            Debug(@"Time out when retrieving list of customers");
         } else {
             [ListDelegate failedToGetCustomers];
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"Failed to retrieve list of customers for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
+            Debug(@"Failed to retrieve list of customers for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
         }
     }];
 
@@ -271,9 +271,9 @@ static NSMutableDictionary * inactiveCustomers = nil;
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             
             if ([theAction isEqualToString:UPDATE]) {
-                NSLog(@"Failed to update customer %@: %@", self.objectId, [err localizedDescription]);
+                Debug(@"Failed to update customer %@: %@", self.objectId, [err localizedDescription]);
             } else {
-                NSLog(@"Failed to create customer: %@", [err localizedDescription]);
+                Debug(@"Failed to create customer: %@", [err localizedDescription]);
             }
         }
     }];
@@ -308,7 +308,7 @@ static NSMutableDictionary * inactiveCustomers = nil;
             [ListDelegate didDeleteObject];
         } else {
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"Failed to %@ customer %@: %@", act, self.objectId, [err localizedDescription]);
+            Debug(@"Failed to %@ customer %@: %@", act, self.objectId, [err localizedDescription]);
         }
     }];
 }

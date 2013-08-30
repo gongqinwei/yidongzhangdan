@@ -217,15 +217,15 @@
                     });
                 } else if (response_status == RESPONSE_TIMEOUT) {
                     [UIHelper showInfo:SysTimeOut withStatus:kError];
-                    NSLog(SysTimeOut);
+                    Debug(SysTimeOut);
                 } else {
                     [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-                    NSLog(@"%@", [err localizedDescription]);
+                    Debug(@"%@", [err localizedDescription]);
                 }
             }];
         } else {
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"%@", [err localizedDescription]);
+            Debug(@"%@", [err localizedDescription]);
         }
     }];
 

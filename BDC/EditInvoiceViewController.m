@@ -388,7 +388,7 @@ typedef enum {
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                self.pdfReady = YES;                               
                                self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];
-//                               NSLog(@"Succeeded! Received %d bytes of data for PDF", [self.invoicePDFData length]);
+//                               Debug(@"Succeeded! Received %d bytes of data for PDF", [self.invoicePDFData length]);
                            }];
 }
 
@@ -404,7 +404,7 @@ typedef enum {
     NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
     
     if (!theConnection) {
-        NSLog(@"Failed to establish URL connection to retrieve PDF");
+        Debug(@"Failed to establish URL connection to retrieve PDF");
     } else {
         [self addPDFAttachment];
     }
@@ -1040,13 +1040,13 @@ typedef enum {
     self.pdfReady = YES;
     self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];
     
-    NSLog(@"Succeeded! Received %d bytes of data for PDF", [self.invoicePDFData length]);
+    Debug(@"Succeeded! Received %d bytes of data for PDF", [self.invoicePDFData length]);
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     self.pdfReady = NO;
     
-    NSLog(@"Connection failed! Error - %@ %@",
+    Debug(@"Connection failed! Error - %@ %@",
           [error localizedDescription],
           [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
 }

@@ -120,7 +120,7 @@ enum PhotoSourceType {
     [self.actions showInView:self.view];
     
 //    if (self.mode == kAttachMode) {
-//        NSLog(@"nav bar: %@", self.navigationItem.leftBarButtonItem);
+//        Debug(@"nav bar: %@", self.navigationItem.leftBarButtonItem);
 //        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismissImagePicker)];
 //        self.navigationItem.leftBarButtonItem = nil;
 //    }

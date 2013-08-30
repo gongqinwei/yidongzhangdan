@@ -11,16 +11,16 @@
 
 #import "Labels.h"
 
-#define LOCAL
+//#define LOCAL
 //#define APPTEST
 //#define APPSTAGE
-//#define PROD
+#define PROD
 
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
 //#define DOMAIN_URL          @"http://10.1.9.101"
-#define DOMAIN_URL          @"http://192.168.1.4"
+#define DOMAIN_URL          @"http://192.168.1.6"
 #define APP_KEY             @"devKey"
 #define DEBUG_MODE
 #endif
@@ -46,6 +46,12 @@
 #define ERR_DOMAIN          @"PROD"
 #define DOMAIN_URL          @"https://app.bill.com"
 #define APP_KEY             @"devKey"
+#endif
+
+#ifdef DEBUG_MODE
+#define Debug( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
+#else
+#define Debug( s, ... )
 #endif
 
 #define KEYCHAIN_ID         @"BDCLogin"

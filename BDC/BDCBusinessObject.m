@@ -63,7 +63,7 @@
         } else {
             [self.editDelegate failedToReadObject];
             [UIHelper showInfo:[NSString stringWithFormat:@"Failed to read %@ %@: %@", [self class], self.objectId, [err localizedDescription]] withStatus:kFailure];
-            NSLog(@"Failed to read %@ %@: %@", [self class], self.objectId, [err localizedDescription]);
+            Debug(@"Failed to read %@ %@: %@", [self class], self.objectId, [err localizedDescription]);
         }
     }];
 }

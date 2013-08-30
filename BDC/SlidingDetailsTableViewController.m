@@ -364,7 +364,7 @@ static double animatedDistance = 0;
                 });
             }
         } else {
-            NSLog(@"Failed to retrieve attachments for %@: %@", self.busObj.name, [err localizedDescription]);
+            Debug(@"Failed to retrieve attachments for %@: %@", self.busObj.name, [err localizedDescription]);
         }
     }];
 }
@@ -671,7 +671,7 @@ static double animatedDistance = 0;
                     }
                     
                     [self.busObj.attachmentDelegate didUploadDocument:doc needUI:NO];
-                    NSLog(@"Successfully added attachment %@", doc.name);
+                    Debug(@"Successfully added attachment %@", doc.name);
                 } else {
                     [UIHelper showInfo:[NSString stringWithFormat:@"Failed to upload %@", doc.name] withStatus:kFailure];
                 }
@@ -707,10 +707,10 @@ static double animatedDistance = 0;
                         
                         [doneLock unlock];
                         
-                        NSLog(@"Successfully deleted attachment %@", doc.name);
+                        Debug(@"Successfully deleted attachment %@", doc.name);
                     } else {
                         [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-                        NSLog(@"Failed to delete attachment %@: %@", docId, [err localizedDescription]);
+                        Debug(@"Failed to delete attachment %@: %@", docId, [err localizedDescription]);
                     }
                 }];
             }
@@ -742,10 +742,10 @@ static double animatedDistance = 0;
                         
                         [doneLock unlock];
                         
-                        NSLog(@"Successfully associate document %@", doc.name);
+                        Debug(@"Successfully associate document %@", doc.name);
                     } else {
                         [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-                        NSLog(@"Failed to associate document %@: %@", doc.name, [err localizedDescription]);
+                        Debug(@"Failed to associate document %@: %@", doc.name, [err localizedDescription]);
                     }
                 }];
             }

@@ -65,10 +65,10 @@ static NSArray *bankAccounts = nil;
             
         } else if (response_status == RESPONSE_TIMEOUT) {
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            NSLog(@"Time out when retrieving list of bank accounts!");
+            Debug(@"Time out when retrieving list of bank accounts!");
         } else {
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"Failed to retrieve list of bank accounts! %@", [err localizedDescription]);
+            Debug(@"Failed to retrieve list of bank accounts! %@", [err localizedDescription]);
         }
     }];
 }

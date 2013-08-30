@@ -168,9 +168,9 @@ static NSMutableArray *inactiveInvoices = nil;
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             
             if ([theAction isEqualToString:UPDATE]) {
-                NSLog(@"Failed to update invoice %@: %@", self.objectId, [err localizedDescription]);
+                Debug(@"Failed to update invoice %@: %@", self.objectId, [err localizedDescription]);
             } else {
-                NSLog(@"Failed to create invoice: %@", [err localizedDescription]);
+                Debug(@"Failed to create invoice: %@", [err localizedDescription]);
             }
         }
     }];
@@ -204,7 +204,7 @@ static NSMutableArray *inactiveInvoices = nil;
             [ListDelegate didDeleteObject];
         } else {
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"Failed to %@ invoice %@: %@", act, self.objectId, [err localizedDescription]);
+            Debug(@"Failed to %@ invoice %@: %@", act, self.objectId, [err localizedDescription]);
         }
     }];
 }
@@ -309,11 +309,11 @@ static NSMutableArray *inactiveInvoices = nil;
         } else if (response_status == RESPONSE_TIMEOUT) {
             [ListDelegate failedToGetInvoices];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            NSLog(@"Time out when retrieving list of invoice for %@!", isActive ? @"active" : @"inactive");
+            Debug(@"Time out when retrieving list of invoice for %@!", isActive ? @"active" : @"inactive");
         } else {
             [ListDelegate failedToGetInvoices];
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-            NSLog(@"Failed to retrieve list of invoice for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
+            Debug(@"Failed to retrieve list of invoice for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
         }
     }];
 }

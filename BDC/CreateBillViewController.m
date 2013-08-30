@@ -420,7 +420,7 @@ enum InfoType {
 //            [UIHelper showInfo:@"Attachment saved." withStatus:kSuccess];
 //        } else {
 //            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-//            NSLog(@"Failed to save attachment: %@", [err localizedDescription]);
+//            Debug(@"Failed to save attachment: %@", [err localizedDescription]);
 //        }
 //    }];
 }

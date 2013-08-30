@@ -8,13 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#ifdef DEBUG_MODE
-#define Debug( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
-#else
-#define Debug( s, ... )
-#endif
-
-
 @interface Util : NSObject
 
 + (void)logout;
