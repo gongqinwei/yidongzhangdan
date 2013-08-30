@@ -22,6 +22,7 @@
 //#define DOMAIN_URL          @"http://10.1.9.101"
 #define DOMAIN_URL          @"http://192.168.1.4"
 #define APP_KEY             @"devKey"
+#define DEBUG_MODE
 #endif
 
 #ifdef APPTEST
@@ -29,6 +30,7 @@
 #define ERR_DOMAIN          @"App Test"
 #define DOMAIN_URL          @"https://app-test.cashview.com"
 #define APP_KEY             @"devKey"
+#define DEBUG_MODE
 #endif
 
 #ifdef APPSTAGE
@@ -36,6 +38,7 @@
 #define ERR_DOMAIN          @"App Stage"
 #define DOMAIN_URL          @"https://app-stage.bill.com"
 #define APP_KEY             @"devKey"
+#define DEBUG_MODE
 #endif
 
 #ifdef PROD

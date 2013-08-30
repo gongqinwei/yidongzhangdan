@@ -837,7 +837,7 @@
         if (org.needApprovalToPayBill) {
             readyToPaySectionLabel = @"Ready to Pay";
         } else {
-            readyToPaySectionLabel = @"Cleared";
+            readyToPaySectionLabel = @"Good To Go";
         }
         
         self.readyToPayBills = [approvedBills arrayByAddingObjectsFromArray:unassignedBills];

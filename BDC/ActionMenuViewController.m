@@ -350,7 +350,7 @@ static ActionMenuViewController * _sharedInstance = nil;
                 
                 [self.payAmountLabel removeFromSuperview];
                 self.payAmountLabel = nil;
-                self.payAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 7, 170, cell.viewForBaselineLayout.bounds.size.height - 12)];
+                self.payAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 7, 185, cell.viewForBaselineLayout.bounds.size.height - 12)];
                 self.payAmountLabel.textAlignment = NSTextAlignmentRight;
                 
                 if ([((NSArray *)[BankAccount list]) count]) {
@@ -362,7 +362,7 @@ static ActionMenuViewController * _sharedInstance = nil;
                     
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 } else {
-                    self.payAmountLabel.text = @"No bank account for Paybles";
+                    self.payAmountLabel.text = @"No bank account for Payables";
                     self.payAmountLabel.font = [UIFont systemFontOfSize:13.0f];
                     self.payAmountLabel.textColor = [UIColor orangeColor];
                     

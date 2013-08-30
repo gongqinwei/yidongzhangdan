@@ -994,7 +994,7 @@ typedef enum {
 - (void)didSelectCrudAction:(NSString *)action {
     [super didSelectCrudAction:action];
     
-    if ([action isEqualToString:ACTION_PAY]) {
+    if ([action isEqualToString:ACTION_PAY] && [((NSArray *)[BankAccount list]) count]) {
 //        if ([((NSArray *)[BankAccount list]) count]) {
             [self performSegueWithIdentifier:BILL_PAY_BILL_SEGUE sender:self];
 //        } else {
