@@ -3,7 +3,7 @@
 //  BDC
 //
 //  Created by Qinwei Gong on 4/27/13.
-//
+//  Copyright (c) 2013 Mobill Inc. All rights reserved.
 //
 
 #import "EditVendorViewController.h"
@@ -348,7 +348,17 @@ enum VendorInfoType {
                     break;
                 case kVendorEmail:
                     if (self.mode == kViewMode) {
-                        cell.detailTextLabel.text = shaddowVendor.email;
+//                        cell.detailTextLabel.text = shaddowVendor.email;
+                        
+                        UITextView *emailView = [[UITextView alloc] initWithFrame:TABLE_CELL_DETAIL_TEXT_RECT];
+                        emailView.font = [UIFont systemFontOfSize:TABLE_CELL_DETAIL_TEXT_FONT];
+                        emailView.text = shaddowVendor.email;
+                        emailView.backgroundColor = [UIColor clearColor];
+                        emailView.editable = NO;
+                        emailView.dataDetectorTypes = UIDataDetectorTypeLink;
+                        
+                        [cell addSubview:emailView];
+
                     } else {
                         if (self.shaddowBusObj != nil) {
                             self.vendorEmailTextField.text = shaddowVendor.email;
@@ -360,7 +370,17 @@ enum VendorInfoType {
                     break;
                 case kVendorPhone:
                     if (self.mode == kViewMode) {
-                        cell.detailTextLabel.text = shaddowVendor.phone;
+//                        cell.detailTextLabel.text = shaddowVendor.phone;
+                        
+                        UITextView *phoneView = [[UITextView alloc] initWithFrame:TABLE_CELL_DETAIL_TEXT_RECT];
+                        phoneView.font = [UIFont systemFontOfSize:TABLE_CELL_DETAIL_TEXT_FONT];
+                        phoneView.text = shaddowVendor.phone;
+                        phoneView.backgroundColor = [UIColor clearColor];
+                        phoneView.editable = NO;
+                        phoneView.dataDetectorTypes = UIDataDetectorTypePhoneNumber;
+                        
+                        [cell addSubview:phoneView];
+
                     } else {
                         if (self.shaddowBusObj != nil) {
                             self.vendorPhoneTextField.text = shaddowVendor.phone;

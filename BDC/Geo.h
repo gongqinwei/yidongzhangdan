@@ -3,7 +3,7 @@
 //  BDC
 //
 //  Created by Qinwei Gong on 2/19/13.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Mobill Inc. All rights reserved.
 //
 
 #ifndef BDC_Geo_h

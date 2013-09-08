@@ -3,7 +3,7 @@
 //  BDC
 //
 //  Created by Qinwei Gong on 8/27/12.
-//
+//  Copyright (c) 2012 Mobill Inc. All rights reserved.
 //
 
 #import "Invoice.h"

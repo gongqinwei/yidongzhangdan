@@ -3,7 +3,7 @@
 //  BDC
 //
 //  Created by Qinwei Gong on 5/11/13.
-//
+//  Copyright (c) 2012 Mobill Inc. All rights reserved.
 //
 
 #import "BankAccount.h"

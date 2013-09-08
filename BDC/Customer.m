@@ -3,7 +3,7 @@
 //  BDC
 //
 //  Created by Qinwei Gong on 9/7/12.
-//
+//  Copyright (c) 2012 Mobill Inc. All rights reserved.
 //
 
 #import "Customer.h"

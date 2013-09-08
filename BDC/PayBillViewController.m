@@ -3,7 +3,7 @@
 //  BDC
 //
 //  Created by Qinwei Gong on 5/1/13.
-//
+//  Copyright (c) 2013 Mobill Inc. All rights reserved.
 //
 
 #import "PayBillViewController.h"

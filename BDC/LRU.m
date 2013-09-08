@@ -3,6 +3,7 @@
 //  Mobill
 //
 //  Created by Qinwei Gong on 6/29/13.
+//  Copyright (c) 2013 Mobill Inc. All rights reserved.
 //
 //  Mainly used for free up memory on receiving memory warning
 

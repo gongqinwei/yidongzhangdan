@@ -3,7 +3,7 @@
 //  BDC
 //
 //  Created by Qinwei Gong on 6/21/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Mobill Inc. All rights reserved.
 //
 
 #ifndef BDC_Constants_h
@@ -11,16 +11,16 @@
 
 #import "Labels.h"
 
-//#define LOCAL
+#define LOCAL
 //#define APPTEST
 //#define APPSTAGE
-#define PROD
+//#define PROD
 
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
 //#define DOMAIN_URL          @"http://10.1.9.101"
-#define DOMAIN_URL          @"http://192.168.1.6"
+#define DOMAIN_URL          @"http://192.168.1.16"
 #define APP_KEY             @"devKey"
 #define DEBUG_MODE
 #endif
@@ -171,6 +171,8 @@
 #define CELL_WIDTH                      300
 #define CELL_HEIGHT                     44
 #define INFO_INPUT_RECT                 CGRectMake(CELL_WIDTH - 170, 5, 170, CELL_HEIGHT - 10)
+#define TABLE_CELL_DETAIL_TEXT_RECT     CGRectMake(85, 5, CELL_WIDTH - 100, CELL_HEIGHT - 10)
+#define TABLE_CELL_DETAIL_TEXT_FONT     13.0
 
 #define INVALID_OPTION                  -1
 

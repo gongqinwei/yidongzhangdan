@@ -125,6 +125,7 @@
 		7E91E42E15993E6D005104AF /* BOSelectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E91E42D15993E6D005104AF /* BOSelectorViewController.m */; };
 		7E91E449159D2E1E005104AF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E91E448159D2E1E005104AF /* QuartzCore.framework */; };
 		7E98A99917D07B3000698ED4 /* MenuIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E98A99817D07B3000698ED4 /* MenuIcon.png */; };
+		7E98A99C17DC1BB400698ED4 /* BDCBusinessObjectWithAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E98A99B17DC1BB300698ED4 /* BDCBusinessObjectWithAddress.m */; };
 		7EA5BF3217C98DCE0075EEF3 /* Mobill_logo29.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF3117C98DCE0075EEF3 /* Mobill_logo29.png */; };
 		7EA5BF3A17C9D6880075EEF3 /* SlidingMenu30.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF3917C9D6880075EEF3 /* SlidingMenu30.png */; };
 		7EA5BF3E17C9DF2E0075EEF3 /* ActionMenu30.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF3D17C9DF2E0075EEF3 /* ActionMenu30.png */; };
@@ -319,6 +320,8 @@
 		7E91E441159BCC2F005104AF /* CreateBillViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateBillViewController.h; sourceTree = "<group>"; };
 		7E91E448159D2E1E005104AF /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		7E98A99817D07B3000698ED4 /* MenuIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIcon.png; sourceTree = "<group>"; };
+		7E98A99A17DC1BB300698ED4 /* BDCBusinessObjectWithAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDCBusinessObjectWithAddress.h; sourceTree = "<group>"; };
+		7E98A99B17DC1BB300698ED4 /* BDCBusinessObjectWithAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDCBusinessObjectWithAddress.m; sourceTree = "<group>"; };
 		7EA5BF3117C98DCE0075EEF3 /* Mobill_logo29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill_logo29.png; sourceTree = "<group>"; };
 		7EA5BF3917C9D6880075EEF3 /* SlidingMenu30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SlidingMenu30.png; sourceTree = "<group>"; };
 		7EA5BF3D17C9DF2E0075EEF3 /* ActionMenu30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ActionMenu30.png; sourceTree = "<group>"; };
@@ -597,6 +600,8 @@
 				0E3A15701742F958007F2DC6 /* Document.m */,
 				0EB21934174B3B2300382C44 /* BDCBusinessObjectWithAttachments.h */,
 				0EB21935174B3B2300382C44 /* BDCBusinessObjectWithAttachments.m */,
+				7E98A99A17DC1BB300698ED4 /* BDCBusinessObjectWithAddress.h */,
+				7E98A99B17DC1BB300698ED4 /* BDCBusinessObjectWithAddress.m */,
 				0E188B8A176C435300493EE1 /* BDCBusinessObjectWithAttachmentsAndAddress.h */,
 				0E188B8B176C435300493EE1 /* BDCBusinessObjectWithAttachmentsAndAddress.m */,
 			);
@@ -788,6 +793,7 @@
 			attributes = {
 				CLASSPREFIX = Mobill;
 				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Mobill Inc.";
 			};
 			buildConfigurationList = 7E91E3E515927C15005104AF /* Build configuration list for PBXProject "Mobill" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -938,6 +944,7 @@
 				0EC19CA2177FFBE800D5B285 /* LRU.m in Sources */,
 				0EC19CA5177FFD3F00D5B285 /* Node.m in Sources */,
 				0EC19CA8177FFE0100D5B285 /* LinkedList.m in Sources */,
+				7E98A99C17DC1BB400698ED4 /* BDCBusinessObjectWithAddress.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

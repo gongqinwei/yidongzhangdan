@@ -3,7 +3,7 @@
 //  BDC
 //
 //  Created by Qinwei Gong on 6/21/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Mobill Inc. All rights reserved.
 //
 
 #import "ScannerViewController.h"

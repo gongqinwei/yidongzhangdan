@@ -3,7 +3,7 @@
 //  BDC
 //
 //  Created by Qinwei Gong on 8/31/12.
-//
+//  Copyright (c) 2013 Mobill Inc. All rights reserved.
 //
 
 #import "AROverViewController.h"

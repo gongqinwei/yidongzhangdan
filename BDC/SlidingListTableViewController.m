@@ -3,7 +3,7 @@
 //  BDC
 //
 //  Created by Qinwei Gong on 4/11/13.
-//
+//  Copyright (c) 2013 Mobill Inc. All rights reserved.
 //
 
 #import "SlidingListTableViewController.h"
