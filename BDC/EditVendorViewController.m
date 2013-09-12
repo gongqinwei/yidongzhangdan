@@ -8,6 +8,7 @@
 
 #import "EditVendorViewController.h"
 #import "Vendor.h"
+#import "MapViewController.h"
 #import "Util.h"
 #import "UIHelper.h"
 #import "Geo.h"
@@ -34,6 +35,7 @@ enum VendorInfoType {
 
 #define VENDOR_ADDR_TAG_OFFSET          4
 #define VENDOR_SCAN_PHOTO_SEGUE         @"ScanMoreVendorPhoto"
+#define VENDOR_VIEW_MAP                 @"ViewVendorMap"
 
 
 @interface EditVendorViewController () <UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
@@ -52,7 +54,7 @@ enum VendorInfoType {
 @property (nonatomic, strong) UITextField *vendorPhoneTextField;
 @property (nonatomic, strong) UITextField *vendorEmailTextField;
 @property (nonatomic, strong) UILabel *vendorPayByLabel;
-@property (nonatomic, strong) NSMutableString *address;
+//@property (nonatomic, strong) NSMutableString *address;
 @property (nonatomic, assign) int numOfLinesInAddr;
 
 @end
@@ -74,7 +76,7 @@ enum VendorInfoType {
 @synthesize vendorPhoneTextField;
 @synthesize vendorEmailTextField;
 @synthesize vendorPayByLabel;
-@synthesize address;
+//@synthesize address;
 @synthesize numOfLinesInAddr;
 
 
@@ -253,18 +255,20 @@ enum VendorInfoType {
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.activityIndicator.hidesWhenStopped = YES;
     
-    [self formatAddr];
+//    [self formatAddr];
+    self.numOfLinesInAddr = shaddowVendor.numOfLinesInAddr;
 }
 
 - (void)formatAddr {
-    self.address = [NSMutableString string];
-    self.numOfLinesInAddr = [((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj) formatAddress:self.address];
+    self.numOfLinesInAddr = [((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj) formatAddress:((Vendor *)self.shaddowBusObj).formattedAddress];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:VENDOR_SCAN_PHOTO_SEGUE]) {
         ((ScannerViewController *)segue.destinationViewController).delegate = self;
         [segue.destinationViewController setMode:kAttachMode];
+    } else if ([segue.identifier isEqualToString:VENDOR_VIEW_MAP]) {
+        [segue.destinationViewController setAnnotations:@[self.shaddowBusObj]];
     }
 }
 
@@ -308,14 +312,14 @@ enum VendorInfoType {
     switch (indexPath.section) {
         case kVendorInfo:
         {
-            if (self.modeChanged) {
-                if (self.mode == kViewMode) {
-                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:VENDOR_INFO_CELL_ID];
-                } else {
-                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:VENDOR_INFO_CELL_ID];
-                }
-            } else {
-                cell = [tableView dequeueReusableCellWithIdentifier:VENDOR_INFO_CELL_ID];
+//            if (self.modeChanged) {
+//                if (self.mode == kViewMode) {
+//                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:VENDOR_INFO_CELL_ID];
+//                } else {
+//                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:VENDOR_INFO_CELL_ID];
+//                }
+//            } else {
+//                cell = [tableView dequeueReusableCellWithIdentifier:VENDOR_INFO_CELL_ID];
                 if (!cell) {
                     if (self.mode == kViewMode) {
                         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:VENDOR_INFO_CELL_ID];
@@ -323,7 +327,7 @@ enum VendorInfoType {
                         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:VENDOR_INFO_CELL_ID];
                     }
                 }
-            }
+//            }
             
             cell.textLabel.text = VendorInfo[indexPath.section][indexPath.row];            
             cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:APP_LABEL_FONT_SIZE];
@@ -348,6 +352,10 @@ enum VendorInfoType {
                     break;
                 case kVendorEmail:
                     if (self.mode == kViewMode) {
+                        UIImageView *emailImg = [[UIImageView alloc] initWithFrame:CGRectMake(22, 14, 18, 18)];
+                        emailImg.image = [UIImage imageNamed:@"emailIcon1.png"];
+                        [cell addSubview:emailImg];
+                        
 //                        cell.detailTextLabel.text = shaddowVendor.email;
                         
                         UITextView *emailView = [[UITextView alloc] initWithFrame:TABLE_CELL_DETAIL_TEXT_RECT];
@@ -370,6 +378,10 @@ enum VendorInfoType {
                     break;
                 case kVendorPhone:
                     if (self.mode == kViewMode) {
+                        UIImageView *phoneImg = [[UIImageView alloc] initWithFrame:CGRectMake(22, 14, 16, 16)];
+                        phoneImg.image = [UIImage imageNamed:@"phoneIcon.png"];
+                        [cell addSubview:phoneImg];
+                        
 //                        cell.detailTextLabel.text = shaddowVendor.phone;
                         
                         UITextView *phoneView = [[UITextView alloc] initWithFrame:TABLE_CELL_DETAIL_TEXT_RECT];
@@ -422,9 +434,21 @@ enum VendorInfoType {
             
             if (self.mode == kViewMode) {
                 cell.textLabel.text = @"Address";
-                cell.detailTextLabel.text = self.address;
+                cell.detailTextLabel.text = shaddowVendor.formattedAddress;
                 cell.detailTextLabel.numberOfLines = self.numOfLinesInAddr;
                 cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
+                
+                if ([[shaddowVendor.formattedAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0) {
+                    if (shaddowVendor.latitude == 0.0 && shaddowVendor.longitude == 0.0) {
+                        [shaddowVendor geoCodeUsingAddress:shaddowVendor.formattedAddress];
+                    }
+                    
+                    if (!(shaddowVendor.latitude == 0.0 && shaddowVendor.longitude == 0.0)) {
+                        ((Vendor *)self.busObj).latitude = shaddowVendor.latitude;
+                        ((Vendor *)self.busObj).longitude = shaddowVendor.longitude;
+                        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    }
+                }
             } else {
                 switch (indexPath.row) {
                     case kAddr1:
@@ -656,6 +680,13 @@ enum VendorInfoType {
     //    [self textFieldDoneEditing:self.editingField];
     [self.vendorStateTextField resignFirstResponder];
     [self.vendorCountryTextField resignFirstResponder];
+    
+    if (self.mode == kViewMode && indexPath.section == kVendorAddr) {
+        CLLocationCoordinate2D coordinate = [((Vendor*)self.shaddowBusObj) coordinate];
+        if (!(coordinate.latitude == 0.0 && coordinate.longitude == 0.0)) {
+            [self performSegueWithIdentifier:VENDOR_VIEW_MAP sender:self];
+        }
+    }
 }
 
 #pragma mark - Text Field delegate
@@ -785,15 +816,14 @@ enum VendorInfoType {
 #pragma mark - Model delegate
 
 - (void)didReadObject {
-    [self formatAddr];
     [super didReadObject];
     [self.shaddowBusObj cloneTo:self.busObj];
 }
 
 - (void)doneSaveObject {
     [super doneSaveObject];
-    self.address = [NSMutableString string];
-    self.numOfLinesInAddr = [((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj) formatAddress:self.address];
+    [self formatAddr];
+    [((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj) geoCodeUsingAddress:((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj).formattedAddress];
 }
 
 

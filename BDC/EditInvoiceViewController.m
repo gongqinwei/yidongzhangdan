@@ -136,7 +136,7 @@ typedef enum {
         if (self.isActive) {
             self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
             if (self.pdfReady) {
-                self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];
+//                self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];      //TEMP: UNCOMMENT ONCE SEND INVOICE API IS DONE
             }
         } else {
             self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
@@ -387,7 +387,7 @@ typedef enum {
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                self.pdfReady = YES;                               
-                               self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];
+//                               self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];      //TEMP: UNCOMMENT ONCE SEND INVOICE API IS DONE
 //                               Debug(@"Succeeded! Received %d bytes of data for PDF", [self.invoicePDFData length]);
                            }];
 }
@@ -1038,7 +1038,7 @@ typedef enum {
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     self.pdfReady = YES;
-    self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];
+//    self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];      //TEMP: UNCOMMENT ONCE SEND INVOICE API IS DONE
     
     Debug(@"Succeeded! Received %d bytes of data for PDF", [self.invoicePDFData length]);
 }

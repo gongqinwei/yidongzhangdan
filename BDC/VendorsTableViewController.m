@@ -9,11 +9,13 @@
 #import "VendorsTableViewController.h"
 #import "EditVendorViewController.h"
 #import "Vendor.h"
+#import "MapViewController.h"
 #import "Util.h"
 
 #define VENDOR_CELL_ID                  @"VendorItem"
 #define VENDOR_VIEW_VENDOR_SEGUE        @"ViewVendor"
 #define VENDOR_CREATE_VENDOR_SEGUE      @"CreateVendor"
+#define VENDOR_LIST_MAP                 @"ViewVendorsMap"
 
 #define ALL_INACTIVE_VENDORS            @"All Deleted Vendors"
 
@@ -219,6 +221,8 @@
         [segue.destinationViewController setMode:kViewMode];
     } else if ([segue.identifier isEqualToString:VENDOR_CREATE_VENDOR_SEGUE]) {
         [segue.destinationViewController setMode:kCreateMode];
+    } else if ([segue.identifier isEqualToString:VENDOR_LIST_MAP]) {
+        [segue.destinationViewController setAnnotations:self.vendors];
     }
 }
 
@@ -318,5 +322,12 @@
     self.vendors = vendorList;
 }
 
+- (void)didSelectCrudAction:(NSString *)action {
+    [super didSelectCrudAction:action];
+    
+    if ([action isEqualToString:ACTION_MAP]) {
+        [self performSegueWithIdentifier:VENDOR_LIST_MAP sender:self];
+    }
+}
 
 @end

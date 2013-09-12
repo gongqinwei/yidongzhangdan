@@ -27,7 +27,7 @@
 @synthesize password;
 @synthesize warning;
 @synthesize indicator;
-@synthesize signUpButton;
+//@synthesize signUpButton;
 
 - (IBAction)login:(id)sender {
     [self.email resignFirstResponder];
@@ -41,23 +41,18 @@
     [Organization retrieveList];
 }
 
-- (IBAction)toggleSignUp:(UIButton *)sender {
-    self.signUpButton.alpha = self.signUpButton.hidden ? 0.0 : 1.0;
-    self.signUpButton.hidden = !self.signUpButton.hidden;
-    
-    [UIView animateWithDuration:0.5
-                     animations:^{
-                         self.signUpButton.alpha = self.signUpButton.hidden ? 0.0 : 1.0;
-                     }
-     ];
-}
-
-- (IBAction)signUpWithBDC:(UIButton *)sender {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/Signup", DOMAIN_URL]];
-    [[UIApplication sharedApplication] openURL:url];
-}
-
-//- (void)launchSignup {
+//- (IBAction)toggleSignUp:(UIButton *)sender {
+//    self.signUpButton.alpha = self.signUpButton.hidden ? 0.0 : 1.0;
+//    self.signUpButton.hidden = !self.signUpButton.hidden;
+//    
+//    [UIView animateWithDuration:0.5
+//                     animations:^{
+//                         self.signUpButton.alpha = self.signUpButton.hidden ? 0.0 : 1.0;
+//                     }
+//     ];
+//}
+//
+//- (IBAction)signUpWithBDC:(UIButton *)sender {
 //    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/Signup", DOMAIN_URL]];
 //    [[UIApplication sharedApplication] openURL:url];
 //}

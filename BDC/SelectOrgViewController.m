@@ -128,7 +128,7 @@
     NSString *imageName = @"CompanyIcon.png";
     cell.imageView.image = [UIImage imageNamed:imageName];
     
-    dispatch_async(dispatch_get_global_queue(0,0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100&orgId=%@", DOMAIN_URL, ORG_LOGO_API, org.objectId]]];
         
         if (imageData != nil) {

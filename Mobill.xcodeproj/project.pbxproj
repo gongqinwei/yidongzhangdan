@@ -102,6 +102,9 @@
 		0EEB9F751756B26B00AAAC35 /* SlidingCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB9F741756B26B00AAAC35 /* SlidingCollectionViewController.m */; };
 		0EEB9F781756B5AE00AAAC35 /* InboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB9F771756B5AE00AAAC35 /* InboxViewController.m */; };
 		0EEB9F7C1756B91300AAAC35 /* DocumentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB9F7B1756B91300AAAC35 /* DocumentCell.m */; };
+		7E370EAE17DD89C8005B3538 /* phoneIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EAD17DD89C8005B3538 /* phoneIcon.png */; };
+		7E370EB617DD8E3F005B3538 /* emailIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EB517DD8E3F005B3538 /* emailIcon.png */; };
+		7E370EB817DD90EC005B3538 /* emailIcon1.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EB717DD90EC005B3538 /* emailIcon1.png */; };
 		7E579F5A15A21F1E009D1455 /* Bill.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F5915A21F1E009D1455 /* Bill.m */; };
 		7E579F5E15A234EB009D1455 /* APIHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F5D15A234EB009D1455 /* APIHandler.m */; };
 		7E579F6515A80C8F009D1455 /* BDClogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E579F6415A80C8F009D1455 /* BDClogo.png */; };
@@ -125,7 +128,9 @@
 		7E91E42E15993E6D005104AF /* BOSelectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E91E42D15993E6D005104AF /* BOSelectorViewController.m */; };
 		7E91E449159D2E1E005104AF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E91E448159D2E1E005104AF /* QuartzCore.framework */; };
 		7E98A99917D07B3000698ED4 /* MenuIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E98A99817D07B3000698ED4 /* MenuIcon.png */; };
-		7E98A99C17DC1BB400698ED4 /* BDCBusinessObjectWithAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E98A99B17DC1BB300698ED4 /* BDCBusinessObjectWithAddress.m */; };
+		7E98A99F17DC471400698ED4 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E98A99E17DC470700698ED4 /* MapViewController.m */; };
+		7E98A9A117DC5C1200698ED4 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E98A9A017DC5C0C00698ED4 /* CoreLocation.framework */; };
+		7E98A9A317DC5C3100698ED4 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E98A9A217DC5C2A00698ED4 /* MapKit.framework */; };
 		7EA5BF3217C98DCE0075EEF3 /* Mobill_logo29.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF3117C98DCE0075EEF3 /* Mobill_logo29.png */; };
 		7EA5BF3A17C9D6880075EEF3 /* SlidingMenu30.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF3917C9D6880075EEF3 /* SlidingMenu30.png */; };
 		7EA5BF3E17C9DF2E0075EEF3 /* ActionMenu30.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF3D17C9DF2E0075EEF3 /* ActionMenu30.png */; };
@@ -133,6 +138,7 @@
 		7EA5BF4817CB0E290075EEF3 /* CheckMarkIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF4717CB0E290075EEF3 /* CheckMarkIcon.png */; };
 		7EA5BF4A17CC7CCF0075EEF3 /* Mobill50.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF4917CC7CCF0075EEF3 /* Mobill50.png */; };
 		7EA5BF4C17CC7D830075EEF3 /* Mobill40.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF4B17CC7D820075EEF3 /* Mobill40.png */; };
+		7EE3920A17DD2184007B1126 /* directionsIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EE3920917DD2184007B1126 /* directionsIcon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -279,6 +285,9 @@
 		0EEB9F771756B5AE00AAAC35 /* InboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InboxViewController.m; sourceTree = "<group>"; };
 		0EEB9F7A1756B91300AAAC35 /* DocumentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentCell.h; sourceTree = "<group>"; };
 		0EEB9F7B1756B91300AAAC35 /* DocumentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentCell.m; sourceTree = "<group>"; };
+		7E370EAD17DD89C8005B3538 /* phoneIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phoneIcon.png; sourceTree = "<group>"; };
+		7E370EB517DD8E3F005B3538 /* emailIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailIcon.png; sourceTree = "<group>"; };
+		7E370EB717DD90EC005B3538 /* emailIcon1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailIcon1.png; sourceTree = "<group>"; };
 		7E579F5815A21F1E009D1455 /* Bill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bill.h; sourceTree = "<group>"; };
 		7E579F5915A21F1E009D1455 /* Bill.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bill.m; sourceTree = "<group>"; };
 		7E579F5C15A234EB009D1455 /* APIHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIHandler.h; sourceTree = "<group>"; };
@@ -320,8 +329,10 @@
 		7E91E441159BCC2F005104AF /* CreateBillViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateBillViewController.h; sourceTree = "<group>"; };
 		7E91E448159D2E1E005104AF /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		7E98A99817D07B3000698ED4 /* MenuIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIcon.png; sourceTree = "<group>"; };
-		7E98A99A17DC1BB300698ED4 /* BDCBusinessObjectWithAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDCBusinessObjectWithAddress.h; sourceTree = "<group>"; };
-		7E98A99B17DC1BB300698ED4 /* BDCBusinessObjectWithAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDCBusinessObjectWithAddress.m; sourceTree = "<group>"; };
+		7E98A99D17DC470000698ED4 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
+		7E98A99E17DC470700698ED4 /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
+		7E98A9A017DC5C0C00698ED4 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		7E98A9A217DC5C2A00698ED4 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		7EA5BF3117C98DCE0075EEF3 /* Mobill_logo29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill_logo29.png; sourceTree = "<group>"; };
 		7EA5BF3917C9D6880075EEF3 /* SlidingMenu30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SlidingMenu30.png; sourceTree = "<group>"; };
 		7EA5BF3D17C9DF2E0075EEF3 /* ActionMenu30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ActionMenu30.png; sourceTree = "<group>"; };
@@ -329,6 +340,7 @@
 		7EA5BF4717CB0E290075EEF3 /* CheckMarkIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CheckMarkIcon.png; sourceTree = "<group>"; };
 		7EA5BF4917CC7CCF0075EEF3 /* Mobill50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill50.png; sourceTree = "<group>"; };
 		7EA5BF4B17CC7D820075EEF3 /* Mobill40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill40.png; sourceTree = "<group>"; };
+		7EE3920917DD2184007B1126 /* directionsIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = directionsIcon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -336,6 +348,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E98A9A317DC5C3100698ED4 /* MapKit.framework in Frameworks */,
+				7E98A9A117DC5C1200698ED4 /* CoreLocation.framework in Frameworks */,
 				0E3A157D17455CA0007F2DC6 /* QuickLook.framework in Frameworks */,
 				0E7DCABB16030BD700D0B35E /* Security.framework in Frameworks */,
 				0E56F3F51600047B0066B355 /* MessageUI.framework in Frameworks */,
@@ -600,8 +614,6 @@
 				0E3A15701742F958007F2DC6 /* Document.m */,
 				0EB21934174B3B2300382C44 /* BDCBusinessObjectWithAttachments.h */,
 				0EB21935174B3B2300382C44 /* BDCBusinessObjectWithAttachments.m */,
-				7E98A99A17DC1BB300698ED4 /* BDCBusinessObjectWithAddress.h */,
-				7E98A99B17DC1BB300698ED4 /* BDCBusinessObjectWithAddress.m */,
 				0E188B8A176C435300493EE1 /* BDCBusinessObjectWithAttachmentsAndAddress.h */,
 				0E188B8B176C435300493EE1 /* BDCBusinessObjectWithAttachmentsAndAddress.m */,
 			);
@@ -655,6 +667,8 @@
 				7E91E42D15993E6D005104AF /* BOSelectorViewController.m */,
 				0E0B9E9B17751CE900C2AF30 /* TermOfServiceViewController.h */,
 				0E0B9E9C17751CE900C2AF30 /* TermOfServiceViewController.m */,
+				7E98A99D17DC470000698ED4 /* MapViewController.h */,
+				7E98A99E17DC470700698ED4 /* MapViewController.m */,
 				0EA29AB416DDBE7600386617 /* Sliding */,
 				0EA29AB516DDBE9900386617 /* Login */,
 				0EA29AB616DDBEE500386617 /* Menu */,
@@ -669,6 +683,8 @@
 		7E91E3E015927C15005104AF = {
 			isa = PBXGroup;
 			children = (
+				7E98A9A217DC5C2A00698ED4 /* MapKit.framework */,
+				7E98A9A017DC5C0C00698ED4 /* CoreLocation.framework */,
 				0EC49B0317C5E4AF0043B37A /* Mobill_logo114.png */,
 				0EC49B0117C5E49E0043B37A /* Mobill_logo57.png */,
 				0E3A157C17455CA0007F2DC6 /* QuickLook.framework */,
@@ -760,6 +776,10 @@
 				0EC49AF917B9F6940043B37A /* arrow_down_gray.png */,
 				0EC49AFA17B9F6950043B37A /* arrow_down_blue.png */,
 				0E6B083E177A5CC200681E9D /* CompanyIcon.png */,
+				7EE3920917DD2184007B1126 /* directionsIcon.png */,
+				7E370EB517DD8E3F005B3538 /* emailIcon.png */,
+				7E370EB717DD90EC005B3538 /* emailIcon1.png */,
+				7E370EAD17DD89C8005B3538 /* phoneIcon.png */,
 				0EB2190917472E1A00382C44 /* FileIcons */,
 			);
 			name = Images;
@@ -875,6 +895,10 @@
 				7EA5BF4A17CC7CCF0075EEF3 /* Mobill50.png in Resources */,
 				7EA5BF4C17CC7D830075EEF3 /* Mobill40.png in Resources */,
 				7E98A99917D07B3000698ED4 /* MenuIcon.png in Resources */,
+				7EE3920A17DD2184007B1126 /* directionsIcon.png in Resources */,
+				7E370EAE17DD89C8005B3538 /* phoneIcon.png in Resources */,
+				7E370EB617DD8E3F005B3538 /* emailIcon.png in Resources */,
+				7E370EB817DD90EC005B3538 /* emailIcon1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -944,7 +968,7 @@
 				0EC19CA2177FFBE800D5B285 /* LRU.m in Sources */,
 				0EC19CA5177FFD3F00D5B285 /* Node.m in Sources */,
 				0EC19CA8177FFE0100D5B285 /* LinkedList.m in Sources */,
-				7E98A99C17DC1BB400698ED4 /* BDCBusinessObjectWithAddress.m in Sources */,
+				7E98A99F17DC471400698ED4 /* MapViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

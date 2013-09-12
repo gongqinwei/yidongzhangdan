@@ -148,7 +148,7 @@
         NSString *ext = [[doc.name pathExtension] lowercaseString];
         if (doc.objectId && ([IMAGE_TYPE_SET containsObject:ext] || [ext isEqualToString:@"pdf"])) {
                 
-            dispatch_async(dispatch_get_global_queue(0,0), ^{
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                 NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?%@=%@&%@=%d&%@=%d&%@=%d", DOMAIN_URL, DOC_IMAGE_API, ID, doc.objectId, PAGE_NUMBER, (!doc.page || doc.page <= 0 ? 1: doc.page), IMAGE_WIDTH, DOCUMENT_CELL_DIMENTION * 2, IMAGE_HEIGHT, DOCUMENT_CELL_DIMENTION * 2]]];
 
                 if (data != nil) {

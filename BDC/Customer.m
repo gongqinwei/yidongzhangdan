@@ -136,6 +136,8 @@ static NSMutableDictionary * inactiveCustomers = nil;
     self.phone = (phoneStr == (id)[NSNull null]) ? nil : phoneStr;
     
     self.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
+    
+    [super populateObjectWithInfo:dict];
 }
 
 + (void)retrieveListForActive:(BOOL)isActive {
@@ -322,14 +324,14 @@ static NSMutableDictionary * inactiveCustomers = nil;
     
     target.name = source.name;
     target.isActive = source.isActive;
-    target.addr1 = source.addr1;
-    target.addr2 = source.addr2;
-    target.addr3 = source.addr3;
-    target.addr4 = source.addr4;
-    target.city = source.city;
-    target.state = source.state;
-    target.country = source.country;
-    target.zip = source.zip;
+//    target.addr1 = source.addr1;
+//    target.addr2 = source.addr2;
+//    target.addr3 = source.addr3;
+//    target.addr4 = source.addr4;
+//    target.city = source.city;
+//    target.state = source.state;
+//    target.country = source.country;
+//    target.zip = source.zip;
     target.phone = source.phone;
     target.email = source.email;
     target.editDelegate = source.editDelegate;

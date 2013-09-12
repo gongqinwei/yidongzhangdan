@@ -17,6 +17,7 @@
 #define ACTION_DELETE           @"Delete..."
 #define ACTION_UNDELETE         @"Undelete..."
 #define ACTION_LIST             @"List for"
+#define ACTION_MAP              @"Map View"
 #define ACTION_ORDER            @"Order by"
 #define ACTION_PAY              @"Pay"
 #define ACTION_ASSOCIATE        @"Associate %@ with..."

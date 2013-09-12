@@ -8,6 +8,7 @@
 
 #import "EditCustomerViewController.h"
 #import "Customer.h"
+#import "MapViewController.h"
 #import "Util.h"
 #import "UIHelper.h"
 #import "Geo.h"
@@ -34,6 +35,7 @@ enum CustomerInfoType {
 
 #define CUSTOMER_ADDR_TAG_OFFSET        3
 #define CUSTOMER_SCAN_PHOTO_SEGUE       @"ScanMoreCustomerPhoto"
+#define CUSTOMER_VIEW_MAP               @"ViewCustomerMap"
 
 
 @interface EditCustomerViewController () <UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
@@ -51,7 +53,7 @@ enum CustomerInfoType {
 @property (nonatomic, strong) UITextField *customerZipTextField;
 @property (nonatomic, strong) UITextField *customerPhoneTextField;
 @property (nonatomic, strong) UITextField *customerEmailTextField;
-@property (nonatomic, strong) NSMutableString *address;
+//@property (nonatomic, strong) NSMutableString *address;
 @property (nonatomic, assign) int numOfLinesInAddr;
 
 @end
@@ -72,7 +74,7 @@ enum CustomerInfoType {
 @synthesize customerZipTextField;
 @synthesize customerPhoneTextField;
 @synthesize customerEmailTextField;
-@synthesize address;
+//@synthesize address;
 @synthesize numOfLinesInAddr;
 
 
@@ -251,18 +253,20 @@ enum CustomerInfoType {
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.activityIndicator.hidesWhenStopped = YES;
     
-    [self formatAddr];
+//    [self formatAddr];
+    self.numOfLinesInAddr = shaddowCustomer.numOfLinesInAddr;
 }
 
 - (void)formatAddr {
-    self.address = [NSMutableString string];
-    self.numOfLinesInAddr = [((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj) formatAddress:self.address];
+    self.numOfLinesInAddr = [((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj) formatAddress:((Customer *)self.shaddowBusObj).formattedAddress];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:CUSTOMER_SCAN_PHOTO_SEGUE]) {
         ((ScannerViewController *)segue.destinationViewController).delegate = self;
         [segue.destinationViewController setMode:kAttachMode];
+    } else if ([segue.identifier isEqualToString:CUSTOMER_VIEW_MAP]) {
+        [segue.destinationViewController setAnnotations:@[self.shaddowBusObj]];
     }
 }
 
@@ -306,14 +310,14 @@ enum CustomerInfoType {
     switch (indexPath.section) {
         case kCustomerInfo:
         {
-            if (self.modeChanged) {
-                if (self.mode == kViewMode) {
-                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CUSTOMER_INFO_CELL_ID];
-                } else {
-                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CUSTOMER_INFO_CELL_ID];
-                }
-            } else {
-                cell = [tableView dequeueReusableCellWithIdentifier:CUSTOMER_INFO_CELL_ID];
+//            if (self.modeChanged) {
+//                if (self.mode == kViewMode) {
+//                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CUSTOMER_INFO_CELL_ID];
+//                } else {
+//                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CUSTOMER_INFO_CELL_ID];
+//                }
+//            } else {
+//                cell = [tableView dequeueReusableCellWithIdentifier:CUSTOMER_INFO_CELL_ID];
                 if (!cell) {
                     if (self.mode == kViewMode) {
                         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CUSTOMER_INFO_CELL_ID];
@@ -321,7 +325,7 @@ enum CustomerInfoType {
                         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CUSTOMER_INFO_CELL_ID];
                     }
                 }
-            }
+//            }
             
             cell.textLabel.text = CustomerInfo[indexPath.section][indexPath.row];
             cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:APP_LABEL_FONT_SIZE];
@@ -343,6 +347,10 @@ enum CustomerInfoType {
                     break;
                 case kCustomerEmail:
                     if (self.mode == kViewMode) {
+                        UIImageView *emailImg = [[UIImageView alloc] initWithFrame:CGRectMake(22, 14, 18, 18)];
+                        emailImg.image = [UIImage imageNamed:@"emailIcon1.png"];
+                        [cell addSubview:emailImg];
+                        
 //                        cell.detailTextLabel.text = shaddowCustomer.email;
                         UITextView *emailView = [[UITextView alloc] initWithFrame:TABLE_CELL_DETAIL_TEXT_RECT];
                         emailView.font = [UIFont systemFontOfSize:TABLE_CELL_DETAIL_TEXT_FONT];
@@ -363,6 +371,10 @@ enum CustomerInfoType {
                     break;
                 case kCustomerPhone:
                     if (self.mode == kViewMode) {
+                        UIImageView *phoneImg = [[UIImageView alloc] initWithFrame:CGRectMake(22, 14, 16, 16)];
+                        phoneImg.image = [UIImage imageNamed:@"phoneIcon.png"];
+                        [cell addSubview:phoneImg];
+                        
 //                        cell.detailTextLabel.text = shaddowCustomer.phone;
                         
                         UITextView *phoneView = [[UITextView alloc] initWithFrame:TABLE_CELL_DETAIL_TEXT_RECT];
@@ -414,9 +426,21 @@ enum CustomerInfoType {
 
             if (self.mode == kViewMode) {
                 cell.textLabel.text = @"Address";
-                cell.detailTextLabel.text = self.address;
+                cell.detailTextLabel.text = shaddowCustomer.formattedAddress;
                 cell.detailTextLabel.numberOfLines = self.numOfLinesInAddr;
                 cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
+                
+                if ([[shaddowCustomer.formattedAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0) {
+                    if (shaddowCustomer.latitude == 0.0 && shaddowCustomer.longitude == 0.0) {
+                        [shaddowCustomer geoCodeUsingAddress:shaddowCustomer.formattedAddress];
+                    }
+                    
+                    if (!(shaddowCustomer.latitude == 0.0 && shaddowCustomer.longitude == 0.0)) {
+                        ((Customer *)self.busObj).latitude = shaddowCustomer.latitude;
+                        ((Customer *)self.busObj).longitude = shaddowCustomer.longitude;
+                        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    }
+                }
             } else {
                 switch (indexPath.row) {
                     case kAddr1:
@@ -649,6 +673,13 @@ enum CustomerInfoType {
 //    [self textFieldDoneEditing:self.editingField];
     [self.customerStateTextField resignFirstResponder];
     [self.customerCountryTextField resignFirstResponder];
+    
+    if (self.mode == kViewMode && indexPath.section == kCustomerAddr) {
+        CLLocationCoordinate2D coordinate = [((Customer *)self.shaddowBusObj) coordinate];
+        if (!(coordinate.latitude == 0.0 && coordinate.longitude == 0.0)) {
+            [self performSegueWithIdentifier:CUSTOMER_VIEW_MAP sender:self];
+        }
+    }
 }
 
 #pragma mark - Text Field delegate
@@ -778,15 +809,14 @@ enum CustomerInfoType {
 #pragma mark - Model delegate
 
 - (void)didReadObject {
-    [self formatAddr];
     [super didReadObject];
     [self.shaddowBusObj cloneTo:self.busObj];
 }
 
 - (void)doneSaveObject {
     [super doneSaveObject];
-    self.address = [NSMutableString string];
-    self.numOfLinesInAddr = [((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj) formatAddress:self.address];
+    [self formatAddr];
+    [((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj) geoCodeUsingAddress:((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj).formattedAddress];
 }
 
 

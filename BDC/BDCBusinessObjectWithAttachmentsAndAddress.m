@@ -20,36 +20,58 @@
 @synthesize state;
 @synthesize country;
 @synthesize zip;
-
+@synthesize latitude;
+@synthesize longitude;
+@synthesize formattedAddress;
+@synthesize numOfLinesInAddr;
 
 - (id) init {
     if (self = [super init]) {
         self.country = US_FULL_INDEX;
         self.state = [NSNumber numberWithInt:INVALID_OPTION];
+        self.formattedAddress = [NSMutableString string];
     }
     return self;
 }
 
++ (void)clone:(BDCBusinessObjectWithAttachmentsAndAddress *)source to:(BDCBusinessObjectWithAttachmentsAndAddress *)target {
+    [super clone:source to:target];
+    
+    target.addr1 = source.addr1;
+    target.addr2 = source.addr2;
+    target.addr3 = source.addr3;
+    target.addr4 = source.addr4;
+    target.city = source.city;
+    target.state = source.state;
+    target.country = source.country;
+    target.zip = source.zip;
+    target.latitude = source.latitude;
+    target.longitude = source.longitude;
+    target.formattedAddress = source.formattedAddress;
+    target.numOfLinesInAddr = source.numOfLinesInAddr;
+}
+
 - (int)formatAddress:(NSMutableString *)addr {
-    int numOfLines = 0;
+    [addr setString:@""]; // reset
+    self.numOfLinesInAddr = 0;
     BOOL hasCity = NO;
     BOOL hasState = NO;
     BOOL hasZip = NO;
     
     if (self.addr1 && self.addr1.length) {
-        numOfLines++;
+        self.numOfLinesInAddr++;
         [addr appendFormat:@"%@\n", self.addr1];
     }
     if (self.addr2 && self.addr2.length) {
-        numOfLines++;
+        self.numOfLinesInAddr++;
         [addr appendFormat:@"%@\n", self.addr2];
     }
     if (self.addr3 && self.addr3.length) {
-        numOfLines++;
+        self.numOfLinesInAddr++;
         [addr appendFormat:@"%@\n", self.addr3];
     }
     if (self.addr4 && self.addr4.length) {
-        numOfLines++;
+        self.numOfLinesInAddr++;
         [addr appendFormat:@"%@\n", self.addr4];
     }
     if (self.city && self.city.length) {
@@ -59,7 +81,7 @@
     if (self.state) {
         NSString *stateStr;
         if ([self.state isKindOfClass:[NSNumber class]]) {
-            if ([self.state intValue] != INVALID_OPTION) {
+            if ([self.state intValue] != INVALID_OPTION && [self.state intValue] < [US_STATE_CODES count]) {
                 hasState = YES;
                 stateStr = [US_STATE_CODES objectAtIndex:[self.state intValue]];
             }
@@ -82,18 +104,82 @@
     }
     if (hasCity || hasState || hasZip) {
         [addr appendString:@"\n"];
-        numOfLines++;
+        self.numOfLinesInAddr++;
     }
-    if (self.country != INVALID_OPTION) {
-        numOfLines++;
+    if (self.country != INVALID_OPTION && self.country < [COUNTRIES count]) {
+        self.numOfLinesInAddr++;
         [addr appendFormat:@"%@ ", [COUNTRIES objectAtIndex: self.country]];
     }
 
-    if (numOfLines == 0) {
-        numOfLines++;
+    if (self.numOfLinesInAddr == 0) {
+        self.numOfLinesInAddr++;
     }
+    
+    return self.numOfLinesInAddr;
+}
 
-    return numOfLines;
+- (void)populateObjectWithInfo:(NSDictionary *)dict {
+    [self formatAddress:self.formattedAddress];
+    
+    /*** Not using CLGeocoder because of its inaccuracy  ***/
+    //    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    //    [geocoder geocodeAddressString:self.formattedAddress completionHandler:^(NSArray *placemarks, NSError *error) {
+    //        for (CLPlacemark *placemark in placemarks) {
+    //            self.latitude = placemark.location.coordinate.latitude;
+    //            self.longitude = placemark.location.coordinate.longitude;
+    //            break;
+    //        }
+    //    }];
+    
+    /*** Using Google Maps API instead ***/
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [self geoCodeUsingAddress:self.formattedAddress];
+    });
+}
+
+- (void) geoCodeUsingAddress:(NSString *)address
+{
+    double lat = 0.0, lon = 0.0;
+
+    NSString *esc_addr =  [address stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *req = [NSString stringWithFormat:@"http://maps.google.com/maps/api/geocode/json?sensor=false&address=%@", esc_addr];
+    NSString *result = [NSString stringWithContentsOfURL:[NSURL URLWithString:req] encoding:NSUTF8StringEncoding error:NULL];
+    if (result) {
+        NSScanner *scanner = [NSScanner scannerWithString:result];
+        if ([scanner scanUpToString:@"\"lat\" :" intoString:nil] && [scanner scanString:@"\"lat\" :" intoString:nil]) {
+            [scanner scanDouble:&lat];
+            if ([scanner scanUpToString:@"\"lng\" :" intoString:nil] && [scanner scanString:@"\"lng\" :" intoString:nil]) {
+                [scanner scanDouble:&lon];
+            }
+        }
+    }
+    
+    self.latitude = lat;
+    self.longitude = lon;
+}
+
+#pragma mark - MKAnnotation
+
+- (NSString *)title
+{
+    return self.name;
+}
+
+//- (NSString *)subtitle
+//{
+//    return self.name;
+//}
+
+- (CLLocationCoordinate2D)coordinate
+{
+//    if (self.latitude == 0.0 && self.longitude == 0.0 && [[self.formattedAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0) {
+//        [self geoCodeUsingAddress:self.formattedAddress];
+//    }
+
+    CLLocationCoordinate2D coordinate;
+    coordinate.latitude = self.latitude;
+    coordinate.longitude = self.longitude;
+    return coordinate;
 }
 
 @end

@@ -7,8 +7,9 @@
 //
 
 #import "BDCBusinessObjectWithAttachments.h"
+#import <MapKit/MapKit.h>
 
-@interface BDCBusinessObjectWithAttachmentsAndAddress : BDCBusinessObjectWithAttachments
+@interface BDCBusinessObjectWithAttachmentsAndAddress : BDCBusinessObjectWithAttachments <MKAnnotation>
 
 @property (nonatomic, strong) NSString *addr1;
 @property (nonatomic, strong) NSString *addr2;
@@ -18,7 +19,12 @@
 @property (nonatomic, strong) id state;
 @property (nonatomic, assign) int country;
 @property (nonatomic, strong) NSString *zip;
+@property (nonatomic, assign) double latitude;
+@property (nonatomic, assign) double longitude;
+@property (nonatomic, strong) NSMutableString *formattedAddress;
+@property (nonatomic, assign) int numOfLinesInAddr;
 
 - (int)formatAddress:(NSMutableString *)addr;
+- (void) geoCodeUsingAddress:(NSString *)address;
 
 @end

@@ -177,7 +177,7 @@ static RootMenuViewController * _sharedInstance = nil;
         NSString *imageName = @"ProfileIcon.png";
         cell.imageView.image = [UIImage imageNamed:imageName];
 
-        dispatch_async(dispatch_get_global_queue(0,0), ^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100", DOMAIN_URL, ORG_LOGO_API]]];            
             
             if (data != nil) {
@@ -267,7 +267,7 @@ static RootMenuViewController * _sharedInstance = nil;
         mailer.mailComposeDelegate = self;
         
         Organization *org = [Organization getSelectedOrg];
-        [mailer setSubject:[NSString stringWithFormat:@"Feedback on MoBill iPhone app from %@", org.name]];
+        [mailer setSubject:[NSString stringWithFormat:@"Feedback on Mobill app from %@", org.name]];
         
         NSArray *toRecipients = [NSArray arrayWithObjects:@"customer.mobill@gmail.com", nil];
         [mailer setToRecipients:toRecipients];
