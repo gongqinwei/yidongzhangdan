@@ -105,10 +105,10 @@
 		7E370EAE17DD89C8005B3538 /* phoneIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EAD17DD89C8005B3538 /* phoneIcon.png */; };
 		7E370EB617DD8E3F005B3538 /* emailIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EB517DD8E3F005B3538 /* emailIcon.png */; };
 		7E370EB817DD90EC005B3538 /* emailIcon1.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EB717DD90EC005B3538 /* emailIcon1.png */; };
+		7E370EBA17E196B2005B3538 /* Mobill_logo120.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EB917E196B2005B3538 /* Mobill_logo120.png */; };
 		7E579F5A15A21F1E009D1455 /* Bill.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F5915A21F1E009D1455 /* Bill.m */; };
 		7E579F5E15A234EB009D1455 /* APIHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F5D15A234EB009D1455 /* APIHandler.m */; };
 		7E579F6515A80C8F009D1455 /* BDClogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E579F6415A80C8F009D1455 /* BDClogo.png */; };
-		7E579F7B15A96B71009D1455 /* BDC-icon-big.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E579F7A15A96B71009D1455 /* BDC-icon-big.png */; };
 		7E579F8415AB9561009D1455 /* SelectOrgViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F8315AB9561009D1455 /* SelectOrgViewController.m */; };
 		7E579F8715ABA91A009D1455 /* Organization.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F8615ABA91A009D1455 /* Organization.m */; };
 		7E579F8A15ACE571009D1455 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F8915ACE571009D1455 /* UserProfileViewController.m */; };
@@ -288,14 +288,12 @@
 		7E370EAD17DD89C8005B3538 /* phoneIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phoneIcon.png; sourceTree = "<group>"; };
 		7E370EB517DD8E3F005B3538 /* emailIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailIcon.png; sourceTree = "<group>"; };
 		7E370EB717DD90EC005B3538 /* emailIcon1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailIcon1.png; sourceTree = "<group>"; };
+		7E370EB917E196B2005B3538 /* Mobill_logo120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill_logo120.png; sourceTree = "<group>"; };
 		7E579F5815A21F1E009D1455 /* Bill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bill.h; sourceTree = "<group>"; };
 		7E579F5915A21F1E009D1455 /* Bill.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bill.m; sourceTree = "<group>"; };
 		7E579F5C15A234EB009D1455 /* APIHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIHandler.h; sourceTree = "<group>"; };
 		7E579F5D15A234EB009D1455 /* APIHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIHandler.m; sourceTree = "<group>"; };
 		7E579F6415A80C8F009D1455 /* BDClogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BDClogo.png; sourceTree = "<group>"; };
-		7E579F7815A969A5009D1455 /* BDC-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BDC-icon.png"; sourceTree = "<group>"; };
-		7E579F7A15A96B71009D1455 /* BDC-icon-big.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BDC-icon-big.png"; sourceTree = "<group>"; };
-		7E579F8015A97262009D1455 /* billcom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = billcom.png; sourceTree = "<group>"; };
 		7E579F8215AB9561009D1455 /* SelectOrgViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectOrgViewController.h; sourceTree = "<group>"; };
 		7E579F8315AB9561009D1455 /* SelectOrgViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectOrgViewController.m; sourceTree = "<group>"; };
 		7E579F8515ABA91A009D1455 /* Organization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Organization.h; sourceTree = "<group>"; };
@@ -687,14 +685,12 @@
 				7E98A9A017DC5C0C00698ED4 /* CoreLocation.framework */,
 				0EC49B0317C5E4AF0043B37A /* Mobill_logo114.png */,
 				0EC49B0117C5E49E0043B37A /* Mobill_logo57.png */,
+				7E370EB917E196B2005B3538 /* Mobill_logo120.png */,
 				0E3A157C17455CA0007F2DC6 /* QuickLook.framework */,
 				0E01C34E172214FF00184702 /* .gitignore */,
 				0EE9B10B160A6D83002A5950 /* Default-568h@2x.png */,
 				0E7DCABA16030BD700D0B35E /* Security.framework */,
 				0E56F3F41600047B0066B355 /* MessageUI.framework */,
-				7E579F8015A97262009D1455 /* billcom.png */,
-				7E579F7A15A96B71009D1455 /* BDC-icon-big.png */,
-				7E579F7815A969A5009D1455 /* BDC-icon.png */,
 				7E91E448159D2E1E005104AF /* QuartzCore.framework */,
 				7E91E4221593FA34005104AF /* MobileCoreServices.framework */,
 				7E91E3F515927C15005104AF /* BDC */,
@@ -841,7 +837,6 @@
 				7E91E40315927C15005104AF /* MainStoryboard_iPhone.storyboard in Resources */,
 				7E91E40615927C15005104AF /* MainStoryboard_iPad.storyboard in Resources */,
 				7E579F6515A80C8F009D1455 /* BDClogo.png in Resources */,
-				7E579F7B15A96B71009D1455 /* BDC-icon-big.png in Resources */,
 				0E14EC601603ED960098EB03 /* warning.png in Resources */,
 				0E14EC611603ED960098EB03 /* success.png in Resources */,
 				0EE9B10C160A6D83002A5950 /* Default-568h@2x.png in Resources */,
@@ -899,6 +894,7 @@
 				7E370EAE17DD89C8005B3538 /* phoneIcon.png in Resources */,
 				7E370EB617DD8E3F005B3538 /* emailIcon.png in Resources */,
 				7E370EB817DD90EC005B3538 /* emailIcon1.png in Resources */,
+				7E370EBA17E196B2005B3538 /* Mobill_logo120.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
