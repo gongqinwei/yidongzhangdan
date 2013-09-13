@@ -21,7 +21,6 @@ static Handler sessionValidatingHandler = nil;
     NSURL *url = [NSURL URLWithString:urlStr];
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:API_TIMEOUT];
     Debug(@"url: %@", urlStr);
-
     
     [req setHTTPMethod:@"POST"];
     

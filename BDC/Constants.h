@@ -46,6 +46,7 @@
 #define ERR_DOMAIN          @"PROD"
 #define DOMAIN_URL          @"https://app.bill.com"
 #define APP_KEY             @"devKey"
+#define DEBUG_MODE
 #endif
 
 #ifdef DEBUG_MODE

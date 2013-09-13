@@ -106,7 +106,7 @@
     
     if (self.mode != kSelectMode && self.mode != kAttachMode) {
         self.sortAttributes = [NSArray array];
-        self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
+        self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, ACTION_MAP, nil];
         self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
     } else {
         self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];

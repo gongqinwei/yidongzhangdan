@@ -10,6 +10,7 @@
 #import "BDCBusinessObjectWithAttachmentsAndAddress.h"
 #import "SlidingDetailsTableViewController.h"
 #import "Constants.h"
+#import "Geo.h"
 
 #define INIT_MAP_POINTS             10000
 
@@ -49,12 +50,53 @@
 
 - (void) setAnnotations:(NSArray *)annotations {
     _annotations = annotations;
+//    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     
-//    for (BDCBusinessObjectWithAttachmentsAndAddress *obj in self.annotations) {
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    for (BDCBusinessObjectWithAttachmentsAndAddress *obj in self.annotations) {
+        if ([[obj.formattedAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0) {
+            NSString *esc_addr =  [obj.formattedAddress stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
 //            [obj geoCodeUsingAddress:obj.formattedAddress];
-//        });
-//    }
+
+//            [geocoder geocodeAddressString:obj.formattedAddress completionHandler:^(NSArray *placemarks, NSError *error) {
+//                for (CLPlacemark *placemark in placemarks) {
+//                    obj.latitude = placemark.location.coordinate.latitude;
+//                    obj.longitude = placemark.location.coordinate.longitude;
+//                    [self.mapView addAnnotation:obj];
+//                    break;
+//                }
+//            }];
+                
+                NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:GOOGLE_MAP_API, esc_addr]];
+                NSURLRequest *req = [NSURLRequest requestWithURL:url];
+
+                [NSURLConnection sendAsynchronousRequest:req queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error){
+                    dispatch_sync(dispatch_get_main_queue(), ^{
+                        //parse out the json data
+                        NSError* error;
+                        NSDictionary* json = [NSJSONSerialization
+                                              JSONObjectWithData:data
+                                              options:kNilOptions
+                                              error:&error];
+                        
+                        //The results from Google will be an array obtained from the NSDictionary object with the key "results".
+                        NSArray* places = [json objectForKey:@"results"];
+                        
+                        NSDictionary *geometry = [places[0] objectForKey:@"geometry"];
+                        NSDictionary *location = [geometry objectForKey:@"location"];
+                        double lat = [[location objectForKey:@"lat"] doubleValue];
+                        double lon = [[location objectForKey:@"lng"] doubleValue];
+                        //Write out the data to the console.
+                        NSLog(@"Google Data: %f %f", lat, lon);
+                        obj.latitude = lat;
+                        obj.longitude = lon;
+                        [self.mapView addAnnotation:obj];
+                    });
+                }];
+            });
+        }
+    }
 }
 
 - (void) setMapView:(MKMapView *)mapView

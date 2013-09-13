@@ -10,6 +10,7 @@
 #import "Constants.h"
 #import "Geo.h"
 
+
 @implementation BDCBusinessObjectWithAttachmentsAndAddress
 
 @synthesize addr1;
@@ -132,23 +133,22 @@
     //    }];
     
     /*** Using Google Maps API instead ***/
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        [self geoCodeUsingAddress:self.formattedAddress];
-    });
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+//        [self geoCodeUsingAddress:self.formattedAddress];
+//    });
 }
 
-- (void) geoCodeUsingAddress:(NSString *)address
-{
+- (void)geoCodeUsingAddress:(NSString *)address {
     double lat = 0.0, lon = 0.0;
 
     NSString *esc_addr =  [address stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSString *req = [NSString stringWithFormat:@"http://maps.google.com/maps/api/geocode/json?sensor=false&address=%@", esc_addr];
+    NSString *req = [NSString stringWithFormat:GOOGLE_MAP_API, esc_addr];
     NSString *result = [NSString stringWithContentsOfURL:[NSURL URLWithString:req] encoding:NSUTF8StringEncoding error:NULL];
     if (result) {
         NSScanner *scanner = [NSScanner scannerWithString:result];
-        if ([scanner scanUpToString:@"\"lat\" :" intoString:nil] && [scanner scanString:@"\"lat\" :" intoString:nil]) {
+        if ([scanner scanUpToString:GOOGLE_MAP_LAT intoString:nil] && [scanner scanString:GOOGLE_MAP_LAT intoString:nil]) {
             [scanner scanDouble:&lat];
-            if ([scanner scanUpToString:@"\"lng\" :" intoString:nil] && [scanner scanString:@"\"lng\" :" intoString:nil]) {
+            if ([scanner scanUpToString:GOOGLE_MAP_LON intoString:nil] && [scanner scanString:GOOGLE_MAP_LON intoString:nil]) {
                 [scanner scanDouble:&lon];
             }
         }
@@ -172,10 +172,6 @@
 
 - (CLLocationCoordinate2D)coordinate
 {
-//    if (self.latitude == 0.0 && self.longitude == 0.0 && [[self.formattedAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0) {
-//        [self geoCodeUsingAddress:self.formattedAddress];
-//    }
-
     CLLocationCoordinate2D coordinate;
     coordinate.latitude = self.latitude;
     coordinate.longitude = self.longitude;
