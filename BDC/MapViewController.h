@@ -9,12 +9,20 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import "BDCBusinessObjectWithAttachmentsAndAddress.h"
+
+@protocol SelectObjectProtocol <NSObject>
+
+- (void)selectObject:(BDCBusinessObjectWithAttachmentsAndAddress *)obj;
+
+@end
 
 @interface MapViewController : UIViewController <CLLocationManagerDelegate>
 
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *mapTypeSwitch;
 
-@property (nonatomic, strong) NSArray * annotations; //of id<MKAnnotation>
+@property (nonatomic, strong) NSMutableArray * annotations; //of id<MKAnnotation>
+@property (nonatomic, strong) id<SelectObjectProtocol> selectObjDelegate;
 
 @end

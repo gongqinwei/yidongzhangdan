@@ -165,10 +165,10 @@
     return self.name;
 }
 
-//- (NSString *)subtitle
-//{
-//    return self.name;
-//}
+- (NSString *)subtitle
+{
+    return self.formattedAddress;
+}
 
 - (CLLocationCoordinate2D)coordinate
 {

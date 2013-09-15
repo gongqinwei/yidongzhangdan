@@ -19,7 +19,7 @@
 
 #define ALL_INACTIVE_VENDORS            @"All Deleted Vendors"
 
-@interface VendorsTableViewController () <VendorListDelegate, ListViewDelegate>
+@interface VendorsTableViewController () <VendorListDelegate, ListViewDelegate, SelectObjectProtocol>
 
 @end
 
@@ -222,7 +222,8 @@
     } else if ([segue.identifier isEqualToString:VENDOR_CREATE_VENDOR_SEGUE]) {
         [segue.destinationViewController setMode:kCreateMode];
     } else if ([segue.identifier isEqualToString:VENDOR_LIST_MAP]) {
-        [segue.destinationViewController setAnnotations:self.vendors];
+        [segue.destinationViewController setAnnotations:[Vendor list]];
+        [segue.destinationViewController setSelectObjDelegate:self];
     }
 }
 
@@ -302,7 +303,7 @@
     });
 }
 
-#pragma mark - Action Menu delegate
+#pragma mark - Action Menu Delegate
 
 - (void)didSelectSortAttribute:(NSString *)attribute ascending:(BOOL)ascending active:(BOOL)active {
     NSMutableArray *vendorList = self.vendors;
@@ -329,5 +330,12 @@
         [self performSegueWithIdentifier:VENDOR_LIST_MAP sender:self];
     }
 }
+
+#pragma mark - MapView SelectObject Delegate
+
+- (void)selectObject:(id)obj {
+    [self performSegueWithIdentifier:VENDOR_VIEW_VENDOR_SEGUE sender:obj];
+}
+
 
 @end

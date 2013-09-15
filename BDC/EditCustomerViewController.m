@@ -219,12 +219,14 @@ enum CustomerInfoType {
     self.customerStateTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
     [self initializeTextField:self.customerStateTextField];
     self.customerStateTextField.tag = (kState + CUSTOMER_ADDR_TAG_OFFSET) * TAG_BASE;
+    self.customerStateTextField.delegate = self;
     
     self.customerCountryTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
     [self initializeTextField:self.customerCountryTextField];
     self.customerCountryTextField.tag = (kCountry + CUSTOMER_ADDR_TAG_OFFSET) * TAG_BASE;
     self.customerCountryTextField.rightViewMode = UITextFieldViewModeAlways;
     self.customerCountryTextField.inputView = self.customerCountryPickerView;
+    self.customerCountryTextField.delegate = self;
     
     self.customerZipTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
     [self initializeTextField:self.customerZipTextField];
@@ -266,7 +268,7 @@ enum CustomerInfoType {
         ((ScannerViewController *)segue.destinationViewController).delegate = self;
         [segue.destinationViewController setMode:kAttachMode];
     } else if ([segue.identifier isEqualToString:CUSTOMER_VIEW_MAP]) {
-        [segue.destinationViewController setAnnotations:@[self.shaddowBusObj]];
+        [segue.destinationViewController setAnnotations:[NSMutableArray arrayWithArray:@[self.shaddowBusObj]]];
     }
 }
 

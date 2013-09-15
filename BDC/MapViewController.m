@@ -7,12 +7,11 @@
 //
 
 #import "MapViewController.h"
-#import "BDCBusinessObjectWithAttachmentsAndAddress.h"
 #import "SlidingDetailsTableViewController.h"
 #import "Constants.h"
 #import "Geo.h"
 
-#define INIT_MAP_POINTS             10000
+#define INIT_MAP_POINTS             100000
 
 
 @interface MapViewController () <MKMapViewDelegate>
@@ -28,6 +27,8 @@
 @synthesize mapTypeSwitch;
 @synthesize locationManager;
 @synthesize annotations = _annotations;
+@synthesize selectObjDelegate;
+
 
 - (IBAction)switchMapType:(UISegmentedControl *)sender {
     if (sender.selectedSegmentIndex == 0) {
@@ -49,52 +50,59 @@
 }
 
 - (void) setAnnotations:(NSArray *)annotations {
-    _annotations = annotations;
+    _annotations = [NSMutableArray array];
 //    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     
-    for (BDCBusinessObjectWithAttachmentsAndAddress *obj in self.annotations) {
-        if ([[obj.formattedAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0) {
-            NSString *esc_addr =  [obj.formattedAddress stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-//            [obj geoCodeUsingAddress:obj.formattedAddress];
-
-//            [geocoder geocodeAddressString:obj.formattedAddress completionHandler:^(NSArray *placemarks, NSError *error) {
-//                for (CLPlacemark *placemark in placemarks) {
-//                    obj.latitude = placemark.location.coordinate.latitude;
-//                    obj.longitude = placemark.location.coordinate.longitude;
-//                    [self.mapView addAnnotation:obj];
-//                    break;
-//                }
-//            }];
+    for (BDCBusinessObjectWithAttachmentsAndAddress *obj in annotations) {
+        if (obj.latitude == 0.0 && obj.longitude == 0.0) {
+            if ([[obj.formattedAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0) {
+                NSString *esc_addr =  [obj.formattedAddress stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                 
-                NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:GOOGLE_MAP_API, esc_addr]];
-                NSURLRequest *req = [NSURLRequest requestWithURL:url];
-
-                [NSURLConnection sendAsynchronousRequest:req queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error){
-                    dispatch_sync(dispatch_get_main_queue(), ^{
-                        //parse out the json data
-                        NSError* error;
-                        NSDictionary* json = [NSJSONSerialization
-                                              JSONObjectWithData:data
-                                              options:kNilOptions
-                                              error:&error];
-                        
-                        //The results from Google will be an array obtained from the NSDictionary object with the key "results".
-                        NSArray* places = [json objectForKey:@"results"];
-                        
-                        NSDictionary *geometry = [places[0] objectForKey:@"geometry"];
-                        NSDictionary *location = [geometry objectForKey:@"location"];
-                        double lat = [[location objectForKey:@"lat"] doubleValue];
-                        double lon = [[location objectForKey:@"lng"] doubleValue];
-                        //Write out the data to the console.
-                        NSLog(@"Google Data: %f %f", lat, lon);
-                        obj.latitude = lat;
-                        obj.longitude = lon;
-                        [self.mapView addAnnotation:obj];
-                    });
-                }];
-            });
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                    //            [obj geoCodeUsingAddress:obj.formattedAddress];
+                    
+                    //            [geocoder geocodeAddressString:obj.formattedAddress completionHandler:^(NSArray *placemarks, NSError *error) {
+                    //                for (CLPlacemark *placemark in placemarks) {
+                    //                    obj.latitude = placemark.location.coordinate.latitude;
+                    //                    obj.longitude = placemark.location.coordinate.longitude;
+                    //                    [self.mapView addAnnotation:obj];
+                    //                    break;
+                    //                }
+                    //            }];
+                    
+                    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:GOOGLE_MAP_API, esc_addr]];
+                    NSURLRequest *req = [NSURLRequest requestWithURL:url];
+                    
+                    [NSURLConnection sendAsynchronousRequest:req queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error){
+                        dispatch_sync(dispatch_get_main_queue(), ^{
+                            //parse out the json data
+                            NSError* error;
+                            NSDictionary* json = [NSJSONSerialization
+                                                  JSONObjectWithData:data
+                                                  options:kNilOptions
+                                                  error:&error];
+                            
+                            //The results from Google will be an array obtained from the NSDictionary object with the key "results".
+                            NSArray* places = [json objectForKey:@"results"];
+                            
+                            if (places.count > 0) {
+                                NSDictionary *geometry = [places[0] objectForKey:@"geometry"];
+                                NSDictionary *location = [geometry objectForKey:@"location"];
+                                double lat = [[location objectForKey:@"lat"] doubleValue];
+                                double lon = [[location objectForKey:@"lng"] doubleValue];
+                                
+                                obj.latitude = lat;
+                                obj.longitude = lon;
+                                [_annotations addObject:obj];
+                                [self.mapView addAnnotation:obj];
+                            }
+                        });
+                    }];
+                });
+            }
+        } else {
+            [_annotations addObject:obj];
+            [self.mapView addAnnotation:obj];
         }
     }
 }
@@ -134,18 +142,18 @@
     }
 }
 
-//- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
-//    MKCoordinateRegion region;
-//    MKCoordinateSpan span;
-//    span.latitudeDelta = 0.005;
-//    span.longitudeDelta = 0.005;
-//    CLLocationCoordinate2D location;
-//    location.latitude = userLocation.coordinate.latitude;
-//    location.longitude = userLocation.coordinate.longitude;
-//    region.span = span;
-//    region.center = location;
-//    [mapView setRegion:region animated:YES];
-//}
+- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
+    MKCoordinateRegion region;
+    MKCoordinateSpan span;
+    span.latitudeDelta = 0.005;
+    span.longitudeDelta = 0.005;
+    CLLocationCoordinate2D location;
+    location.latitude = userLocation.coordinate.latitude;
+    location.longitude = userLocation.coordinate.longitude;
+    region.span = span;
+    region.center = location;
+    [mapView setRegion:region animated:YES];
+}
 
 - (void) mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
@@ -164,17 +172,22 @@
             MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:coordinate
                                                            addressDictionary:nil];
             MKMapItem *mapItem = [[MKMapItem alloc] initWithPlacemark:placemark];
-//            [mapItem setName:@"My Place"];
+            [mapItem setName:obj.name];
             
             NSDictionary *launchOptions = @{MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving};
             MKMapItem *currentLocationMapItem = [MKMapItem mapItemForCurrentLocation];
             [MKMapItem openMapsWithItems:@[currentLocationMapItem, mapItem] launchOptions:launchOptions];
         } else {
-            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://maps.google.com/?saddr=Current+Location&daddr=%f,%f", obj.latitude, obj.longitude]];
+            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:GOOGLE_DIRECTION_API, obj.latitude, obj.longitude]];
             [[UIApplication sharedApplication] openURL:url];
         }
     } else {
-        [self.navigationController popViewControllerAnimated:YES]; //TODO: if pop to list vc, need to segue to a detail vc.
+        if (self.selectObjDelegate) {
+            [self.navigationController popViewControllerAnimated:NO];
+            [self.selectObjDelegate selectObject:obj];
+        } else {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
     }
 }
 

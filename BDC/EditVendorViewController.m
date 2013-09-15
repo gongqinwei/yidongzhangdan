@@ -221,12 +221,14 @@ enum VendorInfoType {
     self.vendorStateTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
     [self initializeTextField:self.vendorStateTextField];
     self.vendorStateTextField.tag = (kState + VENDOR_ADDR_TAG_OFFSET) * TAG_BASE;
+    self.vendorStateTextField.delegate = self;
     
     self.vendorCountryTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
     [self initializeTextField:self.vendorCountryTextField];
     self.vendorCountryTextField.tag = (kCountry + VENDOR_ADDR_TAG_OFFSET) * TAG_BASE;
     self.vendorCountryTextField.rightViewMode = UITextFieldViewModeAlways;
     self.vendorCountryTextField.inputView = self.vendorCountryPickerView;
+    self.vendorCountryTextField.delegate = self;
     
     self.vendorZipTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];
     [self initializeTextField:self.vendorZipTextField];
@@ -268,7 +270,7 @@ enum VendorInfoType {
         ((ScannerViewController *)segue.destinationViewController).delegate = self;
         [segue.destinationViewController setMode:kAttachMode];
     } else if ([segue.identifier isEqualToString:VENDOR_VIEW_MAP]) {
-        [segue.destinationViewController setAnnotations:@[self.shaddowBusObj]];
+        [segue.destinationViewController setAnnotations:[NSMutableArray arrayWithArray:@[self.shaddowBusObj]]];
     }
 }
 

@@ -9,15 +9,17 @@
 #import "CustomersTableViewController.h"
 #import "EditCustomerViewController.h"
 #import "Customer.h"
+#import "MapViewController.h"
 #import "Util.h"
 
 #define CUSTOMER_CELL_ID                    @"CustomerItem"
 #define CUSTOMER_VIEW_CUSTOMER_SEGUE        @"ViewCustomer"
 #define CUSTOMER_CREATE_CUSTOMER_SEGUE      @"CreateCustomer"
+#define CUSTOMER_LIST_MAP                   @"ViewCustomersMap"
 
 #define ALL_INACTIVE_CUSTOMERS              @"All Deleted Customers"
 
-@interface CustomersTableViewController () <CustomerListDelegate, ListViewDelegate>
+@interface CustomersTableViewController () <CustomerListDelegate, ListViewDelegate, SelectObjectProtocol>
 
 @end
 
@@ -111,7 +113,7 @@
     
     if (self.mode != kSelectMode && self.mode != kAttachMode) {
         self.sortAttributes = [NSArray array];
-        self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
+        self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, ACTION_MAP, nil];
         self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
     } else {
         self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
@@ -227,6 +229,9 @@
     } else if ([segue.identifier isEqualToString:CUSTOMER_CREATE_CUSTOMER_SEGUE]) {
 //        [segue.destinationViewController setTitle:@"New Customer"];
         [segue.destinationViewController setMode:kCreateMode];
+    } else if ([segue.identifier isEqualToString:CUSTOMER_LIST_MAP]) {
+        [segue.destinationViewController setAnnotations:[Customer list]];
+        [segue.destinationViewController setSelectObjDelegate:self];
     }
 }
 
@@ -306,7 +311,7 @@
     });
 }
 
-#pragma mark - Action Menu delegate
+#pragma mark - Action Menu Delegate
 
 - (void)didSelectSortAttribute:(NSString *)attribute ascending:(BOOL)ascending active:(BOOL)active {
     NSMutableArray *customerList = self.customers;
@@ -326,5 +331,18 @@
     self.customers = customerList;
 }
 
+- (void)didSelectCrudAction:(NSString *)action {
+    [super didSelectCrudAction:action];
+    
+    if ([action isEqualToString:ACTION_MAP]) {
+        [self performSegueWithIdentifier:CUSTOMER_LIST_MAP sender:self];
+    }
+}
+
+#pragma mark - MapView SelectObject Delegate
+
+- (void)selectObject:(id)obj {
+    [self performSegueWithIdentifier:CUSTOMER_VIEW_CUSTOMER_SEGUE sender:obj];
+}
 
 @end
