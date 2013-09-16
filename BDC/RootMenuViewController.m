@@ -85,7 +85,7 @@ static RootMenuViewController * _sharedInstance = nil;
     
     self.menuItems = [NSMutableDictionary dictionary];
     
-    for (int i = 0; i < [ROOT_MENU count]; i++) {
+    for (int i = 1; i < [ROOT_MENU count]; i++) {
         for (int j = 0; j < [[ROOT_MENU objectAtIndex:i] count] - 1; j++) {
             if (i != kRootMore || j == kMoreLegal) {
                 NSString *vcID = [[ROOT_MENU objectAtIndex:i] objectAtIndex:j];
@@ -139,7 +139,7 @@ static RootMenuViewController * _sharedInstance = nil;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:MENU_ORGS]) {
+    if ([segue.identifier isEqualToString:MENU_ORG]) {
         [(SelectOrgViewController *)segue.destinationViewController setIsInitialLogin:NO];
     } else if ([segue.identifier isEqualToString:MENU_LOGOUT]) {
         [Util logout];
@@ -155,7 +155,11 @@ static RootMenuViewController * _sharedInstance = nil;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[ROOT_MENU objectAtIndex:section] count] - 1;
+    if (section == kRootProfile) {
+        return [[ROOT_MENU objectAtIndex:section] count] - 2;
+    } else {
+        return [[ROOT_MENU objectAtIndex:section] count] - 1;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -167,29 +171,60 @@ static RootMenuViewController * _sharedInstance = nil;
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    if (indexPath.section == 0 && indexPath.row == 0) {
-        cell.textLabel.text = [Organization getSelectedOrg].name;
-        cell.textLabel.font = [UIFont boldSystemFontOfSize:20.0];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.accessoryType = UITableViewCellAccessoryNone;
-        cell.userInteractionEnabled = NO;
-        
-        NSString *imageName = @"ProfileIcon.png";
-        cell.imageView.image = [UIImage imageNamed:imageName];
-
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100", DOMAIN_URL, ORG_LOGO_API]]];            
+    if (indexPath.section == kRootProfile) {
+        if (indexPath.row == kProfileUser) {    // temporarily same as profile org. will change to user name/email once BDC API implemented
+            cell.textLabel.text = [Organization getSelectedOrg].name;
+            cell.textLabel.font = [UIFont boldSystemFontOfSize:20.0];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
             
-            if (data != nil) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    UIImage *logo = [UIImage imageWithData: data];
-                    if (logo) {
-                        cell.imageView.image = [UIImage imageWithData: data];
-                        cell.imageView.frame = CGRectMake(3, 3, 37, 37);
-                    }
-                });
+            if ([Organization count] > 1) {
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                cell.userInteractionEnabled = YES;
+            } else {
+                cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.userInteractionEnabled = NO;
             }
-        });
+            
+            NSString *imageName = @"ProfileIcon.png";
+            cell.imageView.image = [UIImage imageNamed:imageName];
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100", DOMAIN_URL, ORG_LOGO_API]]];
+                
+                if (data != nil) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIImage *logo = [UIImage imageWithData: data];
+                        if (logo) {
+                            cell.imageView.image = [UIImage imageWithData: data];
+                            cell.imageView.frame = CGRectMake(3, 3, 37, 37);
+                        }
+                    });
+                }
+            });
+        } else if (indexPath.row == kProfileOrg) {  // temporarily never show. in future, clicking the profileUser will toggle this cell
+            cell.textLabel.text = [Organization getSelectedOrg].name;
+            cell.textLabel.font = [UIFont boldSystemFontOfSize:20.0];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.userInteractionEnabled = NO;
+            
+            NSString *imageName = @"ProfileIcon.png";
+            cell.imageView.image = [UIImage imageNamed:imageName];
+
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100", DOMAIN_URL, ORG_LOGO_API]]];            
+                
+                if (data != nil) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIImage *logo = [UIImage imageWithData: data];
+                        if (logo) {
+                            cell.imageView.image = [UIImage imageWithData: data];
+                            cell.imageView.frame = CGRectMake(3, 3, 37, 37);
+                        }
+                    });
+                }
+            });
+        } 
     } else {
         cell.textLabel.text = [[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
         NSString *menuName = [[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
@@ -213,18 +248,15 @@ static RootMenuViewController * _sharedInstance = nil;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == kRootMore) {
-        if (indexPath.row == kMoreOrgs || indexPath.row == kMoreLogout) {
-            [self performSegueWithIdentifier:[[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] sender:self];
-        } else if (indexPath.row == kMoreLegal) {
-            [self showView:[[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
-        } else if (indexPath.row == kMoreFeedback) {
-            SlidingViewController *currentVC = (SlidingViewController*)[RootMenuViewController sharedInstance].currVC;
-            [currentVC slideOutOnly];
-            
-            [self sendFeedbackEmail];
-        }
-    } else if (indexPath.section != 0 || indexPath.row != 0) {
+    if (indexPath.section == kRootProfile && indexPath.row == kProfileUser && [Organization count] > 1) {
+        [self performSegueWithIdentifier:[[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row+1] sender:self];
+    } else if ((indexPath.section == kRootProfile && indexPath.row == kProfileOrg) || (indexPath.section == kRootMore && indexPath.row == kMoreLogout)) {
+        [self performSegueWithIdentifier:[[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] sender:self];
+    } else if (indexPath.section == kRootMore && indexPath.row == kMoreFeedback) {
+        SlidingViewController *currentVC = (SlidingViewController*)[RootMenuViewController sharedInstance].currVC;
+        [currentVC slideOutOnly];
+        [self sendFeedbackEmail];
+    } else {
         [self showView:[[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
     }
 }

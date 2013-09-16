@@ -81,6 +81,14 @@ static NSMutableDictionary * inactiveCustomers = nil;
     return [NSMutableArray arrayWithArray:[inactiveCustomers allValues]];
 }
 
++ (int)count {
+    return customers.count;
+}
+
++ (int)countInactive {
+    return inactiveCustomers.count;
+}
+
 //+ (void)setCustomers:(NSDictionary *)custDict active:(Boolean)isActive {
 //    if (isActive) {
 //        customers = custDict;

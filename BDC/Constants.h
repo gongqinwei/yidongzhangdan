@@ -11,10 +11,10 @@
 
 #import "Labels.h"
 
-//#define LOCAL
+#define LOCAL
 //#define APPTEST
 //#define APPSTAGE
-#define PROD
+//#define PROD
 
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
@@ -46,7 +46,6 @@
 #define ERR_DOMAIN          @"PROD"
 #define DOMAIN_URL          @"https://app.bill.com"
 #define APP_KEY             @"devKey"
-#define DEBUG_MODE
 #endif
 
 #ifdef DEBUG_MODE
@@ -87,10 +86,11 @@
 #define UPDATE              @"Update"
 #define DELETE              @"Delete"
 #define UNDELETE            @"Undelete"
+#define LIST_API            @"List/"
 
 #define INV_2_PDF_API       @"Invoice2PdfServlet"
-#define ATTACH_DOWNLOAD_API @"AttachDownload"       // not used any more
-#define DOC_DOWNLOAD_API    @"FileServlet"          // not used any more
+#define ATTACH_DOWNLOAD_API @"AttachDownload"           // not used any more
+#define DOC_DOWNLOAD_API    @"FileServlet"              // not used any more
 #define DOC_IMAGE_API       @"ImageServlet"
 #define ATTACH_IMAGE_API    @"AttachmentImageServlet"
 #define ORG_LOGO_API        @"InvoiceLogoImage"
@@ -100,7 +100,10 @@
 #define RETRIEVE_DOCS_API   @"RetrieveAttachment.json"
 #define REMOVE_DOCS_API     @"RemoveAttachment.json"
 #define ASSIGN_DOCS_API     @"AssignDocument.json"
-#define LIST_API            @"List/"
+#define USER_API            @"User.json"
+#define PROFILE_API         @"Profile.json"
+#define ORGANIZATION_API    @"Organization.json"        // read-only
+#define ORG_PREF_API        @"GetOrgPreferences.json"   // read-only
 #define BILL_API            @"Bill.json"
 #define PAY_BILL_API        @"PayBill.json"
 #define INVOICE_API         @"Invoice.json"
@@ -109,6 +112,9 @@
 #define ITEM_API            @"Item.json"
 #define ACCOUNT_API         @"ChartOfAccount.json"
 #define BANK_ACCOUNT_API    @"BankAccount.json"
+#define APPROVER_LIST_API   @"ApproverList.json"
+#define APPROVERS_SET_API   @"SetApprovers.json"
+#define INVOICE_SEND_API    @"SendInvoice.json"
 #define ENUM_API            @"Enum.json"
 #define ORG_PAY_NEED_APPROVAL_API   @"OrgBillPayNeedApproval.json"
 

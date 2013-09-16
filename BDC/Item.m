@@ -151,6 +151,14 @@ static NSMutableDictionary *inactiveItems = nil;
     return [NSMutableArray arrayWithArray:[inactiveItems allValues]];
 }
 
++ (int)count {
+    return items.count;
+}
+
++ (int)countInactive {
+    return inactiveItems.count;
+}
+
 //+ (void)setItems:(NSDictionary *)itemDict active:(Boolean)isActive {
 //    if (isActive) {
 //        items = itemDict;

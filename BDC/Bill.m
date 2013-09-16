@@ -238,6 +238,14 @@ static NSMutableArray *inactiveBills = nil;
     return inactiveBills;
 }
 
++ (int)count {
+    return bills.count;
+}
+
++ (int)countInactive {
+    return inactiveBills.count;
+}
+
 + (void)retrieveListForActive:(BOOL)isActive reload:(BOOL)needReload {
     [UIAppDelegate incrNetworkActivities];
     

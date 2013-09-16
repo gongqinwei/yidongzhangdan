@@ -239,6 +239,14 @@ static NSMutableArray *inactiveInvoices = nil;
     return inactiveInvoices;
 }
 
++ (int)count {
+    return invoices.count;
+}
+
++ (int)countInactive {
+    return inactiveInvoices.count;
+}
+
 - (void)populateObjectWithInfo:(NSDictionary *)dict {
     self.objectId = [dict objectForKey:ID];
     self.invoiceNumber = [dict objectForKey:INV_NUMBER];

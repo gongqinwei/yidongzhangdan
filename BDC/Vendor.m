@@ -61,6 +61,14 @@ static NSMutableDictionary * inactiveVendors = nil;
     return [NSMutableArray arrayWithArray:[inactiveVendors allValues]];
 }
 
++ (int)count {
+    return vendors.count;
+}
+
++ (int)countInactive {
+    return inactiveVendors.count;
+}
+
 + (Vendor *)objectForKey:(NSString *)vendorId {
     Vendor *vendor = [vendors objectForKey:vendorId];
     if (vendor == nil) {

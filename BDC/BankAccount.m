@@ -29,6 +29,10 @@ static NSArray *bankAccounts = nil;
     return bankAccounts;
 }
 
++ (int)count {
+    return bankAccounts.count;
+}
+
 + (void)retrieveListForActive:(BOOL)isActive {
     [UIAppDelegate incrNetworkActivities];
     

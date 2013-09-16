@@ -49,6 +49,10 @@ static Organization *selectedOrg = nil;
     return orgs;
 }
 
++ (int)count {
+    return orgs.count;
+}
+
 + (void)setOrgs:(NSArray *)orgList {
     orgs = orgList;
 }

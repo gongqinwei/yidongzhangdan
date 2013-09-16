@@ -107,5 +107,7 @@
     target.objectId = source.objectId;
     target.isActive = source.isActive;
 }
++ (int)count { return 0; }
++ (int)countInactive { return 0; }
 
 @end
