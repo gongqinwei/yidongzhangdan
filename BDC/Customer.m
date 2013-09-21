@@ -27,25 +27,6 @@ static id <CustomerListDelegate> ListDelegate = nil;
 static NSMutableDictionary * customers = nil;
 static NSMutableDictionary * inactiveCustomers = nil;
 
-//@synthesize name;
-
-//@synthesize addr1;
-//@synthesize addr2;
-//@synthesize addr3;
-//@synthesize addr4;
-//@synthesize city;
-//@synthesize state;
-//@synthesize country;
-//@synthesize zip;
-
-//@synthesize shipAddr1;
-//@synthesize shipAddr2;
-//@synthesize shipAddr3;
-//@synthesize shipAddr4;
-//@synthesize shipCity;
-//@synthesize shipState;
-//@synthesize shipCountry;
-//@synthesize shipZip;
 @synthesize email;
 @synthesize phone;
 //@synthesize altPhone;
@@ -88,14 +69,6 @@ static NSMutableDictionary * inactiveCustomers = nil;
 + (int)countInactive {
     return inactiveCustomers.count;
 }
-
-//+ (void)setCustomers:(NSDictionary *)custDict active:(Boolean)isActive {
-//    if (isActive) {
-//        customers = custDict;
-//    } else {
-//        inactiveCustomers = custDict;
-//    }
-//}
 
 + (Customer *)objectForKey:(NSString *)customerId {
     Customer *customer = [customers objectForKey:customerId];

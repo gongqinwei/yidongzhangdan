@@ -13,6 +13,7 @@
 #import "Organization.h"
 #import "Invoice.h"
 #import "Customer.h"
+#import "CustomerContact.h"
 #import "Item.h"
 #import "Bill.h"
 #import "Vendor.h"
@@ -118,6 +119,8 @@ static RootMenuViewController * _sharedInstance = nil;
     [Vendor retrieveList];
     [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
     [Item retrieveList];
+    [CustomerContact retrieveListForActive:YES];
+    
     [Invoice retrieveListForActive:NO reload:NO];
     [Bill retrieveListForActive:NO reload:NO];
 //    [Document retrieveListForCategory:FILE_CATEGORY_ATTACHMENT];

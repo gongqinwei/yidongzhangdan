@@ -106,6 +106,9 @@
 		7E370EB617DD8E3F005B3538 /* emailIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EB517DD8E3F005B3538 /* emailIcon.png */; };
 		7E370EB817DD90EC005B3538 /* emailIcon1.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EB717DD90EC005B3538 /* emailIcon1.png */; };
 		7E370EBA17E196B2005B3538 /* Mobill_logo120.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EB917E196B2005B3538 /* Mobill_logo120.png */; };
+		7E370EBD17E6D56D005B3538 /* EditContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E370EBC17E6D56C005B3538 /* EditContactViewController.m */; };
+		7E370EC217E6D815005B3538 /* CustomerContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E370EC117E6D814005B3538 /* CustomerContact.m */; };
+		7E370EC517E82EE0005B3538 /* ContactsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E370EC417E82EE0005B3538 /* ContactsTableViewController.m */; };
 		7E579F5A15A21F1E009D1455 /* Bill.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F5915A21F1E009D1455 /* Bill.m */; };
 		7E579F5E15A234EB009D1455 /* APIHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F5D15A234EB009D1455 /* APIHandler.m */; };
 		7E579F6515A80C8F009D1455 /* BDClogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E579F6415A80C8F009D1455 /* BDClogo.png */; };
@@ -289,6 +292,12 @@
 		7E370EB517DD8E3F005B3538 /* emailIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailIcon.png; sourceTree = "<group>"; };
 		7E370EB717DD90EC005B3538 /* emailIcon1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailIcon1.png; sourceTree = "<group>"; };
 		7E370EB917E196B2005B3538 /* Mobill_logo120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill_logo120.png; sourceTree = "<group>"; };
+		7E370EBB17E6D56B005B3538 /* EditContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditContactViewController.h; sourceTree = "<group>"; };
+		7E370EBC17E6D56C005B3538 /* EditContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditContactViewController.m; sourceTree = "<group>"; };
+		7E370EC017E6D813005B3538 /* CustomerContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerContact.h; sourceTree = "<group>"; };
+		7E370EC117E6D814005B3538 /* CustomerContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerContact.m; sourceTree = "<group>"; };
+		7E370EC317E82EE0005B3538 /* ContactsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsTableViewController.h; sourceTree = "<group>"; };
+		7E370EC417E82EE0005B3538 /* ContactsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsTableViewController.m; sourceTree = "<group>"; };
 		7E579F5815A21F1E009D1455 /* Bill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bill.h; sourceTree = "<group>"; };
 		7E579F5915A21F1E009D1455 /* Bill.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bill.m; sourceTree = "<group>"; };
 		7E579F5C15A234EB009D1455 /* APIHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIHandler.h; sourceTree = "<group>"; };
@@ -474,6 +483,7 @@
 				0EC88C9615F1374900A490EE /* AROverViewController.m */,
 				0EA29AB116D8865800386617 /* Invoice */,
 				0EA29AAF16D885E800386617 /* Customer */,
+				7E370EBE17E6D57C005B3538 /* Contact */,
 				0EA29AB016D8863100386617 /* Item */,
 			);
 			name = AR;
@@ -583,6 +593,26 @@
 			name = Document;
 			sourceTree = "<group>";
 		};
+		7E370EBE17E6D57C005B3538 /* Contact */ = {
+			isa = PBXGroup;
+			children = (
+				7E370EC317E82EE0005B3538 /* ContactsTableViewController.h */,
+				7E370EC417E82EE0005B3538 /* ContactsTableViewController.m */,
+				7E370EBB17E6D56B005B3538 /* EditContactViewController.h */,
+				7E370EBC17E6D56C005B3538 /* EditContactViewController.m */,
+			);
+			name = Contact;
+			sourceTree = "<group>";
+		};
+		7E370EBF17E6D7B9005B3538 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				7E98A99D17DC470000698ED4 /* MapViewController.h */,
+				7E98A99E17DC470700698ED4 /* MapViewController.m */,
+			);
+			name = Map;
+			sourceTree = "<group>";
+		};
 		7E579F5F15A37CFF009D1455 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -606,6 +636,8 @@
 				0EA09F1815FAAD0100BBD180 /* Customer.m */,
 				0E8FBAD0160D10B00074C01B /* Item.h */,
 				0E8FBAD1160D10B00074C01B /* Item.m */,
+				7E370EC017E6D813005B3538 /* CustomerContact.h */,
+				7E370EC117E6D814005B3538 /* CustomerContact.m */,
 				0E3A156C173F753B007F2DC6 /* BankAccount.h */,
 				0E3A156D173F753B007F2DC6 /* BankAccount.m */,
 				0E3A156F1742F958007F2DC6 /* Document.h */,
@@ -665,9 +697,8 @@
 				7E91E42D15993E6D005104AF /* BOSelectorViewController.m */,
 				0E0B9E9B17751CE900C2AF30 /* TermOfServiceViewController.h */,
 				0E0B9E9C17751CE900C2AF30 /* TermOfServiceViewController.m */,
-				7E98A99D17DC470000698ED4 /* MapViewController.h */,
-				7E98A99E17DC470700698ED4 /* MapViewController.m */,
 				0EA29AB416DDBE7600386617 /* Sliding */,
+				7E370EBF17E6D7B9005B3538 /* Map */,
 				0EA29AB516DDBE9900386617 /* Login */,
 				0EA29AB616DDBEE500386617 /* Menu */,
 				0EA29AB716DDBEF300386617 /* Org */,
@@ -965,6 +996,9 @@
 				0EC19CA5177FFD3F00D5B285 /* Node.m in Sources */,
 				0EC19CA8177FFE0100D5B285 /* LinkedList.m in Sources */,
 				7E98A99F17DC471400698ED4 /* MapViewController.m in Sources */,
+				7E370EBD17E6D56D005B3538 /* EditContactViewController.m in Sources */,
+				7E370EC217E6D815005B3538 /* CustomerContact.m in Sources */,
+				7E370EC517E82EE0005B3538 /* ContactsTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

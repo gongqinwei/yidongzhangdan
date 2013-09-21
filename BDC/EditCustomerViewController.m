@@ -8,7 +8,9 @@
 
 #import "EditCustomerViewController.h"
 #import "Customer.h"
+#import "CustomerContact.h"
 #import "MapViewController.h"
+#import "ContactsTableViewController.h"
 #import "Util.h"
 #import "UIHelper.h"
 #import "Geo.h"
@@ -18,6 +20,7 @@
 enum CustomerSections {
     kCustomerInfo,
     kCustomerAddr,
+    kCustomerContacts,
     kCustomerAttachments
 };
 
@@ -27,15 +30,19 @@ enum CustomerInfoType {
     kCustomerPhone
 };
 
-#define CustomerInfo    [NSArray arrayWithObjects: \
-                            [NSArray arrayWithObjects:@"Name", @"Email", @"Phone", nil], \
-                            ADDR_DETAILS, \
-                            [NSArray arrayWithObjects:nil], \
-                        nil]
+#define CustomerContacts                @"Contacts"
+#define CustomerInfo                    [NSArray arrayWithObjects: \
+                                            [NSArray arrayWithObjects:@"Name", @"Email", @"Phone", nil], \
+                                            ADDR_DETAILS, \
+                                            CustomerContacts, \
+                                            [NSArray arrayWithObjects:nil], \
+                                        nil]
 
 #define CUSTOMER_ADDR_TAG_OFFSET        3
 #define CUSTOMER_SCAN_PHOTO_SEGUE       @"ScanMoreCustomerPhoto"
-#define CUSTOMER_VIEW_MAP               @"ViewCustomerMap"
+#define CUSTOMER_VIEW_MAP_SEGUE         @"ViewCustomerMap"
+#define CUSTOMER_VIEW_CONTACTS_SEGUE    @"ViewContacts"
+#define CUSTOMER_CREATE_CONTACT_SEGUE   @"CustomerCreateContact"
 
 
 @interface EditCustomerViewController () <UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
@@ -53,7 +60,6 @@ enum CustomerInfoType {
 @property (nonatomic, strong) UITextField *customerZipTextField;
 @property (nonatomic, strong) UITextField *customerPhoneTextField;
 @property (nonatomic, strong) UITextField *customerEmailTextField;
-//@property (nonatomic, strong) NSMutableString *address;
 @property (nonatomic, assign) int numOfLinesInAddr;
 
 @end
@@ -74,7 +80,6 @@ enum CustomerInfoType {
 @synthesize customerZipTextField;
 @synthesize customerPhoneTextField;
 @synthesize customerEmailTextField;
-//@synthesize address;
 @synthesize numOfLinesInAddr;
 
 
@@ -267,8 +272,13 @@ enum CustomerInfoType {
     if ([segue.identifier isEqualToString:CUSTOMER_SCAN_PHOTO_SEGUE]) {
         ((ScannerViewController *)segue.destinationViewController).delegate = self;
         [segue.destinationViewController setMode:kAttachMode];
-    } else if ([segue.identifier isEqualToString:CUSTOMER_VIEW_MAP]) {
+    } else if ([segue.identifier isEqualToString:CUSTOMER_VIEW_MAP_SEGUE]) {
         [segue.destinationViewController setAnnotations:[NSMutableArray arrayWithArray:@[self.shaddowBusObj]]];
+    } else if ([segue.identifier isEqualToString:CUSTOMER_VIEW_CONTACTS_SEGUE]) {
+        [segue.destinationViewController setCustomer:(Customer *)self.shaddowBusObj];
+    } else if ([segue.identifier isEqualToString:CUSTOMER_CREATE_CONTACT_SEGUE]) {
+        [segue.destinationViewController setCustomer:(Customer *)self.shaddowBusObj];
+        [segue.destinationViewController setMode:kCreateMode];
     }
 }
 
@@ -304,6 +314,7 @@ enum CustomerInfoType {
 {
     static NSString *CUSTOMER_INFO_CELL_ID = @"CustomerInfoItem";
     static NSString *CUSTOMER_ADDRESS_CELL_ID = @"CustomerAddress";
+    static NSString *CUSTOMER_CONTACT_CELL_ID = @"CustomerContacts";
     static NSString *CUSTOMER_ATTACH_CELL_ID = @"CustomerAttachments";
     
     UITableViewCell *cell;
@@ -575,6 +586,23 @@ enum CustomerInfoType {
         }
             break;
             
+        case kCustomerContacts:
+        {
+            if (self.mode == kViewMode) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CUSTOMER_CONTACT_CELL_ID];
+            } else {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CUSTOMER_CONTACT_CELL_ID];
+            }
+            
+            cell.textLabel.text = CustomerContacts;
+            cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:APP_LABEL_FONT_SIZE];
+//            NSArray *contacts = [CustomerContact listContactsForCustomer:shaddowCustomer];
+//            cell.detailTextLabel.text = [NSString stringWithFormat:@"(%d)", contacts.count];
+//            cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:APP_LABEL_FONT_SIZE];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
+            break;
         case kCustomerAttachments:
         {
             cell = [tableView dequeueReusableCellWithIdentifier:CUSTOMER_ATTACH_CELL_ID];
@@ -597,7 +625,7 @@ enum CustomerInfoType {
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == kCustomerInfo) {
+    if (indexPath.section == kCustomerInfo || indexPath.section == kCustomerContacts) {
         return CELL_HEIGHT;
     } else if (indexPath.section == kCustomerAddr) {
         if (self.mode == kViewMode) {
@@ -611,7 +639,7 @@ enum CustomerInfoType {
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (section == kCustomerInfo || section == kCustomerAddr) {
+    if (section == kCustomerInfo || section == kCustomerAddr || section == kCustomerContacts) {
         return 0;
     } else {
         return 30;
@@ -619,7 +647,7 @@ enum CustomerInfoType {
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if (section == kCustomerInfo || section == kCustomerAddr) {
+    if (section == kCustomerInfo || section == kCustomerAddr || section == kCustomerContacts) {
         return nil;
     } else {
         UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 360, 30)];
@@ -679,7 +707,16 @@ enum CustomerInfoType {
     if (self.mode == kViewMode && indexPath.section == kCustomerAddr) {
         CLLocationCoordinate2D coordinate = [((Customer *)self.shaddowBusObj) coordinate];
         if (!(coordinate.latitude == 0.0 && coordinate.longitude == 0.0)) {
-            [self performSegueWithIdentifier:CUSTOMER_VIEW_MAP sender:self];
+            [self performSegueWithIdentifier:CUSTOMER_VIEW_MAP_SEGUE sender:self];
+        }
+    }
+    
+    if (indexPath.section == kCustomerContacts) {
+        NSMutableArray *contacts = [CustomerContact listContactsForCustomer:((Customer *)self.shaddowBusObj)];
+        if (contacts.count == 0) {
+            [self performSegueWithIdentifier:CUSTOMER_CREATE_CONTACT_SEGUE sender:self];
+        } else {
+            [self performSegueWithIdentifier:CUSTOMER_VIEW_CONTACTS_SEGUE sender:self];
         }
     }
 }

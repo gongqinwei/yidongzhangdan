@@ -41,14 +41,6 @@ typedef enum {
 
 @interface Vendor : BDCBusinessObjectWithAttachmentsAndAddress
 
-//@property (nonatomic, strong) NSString *addr1;
-//@property (nonatomic, strong) NSString *addr2;
-//@property (nonatomic, strong) NSString *addr3;
-//@property (nonatomic, strong) NSString *addr4;
-//@property (nonatomic, strong) NSString *city;
-//@property (nonatomic, strong) id state;
-//@property (nonatomic, assign) int country;
-//@property (nonatomic, strong) NSString *zip;
 @property (nonatomic, strong) NSString *email;
 @property (nonatomic, strong) NSString *phone;
 @property (nonatomic, strong) NSString *payBy;

@@ -21,14 +21,6 @@ static id <VendorListDelegate> ListDelegate = nil;
 static NSMutableDictionary * vendors = nil;
 static NSMutableDictionary * inactiveVendors = nil;
 
-//@synthesize addr1;
-//@synthesize addr2;
-//@synthesize addr3;
-//@synthesize addr4;
-//@synthesize city;
-//@synthesize state;
-//@synthesize country;
-//@synthesize zip;
 @synthesize email;
 @synthesize phone;
 @synthesize payBy;

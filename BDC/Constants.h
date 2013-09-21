@@ -11,8 +11,8 @@
 
 #import "Labels.h"
 
-#define LOCAL
-//#define APPTEST
+//#define LOCAL
+#define APPTEST
 //#define APPSTAGE
 //#define PROD
 
@@ -108,6 +108,7 @@
 #define PAY_BILL_API        @"PayBill.json"
 #define INVOICE_API         @"Invoice.json"
 #define CUSTOMER_API        @"Customer.json"
+#define CONTACT_API         @"CustomerContact.json"
 #define VENDOR_API          @"Vendor.json"
 #define ITEM_API            @"Item.json"
 #define ACCOUNT_API         @"ChartOfAccount.json"
@@ -115,6 +116,7 @@
 #define APPROVER_LIST_API   @"ApproverList.json"
 #define APPROVERS_SET_API   @"SetApprovers.json"
 #define INVOICE_SEND_API    @"SendInvoice.json"
+#define SET_APPROVERS_API   @"SetApprovers.json"
 #define ENUM_API            @"Enum.json"
 #define ORG_PAY_NEED_APPROVAL_API   @"OrgBillPayNeedApproval.json"
 
