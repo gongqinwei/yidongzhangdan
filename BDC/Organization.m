@@ -116,7 +116,8 @@ static Organization *selectedOrg = nil;
     [Util setSelectedOrgId:org.objectId];
     
     // retrieve org bill pay need approval info
-    [org retrieveNeedApprovalToPayBill];
+//    [org retrieveNeedApprovalToPayBill];
+    [org getOrgPrefs];
 }
 
 + (void)retrieveList {

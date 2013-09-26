@@ -142,6 +142,7 @@
 		7EA5BF4A17CC7CCF0075EEF3 /* Mobill50.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF4917CC7CCF0075EEF3 /* Mobill50.png */; };
 		7EA5BF4C17CC7D830075EEF3 /* Mobill40.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF4B17CC7D820075EEF3 /* Mobill40.png */; };
 		7EE3920A17DD2184007B1126 /* directionsIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EE3920917DD2184007B1126 /* directionsIcon.png */; };
+		7EF87EB317F403D300FCE2C8 /* RecorderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF87EB217F403D300FCE2C8 /* RecorderViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -348,6 +349,8 @@
 		7EA5BF4917CC7CCF0075EEF3 /* Mobill50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill50.png; sourceTree = "<group>"; };
 		7EA5BF4B17CC7D820075EEF3 /* Mobill40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill40.png; sourceTree = "<group>"; };
 		7EE3920917DD2184007B1126 /* directionsIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = directionsIcon.png; sourceTree = "<group>"; };
+		7EF87EB117F403D300FCE2C8 /* RecorderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecorderViewController.h; sourceTree = "<group>"; };
+		7EF87EB217F403D300FCE2C8 /* RecorderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecorderViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -576,12 +579,14 @@
 		0EEB9F791756B8A400AAAC35 /* Document */ = {
 			isa = PBXGroup;
 			children = (
-				7E91E41F1593F83B005104AF /* ScannerViewController.h */,
-				7E91E4201593F83B005104AF /* ScannerViewController.m */,
 				0EEB9F7A1756B91300AAAC35 /* DocumentCell.h */,
 				0EEB9F7B1756B91300AAAC35 /* DocumentCell.m */,
 				0EEB9F761756B5AE00AAAC35 /* InboxViewController.h */,
 				0EEB9F771756B5AE00AAAC35 /* InboxViewController.m */,
+				7E91E41F1593F83B005104AF /* ScannerViewController.h */,
+				7E91E4201593F83B005104AF /* ScannerViewController.m */,
+				7EF87EB117F403D300FCE2C8 /* RecorderViewController.h */,
+				7EF87EB217F403D300FCE2C8 /* RecorderViewController.m */,
 			);
 			name = Document;
 			sourceTree = "<group>";
@@ -968,6 +973,7 @@
 				0EAE1BAA170B9B780091B7FC /* UIViewController+Sliding.m in Sources */,
 				0E847CEE171785C400C7FA53 /* SlidingListTableViewController.m in Sources */,
 				0E847CF11717862A00C7FA53 /* SlidingDetailsTableViewController.m in Sources */,
+				7EF87EB317F403D300FCE2C8 /* RecorderViewController.m in Sources */,
 				0EE1186017266650001AF86E /* BillsTableViewController.m in Sources */,
 				0EA33397172733AC00FB92F3 /* APBusinessObject.m in Sources */,
 				0EA3339A172754D100FB92F3 /* APLineItem.m in Sources */,

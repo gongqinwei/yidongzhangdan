@@ -10,6 +10,7 @@
 #import "Organization.h"
 #import "Invoice.h"
 #import "Customer.h"
+#import "CustomerContact.h"
 #import "Item.h"
 #import "Bill.h"
 #import "Vendor.h"
@@ -81,22 +82,38 @@
                 // set cookie for session id
                 NSString *sessionId = [responseData objectForKey:SESSION_ID_KEY];
                 [Util setSession:sessionId];
-                                
-                [Invoice retrieveListForActive:YES reload:YES];
-                [Bill retrieveListForActive:YES reload:YES];
-                [Customer retrieveListForActive:YES reload:YES];
-                [Vendor retrieveListForActive:YES reload:YES];
-//                [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
-                [Item retrieveListForActive:YES reload:YES];
-                [ChartOfAccount retrieveList];
-                [Invoice retrieveListForActive:NO reload:NO];
-                [Bill retrieveListForActive:NO reload:NO];
-                [Customer retrieveListForActive:NO reload:NO];
-                [Vendor retrieveListForActive:NO reload:NO];
-                [Item retrieveListForActive:NO reload:NO];
                 
-                Organization *org = [Organization getSelectedOrg];
-                [org retrieveNeedApprovalToPayBill];
+                Organization *currentOrg = [Organization getSelectedOrg];
+                
+                if (currentOrg.enableAP) {
+                    [Bill retrieveListForActive:YES reload:YES];
+                    [Vendor retrieveList];
+                }
+                
+                [Invoice retrieveListForActive:YES reload:YES];
+                [ChartOfAccount retrieveList];
+                [Customer retrieveList];
+                if (currentOrg.enableAP || currentOrg.enableAR) {
+                    [Item retrieveList];
+                }
+                [CustomerContact retrieveListForActive:YES];
+                
+                if (currentOrg.enableAP || currentOrg.enableAR) {
+                    [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
+                }
+                
+                [Invoice retrieveListForActive:NO reload:NO];
+                
+                if (currentOrg.enableAP) {
+                    [Bill retrieveListForActive:NO reload:NO];
+                }
+
+                // should do it before retrieving all other entities; but don't want to do async here; should be good for next wakeup
+//                [currentOrg getOrgFeatures];
+                
+                // depricated
+//                [currentOrg retrieveNeedApprovalToPayBill];
+                [currentOrg getOrgPrefs];
             } else {
                 self.window.rootViewController = initialController;
                 [self.window makeKeyAndVisible];

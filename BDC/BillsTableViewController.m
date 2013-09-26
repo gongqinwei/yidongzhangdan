@@ -166,7 +166,8 @@
     [super refreshView];
     
     Organization *org = [Organization getSelectedOrg];
-    [org retrieveNeedApprovalToPayBill];
+//    [org retrieveNeedApprovalToPayBill];
+    [org getOrgPrefs];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
