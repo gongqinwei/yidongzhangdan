@@ -46,6 +46,10 @@ enum ItemInfoType {
     return [Item class];
 }
 
+- (BOOL)isAR {
+    return YES;
+}
+
 - (NSString *)getDocImageAPI {
     return ATTACH_IMAGE_API;
 }

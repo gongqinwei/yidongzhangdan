@@ -526,6 +526,8 @@
 				0E68460E1609863C00716412 /* SplashViewController.m */,
 				7E91E41315928886005104AF /* LoginViewController.h */,
 				7E91E41415928886005104AF /* LoginViewController.m */,
+				7E579F8215AB9561009D1455 /* SelectOrgViewController.h */,
+				7E579F8315AB9561009D1455 /* SelectOrgViewController.m */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -539,15 +541,6 @@
 				0E967EA316F2DC0600882B10 /* ActionMenuViewController.m */,
 			);
 			name = Menu;
-			sourceTree = "<group>";
-		};
-		0EA29AB716DDBEF300386617 /* Org */ = {
-			isa = PBXGroup;
-			children = (
-				7E579F8215AB9561009D1455 /* SelectOrgViewController.h */,
-				7E579F8315AB9561009D1455 /* SelectOrgViewController.m */,
-			);
-			name = Org;
 			sourceTree = "<group>";
 		};
 		0EB2190917472E1A00382C44 /* FileIcons */ = {
@@ -701,7 +694,6 @@
 				7E370EBF17E6D7B9005B3538 /* Map */,
 				0EA29AB516DDBE9900386617 /* Login */,
 				0EA29AB616DDBEE500386617 /* Menu */,
-				0EA29AB716DDBEF300386617 /* Org */,
 				0EEB9F791756B8A400AAAC35 /* Document */,
 				0EA29AB316DDBE2000386617 /* AP */,
 				0EA29AB216DDBDAC00386617 /* AR */,
@@ -839,7 +831,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = Mobill;
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Mobill Inc.";
 			};
 			buildConfigurationList = 7E91E3E515927C15005104AF /* Build configuration list for PBXProject "Mobill" */;
@@ -1036,9 +1028,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -1053,10 +1046,14 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1066,9 +1063,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -1076,8 +1074,11 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";

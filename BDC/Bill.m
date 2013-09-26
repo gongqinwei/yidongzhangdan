@@ -215,7 +215,7 @@ static NSMutableArray *inactiveBills = nil;
     }
     
     NSSortDescriptor *firstOrder;
-    if ([attribue isEqualToString:BILL_NUMBER] || [attribue isEqualToString:BILL_VENDOR_NAME] || [attribue isEqualToString:APPROVAL_STATUSES]) {
+    if ([attribue isEqualToString:BILL_NUMBER] || [attribue isEqualToString:BILL_VENDOR_NAME] || [attribue isEqualToString:BILL_APPROVAL_STATUS]) {
         firstOrder = [[NSSortDescriptor alloc] initWithKey:attribue ascending:isAscending selector:@selector(localizedCaseInsensitiveCompare:)];
     } else {
         firstOrder = [[NSSortDescriptor alloc] initWithKey:attribue ascending:isAscending];

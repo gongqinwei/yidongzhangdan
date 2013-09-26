@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UIViewController+Sliding.h"
-
+#import "Organization.h" // needed for getting current org features
 
 @interface SlidingTableViewController : UITableViewController
 

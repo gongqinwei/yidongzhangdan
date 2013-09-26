@@ -16,6 +16,8 @@
 @interface SlidingDetailsTableViewController : SlidingTableViewController <BusObjectDelegate, ScannerDelegate, AttachmentDelegate, UIAlertViewDelegate, UIScrollViewDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
 
 @property (nonatomic, strong, readonly) Class busObjClass;
+@property (nonatomic, assign, readonly) BOOL isAR;
+@property (nonatomic, assign, readonly) BOOL isAP;
 
 @property (nonatomic, strong) BDCBusinessObjectWithAttachments *busObj;
 @property (nonatomic, strong) BDCBusinessObjectWithAttachments *shaddowBusObj;

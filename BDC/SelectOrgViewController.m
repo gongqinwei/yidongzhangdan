@@ -15,19 +15,30 @@
 
 #define LOG_OUT_FROM_SELECT_ORGS_SEGUE      @"LogOutFromOrgSelect"
 
-@interface SelectOrgViewController ()
+
+@interface SelectOrgViewController () <OrgDelegate>
 
 @property (nonatomic, strong) NSArray *filteredOrgs;
+@property Organization *selectedOrg;
+@property NSString *sessionId;
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
+@property (nonatomic, strong) NSIndexPath *lastSelected;
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope;
 
 @end
+
 
 @implementation SelectOrgViewController
 
 @synthesize orgs;
 @synthesize filteredOrgs;
 @synthesize isInitialLogin;
+@synthesize selectedOrg;
+@synthesize sessionId;
+@synthesize activityIndicator;
+@synthesize lastSelected;
+
 
 - (void)cancelSelect:(UIBarButtonItem *)sender {
     [self.navigationController popViewControllerAnimated:YES];
@@ -73,6 +84,10 @@
     } else {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Log Out" style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
     }
+    
+    self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    self.activityIndicator.hidesWhenStopped = YES;
+    [self.activityIndicator stopAnimating];
 }
 
 - (void)viewDidUnload
@@ -173,56 +188,80 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Organization *selectedOrg;
+    if (self.lastSelected) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self.activityIndicator stopAnimating];
+//        });
+        
+        UITableViewCell *previousCell = [self.tableView cellForRowAtIndexPath:self.lastSelected];
+        previousCell.accessoryView = nil;
+    }
+    self.lastSelected = indexPath;
+    
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    cell.accessoryView = self.activityIndicator;
+    self.activityIndicator.hidden = NO;
+    [self.activityIndicator startAnimating];
+    
+//    Organization *selectedOrg;
+    [Organization setDelegate:self];
     
     if (tableView == self.searchDisplayController.searchResultsTableView) {
-        selectedOrg = [self.filteredOrgs objectAtIndex:indexPath.row];
+        self.selectedOrg = [self.filteredOrgs objectAtIndex:indexPath.row];
     } else {
-        selectedOrg = [self.orgs objectAtIndex:indexPath.row];
+        self.selectedOrg = [self.orgs objectAtIndex:indexPath.row];
     }
     
     NSMutableDictionary *info = [NSMutableDictionary dictionary];
 
-    [info setObject:ORG_ID forKey:selectedOrg.objectId];
+    [info setObject:ORG_ID forKey:self.selectedOrg.objectId];
     [info setObject:USERNAME forKey:[Util URLEncode:[Util getUsername]]];
     [info setObject:PASSWORD forKey:[Util URLEncode:[Util getPassword]]];
     
-    __weak SelectOrgViewController *weakSelf = self;
+//    __weak SelectOrgViewController *weakSelf = self;
     
     [APIHandler asyncCallWithAction:LOGIN_API Info:info AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger status;
         NSDictionary *responseData = [APIHandler getResponse:response data:data error:&err status:&status];
         
         if (status == RESPONSE_SUCCESS) {
-            // set cookie for session id
-            NSString *sessionId = [responseData objectForKey:SESSION_ID_KEY];
+            self.sessionId = [responseData objectForKey:SESSION_ID_KEY];
             
-            // randomly pick a cheap api to test API accessibility
-            NSString *action = [LIST_API stringByAppendingString: ACCOUNT_API];
-            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, LIST_INACTIVE_FILTER, nil];
+            [self.selectedOrg getOrgFeatures];
             
-            [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
-                NSInteger response_status;
-                [APIHandler getResponse:response data:data error:&err status:&response_status];
-                                
-                if(response_status == RESPONSE_SUCCESS) {
-                    // persist
-                    [Organization selectOrg:selectedOrg];
-                    [Util setSession:sessionId];
-                    
-                    // redirect
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        weakSelf.searchDisplayController.active = NO;
-                        [weakSelf performSegueWithIdentifier:@"GoToOrg" sender:weakSelf];
-                    });
-                } else if (response_status == RESPONSE_TIMEOUT) {
-                    [UIHelper showInfo:SysTimeOut withStatus:kError];
-                    Debug(SysTimeOut);
-                } else {
-                    [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
-                    Debug(@"%@", [err localizedDescription]);
-                }
-            }];
+//            [APIHandler asyncCallWithAction:ORG_FEATURE_API Info:nil AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+//                NSInteger response_status;
+//                NSDictionary *orgFeatures = [APIHandler getResponse:response data:data error:&err status:&response_status];
+//                                
+//                if(response_status == RESPONSE_SUCCESS) {
+//                    selectedOrg.showAR = [[orgFeatures objectForKey:SHOW_AR] boolValue];
+//                    selectedOrg.showAP = [[orgFeatures objectForKey:SHOW_AP] boolValue];
+//                    selectedOrg.enableAR = [[orgFeatures objectForKey:ENABLE_AR] boolValue];
+//                    selectedOrg.enableAP = [[orgFeatures objectForKey:ENABLE_AP] boolValue];
+//                    
+//                    if (selectedOrg.showAP || selectedOrg.showAR) {
+//                        // persist
+//                        [Organization selectOrg:selectedOrg];
+//                        [Util setSession:sessionId];
+//                        
+//                        // redirect
+//                        dispatch_async(dispatch_get_main_queue(), ^{
+//                            weakSelf.searchDisplayController.active = NO;
+//                            [weakSelf performSegueWithIdentifier:@"GoToOrg" sender:weakSelf];
+//                        });
+//                    }
+//                } else if (response_status == RESPONSE_TIMEOUT) {
+//                    [UIHelper showInfo:SysTimeOut withStatus:kError];
+//                    Debug(SysTimeOut);
+//                } else {                    
+//                    if ([[orgFeatures objectForKey:RESPONSE_ERROR_CODE] isEqualToString:ORG_LOCKED_OUT]) {
+//                        [UIHelper showInfo:@"This account is past due and is locked out by Bill.com!" withStatus:kWarning];
+//                    } else {
+//                        [UIHelper showInfo:[err localizedDescription] withStatus:kWarning];
+//                        Debug(@"%@", [err localizedDescription]);
+//                    }
+//                }
+//            }];
         } else {
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             Debug(@"%@", [err localizedDescription]);
@@ -248,5 +287,42 @@
     
     self.filteredOrgs = [self.orgs filteredArrayUsingPredicate:filterPredicate];
 }
+
+#pragma mark - Organization delegate
+
+- (void)didGetOrgFeatures {
+    if (self.lastSelected) {
+        UITableViewCell *previousCell = [self.tableView cellForRowAtIndexPath:self.lastSelected];
+        previousCell.accessoryView = nil;
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.activityIndicator stopAnimating];
+    });
+    
+    if (self.selectedOrg.showAR || self.selectedOrg.showAP) {
+        // persist
+        [Organization selectOrg:self.selectedOrg];
+        [Util setSession:self.sessionId];
+        
+        // redirect
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.searchDisplayController.active = NO;
+            [self performSegueWithIdentifier:@"GoToOrg" sender:self];
+        });
+    }    
+}
+
+- (void)failedToGetOrgFeatures {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.activityIndicator stopAnimating];
+    });
+    
+    if (self.lastSelected) {
+        UITableViewCell *previousCell = [self.tableView cellForRowAtIndexPath:self.lastSelected];
+        previousCell.accessoryView = nil;
+    }
+}
+
 
 @end

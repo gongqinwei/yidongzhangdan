@@ -41,6 +41,10 @@ enum ContactInfoType {
     return [CustomerContact class];
 }
 
+- (BOOL)isAR {
+    return YES;
+}
+
 - (NSIndexSet *)getNonAttachmentSections {
     return [NSIndexSet indexSetWithIndex:0];
 }
@@ -86,7 +90,7 @@ enum ContactInfoType {
         self.busObj = [[CustomerContact alloc] initWithCustomer:self.customer];
         self.shaddowBusObj = [[CustomerContact alloc] initWithCustomer:self.customer];
     }
-    
+        
     [super viewDidLoad];
     
     if (self.mode != kViewMode) {

@@ -204,10 +204,14 @@
         self.sortAttributes = [NSArray arrayWithObjects:BILL_APPROVAL_STATUS, BILL_VENDOR_NAME, BILL_NUMBER, BILL_DATE, BILL_DUE_DATE, BILL_AMOUNT, BILL_AMOUNT_PAID, nil];
         self.sortAttributeLabels = BILL_LABELS;
         
-        self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
-        self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
+        if ([Organization getSelectedOrg].enableAP) {
+            self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
+            self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
+        }
     } else {
-        self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
+        if ([Organization getSelectedOrg].enableAP) {
+            self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
+        }
     }
     
     self.createNewSegue = CREATE_BILL_SEGUE;

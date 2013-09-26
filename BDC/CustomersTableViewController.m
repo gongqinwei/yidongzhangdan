@@ -111,12 +111,18 @@
     [Customer setListDelegate:self];
 //    [Customer retrieveList];
     
+    Organization *org = [Organization getSelectedOrg];
     if (self.mode != kSelectMode && self.mode != kAttachMode) {
         self.sortAttributes = [NSArray array];
-        self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, ACTION_MAP, nil];
-        self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
+        
+        if (org.enableAR) {
+            self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, ACTION_MAP, nil];
+            self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
+        }
     } else {
-        self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
+        if (org.enableAR) {
+            self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
+        }
     }
     
     self.createNewSegue = CUSTOMER_CREATE_CUSTOMER_SEGUE;

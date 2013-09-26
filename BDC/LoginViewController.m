@@ -19,10 +19,13 @@
 
 @interface LoginViewController () <OrgDelegate>
 
+@property (nonatomic, strong) Organization *firstOrg;
+
 @end
 
 @implementation LoginViewController
 
+@synthesize firstOrg;
 @synthesize email;
 @synthesize password;
 @synthesize warning;
@@ -108,12 +111,26 @@
 
 #pragma mark - Organization delegate
 
+- (void)didGetOrgFeatures {
+    Debug(@"===> showAR: %d", self.firstOrg.showAR);
+    Debug(@"===> showAP: %d", self.firstOrg.showAP);
+    Debug(@"===> enableAR: %d", self.firstOrg.enableAR);
+    Debug(@"===> enableAP: %d", self.firstOrg.enableAP);
+    
+    [self performSegueWithIdentifier:@"Login" sender:self];
+    [Organization selectOrg:self.firstOrg];
+}
+
+- (void)failedToGetOrgFeatures {
+    
+}
+
 - (void)didGetOrgs:(NSArray *)orgList status:(LoginStatus)status {
     __weak LoginViewController *weakSelf = self;
     
     if (status == kSucceedLogin) {
-        Organization *firstOrg = [orgList objectAtIndex:0];
-        NSString *orgId = firstOrg.objectId;
+        self.firstOrg = [orgList objectAtIndex:0];
+        NSString *orgId = self.firstOrg.objectId;
         
         NSMutableDictionary *info = [NSMutableDictionary dictionary];
         
@@ -145,8 +162,8 @@
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [weakSelf.indicator stopAnimating];
                         weakSelf.warning.hidden = YES;
-                        [weakSelf performSegueWithIdentifier:@"Login" sender:weakSelf];
-                        [Organization selectOrg:firstOrg];
+                        
+                        [self.firstOrg getOrgFeatures];
                     });
                 }
             } else {

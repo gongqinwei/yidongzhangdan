@@ -91,6 +91,10 @@ static Handler sessionValidatingHandler = nil;
             *status = RESPONSE_TIMEOUT;
         } else if (data == nil) {
             *status = RESPONSE_FALURE;
+        } else {
+            NSError *error;
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+            result = [json objectForKey:RESPONSE_DATA_KEY];
         }
     } else {
         NSError *error;
@@ -105,7 +109,6 @@ static Handler sessionValidatingHandler = nil;
             *err = [NSError errorWithDomain:ERR_DOMAIN code:[[[json objectForKey:RESPONSE_DATA_KEY] objectForKey:RESPONSE_ERROR_CODE] intValue] userInfo:details];
         }
     }
-    
     return result;
 }
     

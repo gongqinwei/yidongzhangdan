@@ -105,6 +105,10 @@ typedef enum {
     return [Invoice class];
 }
 
+- (BOOL)isAR {
+    return YES;
+}
+
 - (NSIndexPath *)getAttachmentPath {
     return [NSIndexPath indexPathForRow:1 inSection:kInvoiceAttachments];
 }
@@ -130,7 +134,7 @@ typedef enum {
 }
 
 - (void)setActions {
-    if (self.mode == kViewMode) {
+    if (self.mode == kViewMode && [Organization getSelectedOrg].enableAR) {
         self.crudActions = nil;
 
         if (self.isActive) {
@@ -317,7 +321,7 @@ typedef enum {
         self.busObj = [[Invoice alloc] init];
         self.shaddowBusObj = [[Invoice alloc] init];
     }
-    
+        
     [super viewDidLoad];
     
     if (self.mode != kViewMode) {

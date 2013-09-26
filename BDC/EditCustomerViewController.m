@@ -87,6 +87,10 @@ enum CustomerInfoType {
     return [Customer class];
 }
 
+- (BOOL)isAR {
+    return YES;
+}
+
 - (NSIndexPath *)getAttachmentPath {
     return [NSIndexPath indexPathForRow:0 inSection:kCustomerAttachments];
 }
@@ -714,7 +718,9 @@ enum CustomerInfoType {
     if (indexPath.section == kCustomerContacts) {
         NSMutableArray *contacts = [CustomerContact listContactsForCustomer:((Customer *)self.shaddowBusObj)];
         if (contacts.count == 0) {
-            [self performSegueWithIdentifier:CUSTOMER_CREATE_CONTACT_SEGUE sender:self];
+            if ([Organization getSelectedOrg].enableAR) {
+                [self performSegueWithIdentifier:CUSTOMER_CREATE_CONTACT_SEGUE sender:self];
+            }
         } else {
             [self performSegueWithIdentifier:CUSTOMER_VIEW_CONTACTS_SEGUE sender:self];
         }

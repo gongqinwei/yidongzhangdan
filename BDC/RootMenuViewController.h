@@ -22,6 +22,7 @@
 #define MENU_VENDORS        @"Vendors"
 
 #define CATEGORY_AR         @"Account Receivables"
+#define CATEGORY_AR_READONLY    @"Account Receivables (read only)"
 #define MENU_INVOICES       @"Invoices"
 #define MENU_CUSTOMERS      @"Customers"
 #define MENU_ITEMS          @"Items"
@@ -36,6 +37,7 @@
                             [NSArray arrayWithObjects:MENU_SCANNER, MENU_INBOX,                             CATEGORY_TOOL, nil], \
                             [NSArray arrayWithObjects:MENU_BILLS, MENU_VENDORS,                             CATEGORY_AP, nil], \
                             [NSArray arrayWithObjects:MENU_INVOICES, MENU_CUSTOMERS, MENU_ITEMS,            CATEGORY_AR, nil], \
+                            [NSArray arrayWithObjects:MENU_INVOICES, MENU_CUSTOMERS,                        CATEGORY_AR_READONLY, nil], \
                             [NSArray arrayWithObjects:MENU_FEEDBACK, MENU_LEGAL, MENU_LOGOUT,               CATEGORY_MORE, nil], \
                         nil]
 
@@ -44,6 +46,7 @@ enum RootMenuSections {
     kRootTool,
     kRootAP,
     kRootAR,
+    kRootARReadonly,
     kRootMore
 };
 

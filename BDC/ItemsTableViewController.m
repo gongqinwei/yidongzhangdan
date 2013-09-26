@@ -105,6 +105,7 @@
     [Item setListDelegate:self];
 //    [Item retrieveList];
     
+    Organization *org = [Organization getSelectedOrg];
     if (self.mode == kSelectMode) {
         // get a fresh copy
         NSMutableArray *arr = [NSMutableArray array];
@@ -114,13 +115,17 @@
             [arr addObject:copy];
         }
         self.items = arr;
-        self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
+        if (org.enableAR) {
+            self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
+        }
     } else if(self.mode != kAttachMode) {
         self.items = [Item listOrderBy:ITEM_NAME ascending:YES active:YES];
         
         self.sortAttributes = [NSArray array];
-        self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
-        self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];        
+        if (org.enableAR) {
+            self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
+            self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
+        }
     }
     
     self.createNewSegue = ITEM_CREATE_ITEM_SEGUE;

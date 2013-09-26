@@ -75,7 +75,9 @@
 {
     [super viewDidLoad];
     
-    self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
+    if ([Organization getSelectedOrg].enableAR) {
+        self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
+    }
     
     self.title = @"Contacts";
     self.navigationItem.leftBarButtonItem  = nil;

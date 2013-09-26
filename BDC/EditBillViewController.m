@@ -115,6 +115,10 @@ typedef enum {
     return [Bill class];
 }
 
+- (BOOL)isAP {
+    return YES;
+}
+
 - (NSIndexPath *)getAttachmentPath {
     return [NSIndexPath indexPathForRow:0 inSection:kBillDocs];
 }
@@ -219,7 +223,7 @@ typedef enum {
 }
 
 - (void)setActions {
-    if (self.mode == kViewMode) {
+    if (self.mode == kViewMode && [Organization getSelectedOrg].enableAP) {
         self.crudActions = nil;
         
         if (((Bill *)self.shaddowBusObj).paymentStatus && ![((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]) {

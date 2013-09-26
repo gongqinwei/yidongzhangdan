@@ -37,6 +37,8 @@ static double animatedDistance = 0;
 @implementation SlidingDetailsTableViewController
 
 @synthesize busObjClass;
+@synthesize isAP;
+@synthesize isAR;
 @synthesize busObj = _busObj;
 @synthesize shaddowBusObj;
 @synthesize modeChanged;
@@ -59,19 +61,31 @@ static double animatedDistance = 0;
     self.attachmentDict = [NSMutableDictionary dictionaryWithDictionary:self.busObj.attachmentDict];
 }
 
+- (BOOL)isAP {
+    return NO;
+}
+
+- (BOOL)isAR {
+    return NO;
+}
+
 - (void)setMode:(ViewMode)mode {
     super.mode = mode;
     self.modeChanged = YES;
     
     if (mode == kViewMode) {
         self.isActive = self.busObj.isActive;
-        self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
-        self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
-        if (self.isActive) {
-            self.actionMenuVC.crudActions = self.crudActions;
-        } else {
-            self.actionMenuVC.crudActions = self.inactiveCrudActions;
+        
+        if ((self.isAP && [Organization getSelectedOrg].enableAP) || (self.isAR && [Organization getSelectedOrg].enableAR)) {
+            self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
+            self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
+            if (self.isActive) {
+                self.actionMenuVC.crudActions = self.crudActions;
+            } else {
+                self.actionMenuVC.crudActions = self.inactiveCrudActions;
+            }
         }
+        
         [self.actionMenuVC.tableView reloadData];
         
 //        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
@@ -179,8 +193,9 @@ static double animatedDistance = 0;
     
     imageView.userInteractionEnabled = YES;
     
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTapped:)];
-    [imageView addGestureRecognizer:tap];
+//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTapped:)];
+//    [imageView addGestureRecognizer:tap];
+    [self addTapGestureToImageView:imageView];
     
     if (self.mode != kViewMode) {
         UILongPressGestureRecognizer *press = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(imagePressed:)];
@@ -200,6 +215,19 @@ static double animatedDistance = 0;
     self.currAttachment = imageView;
 }
 
+- (void)addTapGestureToImageView:(UIImageView *)imgView {
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTapped:)];
+    [imgView addGestureRecognizer:tap];
+}
+
+- (void)removeTapGesterFromImageView:(UIImageView *)imgView {
+    for (UIGestureRecognizer *recognizer in imgView.gestureRecognizers) {
+        if ([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
+            [imgView removeGestureRecognizer:recognizer];
+        }
+    }
+}
+
 - (void)imageTapped:(UITapGestureRecognizer *)gestureRecognizer {
     if ([self tryTap]) {
         UIImageView *imageView = (UIImageView *)gestureRecognizer.view;
@@ -215,6 +243,7 @@ static double animatedDistance = 0;
             [self.previewController reloadData];
         } else {
             [self downloadDocument:doc forImage:imageView];
+            [self removeTapGesterFromImageView:imageView];
         }
     }
 }
@@ -392,6 +421,8 @@ static double animatedDistance = 0;
                                    [self presentViewController:self.previewController animated:YES completion:nil];
                                    [self.previewController reloadData];
                                }
+                               
+                               [self addTapGestureToImageView:imgView];
                            }];
 }
 
@@ -562,12 +593,20 @@ static double animatedDistance = 0;
     if (self.busObj) {
         if (self.busObj.isActive) {
             [self.busObj remove];
-            self.actionMenuVC.crudActions = self.inactiveCrudActions;
+            
+            if ((self.isAP && [Organization getSelectedOrg].enableAP) || (self.isAR && [Organization getSelectedOrg].enableAR)) {
+                self.actionMenuVC.crudActions = self.inactiveCrudActions;
+            }
+            
             self.isActive = NO;
             //                [[self.busObj class] retrieveListForActive:YES];
         } else {
             [self.busObj revive];
-            self.actionMenuVC.crudActions = self.crudActions;
+            
+            if ((self.isAP && [Organization getSelectedOrg].enableAP) || (self.isAR && [Organization getSelectedOrg].enableAR)) {
+                self.actionMenuVC.crudActions = self.crudActions;
+            }
+            
             self.isActive = YES;
             //                [[self.busObj class] retrieveListForActive:NO];
         }

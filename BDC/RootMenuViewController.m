@@ -28,11 +28,16 @@
 
 @interface RootMenuViewController () <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate>
 
+@property (nonatomic, strong) Organization *currentOrg;
+@property (nonatomic, strong) NSMutableArray *rootMenu;
+
 @end
 
 
 @implementation RootMenuViewController
 
+@synthesize currentOrg;
+@synthesize rootMenu;
 @synthesize menuTableView;
 @synthesize currVC;
 @synthesize menuItems;
@@ -80,7 +85,33 @@ static RootMenuViewController * _sharedInstance = nil;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.currentOrg = [Organization getSelectedOrg];
+    
+    self.rootMenu = [NSMutableArray array];
+    [self.rootMenu addObject:[ROOT_MENU objectAtIndex:kRootProfile]];   // always + Profile/ChangeOrg section
+    
+    if (!self.currentOrg.showAR && !self.currentOrg.enableAP) {
+        // Profile + More (theoretically should never happen - can't login)
+    } else {
+        if (self.currentOrg.enableAP || self.currentOrg.enableAR) {
+            [self.rootMenu addObject:[ROOT_MENU objectAtIndex:kRootTool]];  // + Documents section
+        }
         
+        if (self.currentOrg.enableAP) {
+            [self.rootMenu addObject:[ROOT_MENU objectAtIndex:kRootAP]];    // + AP section
+        }
+        
+        if (self.currentOrg.enableAR) {
+            [self.rootMenu addObject:[ROOT_MENU objectAtIndex:kRootAR]];    // + AR section
+        } else {
+            [self.rootMenu addObject:[ROOT_MENU objectAtIndex:kRootARReadonly]];    // + AR Readonly section
+        }
+    }
+    
+    [self.rootMenu addObject:[ROOT_MENU objectAtIndex:kRootMore]];      // always + More section
+    
+    
     self.menuTableView.dataSource = self;
     self.menuTableView.delegate = self;
     
@@ -112,18 +143,31 @@ static RootMenuViewController * _sharedInstance = nil;
     
 ////    [Invoice setARDelegate:(AROverViewController *)self.currVC];  //assumption: currVC is AROverViewController.
     
+    if (self.currentOrg.enableAP) {
+        [Bill retrieveListForActive:YES reload:YES];
+        [Vendor retrieveList];
+        [self.currentOrg getOrgPrefs];
+    }
+
     [Invoice retrieveListForActive:YES reload:YES];
     [ChartOfAccount retrieveList];
-    [Bill retrieveListForActive:YES reload:YES];
     [Customer retrieveList];
-    [Vendor retrieveList];
-    [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
-    [Item retrieveList];
+    if (self.currentOrg.enableAP || self.currentOrg.enableAR) {
+        [Item retrieveList];
+    }
     [CustomerContact retrieveListForActive:YES];
     
+    if (self.currentOrg.enableAP || self.currentOrg.enableAR) {
+        [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
+    }
+    
     [Invoice retrieveListForActive:NO reload:NO];
-    [Bill retrieveListForActive:NO reload:NO];
-//    [Document retrieveListForCategory:FILE_CATEGORY_ATTACHMENT];
+    
+    if (self.currentOrg.enableAP) {
+        [Bill retrieveListForActive:NO reload:NO];
+    }
+    
+//    [Document retrieveListForCategory:FILE_CATEGORY_ATTACHMENT]; // for future
     
     _sharedInstance = self;
     
@@ -153,15 +197,27 @@ static RootMenuViewController * _sharedInstance = nil;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [ROOT_MENU count];
+    return self.rootMenu.count;
+    
+//    if (!self.currentOrg.showAR && !self.currentOrg.enableAP) {
+//        return 2; // Profile + More (theoretically should never happen - can't login)
+//    } else if (!self.currentOrg.enableAP) {
+//        if (!self.currentOrg.enableAR) {
+//            return 3; // Profile + AR(read-only) + More
+//        } else {
+//            return 4; // Profile + Documents + AR + More
+//        }
+//    } else {
+//        return [ROOT_MENU count];
+//    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == kRootProfile) {
-        return [[ROOT_MENU objectAtIndex:section] count] - 2;
+        return [[self.rootMenu objectAtIndex:section] count] - 2;
     } else {
-        return [[ROOT_MENU objectAtIndex:section] count] - 1;
+        return [[self.rootMenu objectAtIndex:section] count] - 1;
     }
 }
 
@@ -176,7 +232,7 @@ static RootMenuViewController * _sharedInstance = nil;
     
     if (indexPath.section == kRootProfile) {
         if (indexPath.row == kProfileUser) {    // temporarily same as profile org. will change to user name/email once BDC API implemented
-            cell.textLabel.text = [Organization getSelectedOrg].name;
+            cell.textLabel.text = self.currentOrg.name;
             cell.textLabel.font = [UIFont boldSystemFontOfSize:20.0];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             
@@ -205,7 +261,7 @@ static RootMenuViewController * _sharedInstance = nil;
                 }
             });
         } else if (indexPath.row == kProfileOrg) {  // temporarily never show. in future, clicking the profileUser will toggle this cell
-            cell.textLabel.text = [Organization getSelectedOrg].name;
+            cell.textLabel.text = self.currentOrg.name;
             cell.textLabel.font = [UIFont boldSystemFontOfSize:20.0];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -229,8 +285,8 @@ static RootMenuViewController * _sharedInstance = nil;
             });
         } 
     } else {
-        cell.textLabel.text = [[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-        NSString *menuName = [[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+        cell.textLabel.text = [[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+        NSString *menuName = [[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
         menuName = [menuName stringByReplacingOccurrencesOfString:@" " withString:@""];
         NSString *imageName = [menuName stringByAppendingString:@"Icon.png"];
         cell.imageView.image = [UIImage imageNamed:imageName];
@@ -252,15 +308,15 @@ static RootMenuViewController * _sharedInstance = nil;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == kRootProfile && indexPath.row == kProfileUser && [Organization count] > 1) {
-        [self performSegueWithIdentifier:[[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row+1] sender:self];
-    } else if ((indexPath.section == kRootProfile && indexPath.row == kProfileOrg) || (indexPath.section == kRootMore && indexPath.row == kMoreLogout)) {
-        [self performSegueWithIdentifier:[[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] sender:self];
-    } else if (indexPath.section == kRootMore && indexPath.row == kMoreFeedback) {
+        [self performSegueWithIdentifier:[[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row + 1] sender:self];  // temp hack
+    } else if ((indexPath.section == kRootProfile && indexPath.row == kProfileOrg) || (indexPath.section == self.rootMenu.count - 1 && indexPath.row == kMoreLogout)) {
+        [self performSegueWithIdentifier:[[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] sender:self];
+    } else if (indexPath.section == self.rootMenu.count - 1 && indexPath.row == kMoreFeedback) {
         SlidingViewController *currentVC = (SlidingViewController*)[RootMenuViewController sharedInstance].currVC;
         [currentVC slideOutOnly];
         [self sendFeedbackEmail];
     } else {
-        [self showView:[[ROOT_MENU objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+        [self showView:[[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
     }
 }
 
@@ -279,8 +335,8 @@ static RootMenuViewController * _sharedInstance = nil;
         UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, ROOT_MENU_SECTION_HEADER_HEIGHT)];
         headerView.backgroundColor = [UIColor darkGrayColor];
         
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5, 3, 200, 15)];
-        label.text = [[ROOT_MENU objectAtIndex:section] lastObject];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5, 3, 250, 15)];
+        label.text = [[self.rootMenu objectAtIndex:section] lastObject];
         [UIHelper initializeHeaderLabel:label];
         
         [headerView addSubview:label];
@@ -301,8 +357,8 @@ static RootMenuViewController * _sharedInstance = nil;
         MFMailComposeViewController *mailer = [[MFMailComposeViewController alloc] init];
         mailer.mailComposeDelegate = self;
         
-        Organization *org = [Organization getSelectedOrg];
-        [mailer setSubject:[NSString stringWithFormat:@"Feedback on Mobill app from %@", org.name]];
+//        Organization *org = [Organization getSelectedOrg];
+        [mailer setSubject:[NSString stringWithFormat:@"Feedback on Mobill app from %@", self.currentOrg.name]];
         
         NSArray *toRecipients = [NSArray arrayWithObjects:@"customer.mobill@gmail.com", nil];
         [mailer setToRecipients:toRecipients];

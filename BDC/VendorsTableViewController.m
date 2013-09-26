@@ -106,10 +106,14 @@
     
     if (self.mode != kSelectMode && self.mode != kAttachMode) {
         self.sortAttributes = [NSArray array];
-        self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, ACTION_MAP, nil];
-        self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
+        if ([Organization getSelectedOrg].enableAP) {
+            self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, ACTION_MAP, nil];
+            self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
+        }
     } else {
-        self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
+        if ([Organization getSelectedOrg].enableAP) {
+            self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
+        }
     }
     
     self.createNewSegue = VENDOR_CREATE_VENDOR_SEGUE;
@@ -171,6 +175,32 @@
     return cell;
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.isActive) {
+        return @"Delete";
+    } else {
+        return @"Undelete";
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if (!self.isActive) {
+        return ALL_INACTIVE_VENDORS;
+    }
+    return nil;
+}
+
+//- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+//    
+//}
+//
+//- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+//    
+//}
+
+#pragma mark - Table view delegate
+
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return YES;
@@ -195,24 +225,6 @@
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }
 }
-
-- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.isActive) {
-        return @"Delete";
-    } else {
-        return @"Undelete";
-    }
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    if (!self.isActive) {
-        return ALL_INACTIVE_VENDORS;
-    }
-    return nil;
-}
-
-#pragma mark - Table view delegate
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(Vendor *)sender
 {

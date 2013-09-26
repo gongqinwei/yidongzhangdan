@@ -19,8 +19,8 @@
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
-//#define DOMAIN_URL          @"http://10.1.9.101"
-#define DOMAIN_URL          @"http://192.168.1.16"
+//#define DOMAIN_URL          @"http://10.1.9.84"
+#define DOMAIN_URL          @"http://192.168.1.9"
 #define APP_KEY             @"devKey"
 #define DEBUG_MODE
 #endif
@@ -104,6 +104,7 @@
 #define PROFILE_API         @"Profile.json"
 #define ORGANIZATION_API    @"Organization.json"        // read-only
 #define ORG_PREF_API        @"GetOrgPreferences.json"   // read-only
+#define ORG_FEATURE_API     @"GetOrgFeatures.json"      // read-only
 #define BILL_API            @"Bill.json"
 #define PAY_BILL_API        @"PayBill.json"
 #define INVOICE_API         @"Invoice.json"
@@ -148,7 +149,7 @@
 #define RESPONSE_SUCCESS    0
 #define RESPONSE_FALURE     1
 #define RESPONSE_TIMEOUT    2
-#define ORG_NO_API          @"BDC_1105"
+#define ORG_LOCKED_OUT      @"BDC_1107"
 #define INVALID_SESSION     @"BDC_1109"
 #define RESPONSE_DATA_KEY   @"response_data"
 #define RESPONSE_STATUS_KEY @"response_status"

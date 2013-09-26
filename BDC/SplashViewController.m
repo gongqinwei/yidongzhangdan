@@ -66,8 +66,34 @@
 
 #pragma mark - Organization delegate
 
+- (void)enterBDC {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self performSegueWithIdentifier:@"EnterBDC" sender:self];
+    });
+}
+
+- (void)backToLogin {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self performSegueWithIdentifier:@"PresentLogin" sender:self];
+    });
+}
+
+- (void)didGetOrgFeatures {
+    Organization *currentOrg = [Organization getSelectedOrg];
+    Debug(@"=== showAR: %d", currentOrg.showAR);
+    Debug(@"=== showAP: %d", currentOrg.showAP);
+    Debug(@"=== enableAR: %d", currentOrg.enableAR);
+    Debug(@"=== enableAP: %d", currentOrg.enableAP);
+    
+    [self enterBDC];
+}
+
+- (void)failedToGetOrgFeatures {
+    [self backToLogin];
+}
+
 - (void)didGetOrgs:(NSArray *)orgList status:(LoginStatus)status {
-    __weak SplashViewController *weakSelf = self;
+//    __weak SplashViewController *weakSelf = self;
     
     if (status == kSucceedLogin) {
         NSString *selectedOrgId = [Util getSelectedOrgId];
@@ -90,14 +116,10 @@
                 NSString *sessionId = [responseData objectForKey:SESSION_ID_KEY];
                 [Util setSession:sessionId];
                 
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf performSegueWithIdentifier:@"EnterBDC" sender:weakSelf];
-                });
+                [[Organization getSelectedOrg] getOrgFeatures];
             } else {
                 Debug(@"Splash View Controller: Failed to login!");
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf performSegueWithIdentifier:@"PresentLogin" sender:self];
-                });
+                [self backToLogin];
             }
         }];
     } else if (status == kFailListOrgs) {

@@ -84,6 +84,11 @@ enum VendorInfoType {
     return [Vendor class];
 }
 
+
+- (BOOL)isAP {
+    return YES;
+}
+
 - (NSIndexPath *)getAttachmentPath {
     return [NSIndexPath indexPathForRow:0 inSection:kVendorAttachments];
 }

@@ -152,17 +152,23 @@
     self.invoices = [Invoice listOrderBy:INV_NUMBER ascending:YES active:YES];
     [Invoice setListDelegate:self];
     
+    Organization *org = [Organization getSelectedOrg];
     if (self.mode != kAttachMode) {
         self.sortAttributes = [NSArray arrayWithObjects:INV_CUSTOMER_NAME, INV_NUMBER, INV_DATE, INV_DUE_DATE, INV_AMOUNT, INV_AMOUNT_DUE, nil];
         self.sortAttributeLabels = INV_LABELS;
         
-        self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
-        self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
+        if (org.enableAR) {
+            self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
+            self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
+
+        }
         
         // retrieve inactive invoice list in the background
         [Invoice retrieveListForActive:NO reload:NO];
     } else {
-        self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
+        if (org.enableAR) {
+            self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
+        }
     }
     
     self.createNewSegue = CREATE_INVOICE_SEGUE;
