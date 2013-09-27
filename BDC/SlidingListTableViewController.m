@@ -22,7 +22,55 @@
 @synthesize listViewDelegate;
 @synthesize lastSelected;
 @synthesize activityIndicator;
+@synthesize alphabeticList;
+@synthesize indice;
 
+
++ (void)initialize {
+    Alphabets = @[@"A",@"B",@"C",@"D",@"E",@"F",@"G",@"H",@"I",@"J",@"K",@"L",@"M",@"N",@"O",@"P",@"Q",@"R",@"S",@"T",@"U",@"V",@"W",@"X",@"Y",@"Z"];
+}
+
+- (NSMutableArray *)sortIntoAlphabetsForList:(NSArray *)list {
+    NSMutableDictionary *buckets = [NSMutableDictionary dictionary];
+    
+    for (BDCBusinessObject *obj in list) {
+        NSString *name = obj.name;
+        NSString *firstChar = [[name substringToIndex:1] uppercaseString];
+        
+        NSMutableArray *list;
+        if (![buckets objectForKey:firstChar]) {
+            list = [NSMutableArray array];
+            [list addObject:firstChar];                 // first element in each sub-array is always the char!
+            [buckets setObject:list forKey:firstChar];
+        } else {
+            list = [buckets objectForKey:firstChar];
+        }
+        [list addObject:obj];
+    }
+    
+    NSMutableArray *alphabetLists = [NSMutableArray array];
+    
+    for (NSString *alphabet in Alphabets) {
+        if ([buckets objectForKey:alphabet]) {
+            NSArray *list = [buckets objectForKey:alphabet];
+            [alphabetLists addObject:list];
+            [buckets removeObjectForKey:alphabet];
+        }
+    }
+    
+    NSMutableArray *elseList = [NSMutableArray array];
+    [elseList addObject:@"123"];
+    
+    for (NSArray *list in [buckets allValues]) {
+        [elseList addObjectsFromArray:list];
+    }
+    
+    if (elseList.count > 1) {
+        [alphabetLists addObject:elseList];
+    }
+    
+    return alphabetLists;
+}
 
 - (void)navigateDone {}
 
