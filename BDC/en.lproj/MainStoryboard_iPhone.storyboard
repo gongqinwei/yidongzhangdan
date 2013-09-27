@@ -976,6 +976,25 @@
             </objects>
             <point key="canvasLocation" x="-389" y="2811"/>
         </scene>
+        <!--Recorder View Controller-->
+        <scene sceneID="8ks-q0-2e0">
+            <objects>
+                <viewController id="BOR-Wv-a8t" customClass="RecorderViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="AOr-CR-bIh"/>
+                        <viewControllerLayoutGuide type="bottom" id="yzT-6T-elu"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="L6F-gk-MEe">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="QgJ-gn-HbY"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zvo-v7-yyr" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1108" y="2825"/>
+        </scene>
         <!--Customers Table View Controller - Customers-->
         <scene sceneID="9ui-aC-wlV">
             <objects>
@@ -2600,6 +2619,24 @@
             </objects>
             <point key="canvasLocation" x="-3527" y="47"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="EbS-0G-Cy3">
+            <objects>
+                <navigationController storyboardIdentifier="Recorder" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rBj-zo-jMM" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="U0i-TV-2CK">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BOR-Wv-a8t" kind="relationship" relationship="rootViewController" id="qI8-Wh-DaG"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3Yo-uJ-431" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="582" y="2825"/>
+        </scene>
     </scenes>
     <resources>
         <image name="BDClogo.png" width="134" height="37"/>
@@ -2623,20 +2660,20 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="zBW-fL-edY"/>
-        <segue reference="dpQ-hQ-ASQ"/>
-        <segue reference="nLD-mQ-6wj"/>
-        <segue reference="ifQ-ST-XVY"/>
+        <segue reference="t8v-jY-nXU"/>
+        <segue reference="znb-5y-98g"/>
         <segue reference="CeX-f9-mSc"/>
         <segue reference="GuY-KC-qoW"/>
-        <segue reference="v63-Az-wLD"/>
         <segue reference="3ag-eg-oXf"/>
         <segue reference="FTU-IK-7vF"/>
+        <segue reference="nLD-mQ-6wj"/>
         <segue reference="wxy-Zp-Lfl"/>
         <segue reference="Hnb-9H-Um4"/>
         <segue reference="fqJ-Rf-CsZ"/>
         <segue reference="bpG-n7-YKA"/>
         <segue reference="75L-RH-EbK"/>
         <segue reference="q6X-Dx-WGa"/>
+        <segue reference="iJL-HJ-34E"/>
         <segue reference="bXR-G1-eqB"/>
         <segue reference="5Ki-uI-G54"/>
         <segue reference="01U-I1-ojU"/>
