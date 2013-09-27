@@ -2640,6 +2640,7 @@
     </scenes>
     <resources>
         <image name="BDClogo.png" width="134" height="37"/>
+        <image name="BDClogo.png" width="134" height="37"/>
         <image name="BillsIcon.png" width="24" height="24"/>
         <image name="CheckMarkIcon.png" width="25" height="25"/>
         <image name="CustomersIcon.png" width="24" height="24"/>
