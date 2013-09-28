@@ -40,7 +40,7 @@
         [bucket addObject:obj];
     }
     
-    NSMutableArray *alphabeticLists = [NSMutableArray array];
+    NSMutableArray *alphabeticLists = [NSMutableArray array];	
     self.indice = [NSMutableArray array];
     
     for (NSString *alphabet in ALPHABETS) {

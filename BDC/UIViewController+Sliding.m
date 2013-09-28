@@ -225,7 +225,7 @@ static char const * const TapRecognizerKey = "tapRecognizer";
 }
 
 - (void)setSlidingMenuLeftBarButton {
-    UIImage *logoImage = [UIImage imageNamed:@"SlidingMenu30.png"];
+    UIImage *logoImage = [UIImage imageNamed:@"RootMenu.png"];
     CGRect frameLogoImg = CGRectMake(0, 0, logoImage.size.width, logoImage.size.height);
 
     UIButton *logoButton = [[UIButton alloc] initWithFrame:frameLogoImg];
@@ -238,7 +238,7 @@ static char const * const TapRecognizerKey = "tapRecognizer";
 }
 
 - (void)setActionMenuRightBarButton {
-    UIImage *actionImage = [UIImage imageNamed:@"ActionMenu30.png"];
+    UIImage *actionImage = [UIImage imageNamed:@"ActionMenu.png"];
     CGRect frameActionImg = CGRectMake(0, 0, actionImage.size.width, actionImage.size.height);
 
     UIButton *actionButton = [[UIButton alloc] initWithFrame:frameActionImg];
