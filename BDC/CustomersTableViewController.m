@@ -34,7 +34,8 @@
 }
 
 - (void)setCustomers:(NSMutableArray *)customers {
-    _customers = customers;
+    _customers = [self sortAlphabeticallyForList:customers];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
     });
@@ -67,7 +68,7 @@
 - (void)navigateDone {
     if ([self tryTap]) {
         NSIndexPath *path = self.lastSelected; //self.tableView.indexPathForSelectedRow; //same
-        [self.selectDelegate didSelectCustomer:((Customer *)[self.customers objectAtIndex:path.row]).objectId];
+        [self.selectDelegate didSelectCustomer:((Customer *)self.customers[path.section][path.row]).objectId];
         
         [self.navigationController popViewControllerAnimated:YES];
     }
@@ -75,7 +76,7 @@
 
 - (void)navigateAttach {
     [super navigateAttach];
-    [self attachDocumentForObject:self.customers[self.lastSelected.row]];
+    [self attachDocumentForObject:self.customers[self.lastSelected.section][self.lastSelected.row]];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -142,16 +143,12 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return self.customers.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-//    if (self.tableView.editing) {
-//        return [self.customers count] + 1;
-//    } else {
-        return [self.customers count];
-//    }
+    return [self.customers[section] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -163,22 +160,15 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    if (indexPath.row >= [self.customers count]) { // not used any more
-        cell.textLabel.text = @"New Customer";
-        cell.detailTextLabel.text = @"";
-        cell.textLabel.textColor = [UIColor grayColor];
-        cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    } else {
-        Customer *customer = [self.customers objectAtIndex:indexPath.row];
-        
-        cell.textLabel.text = customer.name;
-        cell.detailTextLabel.text = customer.email;
-        cell.textLabel.textColor = [UIColor blackColor];
-        cell.detailTextLabel.font = [UIFont systemFontOfSize:13.0];
-        
-        if (self.mode == kSelectMode || self.mode == kAttachMode) {
-            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-        }
+    Customer *customer = self.customers[indexPath.section][indexPath.row];
+    
+    cell.textLabel.text = customer.name;
+    cell.detailTextLabel.text = customer.email;
+    cell.textLabel.textColor = [UIColor blackColor];
+    cell.detailTextLabel.font = [UIFont systemFontOfSize:13.0];
+    
+    if (self.mode == kSelectMode || self.mode == kAttachMode) {
+        cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
     }
     
     return cell;
@@ -193,8 +183,10 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
-        Customer *customer = [self.customers objectAtIndex:indexPath.row];
-        [self.customers removeObjectAtIndex:indexPath.row];
+        Customer *customer = self.customers[indexPath.section][indexPath.row];
+        
+        [self.customers[indexPath.section] removeObjectAtIndex:indexPath.row];
+        
         if (customer.isActive) {
             [customer remove];
         } else {
@@ -219,10 +211,18 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (!self.isActive) {
-        return ALL_INACTIVE_CUSTOMERS;
+    return self.indice[section];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+    if ([title isEqualToString:@"#"]) {
+        title = @"123";
     }
-    return nil;
+    return [self.indice indexOfObject:title];
+}
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    return ALPHABETS;
 }
 
 #pragma mark - Table view delegate
@@ -254,27 +254,19 @@
         
         self.lastSelected = indexPath;
     } else {
-        if (indexPath.row >= [self.customers count]) {
-            [self performSegueWithIdentifier:CUSTOMER_CREATE_CUSTOMER_SEGUE sender:nil];    // not used any more
-        } else {
-            if (!self.tableView.editing) {
-                [self performSegueWithIdentifier:CUSTOMER_VIEW_CUSTOMER_SEGUE sender:[self.customers objectAtIndex:indexPath.row]];
-            }
+        if (!self.tableView.editing) {
+            [self performSegueWithIdentifier:CUSTOMER_VIEW_CUSTOMER_SEGUE sender:self.customers[indexPath.section][indexPath.row]];
         }
     }
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)aTableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row >= [self.customers count]) {   // not used any more
-        return UITableViewCellEditingStyleInsert;
-    } else {
-        return UITableViewCellEditingStyleDelete;
-    }
+    return UITableViewCellEditingStyleDelete;
 }
 
 - (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
     if ([self tryTap]) {
-        [self performSegueWithIdentifier:CUSTOMER_VIEW_CUSTOMER_SEGUE sender:[self.customers objectAtIndex:indexPath.row]];
+        [self performSegueWithIdentifier:CUSTOMER_VIEW_CUSTOMER_SEGUE sender:self.customers[indexPath.section][indexPath.row]];
     }
 }
 
@@ -320,21 +312,19 @@
 #pragma mark - Action Menu Delegate
 
 - (void)didSelectSortAttribute:(NSString *)attribute ascending:(BOOL)ascending active:(BOOL)active {
-    NSMutableArray *customerList = self.customers;
-    
     if (active) {
         if (!self.isActive || !self.customers) {
-            customerList = [Customer listOrderBy:CUSTOMER_NAME ascending:self.isAsc active:YES];
+            self.customers = [Customer listOrderBy:CUSTOMER_NAME ascending:self.isAsc active:YES];
             self.isActive = YES;
+            self.title = @"Customers";
         }
     } else {
         if (self.isActive || !self.customers) {
-            customerList = [Customer listOrderBy:CUSTOMER_NAME ascending:self.isAsc active:NO];
+            self.customers = [Customer listOrderBy:CUSTOMER_NAME ascending:self.isAsc active:NO];
             self.isActive = NO;
+            self.title = @"Deleted Customers";
         }
     }
-    
-    self.customers = customerList;
 }
 
 - (void)didSelectCrudAction:(NSString *)action {

@@ -30,6 +30,7 @@
 @synthesize processDateTextField;
 @synthesize processDatePicker;
 @synthesize navBar;
+@synthesize payBillDelegate;
 
 
 - (IBAction)payBill:(id)sender {
@@ -62,6 +63,9 @@
             
             // refresh details page for the change in payment status
             [self.bill read];
+            
+//            self.bill.paymentStatus = PAYMENT_SCHEDULED;
+//            [self.payBillDelegate billPaid];
         } else {
             [UIHelper showInfo:[NSString stringWithFormat:@"Failed to pay bill %@: %@", self.bill.name, [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to pay bill %@: %@", self.bill.name, [err localizedDescription]);
@@ -85,9 +89,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
     
     self.navBar.title = [@"Pay " stringByAppendingString:self.bill.name];
     

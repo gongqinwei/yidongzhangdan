@@ -112,11 +112,6 @@
 #pragma mark - Organization delegate
 
 - (void)didGetOrgFeatures {
-    Debug(@"===> showAR: %d", self.firstOrg.showAR);
-    Debug(@"===> showAP: %d", self.firstOrg.showAP);
-    Debug(@"===> enableAR: %d", self.firstOrg.enableAR);
-    Debug(@"===> enableAP: %d", self.firstOrg.enableAP);
-    
     [self performSegueWithIdentifier:@"Login" sender:self];
     [Organization selectOrg:self.firstOrg];
 }

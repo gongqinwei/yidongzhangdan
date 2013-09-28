@@ -33,7 +33,7 @@
 }
 
 - (void)setContacts:(NSMutableArray *)contacts {
-    _contacts = contacts;
+    _contacts = [self sortAlphabeticallyForList:contacts];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
@@ -94,12 +94,12 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return self.contacts.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.contacts count];
+    return [self.contacts[section] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -111,7 +111,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    CustomerContact *contact = [self.contacts objectAtIndex:indexPath.row];
+    CustomerContact *contact = self.contacts[indexPath.section][indexPath.row];
     
     cell.textLabel.text = contact.name;
     cell.detailTextLabel.text = contact.email;
@@ -130,8 +130,9 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
-        CustomerContact *contact = [self.contacts objectAtIndex:indexPath.row];
-        [self.contacts removeObjectAtIndex:indexPath.row];
+        CustomerContact *contact = self.contacts[indexPath.section][indexPath.row];
+        
+        [self.contacts[indexPath.section] removeObjectAtIndex:indexPath.row];
         [contact remove];
         
         [self.listViewDelegate didDeleteObject:indexPath];
@@ -143,6 +144,22 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
     return @"Delete";
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return self.indice[section];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+    if ([title isEqualToString:@"#"]) {
+        title = @"123";
+    }
+    return [self.indice indexOfObject:title];
+}
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    return ALPHABETS;
 }
 
 #pragma mark - Table view delegate
@@ -161,7 +178,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (!self.tableView.editing) {
-        [self performSegueWithIdentifier:CONTACTS_VIEW_CONTACT_SEGUE sender:[self.contacts objectAtIndex:indexPath.row]];
+        [self performSegueWithIdentifier:CONTACTS_VIEW_CONTACT_SEGUE sender:self.contacts[indexPath.section][indexPath.row]];
     }
 }
 

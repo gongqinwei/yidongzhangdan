@@ -9,6 +9,8 @@
 #import "SlidingTableViewController.h"
 #import "Document.h"
 
+#define ALPHABETS   [NSArray arrayWithObjects:@"A",@"B",@"C",@"D",@"E",@"F",@"G",@"H",@"I",@"J",@"K",@"L",@"M",@"N",@"O",@"P",@"Q",@"R",@"S",@"T",@"U",@"V",@"W",@"X",@"Y",@"Z",@"#",nil]
+
 @protocol ListViewDelegate <NSObject>
 @optional
 - (void)didReadObject;
@@ -29,6 +31,8 @@
 @property (nonatomic, strong) NSIndexPath *lastSelected;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 
+@property (nonatomic, strong) NSMutableArray *indice;
+
 
 - (void)navigateDone;
 - (void)navigateAttach;
@@ -36,5 +40,7 @@
 
 - (void)didSelectCrudAction:(NSString *)action;
 - (void)attachDocumentForObject:(BDCBusinessObject *)obj;
+
+- (NSMutableArray *)sortAlphabeticallyForList:(NSArray *)list;
 
 @end

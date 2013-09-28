@@ -114,6 +114,7 @@ static ActionMenuViewController * _sharedInstance = nil;
                                                                         forState:UIControlStateNormal];
     [self.searchDisplayController.searchBar setScopeBarButtonTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], UITextAttributeTextColor, nil]
                                                                         forState:UIControlStateSelected];
+    self.searchDisplayController.searchBar.placeholder = @"Search in Bill.com";
     
     self.activenessSwitch = [[UISegmentedControl alloc] initWithItems:@[@"Active", @"Inactive"]];
     self.activenessSwitch.frame = CGRectMake(1.0, 0.0, SLIDING_DISTANCE - 2.0, 30.0);
@@ -329,25 +330,6 @@ static ActionMenuViewController * _sharedInstance = nil;
             [self addSelectedBackGroundForCell:cell];
             
             if ([action isEqualToString:ACTION_PAY]) {
-//                UITextField *payAmountTextField = [[UITextField alloc] initWithFrame:CGRectMake(120, 5, 100, cell.viewForBaselineLayout.bounds.size.height - 12)];
-//                payAmountTextField.text = @"100"; // [Util formatCurrency:item.amount];
-//                payAmountTextField.keyboardType = UIKeyboardTypeDecimalPad;
-//              itemAmountTextField.objectTag = item;
-//              itemAmountTextField.delegate = self;
-//              itemAmountTextField.tag = [BillInfo count] * TAG_BASE + indexPath.row * 2 + 1;
-                
-//                payAmountTextField.font = [UIFont fontWithName:APP_FONT size:16];
-//                payAmountTextField.textColor = APP_SYSTEM_BLUE_COLOR;
-//                payAmountTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-//                payAmountTextField.textAlignment = NSTextAlignmentRight;
-//                payAmountTextField.enabled = YES;
-//                payAmountTextField.layer.cornerRadius = 8.0f;
-//                payAmountTextField.layer.masksToBounds = NO;
-//                payAmountTextField.layer.borderColor = [[UIColor whiteColor]CGColor];
-//                payAmountTextField.layer.borderWidth = 0.5f;
-//                payAmountTextField.backgroundColor = [UIColor lightGrayColor];
-//                payAmountTextField.rightView = [[UIView alloc] initWithFrame:TEXT_FIELD_RIGHT_PADDING_RECT];
-                
                 [self.payAmountLabel removeFromSuperview];
                 self.payAmountLabel = nil;
                 self.payAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 7, 185, cell.viewForBaselineLayout.bounds.size.height - 12)];

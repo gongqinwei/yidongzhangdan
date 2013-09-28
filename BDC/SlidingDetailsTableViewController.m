@@ -234,16 +234,18 @@ static double animatedDistance = 0;
         [self selectAttachment:imageView];
         
         int idx = imageView.tag;
-        Document *doc = self.shaddowBusObj.attachments[idx];
-        
-        if ([doc docFileExists] || doc.data) {
-            self.previewController.currentPreviewItemIndex = idx;
+        if (idx < self.shaddowBusObj.attachments.count) {       // safety check
+            Document *doc = self.shaddowBusObj.attachments[idx];
             
-            [self presentViewController:self.previewController animated:YES completion:nil];
-            [self.previewController reloadData];
-        } else {
-            [self downloadDocument:doc forImage:imageView];
-            [self removeTapGesterFromImageView:imageView];
+            if ([doc docFileExists] || doc.data) {
+                self.previewController.currentPreviewItemIndex = idx;
+                
+                [self presentViewController:self.previewController animated:YES completion:nil];
+                [self.previewController reloadData];
+            } else {
+                [self downloadDocument:doc forImage:imageView];
+                [self removeTapGesterFromImageView:imageView];
+            }
         }
     }
 }
@@ -254,33 +256,37 @@ static double animatedDistance = 0;
         
         if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
             int idx = self.currAttachment.tag;
-            Document *doc = [self.shaddowBusObj.attachments objectAtIndex:idx];
             
-            if (!doc.objectId && [self.docsUploading objectForKey:doc.name]) {
-                [UIHelper showInfo:@"This document is still being processed by Bill.com.\n\nCannot delete at this time!" withStatus:kWarning];
-            } else {
-                [UIView animateWithDuration:1.0
-                                 animations:^{
-                                     self.currAttachment.alpha = 0.0;
-                                 }
-                                 completion:^ (BOOL finished) {
-                                     if (finished) {
-                                         @synchronized (self) {
-                                             [self.shaddowBusObj.attachments removeObjectAtIndex:idx];
-                                             
-                                             if (doc.objectId) {
-                                                 [self.attachmentDict removeObjectForKey:doc.objectId];
-                                             }
-                                             
-                                             [self.currAttachment removeFromSuperview];
-                                             self.currAttachment = nil;
-                                             [self layoutScrollImages:NO];
-                                             
-                                             self.currAttachment = nil;
-                                             [self.previewController reloadData];
-                                         }
+            if (idx < self.shaddowBusObj.attachments.count) {       // safety check
+                Document *doc = [self.shaddowBusObj.attachments objectAtIndex:idx];
+                
+                if (!doc.objectId && [self.docsUploading objectForKey:doc.name]) {
+                    [UIHelper showInfo:@"This document is still being processed by Bill.com.\n\nCannot delete at this time!" withStatus:kWarning];
+                } else {
+                    [UIView animateWithDuration:1.0
+                                     animations:^{
+                                         self.currAttachment.alpha = 0.0;
                                      }
-                                 }];
+                                     completion:^ (BOOL finished) {
+                                         if (finished) {
+                                             @synchronized (self) {
+                                                 [self.shaddowBusObj.attachments removeObjectAtIndex:idx];
+                                                 
+                                                 if (doc.objectId) {
+                                                     [self.attachmentDict removeObjectForKey:doc.objectId];
+                                                 }
+                                                 
+                                                 [self.currAttachment removeFromSuperview];
+                                                 self.currAttachment = nil;
+                                                 [self layoutScrollImages:NO];
+                                                 
+                                                 self.currAttachment = nil;
+                                                 [self.previewController reloadData];
+                                             }
+                                         }
+                                     }];
+                }
+
             }
         }
     }

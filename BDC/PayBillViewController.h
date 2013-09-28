@@ -9,6 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "Bill.h"
 
+@protocol PayBillDelegate <NSObject>
+
+- (void)billPaid;
+
+@end
+
 @interface PayBillViewController : UITableViewController
 
 @property (nonatomic, strong) Bill *bill;
@@ -20,5 +26,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *payAmountTextField;
 @property (weak, nonatomic) IBOutlet UITextField *processDateTextField;
 @property (weak, nonatomic) IBOutlet UINavigationItem *navBar;
+
+@property (nonatomic, strong) id<PayBillDelegate> payBillDelegate;
 
 @end

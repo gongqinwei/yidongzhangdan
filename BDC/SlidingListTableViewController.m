@@ -22,7 +22,49 @@
 @synthesize listViewDelegate;
 @synthesize lastSelected;
 @synthesize activityIndicator;
+@synthesize indice;
 
+
+- (NSMutableArray *)sortAlphabeticallyForList:(NSArray *)list {
+    NSMutableDictionary *buckets = [NSMutableDictionary dictionary];
+    
+    NSMutableArray *bucket;
+    for (BDCBusinessObject *obj in list) {
+        NSString *firstChar = [[obj.name substringToIndex:1] uppercaseString];
+        if (![buckets objectForKey:firstChar]) {
+            bucket = [NSMutableArray array];
+            [buckets setObject:bucket forKey:firstChar];
+        } else {
+            bucket = [buckets objectForKey:firstChar];
+        }
+        [bucket addObject:obj];
+    }
+    
+    NSMutableArray *alphabeticLists = [NSMutableArray array];
+    self.indice = [NSMutableArray array];
+    
+    for (NSString *alphabet in ALPHABETS) {
+        if ([buckets objectForKey:alphabet]) {
+            [alphabeticLists addObject:[buckets objectForKey:alphabet]];
+            [self.indice addObject:alphabet];
+            
+            [buckets removeObjectForKey:alphabet];
+        }
+    }
+    
+    NSMutableArray *elseList = [NSMutableArray array];
+    
+    for (NSArray *subList in [buckets allValues]) {
+        [elseList addObjectsFromArray:subList];
+    }
+    
+    if (elseList.count > 0) {
+        [alphabeticLists addObject:elseList];
+        [self.indice addObject:@"123"];
+    }
+    
+    return alphabeticLists;
+}
 
 - (void)navigateDone {}
 

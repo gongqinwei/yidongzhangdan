@@ -69,7 +69,7 @@ typedef enum {
 #define REMOVE_ATTACHMENT_ALERT_TAG     2
 
 
-@interface EditBillViewController () <VendorSelectDelegate, ScannerDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
+@interface EditBillViewController () <VendorSelectDelegate, ScannerDelegate, PayBillDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
 
 @property (nonatomic, strong) NSDecimalNumber *totalAmount;
 @property (nonatomic, strong) UIDatePicker *billDatePicker;
@@ -372,6 +372,7 @@ typedef enum {
         [segue.destinationViewController setMode:kViewMode];
     } else if ([segue.identifier isEqualToString:BILL_PAY_BILL_SEGUE]) {
         [segue.destinationViewController setBill:(Bill *)self.shaddowBusObj];
+        [segue.destinationViewController setPayBillDelegate:self];
     }
 }
 
@@ -1008,5 +1009,12 @@ typedef enum {
     }
 }
 
+#pragma mark - Pay Bill delegate
+
+- (void)billPaid {
+    // update payment status to scheduled
+    NSIndexPath *path = [NSIndexPath indexPathForRow:kBillPaymentStatus inSection:kBillInfo];
+    [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationNone];
+}
 
 @end

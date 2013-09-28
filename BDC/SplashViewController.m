@@ -79,12 +79,6 @@
 }
 
 - (void)didGetOrgFeatures {
-    Organization *currentOrg = [Organization getSelectedOrg];
-    Debug(@"=== showAR: %d", currentOrg.showAR);
-    Debug(@"=== showAP: %d", currentOrg.showAP);
-    Debug(@"=== enableAR: %d", currentOrg.enableAR);
-    Debug(@"=== enableAP: %d", currentOrg.enableAP);
-    
     [self enterBDC];
 }
 

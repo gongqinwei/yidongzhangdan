@@ -34,7 +34,8 @@
 }
 
 - (void)setVendors:(NSMutableArray *)vendors {
-    _vendors = vendors;
+    _vendors = [self sortAlphabeticallyForList:vendors];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
     });
@@ -60,7 +61,7 @@
 - (void)navigateDone {
     if ([self tryTap]) {
         NSIndexPath *path = self.lastSelected; //self.tableView.indexPathForSelectedRow; //same
-        [self.selectDelegate didSelectVendor:((Vendor *)[self.vendors objectAtIndex:path.row]).objectId];
+        [self.selectDelegate didSelectVendor:((Vendor *)self.vendors[path.section][path.row]).objectId];
         
         [self.navigationController popViewControllerAnimated:YES];
     }
@@ -68,7 +69,7 @@
 
 - (void)navigateAttach {
     [super navigateAttach];
-    [self attachDocumentForObject:self.vendors[self.lastSelected.row]];
+    [self attachDocumentForObject:self.vendors[self.lastSelected.section][self.lastSelected.row]];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -133,16 +134,12 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return self.vendors.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //    if (self.tableView.editing) {
-    //        return [self.vendors count] + 1;
-    //    } else {
-    return [self.vendors count];
-    //    }
+    return [self.vendors[section] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -154,22 +151,15 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    if (indexPath.row >= [self.vendors count]) { // not used any more
-        cell.textLabel.text = @"New Vendor";
-        cell.detailTextLabel.text = @"";
-        cell.textLabel.textColor = [UIColor grayColor];
-        cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    } else {
-        Vendor *vendor = [self.vendors objectAtIndex:indexPath.row];
-        
-        cell.textLabel.text = vendor.name;
-        cell.detailTextLabel.text = vendor.email;
-        cell.textLabel.textColor = [UIColor blackColor];
-        cell.detailTextLabel.font = [UIFont systemFontOfSize:13.0];
-        
-        if (self.mode == kSelectMode || self.mode == kAttachMode) {
-            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-        }
+    Vendor *vendor = self.vendors[indexPath.section][indexPath.row];
+    
+    cell.textLabel.text = vendor.name;
+    cell.detailTextLabel.text = vendor.email;
+    cell.textLabel.textColor = [UIColor blackColor];
+    cell.detailTextLabel.font = [UIFont systemFontOfSize:13.0];
+    
+    if (self.mode == kSelectMode || self.mode == kAttachMode) {
+        cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
     }
     
     return cell;
@@ -185,19 +175,19 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (!self.isActive) {
-        return ALL_INACTIVE_VENDORS;
-    }
-    return nil;
+    return self.indice[section];
 }
 
-//- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
-//    
-//}
-//
-//- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-//    
-//}
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+    if ([title isEqualToString:@"#"]) {
+        title = @"123";
+    }
+    return [self.indice indexOfObject:title];
+}
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    return ALPHABETS;
+}
 
 #pragma mark - Table view delegate
 
@@ -210,8 +200,10 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
-        Vendor *vendor = [self.vendors objectAtIndex:indexPath.row];
-        [self.vendors removeObjectAtIndex:indexPath.row];
+        Vendor *vendor = self.vendors[indexPath.section][indexPath.row];
+        
+        [self.vendors[indexPath.section] removeObjectAtIndex:indexPath.row];
+        
         if (vendor.isActive) {
             [vendor remove];
         } else {
@@ -252,27 +244,19 @@
         
         self.lastSelected = indexPath;
     } else {
-        if (indexPath.row >= [self.vendors count]) {
-            [self performSegueWithIdentifier:VENDOR_CREATE_VENDOR_SEGUE sender:nil];    // not used any more
-        } else {
-            if (!self.tableView.editing) {
-                [self performSegueWithIdentifier:VENDOR_VIEW_VENDOR_SEGUE sender:[self.vendors objectAtIndex:indexPath.row]];
-            }
+        if (!self.tableView.editing) {
+            [self performSegueWithIdentifier:VENDOR_VIEW_VENDOR_SEGUE sender:self.vendors[indexPath.section][indexPath.row]];
         }
     }
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)aTableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row >= [self.vendors count]) {   // not used any more
-        return UITableViewCellEditingStyleInsert;
-    } else {
-        return UITableViewCellEditingStyleDelete;
-    }
+    return UITableViewCellEditingStyleDelete;
 }
 
 - (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
     if ([self tryTap]) {
-        [self performSegueWithIdentifier:VENDOR_VIEW_VENDOR_SEGUE sender:[self.vendors objectAtIndex:indexPath.row]];
+        [self performSegueWithIdentifier:VENDOR_VIEW_VENDOR_SEGUE sender:self.vendors[indexPath.section][indexPath.row]];
     }
 }
 
@@ -318,21 +302,19 @@
 #pragma mark - Action Menu Delegate
 
 - (void)didSelectSortAttribute:(NSString *)attribute ascending:(BOOL)ascending active:(BOOL)active {
-    NSMutableArray *vendorList = self.vendors;
-    
     if (active) {
         if (!self.isActive || !self.vendors) {
-            vendorList = [Vendor listOrderBy:VENDOR_NAME ascending:self.isAsc active:YES];
+            self.vendors = [Vendor listOrderBy:VENDOR_NAME ascending:self.isAsc active:YES];
             self.isActive = YES;
+            self.title = @"Vendors";
         }
     } else {
         if (self.isActive || !self.vendors) {
-            vendorList = [Vendor listOrderBy:VENDOR_NAME ascending:self.isAsc active:NO];
+            self.vendors = [Vendor listOrderBy:VENDOR_NAME ascending:self.isAsc active:NO];
             self.isActive = NO;
+            self.title = @"Deleted Vendors";
         }
     }
-    
-    self.vendors = vendorList;
 }
 
 - (void)didSelectCrudAction:(NSString *)action {

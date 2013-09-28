@@ -18,6 +18,8 @@
 
 #define ALL_INACTIVE_ITEMS      @"All Deleted Items"
 
+#define AMOUNT_COLOR            [UIColor colorWithRed:76.0/255.0 green:153.0/255.0 blue:0.0/255.0 alpha:1.0]
+
 @interface ItemsTableViewController () <ItemListDelegate, LineItemDelegate>
 
 @end
@@ -100,7 +102,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.clearsSelectionOnViewWillAppear = NO;
+    self.clearsSelectionOnViewWillAppear = YES;
     
     [Item setListDelegate:self];
 //    [Item retrieveList];
@@ -156,32 +158,33 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = ITEM_CELL_ID;
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
+    Item *item = [self.items objectAtIndex:indexPath.row];
     
-    if (indexPath.row >= [self.items count]) { // not used any more
-        cell.textLabel.text = @"New Item";
-        cell.detailTextLabel.text = @"";
-        cell.textLabel.textColor = [UIColor grayColor];
-        cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    UITableViewCell *cell; // = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    if (self.mode == kSelectMode) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
+        
+        cell.detailTextLabel.text = item.name;
+        cell.textLabel.text = [[Util formatCurrency:item.price] stringByAppendingFormat:@"  x  %d", item.qty];
+        cell.textLabel.textColor = AMOUNT_COLOR;
+        cell.detailTextLabel.font = [UIFont systemFontOfSize:14.0];
     } else {
-        Item *item = [self.items objectAtIndex:indexPath.row];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         
         cell.textLabel.text = item.name;
-        if (self.mode == kSelectMode) {
-            cell.detailTextLabel.text = [[Util formatCurrency:item.price] stringByAppendingFormat:@"  x  %d", item.qty];
-        } else {
-            cell.detailTextLabel.text = [Util formatCurrency:item.price];
-        }
+        cell.detailTextLabel.text = [Util formatCurrency:item.price];
         cell.textLabel.textColor = [UIColor blackColor];
-        cell.detailTextLabel.font = [UIFont systemFontOfSize:13.0];
-        
-        if (self.mode == kSelectMode || self.mode == kAttachMode) {
-            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;           
-        }
+        cell.textLabel.font = [UIFont systemFontOfSize:15.0];
+        cell.detailTextLabel.font = [UIFont systemFontOfSize:14.0];
+        cell.detailTextLabel.textColor = AMOUNT_COLOR;
+    }
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    if (self.mode == kSelectMode || self.mode == kAttachMode) {
+        cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;           
     }
     
     return cell;
@@ -245,12 +248,8 @@
         UITableViewCell *row = [self.tableView cellForRowAtIndexPath:indexPath];
         row.accessoryType = UITableViewCellAccessoryCheckmark;
     } else {
-        if (indexPath.row >= [self.items count]) {
-            [self performSegueWithIdentifier:ITEM_CREATE_ITEM_SEGUE sender:nil];
-        } else {
-            if (!self.tableView.editing) {
-                [self performSegueWithIdentifier:ITEM_VIEW_ITEM_SEGUE sender:[self.items objectAtIndex:indexPath.row]];
-            }
+        if (!self.tableView.editing) {
+            [self performSegueWithIdentifier:ITEM_VIEW_ITEM_SEGUE sender:[self.items objectAtIndex:indexPath.row]];
         }
     }
 }
@@ -277,11 +276,7 @@
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)aTableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row == [self.items count]) {
-        return UITableViewCellEditingStyleInsert;
-    } else {
-        return UITableViewCellEditingStyleDelete;
-    }
+    return UITableViewCellEditingStyleDelete;
 }
 
 - (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
