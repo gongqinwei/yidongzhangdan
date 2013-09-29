@@ -23,6 +23,7 @@
 @synthesize lastSelected;
 @synthesize activityIndicator;
 @synthesize indice;
+@synthesize alphabets;
 
 
 - (NSMutableArray *)sortAlphabeticallyForList:(NSArray *)list {
@@ -66,6 +67,22 @@
     return alphabeticLists;
 }
 
+- (void)toggleMenu:(id)sender {
+    float origX = self.navigationController.view.frame.origin.x;
+    
+    [super toggleMenu:sender];
+
+    float destX = self.navigationController.view.frame.origin.x;
+    
+    if (destX < 0) {
+        self.alphabets = nil;
+        [self.tableView reloadData];
+    } else if (destX == 0 && origX < 0) {
+        self.alphabets = ALPHABETS;
+        [self.tableView reloadData];
+    }
+}
+
 - (void)navigateDone {}
 
 - (void)navigateAttach {
@@ -99,6 +116,8 @@
     
     [self setSlidingMenuLeftBarButton];
     [self setActionMenuRightBarButton];
+    
+    self.alphabets = ALPHABETS;
 }
 
 - (void)viewWillAppear:(BOOL)animated {

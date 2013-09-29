@@ -32,6 +32,7 @@
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 
 @property (nonatomic, strong) NSMutableArray *indice;
+@property (nonatomic, strong) NSArray *alphabets;
 
 
 - (void)navigateDone;

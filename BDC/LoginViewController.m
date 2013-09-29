@@ -112,6 +112,16 @@
     }
 }
 
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    
+    UITouch *touch = [[event allTouches] anyObject];
+    
+    if (![[touch view] isKindOfClass:[UITextField class]]) {
+        [self.view endEditing:YES];
+    }
+    [super touchesBegan:touches withEvent:event];
+}
+
 #pragma mark - Organization delegate
 
 - (void)didGetOrgFeatures {

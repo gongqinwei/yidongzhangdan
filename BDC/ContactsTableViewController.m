@@ -159,7 +159,7 @@
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-    return ALPHABETS;
+    return self.alphabets;
 }
 
 #pragma mark - Table view delegate

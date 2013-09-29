@@ -339,6 +339,11 @@
     NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
+        if (item.qty > 0) {
+            UITableViewCell *row = [self.tableView cellForRowAtIndexPath:path];
+            [self.tableView selectRowAtIndexPath:path animated:NO scrollPosition:UITableViewScrollPositionNone];
+            row.accessoryType = UITableViewCellAccessoryCheckmark;
+        }
     });
 }
 
