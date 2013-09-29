@@ -15,6 +15,7 @@
 + (NSString *)getUsername;
 + (NSString *)getPassword;
 + (void)setUsername:(NSString *)username andPassword:(NSString *)password;
++ (void)removePassword;
 
 + (NSString *)getSelectedOrgId;
 + (void)setSelectedOrgId:(NSString *)orgId;

@@ -26,6 +26,11 @@
     [keychainItem setObject:password forKey:(__bridge id)(kSecValueData)];
 }
 
++ (void)removePassword {
+    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:KEYCHAIN_ID accessGroup:nil];
+    [keychainItem setObject:@"" forKey:(__bridge id)(kSecValueData)];
+}
+
 + (NSString *)getUsername {
     KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:KEYCHAIN_ID accessGroup:nil];
     return [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];

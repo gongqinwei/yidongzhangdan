@@ -13,6 +13,7 @@
 @interface BDCAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (nonatomic, assign) BOOL stayLoggedIn;
 
 @property (nonatomic, assign) int numNetworkActivities;
 

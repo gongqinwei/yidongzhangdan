@@ -12,6 +12,7 @@
 #import "Organization.h"
 #import "Util.h"
 #import "SelectOrgViewController.h"
+#import "BDCAppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
 #define INVALID_CREDENTIAL          @"Wrong username/password!"
@@ -30,6 +31,7 @@
 @synthesize password;
 @synthesize warning;
 @synthesize indicator;
+@synthesize stayLoggedIn;
 //@synthesize signUpButton;
 
 - (IBAction)login:(id)sender {
@@ -40,6 +42,7 @@
     [self.indicator startAnimating];
     
     [Util setUsername:self.email.text andPassword:self.password.text];  //set up keychain
+    [UIAppDelegate setStayLoggedIn:self.stayLoggedIn.on];
     
     [Organization retrieveList];
 }

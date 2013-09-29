@@ -133,7 +133,7 @@ static Organization *selectedOrg = nil;
         if(response_status == RESPONSE_SUCCESS) {
             if ([jsonOrgs count] > 0) {
                 NSMutableArray *orgArr = [[NSMutableArray alloc] init];
-
+                
                 for (int i = 0; i < [jsonOrgs count]; i++) {
                     NSDictionary *dict = (NSDictionary*)[jsonOrgs objectAtIndex:i];
                     Organization *org = [[Organization alloc] init];
@@ -148,7 +148,7 @@ static Organization *selectedOrg = nil;
                 }
                 
                 NSArray *orgs = [NSArray arrayWithArray:orgArr];
-                [Organization setOrgs:orgs];                
+                [Organization setOrgs:orgs];
                 
                 [delegate didGetOrgs:orgs status:kSucceedLogin];
             } else {
@@ -160,5 +160,6 @@ static Organization *selectedOrg = nil;
         }
     }];
 }
+
 
 @end
