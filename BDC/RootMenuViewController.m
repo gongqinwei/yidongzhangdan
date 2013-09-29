@@ -145,16 +145,18 @@ static RootMenuViewController * _sharedInstance = nil;
     
     if (self.currentOrg.enableAP) {
         [Bill retrieveListForActive:YES reload:YES];
-        [Vendor retrieveList];
+        [Vendor retrieveListForActive:YES];
+        [ChartOfAccount retrieveListForActive:YES];
         [self.currentOrg getOrgPrefs];
     }
 
     [Invoice retrieveListForActive:YES reload:YES];
-    [ChartOfAccount retrieveList];
-    [Customer retrieveList];
+    [Customer retrieveListForActive:YES];
+    
     if (self.currentOrg.enableAP || self.currentOrg.enableAR) {
         [Item retrieveList];
     }
+    
     [CustomerContact retrieveListForActive:YES];
     
     if (self.currentOrg.enableAP || self.currentOrg.enableAR) {
@@ -162,9 +164,11 @@ static RootMenuViewController * _sharedInstance = nil;
     }
     
     [Invoice retrieveListForActive:NO reload:NO];
+    [Customer retrieveListForActive:NO reload:NO];
     
     if (self.currentOrg.enableAP) {
         [Bill retrieveListForActive:NO reload:NO];
+        [Vendor retrieveListForActive:NO reload:NO];
     }
     
 //    [Document retrieveListForCategory:FILE_CATEGORY_ATTACHMENT]; // for future

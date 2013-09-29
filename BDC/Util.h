@@ -20,6 +20,8 @@
 + (NSString *)getSelectedOrgId;
 + (void)setSelectedOrgId:(NSString *)orgId;
 
++ (BOOL)isStayLoggedIn;
++ (void)setStayLoggedIn:(BOOL)stayLoggedIn;
 + (void)setSession:(NSString *)sessionId;
 
 + (BOOL)isSameDay:(NSDate*)date1 otherDay:(NSDate*)date2;

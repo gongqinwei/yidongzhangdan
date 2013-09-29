@@ -336,7 +336,7 @@ typedef enum {
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.activityIndicator.hidesWhenStopped = YES;
     
-    self.chartOfAccounts = [ChartOfAccount listOrderBy:ACCOUNT_NAME ascending:YES active:YES];
+    self.chartOfAccounts = [ChartOfAccount list];
     
     self.accountPickerView = [[UIPickerView alloc] initWithFrame:PICKER_RECT];
     self.accountPickerView.delegate = self;
@@ -562,7 +562,7 @@ typedef enum {
             ChartOfAccount *account = item.account;
             
             if (self.mode == kViewMode || (((Bill *)self.shaddowBusObj).paymentStatus && ![((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID])) {
-                cell.textLabel.text = account ? account.name : @" ";
+                cell.textLabel.text = account ? account.fullName : @" ";
                 cell.textLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE];
                 [cell.textLabel sizeToFit];
                 
@@ -570,7 +570,7 @@ typedef enum {
                 cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE];
             } else {
                 UITextField *itemAccountField = [[UITextField alloc] initWithFrame:BILL_ITEM_ACCOUNT_RECT];
-                itemAccountField.text = account && account.name.length ? account.name : @"None";
+                itemAccountField.text = account && account.fullName.length ? account.fullName : @"None";
                 [self initializeTextField:itemAccountField];
                 itemAccountField.textAlignment = NSTextAlignmentCenter;
                 itemAccountField.inputView = self.accountPickerView;
@@ -921,7 +921,9 @@ typedef enum {
     if (row == 0) {
         return @"None";
     }
-    return ((ChartOfAccount *)[self.chartOfAccounts objectAtIndex: row - 1]).name;
+    
+    ChartOfAccount * acct = (ChartOfAccount *)[self.chartOfAccounts objectAtIndex: row - 1];
+    return acct.indentedName;
 }
 
 #pragma mark - UIPickerView Delegate
@@ -934,7 +936,8 @@ typedef enum {
         self.currentField.text = @"None";
         item.account = nil;
     } else {
-        self.currentField.text = ((ChartOfAccount *)[self.chartOfAccounts objectAtIndex:row - 1]).name;
+        ChartOfAccount *acct = (ChartOfAccount *)[self.chartOfAccounts objectAtIndex:row - 1];
+        self.currentField.text = acct.fullName;
         item.account = [self.chartOfAccounts objectAtIndex:row - 1];
     }
 }

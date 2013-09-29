@@ -17,9 +17,16 @@
 
 static id <AccountListDelegate> ListDelegate = nil;
 static NSMutableDictionary *accounts = nil;
+static NSMutableArray *sortedAccounts = nil;
 static NSMutableDictionary *inactiveAccounts = nil;
 
+@synthesize number;
+@synthesize fullName;
 @synthesize type;
+@synthesize parent;
+@synthesize indent;
+@synthesize indentedName;
+
 
 + (id<AccountListDelegate>)getListDelegate {
     return ListDelegate;
@@ -44,6 +51,10 @@ static NSMutableDictionary *inactiveAccounts = nil;
         [objStr appendFormat:@"\"%@\" : \"%@\", ", ID, self.objectId];
     }
     [objStr appendFormat:@"\"%@\" : \"%@\", ", ACCOUNT_NAME, self.name];
+    if (self.number) {
+        [objStr appendFormat:@"\"%@\" : \"%@\", ", ACCOUNT_NUMBER, self.number];
+    }
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", ACCOUNT_PARENT, self.parent];
     [objStr appendFormat:@"\"%@\" : \"%@\" ", ACCOUNT_TYPE, [NSString stringWithFormat:@"%d", self.type]];
     [objStr appendString:@"}"];
     [objStr appendString:@"}"];
@@ -89,19 +100,53 @@ static NSMutableDictionary *inactiveAccounts = nil;
     }];
 }
 
++ (int)indentNameForAccount:(ChartOfAccount *)account {
+    if (!account.parent || [account.parent isEqualToString:EMPTY_ID]) {
+        return 0;
+    }
+    
+    if (account.indent > 0) {
+        return account.indent;
+    }
+    
+    ChartOfAccount *parent = [ChartOfAccount objectForKey:account.parent];
+    account.indent = [ChartOfAccount indentNameForAccount:parent] + 1;      // recursive
+    
+    NSMutableString *prefix = [NSMutableString string];
+    for (int i = 0; i < account.indent; i++) {
+        [prefix appendString:@"-"];
+    }
+    account.indentedName = [NSString stringWithFormat:@" %@ %@", prefix, account.fullName];
+    
+    return account.indent;
+}
+
 + (id)listOrderBy:(NSString *)attribue ascending:(Boolean)isAscending active:(Boolean)isActive {
     NSDictionary *accountList = isActive ? accounts : inactiveAccounts;
     NSArray *accountArr = [accountList allValues];
     
-    NSSortDescriptor *firstOrder = [[NSSortDescriptor alloc] initWithKey:ACCOUNT_NAME ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
-//    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:ID ascending:NO];
-    accountArr = [accountArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, nil]];
+    NSSortDescriptor *firstOrder = [[NSSortDescriptor alloc] initWithKey:@"number" ascending:YES];
+    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+    accountArr = [accountArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, secondOrder, nil]];
     
-    return [NSMutableArray arrayWithArray:accountArr];
+    NSMutableArray *sortedArray = [NSMutableArray arrayWithArray:accountArr];
+    
+    for (ChartOfAccount *account in accountArr) {
+        if (account.parent && ![account.parent isEqualToString:EMPTY_ID]) {
+            [sortedArray removeObject:account];
+            ChartOfAccount *parent = [ChartOfAccount objectForKey:account.parent];
+            int parentIndex = [sortedArray indexOfObject:parent];
+            [sortedArray insertObject:account atIndex:parentIndex + 1];
+            
+            [ChartOfAccount indentNameForAccount:account];
+        }
+    }
+    
+    return sortedArray;
 }
 
 + (id)list {
-    return [NSMutableArray arrayWithArray:[accounts allValues]];
+    return sortedAccounts; //[NSMutableArray arrayWithArray:[accounts allValues]];
 }
 
 + (id)listInactive {
@@ -154,10 +199,25 @@ static NSMutableDictionary *inactiveAccounts = nil;
                 ChartOfAccount *account = [[ChartOfAccount alloc] init];
                 account.objectId = [dict objectForKey:ID];
                 account.name = [dict objectForKey:ACCOUNT_NAME];
+                NSString *number = [dict objectForKey:ACCOUNT_NUMBER];
+                if (number == (id)[NSNull null]) {
+                    account.number = nil;
+                    account.fullName = account.name;
+                } else {
+                    account.number = number;
+                    account.fullName = [NSString stringWithFormat:@"%@ %@", number, account.name];
+                }
                 account.type = [[dict objectForKey:ACCOUNT_TYPE] intValue];
+                account.parent = [dict objectForKey:ACCOUNT_PARENT];
+                account.indent = 0;
+                account.indentedName = account.fullName;
                 account.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
                 
                 [accountDict setObject:account forKey:account.objectId];
+            }
+            
+            if (isActive) {
+                sortedAccounts = [ChartOfAccount listOrderBy:ACCOUNT_NUMBER ascending:YES active:YES];
             }
             
             [ListDelegate didGetAccounts];
@@ -176,8 +236,13 @@ static NSMutableDictionary *inactiveAccounts = nil;
 + (void)clone:(ChartOfAccount *)source to:(ChartOfAccount *)target {
     [super clone:source to:target];
     
-    target.type = source.type;
     target.name = source.name;
+    target.number = source.number;
+    target.fullName = source.fullName;
+    target.type = source.type;
+    target.parent = source.parent;
+    target.indent = source.indent;
+    target.indentedName = source.indentedName;
     target.editDelegate = source.editDelegate;
 }
 

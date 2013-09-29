@@ -11,6 +11,8 @@
 #import "KeychainItemWrapper.h"
 #import <Security/Security.h>
 
+#define STAY_LOGGED_IN      @"StayLoggedIn"
+
 @implementation Util
 
 + (void)logout {
@@ -50,6 +52,19 @@
     // persist
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:orgId forKey:ORG_ID];
+    [defaults synchronize];
+}
+
++ (BOOL)isStayLoggedIn {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    id ret = [defaults objectForKey:STAY_LOGGED_IN];
+    return ret ? [ret boolValue] : YES;
+}
+
++ (void)setStayLoggedIn:(BOOL)stayLoggedIn {
+    // persiste
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:[NSNumber numberWithBool:stayLoggedIn] forKey:STAY_LOGGED_IN];
     [defaults synchronize];
 }
 

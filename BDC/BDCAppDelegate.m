@@ -26,12 +26,12 @@
 
 @end
 
+
 @implementation BDCAppDelegate
 
 @synthesize window = _window;
 @synthesize numNetworkActivities = _numNetworkActivities;
 @synthesize isFirstLaunch;
-@synthesize stayLoggedIn;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -52,7 +52,7 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 
-    if (!self.stayLoggedIn) {
+    if (![Util isStayLoggedIn]) {
         [Util removePassword];
     }
 }
@@ -92,12 +92,13 @@
                 
                 if (currentOrg.enableAP) {
                     [Bill retrieveListForActive:YES reload:YES];
-                    [Vendor retrieveList];
+                    [Vendor retrieveListForActive:YES];
+                    [ChartOfAccount retrieveListForActive:YES];
                 }
                 
                 [Invoice retrieveListForActive:YES reload:YES];
-                [ChartOfAccount retrieveList];
-                [Customer retrieveList];
+                [Customer retrieveListForActive:YES];
+                
                 if (currentOrg.enableAP || currentOrg.enableAR) {
                     [Item retrieveList];
                 }
@@ -108,10 +109,13 @@
                 }
                 
                 [Invoice retrieveListForActive:NO reload:NO];
+                [Customer retrieveListForActive:NO reload:NO];
                 
                 if (currentOrg.enableAP) {
                     [Bill retrieveListForActive:NO reload:NO];
+                    [Vendor retrieveListForActive:NO reload:NO];
                 }
+
 
                 // should do it before retrieving all other entities; but don't want to do async here; should be good for next wakeup
 //                [currentOrg getOrgFeatures];

@@ -12,7 +12,6 @@
 #import "Organization.h"
 #import "Util.h"
 #import "SelectOrgViewController.h"
-#import "BDCAppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
 #define INVALID_CREDENTIAL          @"Wrong username/password!"
@@ -42,7 +41,7 @@
     [self.indicator startAnimating];
     
     [Util setUsername:self.email.text andPassword:self.password.text];  //set up keychain
-    [UIAppDelegate setStayLoggedIn:self.stayLoggedIn.on];
+    [Util setStayLoggedIn:self.stayLoggedIn.on];
     
     [Organization retrieveList];
 }
@@ -88,6 +87,8 @@
     
     self.password.layer.borderColor = [[UIColor grayColor] CGColor];
     self.password.layer.borderWidth = 1.0f;
+    
+    self.stayLoggedIn.on = [Util isStayLoggedIn];
     
     [Organization setDelegate:self];
 }
