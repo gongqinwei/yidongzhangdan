@@ -296,7 +296,11 @@ enum CustomerInfoType {
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [CustomerInfo count];
+    if (self.mode == kCreateMode || self.mode == kAttachMode) {
+        return [CustomerInfo count] - 1;
+    } else {
+        return [CustomerInfo count];
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -590,21 +594,32 @@ enum CustomerInfoType {
         }
             break;
             
-        case kCustomerContacts:
+        case 2: //kCustomerContacts:
         {
-            if (self.mode == kViewMode) {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CUSTOMER_CONTACT_CELL_ID];
+            if (self.mode == kCreateMode || self.mode == kAttachMode) {
+                cell = [tableView dequeueReusableCellWithIdentifier:CUSTOMER_ATTACH_CELL_ID];
+                if (!cell) {
+                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CUSTOMER_ATTACH_CELL_ID];
+                }
+                
+                [cell.contentView addSubview:self.attachmentScrollView];
+                [cell.contentView addSubview:self.attachmentPageControl];
+                cell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
             } else {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CUSTOMER_CONTACT_CELL_ID];
+                if (self.mode == kViewMode) {
+                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CUSTOMER_CONTACT_CELL_ID];
+                } else {
+                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CUSTOMER_CONTACT_CELL_ID];
+                }
+                
+                cell.textLabel.text = CustomerContacts;
+                cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:APP_LABEL_FONT_SIZE];
+    //            NSArray *contacts = [CustomerContact listContactsForCustomer:shaddowCustomer];
+    //            cell.detailTextLabel.text = [NSString stringWithFormat:@"(%d)", contacts.count];
+    //            cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:APP_LABEL_FONT_SIZE];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             }
-            
-            cell.textLabel.text = CustomerContacts;
-            cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:APP_LABEL_FONT_SIZE];
-//            NSArray *contacts = [CustomerContact listContactsForCustomer:shaddowCustomer];
-//            cell.detailTextLabel.text = [NSString stringWithFormat:@"(%d)", contacts.count];
-//            cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:APP_LABEL_FONT_SIZE];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
             break;
         case kCustomerAttachments:
@@ -643,7 +658,7 @@ enum CustomerInfoType {
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (section == kCustomerInfo || section == kCustomerAddr || section == kCustomerContacts) {
+    if (section == kCustomerInfo || section == kCustomerAddr || (self.mode != kCreateMode && self.mode != kAttachMode && section == kCustomerContacts)) {
         return 0;
     } else {
         return 30;
@@ -651,7 +666,7 @@ enum CustomerInfoType {
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if (section == kCustomerInfo || section == kCustomerAddr || section == kCustomerContacts) {
+    if (section == kCustomerInfo || section == kCustomerAddr || (self.mode != kCreateMode && self.mode != kAttachMode && section == kCustomerContacts)) {
         return nil;
     } else {
         UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 360, 30)];
@@ -715,7 +730,7 @@ enum CustomerInfoType {
         }
     }
     
-    if (indexPath.section == kCustomerContacts) {
+    if (self.mode != kCreateMode && self.mode != kAttachMode && indexPath.section == kCustomerContacts) {
         NSMutableArray *contacts = [CustomerContact listContactsForCustomer:((Customer *)self.shaddowBusObj)];
         if (contacts.count == 0) {
             if ([Organization getSelectedOrg].enableAR) {
