@@ -52,6 +52,7 @@ typedef enum {
 #define BILL_INFO_CELL_ID               @"BillInfo"
 #define BILL_ITEM_CELL_ID               @"BillLineItem"
 #define BILL_ATTACH_CELL_ID             @"BillDocs"
+#define BILL_IMAGE_CELL_ID              @"BillImage"
 
 #define BILL_SELECT_VENDOR_SEGUE        @"SelectVendorForBill"
 #define BILL_SCAN_PHOTO_SEGUE           @"ScanMoreBillPhoto"
@@ -68,28 +69,80 @@ typedef enum {
 #define DELETE_BILL_ALERT_TAG           1
 #define REMOVE_ATTACHMENT_ALERT_TAG     2
 
+#define VENDOR_PICKER_TAG               1
+#define ACCOUNT_PICKER_TAG              2
 
-@interface EditBillViewController () <VendorSelectDelegate, ScannerDelegate, PayBillDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
+
+@interface EditBillViewController () <VendorSelectDelegate, ScannerDelegate, PayBillDelegate, UITextFieldDelegate, UIScrollViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
 
 @property (nonatomic, strong) NSDecimalNumber *totalAmount;
 @property (nonatomic, strong) UIDatePicker *billDatePicker;
 @property (nonatomic, strong) UIDatePicker *dueDatePicker;
 
+@property (nonatomic, strong) UITextField *billVendorTextField;
+@property (nonatomic, strong) UIToolbar *billVendorInputAccessoryView;
+@property (nonatomic, strong) UITextField *billVendorInputAccessoryTextField;
+@property (nonatomic, strong) UIBarButtonItem *billVendorInputAccessoryTextItem;
+@property (nonatomic, strong) UIBarButtonItem *billVendorInputAccessoryDoneItem;
+@property (nonatomic, strong) UIBarButtonItem *billVendorInputAccessoryNextItem;
+
 @property (nonatomic, strong) UITextField *billNumTextField;
+@property (nonatomic, strong) UIToolbar *billNumInputAccessoryView;
+@property (nonatomic, strong) UITextField *billNumInputAccessoryTextField;
+@property (nonatomic, strong) UIBarButtonItem *billNumInputAccessoryTextItem;
+//@property (nonatomic, strong) UIBarButtonItem *billNumInputAccessoryPrevItem;
+//@property (nonatomic, strong) UIBarButtonItem *billNumInputAccessoryNextItem;
+@property (nonatomic, strong) UISegmentedControl *billNumInputAccessoryNavSwitch;
+@property (nonatomic, strong) UIBarButtonItem *billNumInputAccessoryNavItem;
+@property (nonatomic, strong) UIBarButtonItem *billNumInputAccessoryDoneItem;
+
 @property (nonatomic, strong) UITextField *billDateTextField;
+@property (nonatomic, strong) UIToolbar *billDateInputAccessoryView;
+@property (nonatomic, strong) UITextField *billDateInputAccessoryTextField;
+@property (nonatomic, strong) UIBarButtonItem *billDateInputAccessoryTextItem;
+//@property (nonatomic, strong) UIBarButtonItem *billDateInputAccessoryPrevItem;
+//@property (nonatomic, strong) UIBarButtonItem *billDateInputAccessoryNextItem;
+@property (nonatomic, strong) UISegmentedControl *billDateInputAccessoryNavSwitch;
+@property (nonatomic, strong) UIBarButtonItem *billDateInputAccessoryNavItem;
+@property (nonatomic, strong) UIBarButtonItem *billDateInputAccessoryDoneItem;
+
 @property (nonatomic, strong) UITextField *billDueDateTextField;
+@property (nonatomic, strong) UIToolbar *billDueDateInputAccessoryView;
+@property (nonatomic, strong) UITextField *billDueDateInputAccessoryTextField;
+@property (nonatomic, strong) UIBarButtonItem *billDueDateInputAccessoryTextItem;
+@property (nonatomic, strong) UIBarButtonItem *billDueDateInputAccessoryPrevItem;
+@property (nonatomic, strong) UIBarButtonItem *billDueDateInputAccessoryDoneItem;
+
+@property (nonatomic, strong) UIToolbar *billItemAccountInputAccessoryView;
+@property (nonatomic, strong) UITextField *billItemAccountInputAccessoryTextField;
+@property (nonatomic, strong) UIBarButtonItem *billItemAccountInputAccessoryTextItem;
+@property (nonatomic, strong) UIBarButtonItem *billItemAccountInputAccessoryPrevItem;
+@property (nonatomic, strong) UIBarButtonItem *billItemAccountInputAccessoryDoneItem;
+
+@property (nonatomic, strong) UIToolbar *billItemAmountInputAccessoryView;
+@property (nonatomic, strong) UITextField *billItemAmountInputAccessoryTextField;
+@property (nonatomic, strong) UIBarButtonItem *billItemAmountInputAccessoryTextItem;
+@property (nonatomic, strong) UIBarButtonItem *billItemAmountInputAccessoryPrevItem;
+@property (nonatomic, strong) UIBarButtonItem *billItemAmountInputAccessoryDoneItem;
+
+@property (nonatomic, strong) NSMutableArray *itemAccountTextFields;
+@property (nonatomic, strong) NSMutableArray *itemAmountTextFields;
+
 //@property (nonatomic, strong) UILabel *billApprovalStatusLabel;
 //@property (nonatomic, strong) UILabel *billPaymentStatusLabel;
 @property (nonatomic, strong) UILabel *billPaidAmountLabel;
 @property (nonatomic, strong) UILabel *billAmountLabel;
 
 @property (nonatomic, strong) UIPickerView *accountPickerView;
+@property (nonatomic, strong) UIPickerView *vendorPickerView;
 
 @property (nonatomic, strong) MFMailComposeViewController *mailer;
 
 @property (nonatomic, strong) NSArray *chartOfAccounts;
 
 @property (nonatomic, strong) UITextField *currentField;
+
+@property (nonatomic, strong) NSArray *vendors;
 
 @end
 
@@ -107,9 +160,58 @@ typedef enum {
 @synthesize billPaidAmountLabel;
 @synthesize billAmountLabel;
 @synthesize accountPickerView;
+@synthesize vendorPickerView;
 @synthesize mailer;
 @synthesize chartOfAccounts;
 @synthesize currentField;
+@synthesize vendors;
+
+@synthesize billVendorTextField;
+@synthesize billVendorInputAccessoryView;
+@synthesize billVendorInputAccessoryTextField;
+@synthesize billVendorInputAccessoryTextItem;
+@synthesize billVendorInputAccessoryDoneItem;
+@synthesize billVendorInputAccessoryNextItem;
+
+@synthesize billNumInputAccessoryView;
+@synthesize billNumInputAccessoryTextField;
+@synthesize billNumInputAccessoryTextItem;
+//@synthesize billNumInputAccessoryPrevItem;
+//@synthesize billNumInputAccessoryNextItem;
+@synthesize billNumInputAccessoryNavSwitch;
+@synthesize billNumInputAccessoryNavItem;
+@synthesize billNumInputAccessoryDoneItem;
+
+@synthesize billDateInputAccessoryView;
+@synthesize billDateInputAccessoryTextField;
+@synthesize billDateInputAccessoryTextItem;
+//@synthesize billDateInputAccessoryPrevItem;
+//@synthesize billDateInputAccessoryNextItem;
+@synthesize billDateInputAccessoryNavSwitch;
+@synthesize billDateInputAccessoryNavItem;
+@synthesize billDateInputAccessoryDoneItem;
+
+@synthesize billDueDateInputAccessoryView;
+@synthesize billDueDateInputAccessoryTextField;
+@synthesize billDueDateInputAccessoryTextItem;
+@synthesize billDueDateInputAccessoryPrevItem;
+@synthesize billDueDateInputAccessoryDoneItem;
+
+@synthesize billItemAccountInputAccessoryView;
+@synthesize billItemAccountInputAccessoryTextField;
+@synthesize billItemAccountInputAccessoryTextItem;
+@synthesize billItemAccountInputAccessoryPrevItem;
+@synthesize billItemAccountInputAccessoryDoneItem;
+
+@synthesize billItemAmountInputAccessoryView;
+@synthesize billItemAmountInputAccessoryTextField;
+@synthesize billItemAmountInputAccessoryTextItem;
+@synthesize billItemAmountInputAccessoryPrevItem;
+@synthesize billItemAmountInputAccessoryDoneItem;
+
+@synthesize itemAccountTextFields;
+@synthesize itemAmountTextFields;
+
 
 - (Class)busObjClass {
     return [Bill class];
@@ -166,6 +268,7 @@ typedef enum {
     
     NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:kBillLineItems];
     [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+    self.billAmountLabel.text = [Util formatCurrency:self.totalAmount];
 }
 
 - (void)setLineItems:(NSArray *)lineItems {    
@@ -173,24 +276,48 @@ typedef enum {
 }
 
 - (void)addMoreItems {
-    [self.view findAndResignFirstResponder];
-    
-    APLineItem *newItem = [[APLineItem alloc] init];
-    newItem.amount = [NSDecimalNumber zero];
-    [((Bill *)self.shaddowBusObj).lineItems addObject:newItem];
-    self.totalAmount = [NSDecimalNumber zero];
-    
-    NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:kBillLineItems];
-    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+    if ([self tryTap]) {
+        [self.view findAndResignFirstResponder];
+        
+        APLineItem *newItem = [[APLineItem alloc] init];
+        newItem.amount = [NSDecimalNumber zero];
+        [((Bill *)self.shaddowBusObj).lineItems addObject:newItem];
+        self.totalAmount = [NSDecimalNumber zero];
+        
+        NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:kBillLineItems];
+        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        if (self.mode == kAttachMode && self.firstItemAdded) {
+            UITextField *itemAccountField = self.itemAccountTextFields[self.itemAccountTextFields.count - 1];
+            [itemAccountField becomeFirstResponder];
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:kBillDocs] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        } else if (self.mode != kAttachMode) {
+            self.billAmountLabel.text = [Util formatCurrency:self.totalAmount];
+        }
+    }
 }
 
 - (void)addMoreAttachment {
-    [self.view findAndResignFirstResponder];
-    [self performSegueWithIdentifier:BILL_SCAN_PHOTO_SEGUE sender:self];
+    if ([self tryTap]) {
+        [self.view findAndResignFirstResponder];
+        [self performSegueWithIdentifier:BILL_SCAN_PHOTO_SEGUE sender:self];
+    }
 }
 
 
 #pragma mark - Target Action
+
+- (void)hideAdditionalKeyboard {
+    [self.billVendorInputAccessoryTextField resignFirstResponder];
+    [self.billNumInputAccessoryTextField resignFirstResponder];
+    [self.billDateInputAccessoryTextField resignFirstResponder];
+    [self.billDueDateInputAccessoryTextField resignFirstResponder];
+}
+
+- (void)hideAdditionalKeyboardAndScrollUp {
+    [self hideAdditionalKeyboard];
+    
+}
 
 - (IBAction)saveBusObj:(UIBarButtonItem *)sender {
     if ([self tryTap]) {
@@ -212,6 +339,9 @@ typedef enum {
             [UIHelper showInfo:@"No amount" withStatus:kError];
             return;
         }
+        
+        [self hideAdditionalKeyboard];
+        [self scrollToTop];
         
         [super saveBusObj:sender];
         
@@ -254,6 +384,21 @@ typedef enum {
 
 #pragma mark - Life Cycle
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    if (self.mode == kAttachMode && !self.viewHasAppeared) {
+        self.viewHasAppeared = YES;
+        
+        [self.billVendorTextField becomeFirstResponder];
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:kBillDocs] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        [self.billVendorInputAccessoryTextField becomeFirstResponder];
+        if (self.vendors.count) {
+            [self didSelectVendor:self.vendors[0]];
+        }
+    }
+}
+
 - (void)viewDidLoad
 {
     if (!self.busObj) {
@@ -282,45 +427,217 @@ typedef enum {
     self.busObj.editDelegate = self;
     self.shaddowBusObj.editDelegate = self;
     
-    self.billDatePicker = [[UIDatePicker alloc] initWithFrame:PICKER_RECT];
-    self.billDatePicker.datePickerMode = UIDatePickerModeDate;
-    [self.billDatePicker addTarget:self action:@selector(selectBillDateFromPicker:) forControlEvents:UIControlEventValueChanged];
+    if (self.mode == kCreateMode || self.mode == kAttachMode) {
+        if (!self.firstItemAdded) {
+            [self addMoreItems];
+        }
+        
+        if (self.mode == kAttachMode) {
+            self.attachmentImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, SCREEN_WIDTH - 20, NORMAL_SCREEN_HEIGHT)];
+            self.attachmentImageView.image = [UIImage imageWithData:((Document *)self.shaddowBusObj.attachments[0]).data];
+
+            self.previewScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, SCREEN_WIDTH - 20, NORMAL_SCREEN_HEIGHT - PORTRAIT_KEYBOARD_HEIGHT)];
+            self.previewScrollView.delegate = self;
+            self.previewScrollView.contentSize = self.attachmentImageView.bounds.size;
+            self.previewScrollView.showsHorizontalScrollIndicator = NO;
+            self.previewScrollView.showsVerticalScrollIndicator = NO;
+            self.previewScrollView.scrollEnabled = YES;
+            self.previewScrollView.maximumZoomScale = 4.0;
+            self.previewScrollView.minimumZoomScale = 1.0;
+            //                self.previewScrollView.bouncesZoom = NO;
+            
+            [self.previewScrollView addSubview:self.attachmentImageView];
+        }
+    }
     
-    self.dueDatePicker = [[UIDatePicker alloc] initWithFrame:PICKER_RECT];
-    self.dueDatePicker.datePickerMode = UIDatePickerModeDate;
-    [self.dueDatePicker addTarget:self action:@selector(selectDueDateFromPicker:) forControlEvents:UIControlEventValueChanged];
+    self.vendors = [Vendor listOrderBy:VENDOR_NAME ascending:YES active:YES];
+    self.chartOfAccounts = [ChartOfAccount list];
     
+    self.accountPickerView = [[UIPickerView alloc] initWithFrame:PICKER_RECT];
+    self.accountPickerView.delegate = self;
+    self.accountPickerView.dataSource = self;
+    self.accountPickerView.showsSelectionIndicator = YES;
+    self.accountPickerView.tag = ACCOUNT_PICKER_TAG;
+    
+    self.vendorPickerView = [[UIPickerView alloc] initWithFrame:PICKER_RECT];
+    self.vendorPickerView.delegate = self;
+    self.vendorPickerView.dataSource = self;
+    self.vendorPickerView.showsSelectionIndicator = YES;
+    self.vendorPickerView.tag = VENDOR_PICKER_TAG;
+    
+    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    
+    
+    // Vendor
+    self.billVendorTextField = [[UITextField alloc] initWithFrame:CGRectZero];
+    
+    self.billVendorInputAccessoryView = [[UIToolbar alloc] initWithFrame:INPUT_ACCESSORY_VIEW_FRAME];
+    self.billVendorInputAccessoryView.barStyle = UIBarStyleBlackTranslucent;
+    
+    self.billVendorInputAccessoryDoneItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:INPUT_ACCESSORY_DONE]
+                                                                             style:UIBarButtonItemStyleDone
+                                                                            target:self
+                                                                            action:@selector(changeInputAccessoryViewFor:)];
+    self.billVendorInputAccessoryNextItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:INPUT_ACCESSORY_NEXT]
+                                                                             style:UIBarButtonItemStyleDone
+                                                                            target:self
+                                                                            action:@selector(changeInputAccessoryViewFor:)];
+    if (self.mode != kAttachMode) {
+        self.billVendorInputAccessoryView.items = [NSArray arrayWithObjects:self.billVendorInputAccessoryNextItem, flexibleSpace, self.billVendorInputAccessoryDoneItem, nil];
+    } else {
+        UIBarButtonItem *billVendorAccessoryLabelItem = [self initializeInputAccessoryLabelItem:@"Vendor"];
+        self.billVendorInputAccessoryTextField = [self initializeInputAccessoryTextField];
+        self.billVendorInputAccessoryTextField.inputView = self.vendorPickerView;
+        self.billVendorInputAccessoryTextItem = [[UIBarButtonItem alloc] initWithCustomView:self.billVendorInputAccessoryTextField];
+        self.billVendorInputAccessoryView.items = [NSArray arrayWithObjects:self.billVendorInputAccessoryNextItem, billVendorAccessoryLabelItem, self.billVendorInputAccessoryTextItem, flexibleSpace, self.billVendorInputAccessoryDoneItem, nil];
+    }
+    self.billVendorTextField.inputAccessoryView = self.billVendorInputAccessoryView;
+    
+    
+    // Invoice Number
     self.billNumTextField = [[UITextField alloc] initWithFrame:BILL_INFO_INPUT_RECT];
     [self initializeTextField:self.billNumTextField];
     self.billNumTextField.tag = kBillNumber * TAG_BASE;
     self.billNumTextField.delegate = self;
     self.billNumTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     
+    self.billNumInputAccessoryView = [[UIToolbar alloc] initWithFrame:INPUT_ACCESSORY_VIEW_FRAME];
+    self.billNumInputAccessoryView.barStyle = UIBarStyleBlackTranslucent;
+    
+    self.billNumInputAccessoryNavSwitch = [[UISegmentedControl alloc] initWithItems:@[@"", @""]];
+    [self.billNumInputAccessoryNavSwitch setImage:[UIImage imageNamed:INPUT_ACCESSORY_PREV] forSegmentAtIndex:0];
+    [self.billNumInputAccessoryNavSwitch setImage:[UIImage imageNamed:INPUT_ACCESSORY_NEXT] forSegmentAtIndex:1];
+    self.billNumInputAccessoryNavSwitch.frame = INPUT_ACCESSORY_NAV_FRAME;
+    self.billNumInputAccessoryNavSwitch.segmentedControlStyle = UISegmentedControlStyleBar;
+    self.billNumInputAccessoryNavSwitch.tintColor = APP_BUTTON_BLUE_COLOR;
+    [self.billNumInputAccessoryNavSwitch addTarget:self action:@selector(changeInputAccessoryViewFor:) forControlEvents:UIControlEventValueChanged];
+    self.billNumInputAccessoryNavItem = [[UIBarButtonItem alloc] initWithCustomView:self.billNumInputAccessoryNavSwitch];
+    
+    self.billNumInputAccessoryDoneItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:INPUT_ACCESSORY_DONE]
+                                                                          style:UIBarButtonItemStyleDone
+                                                                         target:self
+                                                                         action:@selector(changeInputAccessoryViewFor:)];
+    
+    if (self.mode != kAttachMode) {
+        self.billNumInputAccessoryView.items = [NSArray arrayWithObjects:self.billNumInputAccessoryNavItem, flexibleSpace, self.billNumInputAccessoryDoneItem, nil];
+    } else {
+        UIBarButtonItem *billNumAccessoryLabelItem = [self initializeInputAccessoryLabelItem:@"Invoice #"];
+        self.billNumInputAccessoryTextField = [self initializeInputAccessoryTextField:YES];
+        self.billNumInputAccessoryTextItem = [[UIBarButtonItem alloc] initWithCustomView:self.billNumInputAccessoryTextField];
+        self.billNumInputAccessoryView.items = [NSArray arrayWithObjects:self.billNumInputAccessoryNavItem, billNumAccessoryLabelItem, self.billNumInputAccessoryTextItem, flexibleSpace, self.billNumInputAccessoryDoneItem, nil];
+    }
+    self.billNumTextField.inputAccessoryView = self.billNumInputAccessoryView;
+    
+    
+    // Invoice Date
+    self.billDatePicker = [[UIDatePicker alloc] initWithFrame:PICKER_RECT];
+    self.billDatePicker.datePickerMode = UIDatePickerModeDate;
+    [self.billDatePicker addTarget:self action:@selector(selectBillDateFromPicker:) forControlEvents:UIControlEventValueChanged];
+    
     self.billDateTextField = [[UITextField alloc] initWithFrame:BILL_INFO_INPUT_RECT];
     [self initializeTextField:self.billDateTextField];
+    self.billDateTextField.delegate = self;
     self.billDateTextField.tag = kBillDate * TAG_BASE;
     self.billDateTextField.clearButtonMode = UITextFieldViewModeNever;
     self.billDateTextField.inputView = self.billDatePicker;
-    self.billDateTextField.inputAccessoryView = self.inputAccessoryView;
-//    self.billDateTextField.inputAccessoryView = [self inputAccessoryViewForTag:kBillDate];
+    
+    self.billDateInputAccessoryView = [[UIToolbar alloc] initWithFrame:INPUT_ACCESSORY_VIEW_FRAME];
+    self.billDateInputAccessoryView.barStyle = UIBarStyleBlackTranslucent;
+    
+    self.billDateInputAccessoryNavSwitch = [[UISegmentedControl alloc] initWithItems:@[@"", @""]];
+    [self.billDateInputAccessoryNavSwitch setImage:[UIImage imageNamed:INPUT_ACCESSORY_PREV] forSegmentAtIndex:0];
+    [self.billDateInputAccessoryNavSwitch setImage:[UIImage imageNamed:INPUT_ACCESSORY_NEXT] forSegmentAtIndex:1];
+    self.billDateInputAccessoryNavSwitch.frame = INPUT_ACCESSORY_NAV_FRAME;
+    self.billDateInputAccessoryNavSwitch.segmentedControlStyle = UISegmentedControlStyleBar;
+    self.billDateInputAccessoryNavSwitch.tintColor = APP_BUTTON_BLUE_COLOR;
+    [self.billDateInputAccessoryNavSwitch addTarget:self action:@selector(changeInputAccessoryViewFor:) forControlEvents:UIControlEventValueChanged];
+    self.billDateInputAccessoryNavItem = [[UIBarButtonItem alloc] initWithCustomView:self.billDateInputAccessoryNavSwitch];
+    
+    self.billDateInputAccessoryDoneItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:INPUT_ACCESSORY_DONE]
+                                                                           style:UIBarButtonItemStyleDone
+                                                                          target:self
+                                                                          action:@selector(changeInputAccessoryViewFor:)];
+    if (self.mode != kAttachMode) {
+        self.billDateInputAccessoryView.items = [NSArray arrayWithObjects:self.billDateInputAccessoryNavItem, flexibleSpace, self.billDateInputAccessoryDoneItem, nil];
+    } else {
+        UIBarButtonItem *billDateAccessoryLabelItem = [self initializeInputAccessoryLabelItem:@"Inv Date"];
+        self.billDateInputAccessoryTextField = [self initializeInputAccessoryTextField:YES];
+        self.billDateInputAccessoryTextField.inputView = self.billDatePicker;
+        self.billDateInputAccessoryTextItem = [[UIBarButtonItem alloc] initWithCustomView:self.billDateInputAccessoryTextField];
+
+        self.billDateInputAccessoryView.items = [NSArray arrayWithObjects:self.billDateInputAccessoryNavItem, billDateAccessoryLabelItem, self.billDateInputAccessoryTextItem, flexibleSpace, self.billDateInputAccessoryDoneItem, nil];
+    }
+    self.billDateTextField.inputAccessoryView = self.billDateInputAccessoryView;
+    
+    
+    // Due Date
+    self.dueDatePicker = [[UIDatePicker alloc] initWithFrame:PICKER_RECT];
+    self.dueDatePicker.datePickerMode = UIDatePickerModeDate;
+    [self.dueDatePicker addTarget:self action:@selector(selectDueDateFromPicker:) forControlEvents:UIControlEventValueChanged];
     
     self.billDueDateTextField = [[UITextField alloc] initWithFrame:BILL_INFO_INPUT_RECT];
     [self initializeTextField:self.billDueDateTextField];
+    self.billDueDateTextField.delegate = self;
     self.billDueDateTextField.tag = kBillDueDate * TAG_BASE;
     self.billDueDateTextField.clearButtonMode = UITextFieldViewModeNever;
     self.billDueDateTextField.inputView = self.dueDatePicker;
-    self.billDueDateTextField.inputAccessoryView = self.inputAccessoryView;
-//    self.billDueDateTextField.inputAccessoryView = [self inputAccessoryViewForTag:kBillDueDate];
+
+    self.billDueDateInputAccessoryView = [[UIToolbar alloc] initWithFrame:INPUT_ACCESSORY_VIEW_FRAME];
+    self.billDueDateInputAccessoryView.barStyle = UIBarStyleBlackTranslucent;
+
+    self.billDueDateInputAccessoryPrevItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:INPUT_ACCESSORY_PREV]
+                                                                              style:UIBarButtonItemStyleDone
+                                                                             target:self
+                                                                             action:@selector(changeInputAccessoryViewFor:)];
+    self.billDueDateInputAccessoryDoneItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:INPUT_ACCESSORY_DONE]
+                                                                              style:UIBarButtonItemStyleDone
+                                                                             target:self
+                                                                             action:@selector(changeInputAccessoryViewFor:)];
+    if (self.mode != kAttachMode) {
+        self.billDueDateInputAccessoryView.items = [NSArray arrayWithObjects:self.billDueDateInputAccessoryPrevItem, flexibleSpace, self.billDueDateInputAccessoryDoneItem, nil];
+    } else {
+        UIBarButtonItem *billDueDateAccessoryLabelItem = [self initializeInputAccessoryLabelItem:@"Due Date"];
+        self.billDueDateInputAccessoryTextField = [self initializeInputAccessoryTextField];
+        self.billDueDateInputAccessoryTextField.inputView = self.dueDatePicker;
+        self.billDueDateInputAccessoryTextItem = [[UIBarButtonItem alloc] initWithCustomView:self.billDueDateInputAccessoryTextField];
+        
+        self.billDueDateInputAccessoryView.items = [NSArray arrayWithObjects:self.billDueDateInputAccessoryPrevItem, billDueDateAccessoryLabelItem, self.billDueDateInputAccessoryTextItem, flexibleSpace, self.billDueDateInputAccessoryDoneItem, nil];
+    }
+    self.billDueDateTextField.inputAccessoryView = self.billDueDateInputAccessoryView;
     
-//    self.billApprovalStatusLabel = [[UILabel alloc] initWithFrame:BILL_INFO_INPUT_RECT];
-//    self.billApprovalStatusLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE];
-//    self.billApprovalStatusLabel.textColor = APP_LABEL_BLUE_COLOR;
-//    self.billApprovalStatusLabel.textAlignment = NSTextAlignmentRight;
-//    
-//    self.billPaymentStatusLabel = [[UILabel alloc] initWithFrame:BILL_INFO_INPUT_RECT];
-//    self.billPaymentStatusLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE];
-//    self.billPaymentStatusLabel.textColor = APP_LABEL_BLUE_COLOR;
-//    self.billPaymentStatusLabel.textAlignment = NSTextAlignmentRight;
+    
+    // Line Item
+    self.billItemAccountInputAccessoryDoneItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:INPUT_ACCESSORY_DONE]
+                                                                                  style:UIBarButtonItemStyleDone
+                                                                                 target:self
+                                                                                 action:@selector(changeInputAccessoryViewFor:)];
+    self.billItemAccountInputAccessoryView = [[UIToolbar alloc] initWithFrame:INPUT_ACCESSORY_VIEW_FRAME];
+    self.billItemAccountInputAccessoryView.barStyle = UIBarStyleBlackTranslucent;
+    if (self.mode != kAttachMode) {
+        self.billItemAccountInputAccessoryView.items = [NSArray arrayWithObjects:flexibleSpace, self.billItemAccountInputAccessoryDoneItem, nil];
+    } else {
+        UIBarButtonItem *billItemAccountAccessoryLabelItem = [self initializeInputAccessoryLabelItem:@"Account"];
+        self.billItemAccountInputAccessoryView.items = [NSArray arrayWithObjects:billItemAccountAccessoryLabelItem, flexibleSpace, self.billItemAccountInputAccessoryDoneItem, nil];
+    }
+    
+    self.billItemAmountInputAccessoryView = [[UIToolbar alloc] initWithFrame:INPUT_ACCESSORY_VIEW_FRAME];
+    self.billItemAmountInputAccessoryView.barStyle = UIBarStyleBlackTranslucent;
+    
+    self.billItemAmountInputAccessoryDoneItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:INPUT_ACCESSORY_DONE]
+                                                                                 style:UIBarButtonItemStyleDone
+                                                                                target:self
+                                                                                action:@selector(changeInputAccessoryViewFor:)];
+    if (self.mode != kAttachMode) {
+        self.billItemAmountInputAccessoryView.items = [NSArray arrayWithObjects:flexibleSpace, self.billItemAmountInputAccessoryDoneItem, nil];
+    } else {
+        UIBarButtonItem *billItemAmountAccessoryLabelItem = [self initializeInputAccessoryLabelItem:@"Amount"];
+        self.billItemAmountInputAccessoryTextField = [self initializeInputAccessoryTextField];
+        self.billItemAmountInputAccessoryTextField.userInteractionEnabled = NO;
+        self.billItemAmountInputAccessoryTextItem = [[UIBarButtonItem alloc] initWithCustomView:self.billItemAmountInputAccessoryTextField];
+        
+        self.billItemAmountInputAccessoryView.items = [NSArray arrayWithObjects:billItemAmountAccessoryLabelItem, self.billItemAmountInputAccessoryTextItem, flexibleSpace, self.billItemAmountInputAccessoryDoneItem, nil];
+    }
+    
 
     self.billPaidAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(CELL_WIDTH - 100, 24, 100, 20)];
     self.billPaidAmountLabel.font = [UIFont fontWithName:APP_FONT size:14];
@@ -332,16 +649,121 @@ typedef enum {
     self.billAmountLabel.textAlignment = NSTextAlignmentRight;
     self.billAmountLabel.font = [UIFont fontWithName:APP_FONT size:15];
     self.billAmountLabel.backgroundColor = [UIColor clearColor];
+    if (false && self.mode == kAttachMode) {        // not in use!
+        self.billAmountLabel.textColor = [UIColor yellowColor];
+    }
+    
+    self.itemAccountTextFields = [NSMutableArray array];
+    self.itemAmountTextFields = [NSMutableArray array];
     
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.activityIndicator.hidesWhenStopped = YES;
+}
+
+- (void)getBillNumberFromTextField:(UITextField *)textField {
+    ((Bill *)self.shaddowBusObj).invoiceNumber = [Util trim:textField.text];
+    self.billNumTextField.text = textField.text;
+    self.billNumInputAccessoryTextField.text = textField.text;
+}
+
+- (void)changeInputAccessoryViewFor:(id)sender {
+    self.totalAmount = [NSDecimalNumber zero];
     
-    self.chartOfAccounts = [ChartOfAccount list];
-    
-    self.accountPickerView = [[UIPickerView alloc] initWithFrame:PICKER_RECT];
-    self.accountPickerView.delegate = self;
-    self.accountPickerView.dataSource = self;
-    self.accountPickerView.showsSelectionIndicator = YES;
+    if (sender == self.billVendorInputAccessoryDoneItem) {
+        [self.billVendorInputAccessoryTextField resignFirstResponder];
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kBillInfo] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    } else if (sender == self.billNumInputAccessoryDoneItem) {
+        if (self.mode != kAttachMode) {
+            [self.billNumTextField resignFirstResponder];
+        } else {
+            ((Bill *)self.shaddowBusObj).invoiceNumber = self.billNumInputAccessoryTextField.text;
+            [self.billNumInputAccessoryTextField becomeFirstResponder];
+            [self.billNumInputAccessoryTextField resignFirstResponder];
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kBillInfo] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        }
+    } else if (sender == self.billDateInputAccessoryDoneItem) {
+        if (self.mode != kAttachMode) {
+            [self.billDateTextField resignFirstResponder];
+        } else {
+            [self.billDateInputAccessoryTextField becomeFirstResponder];
+            [self.billDateInputAccessoryTextField resignFirstResponder];
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kBillInfo] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        }
+    } else if (sender == self.billDueDateInputAccessoryDoneItem) {
+        if (self.mode != kAttachMode) {
+            [self.billDueDateTextField resignFirstResponder];
+        } else {
+            [self.billDueDateInputAccessoryTextField becomeFirstResponder];
+            [self.billDueDateInputAccessoryTextField resignFirstResponder];
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kBillInfo] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        }
+    } else if (sender == self.billItemAccountInputAccessoryDoneItem) {
+        [self.view findAndResignFirstResponder];
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kBillInfo] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    } else if (sender == self.billItemAmountInputAccessoryDoneItem) {
+        [self.view findAndResignFirstResponder];
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kBillInfo] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+        self.billAmountLabel.text = [Util formatCurrency:self.totalAmount];
+    } else {
+        if (self.mode != kAttachMode) {
+            [self changeFirstResponderFor:sender];
+            [self resetInputAccessoryNavSwitches];
+        } else {
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kBillInfo] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+            
+            [UIView animateWithDuration:0.0 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{}
+                completion:^ (BOOL finished){
+                    [self changeFirstResponderFor:sender];
+                    
+                    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:kBillDocs] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+                    
+                    [self resetInputAccessoryNavSwitches];
+                    
+                    if (sender == self.billVendorInputAccessoryNextItem) {
+                        [self.billNumInputAccessoryTextField becomeFirstResponder];
+                    } else if (sender == self.billNumInputAccessoryNavSwitch && self.billNumInputAccessoryNavSwitch.selectedSegmentIndex == 0) {
+                        [self.billVendorInputAccessoryTextField becomeFirstResponder];
+                    } else if (sender == self.billNumInputAccessoryNavSwitch && self.billNumInputAccessoryNavSwitch.selectedSegmentIndex == 1) {
+                        [self.billDateInputAccessoryTextField becomeFirstResponder];
+                    } else if (sender == self.billDateInputAccessoryNavSwitch && self.billDateInputAccessoryNavSwitch.selectedSegmentIndex == 0) {
+                        [self.billNumInputAccessoryTextField becomeFirstResponder];
+                    } else if (sender == self.billDateInputAccessoryNavSwitch && self.billDateInputAccessoryNavSwitch.selectedSegmentIndex == 1) {
+                        [self.billDueDateInputAccessoryTextField becomeFirstResponder];
+                    } else if (sender == self.billDueDateInputAccessoryPrevItem) {
+                        [self.billDateInputAccessoryTextField becomeFirstResponder];
+                    }
+                }];
+        }
+    }
+}
+
+- (void)changeFirstResponderFor:(id)sender {
+    if (sender == self.billVendorInputAccessoryNextItem) {
+        [self.billNumTextField becomeFirstResponder];
+    } else if (sender == self.billNumInputAccessoryNavSwitch && self.billNumInputAccessoryNavSwitch.selectedSegmentIndex == 0) {
+        [self getBillNumberFromTextField:self.billNumInputAccessoryTextField];
+        if (self.mode == kAttachMode) {
+            [self.billVendorTextField becomeFirstResponder];
+        } else {
+            [self performSegueWithIdentifier:BILL_SELECT_VENDOR_SEGUE sender:self];
+        }
+    } else if (sender == self.billNumInputAccessoryNavSwitch && self.billNumInputAccessoryNavSwitch.selectedSegmentIndex == 1) {
+        [self getBillNumberFromTextField:self.billNumInputAccessoryTextField];
+        [self.billDateTextField becomeFirstResponder];
+    } else if (sender == self.billDateInputAccessoryNavSwitch && self.billDateInputAccessoryNavSwitch.selectedSegmentIndex == 0) {
+        [self.billNumTextField becomeFirstResponder];
+    } else if (sender == self.billDateInputAccessoryNavSwitch && self.billDateInputAccessoryNavSwitch.selectedSegmentIndex == 1) {
+        [self.billDueDateTextField becomeFirstResponder];
+    } else if (sender == self.billDueDateInputAccessoryPrevItem) {
+        [self.billDateTextField becomeFirstResponder];
+    }
+}
+
+- (void)resetInputAccessoryNavSwitches {
+    self.billNumInputAccessoryNavSwitch.selectedSegmentIndex = UISegmentedControlNoSegment;
+    self.billNumInputAccessoryNavSwitch.selectedSegmentIndex = UISegmentedControlNoSegment;
+    self.billDateInputAccessoryNavSwitch.selectedSegmentIndex = UISegmentedControlNoSegment;
+    self.billDateInputAccessoryNavSwitch.selectedSegmentIndex = UISegmentedControlNoSegment;
 }
 
 - (void)viewDidUnload {
@@ -392,9 +814,14 @@ typedef enum {
             return [BillInfo count] - 2;
         }
     } else if (section == kBillLineItems) {
-        return [((Bill *)self.shaddowBusObj).lineItems count];
+        if (!self.firstItemAdded && (self.mode == kCreateMode || self.mode == kAttachMode)) {
+            self.firstItemAdded = YES;
+            return 1;
+        } else {
+            return [((Bill *)self.shaddowBusObj).lineItems count];
+        }
     } else {
-        return 1;
+        return 1 + (self.mode == kAttachMode);
     }
 }
 
@@ -424,9 +851,18 @@ typedef enum {
             }
             
             cell.textLabel.text = [BillInfo objectAtIndex:indexPath.row];
-            cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_LABEL_FONT_SIZE];
-            cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            
+            if (false && self.mode == kAttachMode) {    //not in use!
+                cell.backgroundColor = [UIColor clearColor];
+                cell.textLabel.textColor = [UIColor yellowColor];
+                cell.detailTextLabel.textColor = [UIColor yellowColor];
+                cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_LABEL_FONT_SIZE + 2];
+                cell.detailTextLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_LABEL_FONT_SIZE + 2];
+            } else {
+                cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_LABEL_FONT_SIZE];
+                cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE];
+            }
             
             switch (indexPath.row) {
                 case kBillVendor:
@@ -446,6 +882,10 @@ typedef enum {
                         
                         if (!shaddowBill.paymentStatus || [shaddowBill.paymentStatus isEqualToString:PAYMENT_UNPAID]) {
                             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                        }
+                        
+                        if (self.mode == kAttachMode) {
+                            [cell addSubview:self.billVendorTextField]; // just for bringing up keyboard
                         }
                     }
                     
@@ -483,6 +923,7 @@ typedef enum {
                             shaddowBill.invoiceDate = [NSDate date];
                         }
                         self.billDateTextField.backgroundColor = cell.backgroundColor;
+                        self.billDateInputAccessoryTextField.text = self.billDateTextField.text;
                         
                         [cell addSubview:self.billDateTextField];
                     }
@@ -504,6 +945,7 @@ typedef enum {
                             shaddowBill.dueDate = [NSDate date];
                         }
                         self.billDueDateTextField.backgroundColor = cell.backgroundColor;
+                        self.billDueDateInputAccessoryTextField.text = self.billDueDateTextField.text;
                         
                         [cell addSubview:self.billDueDateTextField];
                     }
@@ -558,6 +1000,10 @@ typedef enum {
             cell.textLabel.numberOfLines = 2;
             cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
             
+            if (false && self.mode == kAttachMode) {    // not in use!
+                cell.backgroundColor = [UIColor clearColor];
+            }
+            
             APLineItem *item = [shaddowBill.lineItems objectAtIndex:indexPath.row];
             ChartOfAccount *account = item.account;
             
@@ -578,8 +1024,11 @@ typedef enum {
                 itemAccountField.delegate = self;
                 itemAccountField.tag = [BillInfo count] * TAG_BASE + indexPath.row * 2;
                 itemAccountField.objectTag = item;
+                itemAccountField.inputView = self.accountPickerView;
+                itemAccountField.inputAccessoryView = self.billItemAccountInputAccessoryView;
                 
                 [cell addSubview:itemAccountField];
+                [self.itemAccountTextFields addObject:itemAccountField];
                 
                 UITextField *itemAmountTextField = [[UITextField alloc] initWithFrame:BILL_ITEM_AMOUNT_RECT];
                 if ((self.mode != kCreateMode && self.mode != kAttachMode) || ![item.amount isEqualToNumber:[NSDecimalNumber zero]]) {
@@ -589,26 +1038,40 @@ typedef enum {
                 itemAmountTextField.keyboardType = UIKeyboardTypeDecimalPad;
                 itemAmountTextField.delegate = self;
                 itemAmountTextField.tag = [BillInfo count] * TAG_BASE + indexPath.row * 2 + 1;
+                itemAmountTextField.objectTag = item;
                 itemAmountTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+                itemAmountTextField.inputAccessoryView = self.billItemAmountInputAccessoryView;
                 
                 [cell addSubview:itemAmountTextField];
+                [self.itemAmountTextFields addObject:itemAmountTextField];
                 
                 [self.tableView setEditing:YES animated:YES];
             }
-            
+
             self.totalAmount = [self.totalAmount decimalNumberByAdding:item.amount];
         }
             break;
         case kBillDocs:
         {
-            cell = [tableView dequeueReusableCellWithIdentifier:BILL_ATTACH_CELL_ID];
-            if (!cell) {
+            if (indexPath.row == 0) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:BILL_ATTACH_CELL_ID];
+                
+                [cell.contentView addSubview:self.attachmentScrollView];
+                [cell.contentView addSubview:self.attachmentPageControl];
+                cell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+            } else {
+                cell = [tableView dequeueReusableCellWithIdentifier:BILL_IMAGE_CELL_ID];
+                if (!cell) {
+                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:BILL_IMAGE_CELL_ID];
+                }
+                
+                cell.backgroundColor = [UIColor clearColor];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+                self.previewScrollView.zoomScale = 1.1;
+                
+                [cell.contentView addSubview:self.previewScrollView];
             }
-            
-            [cell.contentView addSubview:self.attachmentScrollView];
-            [cell.contentView addSubview:self.attachmentPageControl];
-            cell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
         }
             break;
         default:
@@ -616,6 +1079,10 @@ typedef enum {
     }
     
     return cell;
+}
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
+    return [scrollView subviews][0];
 }
 
 #pragma mark - Table view delegate
@@ -626,7 +1093,11 @@ typedef enum {
     } else if (indexPath.section == kBillLineItems) {
         return CELL_HEIGHT;
     } else {
-        return IMG_HEIGHT + IMG_PADDING + ATTACHMENT_PV_HEIGHT;
+        if (indexPath.row == 0) {
+            return IMG_HEIGHT + IMG_PADDING + ATTACHMENT_PV_HEIGHT + ((self.mode == kAttachMode) ? 110 : 0);
+        } else {
+            return NORMAL_SCREEN_HEIGHT + 30;
+        }
     }
 }
 
@@ -661,9 +1132,13 @@ typedef enum {
         label.text = @"Line Items";
         label.font = [UIFont fontWithName:@"Helvetica-Bold" size:17];
         label.backgroundColor = [UIColor clearColor];
-        label.textColor = APP_SYSTEM_BLUE_COLOR;
-        label.shadowColor = [UIColor whiteColor];
-        label.shadowOffset = CGSizeMake(0, 1);
+        if (false && self.mode == kAttachMode) {        // not in use!
+            label.textColor = [UIColor yellowColor];
+        } else {
+            label.textColor = APP_SYSTEM_BLUE_COLOR;
+            label.shadowColor = [UIColor whiteColor];
+            label.shadowOffset = CGSizeMake(0, 1);
+        }
         
         [headerView addSubview:label];
         
@@ -686,9 +1161,13 @@ typedef enum {
         label.text = @"Documents";
         label.font = [UIFont fontWithName:@"Helvetica-Bold" size:17];
         label.backgroundColor = [UIColor clearColor];
-        label.textColor = APP_SYSTEM_BLUE_COLOR;
-        label.shadowColor = [UIColor whiteColor];
-        label.shadowOffset = CGSizeMake(0, 1);
+        if (false && self.mode == kAttachMode) {    // not in use!
+            label.textColor = [UIColor yellowColor];
+        } else {
+            label.textColor = APP_SYSTEM_BLUE_COLOR;
+            label.shadowColor = [UIColor whiteColor];
+            label.shadowOffset = CGSizeMake(0, 1);
+        }
         
         [headerView addSubview:label];
         
@@ -715,30 +1194,35 @@ typedef enum {
         amoutLabel.text = @"Bill Amount:";
         amoutLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:14];
         amoutLabel.backgroundColor = [UIColor clearColor];
-        amoutLabel.textColor = APP_LABEL_BLUE_COLOR;
+        if (false && self.mode == kAttachMode) {        // not in use!
+            amoutLabel.textColor = [UIColor yellowColor];
+        } else {
+            amoutLabel.textColor = APP_LABEL_BLUE_COLOR;
+        }
         amoutLabel.textAlignment = NSTextAlignmentRight;
         [footerView addSubview:amoutLabel];
         
-        UILabel *paidAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 24, 85, 20)];
-        paidAmountLabel.text = @"Paid:";
-        paidAmountLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:13];
-        paidAmountLabel.backgroundColor = [UIColor clearColor];
-        paidAmountLabel.textColor = APP_LABEL_BLUE_COLOR;
-        paidAmountLabel.textAlignment = NSTextAlignmentRight;
-        [footerView addSubview:paidAmountLabel];
-        
         Bill *bill = (Bill *)self.shaddowBusObj;
-        
         if ([self.totalAmount isEqualToNumber:[NSDecimalNumber zero]] && bill.amount) {
             self.billAmountLabel.text = [Util formatCurrency:bill.amount];
         } else {
-            self.billAmountLabel.text = [Util formatCurrency:self.totalAmount];        
+            self.billAmountLabel.text = [Util formatCurrency:self.totalAmount];
             bill.amount = self.totalAmount;
         }
         [footerView addSubview:self.billAmountLabel];
         
-        self.billPaidAmountLabel.text = [Util formatCurrency:bill.paidAmount];
-        [footerView addSubview:self.billPaidAmountLabel];
+        if (self.mode != kCreateMode && self.mode != kAttachMode) {
+            UILabel *paidAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 24, 85, 20)];
+            paidAmountLabel.text = @"Paid:";
+            paidAmountLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:13];
+            paidAmountLabel.backgroundColor = [UIColor clearColor];
+            paidAmountLabel.textColor = APP_LABEL_BLUE_COLOR;
+            paidAmountLabel.textAlignment = NSTextAlignmentRight;
+            [footerView addSubview:paidAmountLabel];
+            
+            self.billPaidAmountLabel.text = [Util formatCurrency:bill.paidAmount];
+            [footerView addSubview:self.billPaidAmountLabel];
+        }
         
         return footerView;
     }
@@ -814,17 +1298,21 @@ typedef enum {
 
 // private
 - (void)textFieldDoneEditing:(UITextField *)textField {
-    if (textField.tag == kBillNumber * TAG_BASE) {
-        ((Bill *)self.shaddowBusObj).invoiceNumber = [Util trim:textField.text];
+    if (textField == self.billNumTextField) { // textField.tag == kBillNumber * TAG_BASE) {
+        [self getBillNumberFromTextField:textField];
     } else {
-        int idx = (textField.tag - [BillInfo count] * TAG_BASE) / 2;
-        APLineItem * item = [((Bill *)self.shaddowBusObj).lineItems objectAtIndex:idx];
-        
         if (textField.tag % 2) {
-            self.totalAmount = [self.totalAmount decimalNumberBySubtracting:item.amount];
-            item.amount = [Util parseCurrency:textField.text];
-            self.totalAmount = [self.totalAmount decimalNumberByAdding:item.amount];
-            self.billAmountLabel.text = [Util formatCurrency:self.totalAmount];
+            int idx = (textField.tag - [BillInfo count] * TAG_BASE) / 2;
+            APLineItem * item = [((Bill *)self.shaddowBusObj).lineItems objectAtIndex:idx];
+            
+            if (self.mode == kAttachMode) {
+                item.amount = [Util parseCurrency:textField.text];
+            } else {
+                self.totalAmount = [self.totalAmount decimalNumberBySubtracting:item.amount];
+                item.amount = [Util parseCurrency:textField.text];
+                self.totalAmount = [self.totalAmount decimalNumberByAdding:item.amount];
+                self.billAmountLabel.text = [Util formatCurrency:self.totalAmount];
+            }
         }
     }
 }
@@ -835,22 +1323,53 @@ typedef enum {
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
-    self.currentField = textField;
-    
-    if (textField.objectTag) {
-        APLineItem *item = textField.objectTag;
-        int row;
+    if ([self tryTap]) {
+        self.currentField = textField;
         
-        if (item.account.objectId) {
-            row = [self.chartOfAccounts indexOfObject:item.account] + 1;
-        } else {
-            row = 0;
+        if (textField.objectTag) {
+            if (textField.tag % 2 == 0) {
+                APLineItem *item = textField.objectTag;
+                int row;
+                
+                if (item.account.objectId) {
+                    row = [self.chartOfAccounts indexOfObject:item.account] + 1;
+                } else {
+                    row = 0;
+                }
+                
+                [self.accountPickerView selectRow:row inComponent:0 animated:NO];
+            }
+            
+//            if (self.mode == kAttachMode) {
+//                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:kBillDocs] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+//                if (textField.tag % 2 == 1) {
+//                    self.billItemAmountInputAccessoryTextField.text = textField.text;
+//                }
+//                return;
+//            }
         }
-
-        [self.accountPickerView selectRow:row inComponent:0 animated:NO];
+        
+        if (self.mode == kAttachMode) {
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:kBillDocs] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+            
+            if (textField == self.billNumTextField) { // textField.tag == kBillNumber * TAG_BASE) {
+                self.billNumInputAccessoryTextField.text = textField.text;
+            } else if (textField == self.billDateTextField) { // textField.tag == kBillDate * TAG_BASE) {
+                self.billDateInputAccessoryTextField.text = textField.text;
+            } else if (textField == self.billDueDateTextField) { // textField.tag == kBillDueDate * TAG_BASE) {
+                self.billDueDateInputAccessoryTextField.text = textField.text;
+            } else {
+                if (textField.tag % 2) {
+                    self.billItemAmountInputAccessoryTextField.text = textField.text;
+                }
+            }
+            
+            // doesn't need scroll up for keyboard
+            return;
+        }
+        
+        [super textFieldDidBeginEditing:textField];
     }
-    
-    [super textFieldDidBeginEditing:textField];
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
@@ -860,15 +1379,30 @@ typedef enum {
     [super textFieldDidEndEditing:textField];
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if (self.mode == kAttachMode) {
+        if (textField == self.billNumTextField) { // textField.tag == kBillNumber * TAG_BASE) {
+            self.billNumInputAccessoryTextField.text = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        } else if (self.mode == kAttachMode && textField.objectTag && textField.tag % 2) {
+            self.billItemAmountInputAccessoryTextField.text = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        }
+    }
+    
+    return YES;
+}
+
+
 #pragma mark - Date Picker target action
 
 - (void)selectBillDateFromPicker:(UIDatePicker *)sender {
     self.billDateTextField.text = [Util formatDate:sender.date format:nil];
+    self.billDateInputAccessoryTextField.text = self.billDateTextField.text;
     ((Bill *)self.shaddowBusObj).invoiceDate = sender.date;
 }
 
 - (void)selectDueDateFromPicker:(UIDatePicker *)sender {
     self.billDueDateTextField.text = [Util formatDate:sender.date format:nil];
+    self.billDueDateInputAccessoryTextField.text = self.billDueDateTextField.text;
     ((Bill *)self.shaddowBusObj).dueDate = sender.date;
 }
 
@@ -914,31 +1448,44 @@ typedef enum {
 }
 
 - (NSInteger) pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    return [self.chartOfAccounts count] + 1;
+    if (pickerView.tag == VENDOR_PICKER_TAG) {
+        return self.vendors.count;
+    } else {
+        return [self.chartOfAccounts count] + 1;
+    }
 }
 
 - (NSString*) pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    if (row == 0) {
-        return @"None";
+    if (pickerView.tag == VENDOR_PICKER_TAG) {
+        Vendor *vendor = self.vendors[row];
+        return vendor.name;
+    } else {
+        if (row == 0) {
+            return @"None";
+        }
+        
+        ChartOfAccount * acct = (ChartOfAccount *)[self.chartOfAccounts objectAtIndex: row - 1];
+        return acct.indentedName;
     }
-    
-    ChartOfAccount * acct = (ChartOfAccount *)[self.chartOfAccounts objectAtIndex: row - 1];
-    return acct.indentedName;
 }
 
 #pragma mark - UIPickerView Delegate
 
 - (void) pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    int idx = (self.currentField.tag - [BillInfo count] * TAG_BASE) / 2;
-    APLineItem * item = [((Bill *)self.shaddowBusObj).lineItems objectAtIndex:idx];
-    
-    if (row == 0) {
-        self.currentField.text = @"None";
-        item.account = nil;
+    if (pickerView.tag == VENDOR_PICKER_TAG) {
+        [self didSelectVendor:self.vendors[row]];
     } else {
-        ChartOfAccount *acct = (ChartOfAccount *)[self.chartOfAccounts objectAtIndex:row - 1];
-        self.currentField.text = acct.fullName;
-        item.account = [self.chartOfAccounts objectAtIndex:row - 1];
+        int idx = (self.currentField.tag - [BillInfo count] * TAG_BASE) / 2;
+        APLineItem * item = [((Bill *)self.shaddowBusObj).lineItems objectAtIndex:idx];
+        
+        if (row == 0) {
+            self.currentField.text = @"None";
+            item.account = nil;
+        } else {
+            ChartOfAccount *acct = (ChartOfAccount *)[self.chartOfAccounts objectAtIndex:row - 1];
+            self.currentField.text = acct.fullName;
+            item.account = [self.chartOfAccounts objectAtIndex:row - 1];
+        }
     }
 }
 
@@ -968,9 +1515,10 @@ typedef enum {
     });
 }
 
-- (void)didSelectVendor:(NSString *)vendorId {
-    ((Bill *)self.shaddowBusObj).vendorId = vendorId;
-    
+- (void)didSelectVendor:(Vendor *)vendor {
+    ((Bill *)self.shaddowBusObj).vendorId = vendor.objectId;
+    self.billVendorInputAccessoryTextField.text = vendor.name;
+
     NSIndexPath *path = [NSIndexPath indexPathForRow:kBillVendor inSection:kBillInfo];
     [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
 }

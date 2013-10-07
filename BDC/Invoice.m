@@ -78,6 +78,12 @@ static NSMutableArray *inactiveInvoices = nil;
 @synthesize lineItems;
 @synthesize detailsDelegate;
 
+
++ (void)resetList {
+    invoices = [NSMutableArray array];
+    inactiveInvoices = [NSMutableArray array];
+}
+
 + (void)setARDelegate:(id<InvoiceListDelegate>)delegate {
     ARDelegate = delegate;
 }

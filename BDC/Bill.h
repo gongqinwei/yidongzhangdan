@@ -59,13 +59,13 @@
 @property (nonatomic, strong) NSString *paymentStatus;
 
 @property (nonatomic, strong) NSMutableArray *lineItems;
+@property (nonatomic, weak) id<BusObjectDelegate> detailsDelegate;
 
 // delegates
 + (void)setAPDelegate:(id<BillListDelegate>)delegate;
 + (void)setListDelegate:(id<BillListDelegate>)delegate;
 
 + (id)list:(NSArray *)invArr orderBy:(NSString *)attribue ascending:(Boolean)isAscending;
-
-@property (nonatomic, weak) id<BusObjectDelegate> detailsDelegate;
++ (void)resetList;
 
 @end

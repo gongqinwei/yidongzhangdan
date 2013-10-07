@@ -126,7 +126,7 @@ enum ContactInfoType {
     self.contactEmailTextField.tag = kContactEmail * TAG_BASE;
     self.contactEmailTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.contactEmailTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
-    self.contactEmailTextField.keyboardType = UIKeyboardTypePhonePad;
+    self.contactEmailTextField.keyboardType = UIKeyboardTypeEmailAddress;
     self.contactEmailTextField.delegate = self;
     
     self.contactPhoneTextField = [[UITextField alloc] initWithFrame:INFO_INPUT_RECT];

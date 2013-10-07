@@ -37,5 +37,6 @@
 
 + (void)setListDelegate:(id<AccountListDelegate>)listDelegate;
 + (ChartOfAccount *)objectForKey:(NSString *)accountId;
++ (void)resetList;
 
 @end

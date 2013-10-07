@@ -16,6 +16,7 @@
 //#define APPSTAGE
 //#define PROD
 
+
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
@@ -46,6 +47,7 @@
 #define ERR_DOMAIN          @"PROD"
 #define DOMAIN_URL          @"https://app.bill.com"
 #define APP_KEY             @"devKey"
+#define DEBUG_MODE  //temp
 #endif
 
 #ifdef DEBUG_MODE
@@ -204,8 +206,9 @@ typedef void(^completionHandler)(BOOL);
 // Element sizes
 #define ToolbarHeight                   44
 #define TableViewShrinkSize             94
+#define PORTRAIT_KEYBOARD_HEIGHT        216
 #define FrameDisclosureCell             CGRectMake(0, 0, 300, 36)
-#define PICKER_RECT                     CGRectMake(0, 0, 320, 216)
+#define PICKER_RECT                     CGRectMake(0, 0, 320, PORTRAIT_KEYBOARD_HEIGHT)
 #define TEXT_FIELD_RIGHT_PADDING_RECT   CGRectMake(0, 0, 10, 30)
 
 // Bill info
@@ -325,6 +328,7 @@ typedef enum {
 #define APP_FONT               @"Arial"
 #define APP_LABEL_BLUE_COLOR   [UIColor colorWithRed:81.0/255.0 green:102.0/255.0 blue:145.0/255.0 alpha:1.0]
 #define APP_SYSTEM_BLUE_COLOR  [UIColor colorWithRed:0.298039 green:0.337255 blue:0.423529 alpha:1.0]
+#define APP_BUTTON_BLUE_COLOR  [UIColor colorWithRed:50.0/255.0 green:135.0/255.0 blue:225.0/255.0 alpha:1.0]
 
 // API Handler typedef
 typedef void(^Handler)(NSURLResponse * response, NSData * data, NSError * err);

@@ -96,12 +96,13 @@
 
 //+ (void)clone:(Invoice *)source to:(Invoice *)target;
 
+@property (nonatomic, weak) id<BusObjectDelegate> detailsDelegate;
+
 // delegates
 + (void)setARDelegate:(id<InvoiceListDelegate>)delegate;
 + (void)setListDelegate:(id<InvoiceListDelegate>)delegate;
 
 + (id)list:(NSArray *)invArr orderBy:(NSString *)attribue ascending:(Boolean)isAscending;
-
-@property (nonatomic, weak) id<BusObjectDelegate> detailsDelegate;
++ (void)resetList;
 
 @end

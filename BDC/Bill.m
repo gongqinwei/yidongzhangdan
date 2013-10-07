@@ -47,6 +47,11 @@ static NSMutableArray *inactiveBills = nil;
 @synthesize detailsDelegate;
 
 
++ (void)resetList {
+    bills = [NSMutableArray array];
+    inactiveBills = [NSMutableArray array];
+}
+
 + (void)setAPDelegate:(id<BillListDelegate>)delegate {
     APDelegate = delegate;
 }

@@ -25,6 +25,11 @@ static NSArray *bankAccounts = nil;
 @synthesize bankName;
 @synthesize primaryAP;
 
+
++ (void)resetList {
+    bankAccounts = [NSArray array];
+}
+
 + (id)list {
     return bankAccounts;
 }

@@ -25,6 +25,11 @@ static NSMutableDictionary *inactiveItems = nil;
 @synthesize type;
 
 
++ (void)resetList {
+    items = [NSMutableDictionary dictionary];
+    inactiveItems = [NSMutableDictionary dictionary];
+}
+
 + (id<ItemListDelegate>)getListDelegate {
     return ListDelegate;
 }

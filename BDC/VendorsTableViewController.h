@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "SlidingListTableViewController.h"
+#import "Vendor.h"
 
 @protocol VendorSelectDelegate <NSObject>
 
 @required
-- (void)didSelectVendor:(NSString *)vendorId;
+- (void)didSelectVendor:(Vendor *)vendor;
 
 @end
 

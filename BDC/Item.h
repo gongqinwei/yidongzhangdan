@@ -49,6 +49,7 @@ typedef enum {
 @property (nonatomic, assign) int qty;
 
 + (void)setListDelegate:(id<ItemListDelegate>)listDelegate;
++ (void)resetList;
 + (Item *)objectForKey:(NSString *)itemId;
 
 @end

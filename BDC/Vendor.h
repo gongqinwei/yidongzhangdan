@@ -48,7 +48,7 @@ typedef enum {
 @property (nonatomic, weak) id<BusObjectDelegate> editBillDelegate;
 
 + (void)setListDelegate:(id<VendorListDelegate>)listDelegate;
-
++ (void)resetList;
 + (Vendor *)objectForKey:(NSString *)vendorId;
 
 @end

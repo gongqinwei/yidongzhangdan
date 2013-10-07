@@ -61,7 +61,7 @@
 - (void)navigateDone {
     if ([self tryTap]) {
         NSIndexPath *path = self.lastSelected; //self.tableView.indexPathForSelectedRow; //same
-        [self.selectDelegate didSelectVendor:((Vendor *)self.vendors[path.section][path.row]).objectId];
+        [self.selectDelegate didSelectVendor:self.vendors[path.section][path.row]];
         
         [self.navigationController popViewControllerAnimated:YES];
     }

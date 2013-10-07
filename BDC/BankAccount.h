@@ -18,5 +18,6 @@
 @property (nonatomic, strong) NSString *bankName;
 @property (nonatomic, strong) NSString *accountNumber;
 @property (nonatomic, assign) BOOL primaryAP;
++ (void)resetList;
 
 @end

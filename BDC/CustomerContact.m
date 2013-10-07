@@ -37,6 +37,9 @@ static id <ContactListDelegate> ListDelegate = nil;
 @synthesize phone;
 @synthesize editCustomerDelegate;
 
++ (void)resetList {
+    contacts = [NSMutableDictionary dictionary];
+}
 
 - (id)initWithCustomer:(Customer *)customer {
     if (self = [super init]) {        

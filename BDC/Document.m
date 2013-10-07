@@ -44,6 +44,11 @@ static NSLock *DocumentsLock = nil;
 //@synthesize vendor;
 
 
++ (void)resetList {
+    documents = [NSMutableArray array];
+    attachments = [NSMutableArray array];
+}
+
 - (id)copyWithZone:(NSZone *)zone {
     Document *doc = [super copyWithZone:zone];
     doc.data = self.data;

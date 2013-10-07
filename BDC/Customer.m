@@ -35,6 +35,12 @@ static NSMutableDictionary * inactiveCustomers = nil;
 @synthesize editDelegate;
 @synthesize editInvoiceDelegate;
 
+
++ (void)resetList {
+    customers = [NSMutableDictionary dictionary];
+    inactiveCustomers = [NSMutableDictionary dictionary];
+}
+
 + (id<CustomerListDelegate>)getListDelegate {
     return ListDelegate;
 }

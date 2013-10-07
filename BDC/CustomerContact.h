@@ -41,6 +41,6 @@
 + (NSMutableArray *)listContactsForCustomer:(Customer *)customer;
 + (void)retrieveListForCustomer:(NSString *)customerId;
 + (void)setListDelegate:(id<ContactListDelegate>)listDelegate;
-
++ (void)resetList;
 
 @end

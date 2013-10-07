@@ -19,6 +19,7 @@
 #import "Vendor.h"
 #import "ChartOfAccount.h"
 #import "Document.h"
+#import "BankAccount.h"
 #import "Util.h"
 #import "UIHelper.h"
 #import <MessageUI/MessageUI.h>
@@ -142,6 +143,17 @@ static RootMenuViewController * _sharedInstance = nil;
 //    [self.menuTableView selectRowAtIndexPath:initIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     
 ////    [Invoice setARDelegate:(AROverViewController *)self.currVC];  //assumption: currVC is AROverViewController.
+    
+    
+    [Bill resetList];
+    [Invoice resetList];
+    [Vendor resetList];
+    [Customer resetList];
+    [Item resetList];
+    [Document resetList];
+    [CustomerContact resetList];
+    [ChartOfAccount resetList];
+    [BankAccount resetList];
     
     if (self.currentOrg.enableAP) {
         [Bill retrieveListForActive:YES reload:YES];

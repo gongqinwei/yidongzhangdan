@@ -26,6 +26,12 @@ static NSMutableDictionary * inactiveVendors = nil;
 @synthesize payBy;
 @synthesize editBillDelegate;
 
+
++ (void)resetList {
+    vendors = [NSMutableDictionary dictionary];
+    inactiveVendors = [NSMutableDictionary dictionary];
+}
+
 + (id<VendorListDelegate>)getListDelegate {
     return ListDelegate;
 }

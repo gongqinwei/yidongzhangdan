@@ -20,10 +20,10 @@
 #define IMG_WIDTH                       CELL_WIDTH / 4
 #define IMG_HEIGHT                      IMG_WIDTH - IMG_PADDING
 
+
 static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
 static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
-static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 216;
 static double animatedDistance = 0;
 
 
@@ -51,6 +51,11 @@ static double animatedDistance = 0;
 @synthesize currAttachment;
 @synthesize previewController;
 
+@synthesize firstItemAdded;
+@synthesize viewHasAppeared;
+@synthesize previewScrollView;
+@synthesize attachmentImageView;
+
 
 - (void)setBusObj:(BDCBusinessObjectWithAttachments *)busObj {
     _busObj = busObj;
@@ -68,6 +73,28 @@ static double animatedDistance = 0;
 - (BOOL)isAR {
     return NO;
 }
+
+// Overriding
+- (IBAction)toggleMenu:(id)sender {
+    if (self.mode == kAttachMode) {
+        CGRect frame = self.navigationController.view.frame;
+        if (frame.origin.x == 0) {
+            [self hideAdditionalKeyboard];
+            [self scrollToTop];
+        }
+    }
+    
+    [super toggleMenu:sender];
+}
+
+- (void)hideAdditionalKeyboard {
+    // To be overridden
+}
+
+- (void)scrollToTop {
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+}
+
 
 - (void)setMode:(ViewMode)mode {
     super.mode = mode;
@@ -132,6 +159,11 @@ static double animatedDistance = 0;
 
 - (void)cancelEdit:(UIBarButtonItem *)sender {
     if ([self tryTap]) {
+        if (self.mode == kAttachMode) {
+            [self hideAdditionalKeyboard];
+            self.attachmentImageView.image = nil;   // release memory
+        }
+        
         if (self.mode == kCreateMode || self.mode == kAttachMode || self.mode == kModifyMode) {
             [self navigateBack];
         } else {
@@ -139,6 +171,37 @@ static double animatedDistance = 0;
             self.mode = kViewMode;
         }
     }
+}
+
+- (UIBarButtonItem *)initializeInputAccessoryLabelItem:(NSString *)labelText {
+    UILabel *label = [[UILabel alloc] initWithFrame:INPUT_ACCESSORY_LABEL_FRAME];
+    label.text = labelText;
+    label.textColor = [UIColor whiteColor];
+    label.backgroundColor = [UIColor clearColor];
+    label.font = [UIFont fontWithName:APP_BOLD_FONT size:APP_LABEL_FONT_SIZE];
+    return [[UIBarButtonItem alloc] initWithCustomView:label];
+}
+
+- (UITextField *)initializeInputAccessoryTextField {
+    return [self initializeInputAccessoryTextField:NO];
+}
+
+- (UITextField *)initializeInputAccessoryTextField:(BOOL)small {
+    CGRect rect = small ? INPUT_ACCESSORY_TEXT_FRAME_S : INPUT_ACCESSORY_TEXT_FRAME;
+    UITextField *textField = [[UITextField alloc] initWithFrame:rect];
+    textField.textColor = [UIColor whiteColor];
+    textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    textField.autocorrectionType = UITextAutocorrectionTypeNo; // no auto correction support
+    textField.autocapitalizationType = UITextAutocapitalizationTypeNone; // no auto capitalization support
+    textField.textAlignment = NSTextAlignmentLeft;
+    textField.enabled = YES;
+    textField.font = [UIFont fontWithName:APP_FONT size:APP_LABEL_FONT_SIZE + 2];
+//    textField.layer.cornerRadius = 8.0f;
+//    textField.layer.masksToBounds = YES;
+//    textField.layer.borderColor = [[UIColor lightGrayColor]CGColor];
+//    textField.layer.borderWidth = 1.0f;
+    textField.rightView = [[UIView alloc] initWithFrame:TEXT_FIELD_RIGHT_PADDING_RECT];
+    return textField;
 }
 
 - (NSIndexPath *)getAttachmentPath {
@@ -505,6 +568,15 @@ static double animatedDistance = 0;
     } else if (self.mode == kCreateMode) {
         [self resetScrollView];
     }
+    
+//    if (self.mode == kAttachMode && self.shaddowBusObj.attachments && self.shaddowBusObj.attachments.count && [IMAGE_TYPE_SET containsObject:[self.shaddowBusObj.attachments[0] pathExtension]]) {
+//        self.tableView.backgroundColor = [UIColor clearColor];
+//        self.tableView.opaque = NO;
+//        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//        
+//        Document *doc = self.shaddowBusObj.attachments[0];
+//        self.tableView.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:doc.data]];
+//    }
 }
 
 - (void)resetScrollView {
@@ -536,8 +608,7 @@ static double animatedDistance = 0;
 }
 
 - (void)initializeTextField:(UITextField *)textField {
-    textField.font = [UIFont fontWithName:APP_FONT size:APP_LABEL_FONT_SIZE];
-    textField.textColor = APP_LABEL_BLUE_COLOR;
+    
     textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     textField.autocorrectionType = UITextAutocorrectionTypeNo; // no auto correction support
     textField.autocapitalizationType = UITextAutocapitalizationTypeNone; // no auto capitalization support
@@ -545,7 +616,15 @@ static double animatedDistance = 0;
     textField.enabled = YES;
     textField.layer.cornerRadius = 8.0f;
     textField.layer.masksToBounds = YES;
-    textField.layer.borderColor = [[UIColor grayColor]CGColor];
+    if (false && self.mode == kAttachMode) {        // not in use!
+        textField.font = [UIFont fontWithName:APP_BOLD_FONT size:APP_LABEL_FONT_SIZE + 1];
+        textField.textColor = [UIColor yellowColor];
+        textField.layer.borderColor = [[UIColor whiteColor] CGColor];
+    } else {
+        textField.font = [UIFont fontWithName:APP_FONT size:APP_LABEL_FONT_SIZE];
+        textField.textColor = APP_LABEL_BLUE_COLOR;
+        textField.layer.borderColor = [[UIColor grayColor]CGColor];
+    }
     textField.layer.borderWidth = 0.5f;
     textField.rightView = [[UIView alloc] initWithFrame:TEXT_FIELD_RIGHT_PADDING_RECT];
     textField.inputAccessoryView = self.inputAccessoryView;

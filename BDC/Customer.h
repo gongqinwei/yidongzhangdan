@@ -44,6 +44,7 @@
 @property (nonatomic, weak) id<BusObjectDelegate> editInvoiceDelegate;
 
 + (void)setListDelegate:(id<CustomerListDelegate>)listDelegate;
++ (void)resetList;
 + (Customer *)objectForKey:(NSString *)customerId;
 
 @end

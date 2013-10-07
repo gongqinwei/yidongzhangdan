@@ -114,7 +114,7 @@ static ActionMenuViewController * _sharedInstance = nil;
                                                                         forState:UIControlStateNormal];
     [self.searchDisplayController.searchBar setScopeBarButtonTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], UITextAttributeTextColor, nil]
                                                                         forState:UIControlStateSelected];
-    self.searchDisplayController.searchBar.placeholder = @"Search in Bill.com";
+    self.searchDisplayController.searchBar.placeholder = @"Search Bill.com";
     
     self.activenessSwitch = [[UISegmentedControl alloc] initWithItems:@[@"Active", @"Inactive"]];
     self.activenessSwitch.frame = CGRectMake(1.0, 0.0, SLIDING_DISTANCE - 2.0, 30.0);
@@ -529,8 +529,8 @@ static ActionMenuViewController * _sharedInstance = nil;
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSInteger)scope {
     NSPredicate *resultPredicate = [NSPredicate
-                                    predicateWithFormat:@"name BEGINSWITH[CD] %@",
-                                    searchText];
+                                    predicateWithFormat:@"name BEGINSWITH[CD] %@ OR name CONTAINS[CD] %@",
+                                    searchText, [NSString stringWithFormat:@" %@", searchText]];
     
     NSArray *filteredInvs;
     NSArray *filteredCustomers;
@@ -555,13 +555,17 @@ static ActionMenuViewController * _sharedInstance = nil;
     self.searchResults = [NSMutableArray array];
     self.searchResultTypes = [NSMutableArray array];
     
+    if ([filteredBills count]) {
+        [self.searchResults addObject:filteredBills];
+        [self.searchResultTypes addObject:@"Bills"];
+    }
     if ([filteredInvs count]) {
         [self.searchResults addObject:filteredInvs];
         [self.searchResultTypes addObject:@"Invoices"];
     }
-    if ([filteredBills count]) {
-        [self.searchResults addObject:filteredBills];
-        [self.searchResultTypes addObject:@"Bills"];
+    if ([filteredVendors count]) {
+        [self.searchResults addObject:filteredVendors];
+        [self.searchResultTypes addObject:@"Vendors"];
     }
     if ([filteredCustomers count]) {
         [self.searchResults addObject:filteredCustomers];
@@ -570,10 +574,6 @@ static ActionMenuViewController * _sharedInstance = nil;
     if ([filteredItems count]) {
         [self.searchResults addObject:filteredItems];
         [self.searchResultTypes addObject:@"Items"];
-    }
-    if ([filteredVendors count]) {
-        [self.searchResults addObject:filteredVendors];
-        [self.searchResultTypes addObject:@"Vendors"];
     }
 }
 

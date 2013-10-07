@@ -509,9 +509,18 @@ typedef enum {
             }
             
             cell.textLabel.text = [InvoiceInfo objectAtIndex:indexPath.row];
-            cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:INV_LABEL_FONT_SIZE];
-            cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:INV_LABEL_FONT_SIZE];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            
+            if (self.mode == kAttachMode) {
+                cell.backgroundColor = [UIColor clearColor];
+                cell.textLabel.textColor = [UIColor yellowColor];
+                cell.detailTextLabel.textColor = [UIColor yellowColor];
+                cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:INV_LABEL_FONT_SIZE + 2];
+                cell.detailTextLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:INV_LABEL_FONT_SIZE + 2];
+            } else {
+                cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:INV_LABEL_FONT_SIZE];
+                cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:INV_LABEL_FONT_SIZE];
+            }
             
             switch (indexPath.row) {
                 case kInvoiceCustomer:                    
@@ -628,9 +637,18 @@ typedef enum {
 
             NSDecimalNumber *amount = [item.price decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithDecimal:[[NSNumber numberWithInt:item.qty] decimalValue]]];
             cell.textLabel.text = item.name;
-            cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:INV_LABEL_FONT_SIZE];            
-            cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:INV_LABEL_FONT_SIZE];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            
+            if (self.mode == kAttachMode) {
+                cell.backgroundColor = [UIColor clearColor];
+                cell.textLabel.textColor = [UIColor yellowColor];
+                cell.detailTextLabel.textColor = [UIColor yellowColor];
+                cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:INV_LABEL_FONT_SIZE + 2];
+                cell.detailTextLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:INV_LABEL_FONT_SIZE + 2];
+            } else {
+                cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:INV_LABEL_FONT_SIZE];
+                cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:INV_LABEL_FONT_SIZE];
+            }
             
             if (self.mode == kViewMode) {
 //                for (UIView *view in cell.subviews) {
@@ -642,8 +660,13 @@ typedef enum {
             } else {
                 UITextField *itemAmountTextField = [[UITextField alloc] initWithFrame:INV_ITEM_AMOUNT_RECT];
                 itemAmountTextField.text = [Util formatCurrency:amount];
-                itemAmountTextField.font = [UIFont fontWithName:APP_FONT size:INV_LABEL_FONT_SIZE];
-                itemAmountTextField.textColor = [UIColor blackColor];
+                if (self.mode == kAttachMode) {
+                    itemAmountTextField.font = [UIFont fontWithName:APP_BOLD_FONT size:INV_LABEL_FONT_SIZE + 2];
+                    itemAmountTextField.textColor = [UIColor yellowColor];
+                } else {
+                    itemAmountTextField.font = [UIFont fontWithName:APP_FONT size:INV_LABEL_FONT_SIZE];
+                    itemAmountTextField.textColor = [UIColor blackColor];
+                }
                 itemAmountTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
                 itemAmountTextField.backgroundColor = cell.backgroundColor;
                 itemAmountTextField.autocorrectionType = UITextAutocorrectionTypeNo; // no auto correction support
@@ -752,9 +775,13 @@ typedef enum {
         label.text = @"Line Items";
         label.font = [UIFont fontWithName:@"Helvetica-Bold" size:17];
         label.backgroundColor = [UIColor clearColor];
-        label.textColor = APP_SYSTEM_BLUE_COLOR;
-        label.shadowColor = [UIColor whiteColor];
-        label.shadowOffset = CGSizeMake(0, 1);
+        if (self.mode == kAttachMode) {
+            label.textColor = [UIColor yellowColor];
+        } else {
+            label.textColor = APP_SYSTEM_BLUE_COLOR;
+            label.shadowColor = [UIColor whiteColor];
+            label.shadowOffset = CGSizeMake(0, 1);
+        }
 
         [headerView addSubview:label];
         
@@ -777,9 +804,13 @@ typedef enum {
         label.text = @"Documents";
         label.font = [UIFont fontWithName:@"Helvetica-Bold" size:17];
         label.backgroundColor = [UIColor clearColor];
-        label.textColor = APP_SYSTEM_BLUE_COLOR;
-        label.shadowColor = [UIColor whiteColor];
-        label.shadowOffset = CGSizeMake(0, 1);
+        if (self.mode == kAttachMode) {
+            label.textColor = [UIColor yellowColor];
+        } else {
+            label.textColor = APP_SYSTEM_BLUE_COLOR;
+            label.shadowColor = [UIColor whiteColor];
+            label.shadowOffset = CGSizeMake(0, 1);
+        }
         
         [headerView addSubview:label];
         
@@ -812,7 +843,11 @@ typedef enum {
         label.text = @"Amount";
         label.font = [UIFont fontWithName:APP_BOLD_FONT size:14];
         label.backgroundColor = [UIColor clearColor];
-        label.textColor = APP_LABEL_BLUE_COLOR;
+        if (self.mode == kAttachMode) {
+            label.textColor = [UIColor yellowColor];
+        } else {
+            label.textColor = APP_LABEL_BLUE_COLOR;
+        }
         
         [footerView addSubview:label];
         
@@ -821,6 +856,9 @@ typedef enum {
         amount.textAlignment = NSTextAlignmentRight;
         amount.font = [UIFont fontWithName:APP_FONT size:15];
         amount.backgroundColor = [UIColor clearColor];
+        if (self.mode == kAttachMode) {
+            amount.textColor = [UIColor yellowColor];
+        }
         
         ((Invoice *)self.shaddowBusObj).amount = self.totalAmount;
         ((Invoice *)self.shaddowBusObj).amountDue = self.totalAmount;

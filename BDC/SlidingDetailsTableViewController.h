@@ -13,6 +13,16 @@
 #import <QuickLook/QuickLook.h>
 
 
+#define INPUT_ACCESSORY_PREV            @"Left.png"
+#define INPUT_ACCESSORY_NEXT            @"Right.png"
+#define INPUT_ACCESSORY_DONE            @"Down.png"
+#define INPUT_ACCESSORY_VIEW_FRAME      CGRectMake(0, 0, SCREEN_WIDTH, ToolbarHeight)
+#define INPUT_ACCESSORY_LABEL_FRAME     CGRectMake(15, 7, 60, ToolbarHeight - 9)
+#define INPUT_ACCESSORY_TEXT_FRAME      CGRectMake(0, 7, SCREEN_WIDTH - 170, ToolbarHeight - 9)
+#define INPUT_ACCESSORY_TEXT_FRAME_S    CGRectMake(0, 7, SCREEN_WIDTH - 200, ToolbarHeight - 9)
+#define INPUT_ACCESSORY_NAV_FRAME       CGRectMake(0.0, 0.0, 66.0, ToolbarHeight - 12.0)
+
+
 @interface SlidingDetailsTableViewController : SlidingTableViewController <BusObjectDelegate, ScannerDelegate, AttachmentDelegate, UIAlertViewDelegate, UIScrollViewDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
 
 @property (nonatomic, strong, readonly) Class busObjClass;
@@ -35,6 +45,15 @@
 @property (nonatomic, strong) UIImageView *currAttachment;
 @property (nonatomic, strong) QLPreviewController *previewController;
 
+// for kAttachMode
+@property (nonatomic, assign) BOOL firstItemAdded;
+@property (nonatomic, assign) BOOL viewHasAppeared;
+@property (nonatomic, strong) UIScrollView *previewScrollView;
+@property (nonatomic, strong) UIImageView *attachmentImageView;
+
+
+- (void)scrollToTop;
+- (void)hideAdditionalKeyboard;
 - (void)navigateBack;
 - (void)didSelectCrudAction:(NSString *)action;
 - (void)initializeTextField:(UITextField *)textField;
@@ -60,6 +79,10 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField;
 
 - (void)quitAttachMode;
+
+- (UIBarButtonItem *)initializeInputAccessoryLabelItem:(NSString *)labelText;
+- (UITextField *)initializeInputAccessoryTextField;
+- (UITextField *)initializeInputAccessoryTextField:(BOOL)small;
 
 
 @end

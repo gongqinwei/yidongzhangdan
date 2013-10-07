@@ -28,6 +28,12 @@ static NSMutableDictionary *inactiveAccounts = nil;
 @synthesize indentedName;
 
 
++ (void)resetList {
+    accounts = [NSMutableDictionary dictionary];
+    inactiveAccounts = [NSMutableDictionary dictionary];
+    sortedAccounts = [NSMutableArray array];
+}
+
 + (id<AccountListDelegate>)getListDelegate {
     return ListDelegate;
 }
