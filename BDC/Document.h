@@ -88,6 +88,9 @@
 - (BOOL)docFileExists;
 - (void)writeToFile;
 
+- (BOOL)isImage;
+- (BOOL)isImageOrPDF;
+
 + (void)setDocumentListDelegate:(id<DocumentListDelegate>)listDelegate;
 + (void)setAttachmentListDelegate:(id<DocumentListDelegate>)listDelegate;
 

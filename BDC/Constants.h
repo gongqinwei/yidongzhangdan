@@ -12,9 +12,9 @@
 #import "Labels.h"
 
 //#define LOCAL
-#define APPTEST
+//#define APPTEST
 //#define APPSTAGE
-//#define PROD
+#define PROD
 
 
 #ifdef LOCAL
@@ -47,7 +47,6 @@
 #define ERR_DOMAIN          @"PROD"
 #define DOMAIN_URL          @"https://app.bill.com"
 #define APP_KEY             @"devKey"
-#define DEBUG_MODE  //temp
 #endif
 
 #ifdef DEBUG_MODE

@@ -11,5 +11,6 @@
 @interface BillsTableViewController : SlidingListTableViewController
 
 @property (nonatomic, strong) NSMutableArray *bills;
+@property (nonatomic, strong) NSMutableArray *vendorSectionLabels;
 
 @end

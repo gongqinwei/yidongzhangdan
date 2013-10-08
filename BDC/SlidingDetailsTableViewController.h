@@ -50,6 +50,8 @@
 @property (nonatomic, assign) BOOL viewHasAppeared;
 @property (nonatomic, strong) UIScrollView *previewScrollView;
 @property (nonatomic, strong) UIImageView *attachmentImageView;
+@property (nonatomic, strong) UIView *attachmentImageObscure;
+@property (nonatomic, strong) UIActivityIndicatorView *attachmentImageDownloadingIndicator;
 
 
 - (void)scrollToTop;
@@ -74,6 +76,7 @@
 - (NSString *)getDocIDParam;
 - (NSString *)getDocImageAPI;
 - (void)resetScrollView;
+- (void)downloadAttachPreviewDocument:(Document *)doc;
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField;
 - (void)textFieldDidEndEditing:(UITextField *)textField;

@@ -85,5 +85,6 @@ enum RootMoreItems {
 
 + (RootMenuViewController *)sharedInstance;
 - (UINavigationController *)showView:(NSString *)identifier;
+- (void)switchFrom:(UIViewController *)orig To:(NSString *)identifier;
 
 @end

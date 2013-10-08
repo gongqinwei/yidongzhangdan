@@ -126,8 +126,13 @@
 #pragma mark - Organization delegate
 
 - (void)didGetOrgFeatures {
-    [self performSegueWithIdentifier:@"Login" sender:self];
     [Organization selectOrg:self.firstOrg];
+    
+    [self.indicator stopAnimating];
+    self.warning.hidden = YES;
+    
+    [self performSegueWithIdentifier:@"Login" sender:self];
+    
 }
 
 - (void)failedToGetOrgFeatures {
@@ -152,11 +157,11 @@
             NSInteger status;
             NSDictionary *responseData = [APIHandler getResponse:response data:data error:&err status:&status];
             if (status == RESPONSE_SUCCESS) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf.indicator stopAnimating];
-                    weakSelf.warning.hidden = YES;
-                });
-                                
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [weakSelf.indicator stopAnimating];
+//                    weakSelf.warning.hidden = YES;
+//                });
+                
                 // set cookie for session id
                 NSString *sessionId = [responseData objectForKey:SESSION_ID_KEY];
                 [Util setSession:sessionId];
@@ -169,7 +174,7 @@
                     });
                 } else {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [weakSelf.indicator stopAnimating];
+//                        [weakSelf.indicator stopAnimating];
                         weakSelf.warning.hidden = YES;
                         
                         [self.firstOrg getOrgFeatures];

@@ -11,6 +11,9 @@
 #import "CustomerContact.h"
 #import "MapViewController.h"
 #import "ContactsTableViewController.h"
+#import "RootMenuViewController.h"
+#import "InvoicesTableViewController.h"
+#import "Invoice.h"
 #import "Util.h"
 #import "UIHelper.h"
 #import "Geo.h"
@@ -157,6 +160,10 @@ enum CustomerInfoType {
         
         if (self.mode == kCreateMode || self.mode == kAttachMode) {
             self.title = @"New Customer";
+        }
+    } else {
+        if ([[RootMenuViewController sharedInstance].currVC.navigationId isEqualToString:MENU_CUSTOMERS]) {
+            self.crudActions = [self.crudActions arrayByAddingObject:ACTION_LIST_CUSTOMER_INVS];
         }
     }
     
@@ -877,6 +884,23 @@ enum CustomerInfoType {
     [super doneSaveObject];
     [self formatAddr];
     [((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj) geoCodeUsingAddress:((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj).formattedAddress];
+}
+
+#pragma mark - Action Menu delegate
+
+- (void)didSelectCrudAction:(NSString *)action {
+    if ([action isEqualToString:ACTION_LIST_CUSTOMER_INVS]) {
+        InvoicesTableViewController *invsVC = [[RootMenuViewController sharedInstance] showView:MENU_INVOICES].childViewControllers[0];
+        [invsVC didSelectSortAttribute:INV_CUSTOMER_NAME ascending:YES active:YES];
+        if ([invsVC.customerSectionLabels containsObject:self.busObj.name]) {
+            int section = [invsVC.customerSectionLabels indexOfObject:self.busObj.name];
+            [invsVC.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:section] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        } else {
+            [UIHelper showInfo:[NSString stringWithFormat:@"There's no unpaid invoices for %@", self.busObj.name] withStatus:kInfo];
+        }
+    } else {
+        [super didSelectCrudAction:action];
+    }
 }
 
 

@@ -12,5 +12,6 @@
 @interface InvoicesTableViewController : SlidingListTableViewController
 
 @property (nonatomic, strong) NSMutableArray *invoices;
+@property (nonatomic, strong) NSMutableArray *customerSectionLabels;
 
 @end

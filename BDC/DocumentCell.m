@@ -28,6 +28,7 @@
 @synthesize downloadingIndicator;
 @synthesize ebillLabel;
 
+
 - (void)toggleInfoDisplay:(BOOL)hidden {
     self.documentName.hidden = hidden;
     self.documentCreatedDate.hidden = hidden;

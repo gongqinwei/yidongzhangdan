@@ -449,6 +449,8 @@ static ActionMenuViewController * _sharedInstance = nil;
 //            [[ActionMenuViewController slideInListViewIdentifier:MENU_VENDORS] performSegueWithIdentifier:@"ViewVendor" sender:(Vendor *)obj];
 //        }
     } else {
+        [self.targetViewController toggleMenu:self];
+        
         if (self.targetViewController.sortAttributes) {
             if (indexPath.section == 1) {
                 if (self.targetViewController.sortAttributes.count > 0) {
@@ -469,9 +471,7 @@ static ActionMenuViewController * _sharedInstance = nil;
             }
         } else {            
             [self.actionDelegate didSelectCrudAction:[self.crudActions objectAtIndex:indexPath.row]];
-        }
- 
-        [self.targetViewController toggleMenu:self];
+        } 
     }
 }
 

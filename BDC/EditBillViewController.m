@@ -427,6 +427,12 @@ typedef enum {
     self.busObj.editDelegate = self;
     self.shaddowBusObj.editDelegate = self;
     
+    if (self.mode == kAttachMode) {
+        if (![self.shaddowBusObj.attachments[0] isImage]) {
+            self.mode = kCreateMode;
+        }
+    }
+    
     if (self.mode == kCreateMode || self.mode == kAttachMode) {
         if (!self.firstItemAdded) {
             [self addMoreItems];
@@ -434,8 +440,24 @@ typedef enum {
         
         if (self.mode == kAttachMode) {
             self.attachmentImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, SCREEN_WIDTH - 20, NORMAL_SCREEN_HEIGHT)];
-            self.attachmentImageView.image = [UIImage imageWithData:((Document *)self.shaddowBusObj.attachments[0]).data];
 
+            BOOL usingImageData = YES;
+            Document *doc = (Document *)self.shaddowBusObj.attachments[0];
+            NSData *imgData = doc.data;
+            if (!imgData || imgData.length == 0) {
+                if ([doc docFileExists]) {
+                    self.attachmentImageView.image = [UIImage imageWithContentsOfFile:[doc getDocFilePath]];
+                } else {
+                    usingImageData = NO;
+                    imgData = doc.thumbnail;
+                    doc.documentDelegate = nil;                     // nil or self?
+                    [self downloadAttachPreviewDocument:doc];
+                }
+            }
+            if (!self.attachmentImageView.image && imgData) {
+                self.attachmentImageView.image = [UIImage imageWithData:imgData];
+            }
+            
             self.previewScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, SCREEN_WIDTH - 20, NORMAL_SCREEN_HEIGHT - PORTRAIT_KEYBOARD_HEIGHT)];
             self.previewScrollView.delegate = self;
             self.previewScrollView.contentSize = self.attachmentImageView.bounds.size;
@@ -444,9 +466,23 @@ typedef enum {
             self.previewScrollView.scrollEnabled = YES;
             self.previewScrollView.maximumZoomScale = 4.0;
             self.previewScrollView.minimumZoomScale = 1.0;
-            //                self.previewScrollView.bouncesZoom = NO;
+            self.previewScrollView.bouncesZoom = YES;
             
             [self.previewScrollView addSubview:self.attachmentImageView];
+            
+            if (!usingImageData) {
+                self.attachmentImageObscure = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, SCREEN_WIDTH - 20, NORMAL_SCREEN_HEIGHT)];
+                self.attachmentImageObscure.backgroundColor = [UIColor lightGrayColor];
+                self.attachmentImageObscure.alpha = 0.9;
+                
+                self.attachmentImageDownloadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+                self.attachmentImageDownloadingIndicator.center = CGPointMake((SCREEN_WIDTH) / 2 , (NORMAL_SCREEN_HEIGHT - PORTRAIT_KEYBOARD_HEIGHT) / 2);
+                self.attachmentImageDownloadingIndicator.hidesWhenStopped = YES;
+                [self.attachmentImageDownloadingIndicator startAnimating];
+
+                [self.attachmentImageView addSubview:self.attachmentImageObscure];
+                [self.previewScrollView addSubview:self.attachmentImageDownloadingIndicator];
+            }
         }
     }
     
@@ -1383,7 +1419,7 @@ typedef enum {
     if (self.mode == kAttachMode) {
         if (textField == self.billNumTextField) { // textField.tag == kBillNumber * TAG_BASE) {
             self.billNumInputAccessoryTextField.text = [textField.text stringByReplacingCharactersInRange:range withString:string];
-        } else if (self.mode == kAttachMode && textField.objectTag && textField.tag % 2) {
+        } else if (textField.objectTag && textField.tag % 2) {
             self.billItemAmountInputAccessoryTextField.text = [textField.text stringByReplacingCharactersInRange:range withString:string];
         }
     }
@@ -1549,14 +1585,12 @@ typedef enum {
 #pragma mark - Action Menu delegate
 
 - (void)didSelectCrudAction:(NSString *)action {
-    [super didSelectCrudAction:action];
-    
-    if ([action isEqualToString:ACTION_PAY] && [((NSArray *)[BankAccount list]) count]) {
-//        if ([((NSArray *)[BankAccount list]) count]) {
+    if ([action isEqualToString:ACTION_PAY]) {
+        if ([((NSArray *)[BankAccount list]) count]) {
             [self performSegueWithIdentifier:BILL_PAY_BILL_SEGUE sender:self];
-//        } else {
-//            [UIHelper showInfo:@"You haven't set up bank account in Bill.com!" withStatus:kInfo];
-//        }
+        }
+    } else {
+        [super didSelectCrudAction:action];
     }
 }
 

@@ -9,6 +9,9 @@
 #import "EditVendorViewController.h"
 #import "Vendor.h"
 #import "MapViewController.h"
+#import "RootMenuViewController.h"
+#import "BillsTableViewController.h"
+#import "Bill.h"
 #import "Util.h"
 #import "UIHelper.h"
 #import "Geo.h"
@@ -155,6 +158,10 @@ enum VendorInfoType {
         
         if (self.mode == kCreateMode || self.mode == kAttachMode) {
             self.title = @"New Vendor";
+        }
+    } else {
+        if ([[RootMenuViewController sharedInstance].currVC.navigationId isEqualToString:MENU_VENDORS]) {
+            self.crudActions = [self.crudActions arrayByAddingObject:ACTION_LIST_VENDOR_BILLS];
         }
     }
     
@@ -831,6 +838,23 @@ enum VendorInfoType {
     [super doneSaveObject];
     [self formatAddr];
     [((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj) geoCodeUsingAddress:((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj).formattedAddress];
+}
+
+#pragma mark - Action Menu delegate
+
+- (void)didSelectCrudAction:(NSString *)action {
+    if ([action isEqualToString:ACTION_LIST_VENDOR_BILLS]) {
+        BillsTableViewController *billsVC = [[RootMenuViewController sharedInstance] showView:MENU_BILLS].childViewControllers[0];
+        [billsVC didSelectSortAttribute:BILL_VENDOR_NAME ascending:YES active:YES];
+        if ([billsVC.vendorSectionLabels containsObject:self.busObj.name]) {
+            int section = [billsVC.vendorSectionLabels indexOfObject:self.busObj.name];
+            [billsVC.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:section] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        } else {
+            [UIHelper showInfo:[NSString stringWithFormat:@"There's no unpaid bills for %@", self.busObj.name] withStatus:kInfo];
+        }
+    } else {
+        [super didSelectCrudAction:action];
+    }
 }
 
 

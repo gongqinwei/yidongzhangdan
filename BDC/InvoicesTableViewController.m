@@ -68,7 +68,6 @@
 @property (nonatomic, strong) NSMutableArray *customerInvoices;
 @property (nonatomic, strong) NSMutableArray *customerTotalInvoiceAmounts;
 @property (nonatomic, strong) NSMutableArray *customerSectionButtons;
-@property (nonatomic, strong) NSMutableArray *customerSectionLabels;
 
 @property (nonatomic, strong) NSMutableArray *invoiceListsCopy;
 

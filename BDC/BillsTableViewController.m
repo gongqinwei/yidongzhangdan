@@ -89,7 +89,6 @@
 @property (nonatomic, strong) NSMutableArray *vendorBills;
 @property (nonatomic, strong) NSMutableArray *vendorTotalBillAmounts;
 @property (nonatomic, strong) NSMutableArray *vendorSectionButtons;
-@property (nonatomic, strong) NSMutableArray *vendorSectionLabels;
 
 @property (nonatomic, strong) NSDecimalNumber *totalBillAmount;
 

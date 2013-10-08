@@ -64,8 +64,9 @@ static NSLock *DocumentsLock = nil;
 
 - (void)setData:(NSData *)data {
     if (data) {
-        NSString *ext = [[self.name pathExtension] lowercaseString];
-        if ([IMAGE_TYPE_SET containsObject:ext]) {
+//        NSString *ext = [[self.name pathExtension] lowercaseString];
+//        if ([IMAGE_TYPE_SET containsObject:ext]) {
+        if ([self isImageOrPDF]) {
             int size = data.length;
             if (size > COMPRESSION_THRESHOLD) {
                 UIImage *img = [UIImage imageWithData:data];
@@ -277,6 +278,16 @@ static NSLock *DocumentsLock = nil;
     image = nil;
     
     return newImage;
+}
+
+- (BOOL)isImage {
+    NSString *ext = [[self.name pathExtension] lowercaseString];
+    return [IMAGE_TYPE_SET containsObject:ext];
+}
+
+- (BOOL)isImageOrPDF {
+    NSString *ext = [[self.name pathExtension] lowercaseString];
+    return [IMAGE_TYPE_SET containsObject:ext] || [ext isEqualToString:@"pdf"];
 }
 
 @end

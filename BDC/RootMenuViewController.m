@@ -49,6 +49,11 @@ static RootMenuViewController * _sharedInstance = nil;
     return _sharedInstance;
 }
 
+- (void)switchFrom:(UIViewController *)orig To:(NSString *)identifier {
+//    [orig disappear];
+    [self showView:identifier];
+}
+
 - (UINavigationController *)showView:(NSString *)identifier {
     identifier = [identifier stringByReplacingOccurrencesOfString:@" " withString:@""];
     
@@ -91,7 +96,7 @@ static RootMenuViewController * _sharedInstance = nil;
     
     self.rootMenu = [NSMutableArray array];
     [self.rootMenu addObject:[ROOT_MENU objectAtIndex:kRootProfile]];   // always + Profile/ChangeOrg section
-    
+        
     if (!self.currentOrg.showAR && !self.currentOrg.enableAP) {
         // Profile + More (theoretically should never happen - can't login)
     } else {
