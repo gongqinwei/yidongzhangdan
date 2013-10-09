@@ -892,6 +892,15 @@ enum CustomerInfoType {
     if ([action isEqualToString:ACTION_LIST_CUSTOMER_INVS]) {
         InvoicesTableViewController *invsVC = [[RootMenuViewController sharedInstance] showView:MENU_INVOICES].childViewControllers[0];
         [invsVC didSelectSortAttribute:INV_CUSTOMER_NAME ascending:YES active:YES];
+        [invsVC.tableView reloadData];
+        
+        [[RootMenuViewController sharedInstance].menuTableView selectRowAtIndexPath:[NSIndexPath indexPathForItem:kARInvoice inSection:kRootAR] animated:NO scrollPosition:UITableViewScrollPositionNone];
+        invsVC.actionMenuVC.isActive = YES;
+        invsVC.actionMenuVC.ascSwitch.on = YES;
+        invsVC.actionMenuVC.activenessSwitch.selectedSegmentIndex = 0;
+        invsVC.actionMenuVC.lastSortAttribute = [NSIndexPath indexPathForItem:[invsVC.sortAttributes indexOfObject:INV_CUSTOMER_NAME] inSection:1];
+        [invsVC.actionMenuVC.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 1)] withRowAnimation:UITableViewRowAnimationAutomatic];
+        
         if ([invsVC.customerSectionLabels containsObject:self.busObj.name]) {
             int section = [invsVC.customerSectionLabels indexOfObject:self.busObj.name];
             [invsVC.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:section] atScrollPosition:UITableViewScrollPositionTop animated:NO];

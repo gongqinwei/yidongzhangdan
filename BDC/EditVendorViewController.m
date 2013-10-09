@@ -846,6 +846,15 @@ enum VendorInfoType {
     if ([action isEqualToString:ACTION_LIST_VENDOR_BILLS]) {
         BillsTableViewController *billsVC = [[RootMenuViewController sharedInstance] showView:MENU_BILLS].childViewControllers[0];
         [billsVC didSelectSortAttribute:BILL_VENDOR_NAME ascending:YES active:YES];
+        [billsVC.tableView reloadData];
+        
+        [[RootMenuViewController sharedInstance].menuTableView selectRowAtIndexPath:[NSIndexPath indexPathForItem:kAPBill inSection:kRootAP] animated:NO scrollPosition:UITableViewScrollPositionNone];
+        billsVC.actionMenuVC.isActive = YES;
+        billsVC.actionMenuVC.ascSwitch.on = YES;
+        billsVC.actionMenuVC.activenessSwitch.selectedSegmentIndex = 0;
+        billsVC.actionMenuVC.lastSortAttribute = [NSIndexPath indexPathForItem:[billsVC.sortAttributes indexOfObject:BILL_VENDOR_NAME] inSection:1];
+        [billsVC.actionMenuVC.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 1)] withRowAnimation:UITableViewRowAnimationAutomatic];
+        
         if ([billsVC.vendorSectionLabels containsObject:self.busObj.name]) {
             int section = [billsVC.vendorSectionLabels indexOfObject:self.busObj.name];
             [billsVC.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:section] atScrollPosition:UITableViewScrollPositionTop animated:NO];

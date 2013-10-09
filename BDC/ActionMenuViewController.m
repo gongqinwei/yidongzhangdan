@@ -307,10 +307,12 @@ static ActionMenuViewController * _sharedInstance = nil;
                         }
                     } else {
                         cell.textLabel.text = [self.crudActions objectAtIndex:indexPath.row];
+                        cell.accessoryType = UITableViewCellAccessoryNone;
                         [self addSelectedBackGroundForCell:cell];
                     }
                 } else {
                     cell.textLabel.text = [self.crudActions objectAtIndex:indexPath.row];
+                    cell.accessoryType = UITableViewCellAccessoryNone;
                     [self addSelectedBackGroundForCell:cell];
                 }
             }
