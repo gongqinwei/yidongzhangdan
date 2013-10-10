@@ -777,14 +777,19 @@ typedef enum {
     if (sender == self.billVendorInputAccessoryNextItem) {
         [self.billNumTextField becomeFirstResponder];
     } else if (sender == self.billNumInputAccessoryNavSwitch && self.billNumInputAccessoryNavSwitch.selectedSegmentIndex == 0) {
-        [self getBillNumberFromTextField:self.billNumInputAccessoryTextField];
         if (self.mode == kAttachMode) {
+            [self getBillNumberFromTextField:self.billNumInputAccessoryTextField];
             [self.billVendorTextField becomeFirstResponder];
         } else {
+            [self getBillNumberFromTextField:self.billNumTextField];
             [self performSegueWithIdentifier:BILL_SELECT_VENDOR_SEGUE sender:self];
         }
     } else if (sender == self.billNumInputAccessoryNavSwitch && self.billNumInputAccessoryNavSwitch.selectedSegmentIndex == 1) {
-        [self getBillNumberFromTextField:self.billNumInputAccessoryTextField];
+        if (self.mode == kAttachMode) {
+            [self getBillNumberFromTextField:self.billNumInputAccessoryTextField];
+        } else {
+            [self getBillNumberFromTextField:self.billNumTextField];
+        }
         [self.billDateTextField becomeFirstResponder];
     } else if (sender == self.billDateInputAccessoryNavSwitch && self.billDateInputAccessoryNavSwitch.selectedSegmentIndex == 0) {
         [self.billNumTextField becomeFirstResponder];
