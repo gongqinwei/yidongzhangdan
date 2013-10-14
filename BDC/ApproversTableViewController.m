@@ -11,14 +11,14 @@
 
 @interface ApproversTableViewController ()
 
-@property (nonatomic, strong) NSMutableArray *approverList;
-
 @end
 
 
 @implementation ApproversTableViewController
 
 @synthesize approverList;
+@synthesize selectDelegate;
+
 
 - (void)viewDidLoad
 {
