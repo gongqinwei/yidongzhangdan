@@ -1536,10 +1536,18 @@
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BillDoc" id="i0V-4m-gCJ">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BillApprover" id="i0V-4m-gCJ">
                                 <rect key="frame" x="0.0" y="207" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="i0V-4m-gCJ" id="CXS-7h-5Fp">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BillDoc" id="V08-ls-2hV">
+                                <rect key="frame" x="0.0" y="251" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="V08-ls-2hV" id="Mez-YG-r5w">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
@@ -1556,6 +1564,7 @@
                         <segue destination="cTU-5g-PB7" kind="push" identifier="SelectVendorForBill" id="Vyp-zG-ZzN"/>
                         <segue destination="Crd-D4-0GL" kind="push" identifier="ViewVendorDetails" id="dP9-hw-whd"/>
                         <segue destination="IyU-sG-dly" kind="modal" identifier="PayBill" id="V7c-Sb-YSA"/>
+                        <segue destination="TWe-gc-5HJ" kind="push" identifier="AddBillAprover" id="f4h-vQ-zhx"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j3c-Mt-KhE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2296,7 +2305,68 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5M6-cV-DcP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1442" y="1757"/>
+            <point key="canvasLocation" x="-873" y="1757"/>
+        </scene>
+        <!--Approvers Table View Controller-->
+        <scene sceneID="oL9-fm-Xoq">
+            <objects>
+                <tableViewController id="TWe-gc-5HJ" customClass="ApproversTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Yhb-Bg-9fx">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" accessoryType="checkmark" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ApproverItem" id="vRm-t5-Ve2">
+                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vRm-t5-Ve2" id="yjQ-M7-edx">
+                                    <rect key="frame" x="0.0" y="0.0" width="281" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="TWe-gc-5HJ" id="4Qy-0Q-Keu"/>
+                            <outlet property="delegate" destination="TWe-gc-5HJ" id="N7U-ob-nkf"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="02d-h9-Jgm"/>
+                    <connections>
+                        <segue destination="xyN-Wc-9d9" kind="push" identifier="CreateNewApprover" id="Oau-Ps-G1G"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eI7-gn-2Q1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-347" y="1049"/>
+        </scene>
+        <!--Edit Approver View Controller-->
+        <scene sceneID="1CA-Ps-XE9">
+            <objects>
+                <tableViewController id="xyN-Wc-9d9" customClass="EditApproverViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="prq-ri-h8Y">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="ECA-ni-Oh0">
+                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ECA-ni-Oh0" id="JiK-Yo-NU5">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="xyN-Wc-9d9" id="K6R-WH-Ygg"/>
+                            <outlet property="delegate" destination="xyN-Wc-9d9" id="1en-FR-a97"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="j2g-T0-dSh"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="enT-Fd-gmE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="207" y="1049"/>
         </scene>
         <!--Navigation Controller - Customers-->
         <scene sceneID="INZ-lA-ULg">
@@ -2649,11 +2719,29 @@
             </objects>
             <point key="canvasLocation" x="582" y="2825"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="WzQ-zg-hX1">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xYr-UD-FcP" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="IMV-sr-aaV">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="TWe-gc-5HJ" kind="relationship" relationship="rootViewController" id="c5e-gB-xVN"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="N6A-Nz-Z64" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-873" y="1049"/>
+        </scene>
     </scenes>
     <resources>
         <image name="BDClogo.png" width="134" height="37"/>
         <image name="BillsIcon.png" width="24" height="24"/>
-        <image name="CheckMarkIcon.png" width="25" height="25"/>
+        <image name="CheckMarkIcon.png" width="16" height="16"/>
         <image name="CustomersIcon.png" width="24" height="24"/>
         <image name="InboxIcon.png" width="24" height="24"/>
         <image name="InvoicesIcon.png" width="24" height="24"/>
@@ -2661,7 +2749,7 @@
         <image name="Mobill40.png" width="106" height="40"/>
         <image name="Mobill50.png" width="132" height="50"/>
         <image name="MyCompaniesIcon.png" width="24" height="24"/>
-        <image name="PlusIcon.png" width="20" height="20"/>
+        <image name="PlusIcon.png" width="16" height="16"/>
         <image name="VendorsIcon.png" width="22" height="24"/>
         <image name="bill.png" width="16" height="16"/>
     </resources>
@@ -2671,23 +2759,24 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Cys-5K-tfg"/>
-        <segue reference="wxy-Zp-Lfl"/>
-        <segue reference="ifQ-ST-XVY"/>
-        <segue reference="v63-Az-wLD"/>
+        <segue reference="Vyp-zG-ZzN"/>
+        <segue reference="3HC-XA-11p"/>
         <segue reference="3ag-eg-oXf"/>
+        <segue reference="ifQ-ST-XVY"/>
         <segue reference="FTU-IK-7vF"/>
         <segue reference="nLD-mQ-6wj"/>
+        <segue reference="wxy-Zp-Lfl"/>
         <segue reference="CeX-f9-mSc"/>
-        <segue reference="dP9-hw-whd"/>
-        <segue reference="Vyp-zG-ZzN"/>
-        <segue reference="WRK-Bd-AdY"/>
-        <segue reference="zBW-fL-edY"/>
         <segue reference="rr1-4I-AAm"/>
         <segue reference="fqJ-Rf-CsZ"/>
         <segue reference="bpG-n7-YKA"/>
-        <segue reference="4YZ-nK-Ds9"/>
+        <segue reference="f4h-vQ-zhx"/>
+        <segue reference="WRK-Bd-AdY"/>
+        <segue reference="dP9-hw-whd"/>
+        <segue reference="zBW-fL-edY"/>
+        <segue reference="crQ-7s-jkT"/>
         <segue reference="01U-I1-ojU"/>
+        <segue reference="4YZ-nK-Ds9"/>
         <segue reference="2iZ-iS-Zfa"/>
     </inferredMetricsTieBreakers>
 </document>

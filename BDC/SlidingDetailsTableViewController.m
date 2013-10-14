@@ -640,6 +640,33 @@ static double animatedDistance = 0;
     textField.inputAccessoryView = self.inputAccessoryView;
 }
 
+- (UIView *)initializeSectionHeaderViewWithLabel:(NSString *)labelText needAddButton:(BOOL)needAddButton addAction:(SEL)action {
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 360, 40)];
+    headerView.backgroundColor = [UIColor clearColor];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 200, 20)];
+    label.text = labelText;
+    label.font = [UIFont fontWithName:@"Helvetica-Bold" size:17];
+    label.backgroundColor = [UIColor clearColor];
+    label.textColor = APP_SYSTEM_BLUE_COLOR;
+    label.shadowColor = [UIColor whiteColor];
+    label.shadowOffset = CGSizeMake(0, 1);
+    
+    [headerView addSubview:label];
+    
+    if (needAddButton) {
+        UIButton *addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+        CGRect frame = CGRectMake(265, -10, 40, 40);
+        addButton.frame = frame;
+        addButton.backgroundColor = [UIColor clearColor];
+        [addButton addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+        
+        [headerView addSubview:addButton];
+    }
+    
+    return headerView;
+}
+
 #pragma mark - Scroll View delegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)sender {
@@ -762,6 +789,8 @@ static double animatedDistance = 0;
 
 - (void)doneSaveObject {
     @synchronized (self) {
+        // Save Documents/Attachments
+        
         NSMutableArray *original = [NSMutableArray arrayWithArray:[self.busObj.attachmentDict allKeys]];
         NSMutableArray *current = [NSMutableArray arrayWithArray:[self.attachmentDict allKeys]];
         [original removeObjectsInArray:current];

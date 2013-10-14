@@ -17,6 +17,7 @@
 #import "Item.h"
 #import "Bill.h"
 #import "Vendor.h"
+#import "Approver.h"
 #import "ChartOfAccount.h"
 #import "Document.h"
 #import "BankAccount.h"
@@ -164,6 +165,7 @@ static RootMenuViewController * _sharedInstance = nil;
         [Bill retrieveListForActive:YES reload:YES];
         [Vendor retrieveListForActive:YES];
         [ChartOfAccount retrieveListForActive:YES];
+        [Approver retrieveList];
         [self.currentOrg getOrgPrefs];
     }
 

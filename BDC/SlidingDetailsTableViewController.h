@@ -86,6 +86,6 @@
 - (UIBarButtonItem *)initializeInputAccessoryLabelItem:(NSString *)labelText;
 - (UITextField *)initializeInputAccessoryTextField;
 - (UITextField *)initializeInputAccessoryTextField:(BOOL)small;
-
+- (UIView *)initializeSectionHeaderViewWithLabel:(NSString *)labelText needAddButton:(BOOL)needAddButton addAction:(SEL)action;
 
 @end

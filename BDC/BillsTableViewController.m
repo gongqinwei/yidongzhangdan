@@ -222,7 +222,7 @@
         self.totalBillAmount = [self.totalBillAmount decimalNumberByAdding:bill.amount];
     }
     
-    [BankAccount retrieveListForActive:YES];
+    [BankAccount retrieveList];
 }
 
 - (void)viewDidUnload
@@ -841,7 +841,7 @@
         if (org.needApprovalToPayBill) {
             readyToPaySectionLabel = @"Ready to Pay";
         } else {
-            readyToPaySectionLabel = @"Good To Go";
+            readyToPaySectionLabel = @"Approval Cleared";
         }
         
         self.readyToPayBills = [approvedBills arrayByAddingObjectsFromArray:unassignedBills];

@@ -38,7 +38,7 @@ static NSArray *bankAccounts = nil;
     return bankAccounts.count;
 }
 
-+ (void)retrieveListForActive:(BOOL)isActive {
++ (void)retrieveList {
     [UIAppDelegate incrNetworkActivities];
     
     NSString *filter = LIST_BANK_ACCOUNT_FILTER;

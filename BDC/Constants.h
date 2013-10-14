@@ -11,17 +11,17 @@
 
 #import "Labels.h"
 
-//#define LOCAL
+#define LOCAL
 //#define APPTEST
 //#define APPSTAGE
-#define PROD
+//#define PROD
 
 
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
 //#define DOMAIN_URL          @"http://10.1.9.84"
-#define DOMAIN_URL          @"http://192.168.1.9"
+#define DOMAIN_URL          @"http://192.168.1.4"
 #define APP_KEY             @"devKey"
 #define DEBUG_MODE
 #endif
@@ -115,12 +115,13 @@
 #define ITEM_API            @"Item.json"
 #define ACCOUNT_API         @"ChartOfAccount.json"
 #define BANK_ACCOUNT_API    @"BankAccount.json"
-#define APPROVER_LIST_API   @"ApproverList.json"
+#define APPROVER_LIST_API   @"ui/ApproverList.json"
+#define APPROVERS_GET_API   @"GetApprovers.json"
 #define APPROVERS_SET_API   @"SetApprovers.json"
 #define INVOICE_SEND_API    @"SendInvoice.json"
 #define SET_APPROVERS_API   @"SetApprovers.json"
 #define ENUM_API            @"Enum.json"
-#define ORG_PAY_NEED_APPROVAL_API   @"OrgBillPayNeedApproval.json"
+#define ORG_PAY_NEED_APPROVAL_API   @"OrgBillPayNeedApproval.json"  // not used any more
 
 #define ENTITY              @"entity"
 

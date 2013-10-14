@@ -20,6 +20,7 @@
 #import "Constants.h"
 #import "UIHelper.h"
 #import "Vendor.h"
+#import "Approver.h"
 #import "BankAccount.h"
 #import "Organization.h"
 #import "Document.h"
@@ -31,6 +32,7 @@
 enum BillSections {
     kBillInfo,
     kBillLineItems,
+    kBillApprovers,
     kBillDocs
 };
 
@@ -51,6 +53,7 @@ typedef enum {
 
 #define BILL_INFO_CELL_ID               @"BillInfo"
 #define BILL_ITEM_CELL_ID               @"BillLineItem"
+#define BILL_APPROVER_CELL_ID           @"BillApprover"
 #define BILL_ATTACH_CELL_ID             @"BillDocs"
 #define BILL_IMAGE_CELL_ID              @"BillImage"
 
@@ -59,6 +62,7 @@ typedef enum {
 //#define BILL_PREVIEW_ATTACHMENT_SEGUE   @"PreviewBillDoc"
 #define BILL_VIEW_VENDOR_DETAILS_SEGUE  @"ViewVendorDetails"
 #define BILL_PAY_BILL_SEGUE             @"PayBill"
+#define BILL_ADD_APPROVER_SEGUE         @"AddBillAprover"
 
 #define BILL_LABEL_FONT_SIZE            13
 #define BillInfo                 [NSArray arrayWithObjects:@"Vendor", @"Invoice #", @"Inv Date", @"Due Date", @"Approval", @"Payment", nil]
@@ -73,7 +77,7 @@ typedef enum {
 #define ACCOUNT_PICKER_TAG              2
 
 
-@interface EditBillViewController () <VendorSelectDelegate, ScannerDelegate, PayBillDelegate, UITextFieldDelegate, UIScrollViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
+@interface EditBillViewController () <VendorSelectDelegate, ScannerDelegate, PayBillDelegate, ApproverListDelegate, UITextFieldDelegate, UIScrollViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
 
 @property (nonatomic, strong) NSDecimalNumber *totalAmount;
 @property (nonatomic, strong) UIDatePicker *billDatePicker;
@@ -144,6 +148,9 @@ typedef enum {
 
 @property (nonatomic, strong) NSArray *vendors;
 
+@property (nonatomic, strong) NSArray *approvers;
+@property (nonatomic, strong) NSMutableArray *modifiedApprovers;
+
 @end
 
 
@@ -165,6 +172,8 @@ typedef enum {
 @synthesize chartOfAccounts;
 @synthesize currentField;
 @synthesize vendors;
+@synthesize approvers = _approvers;
+@synthesize modifiedApprovers;
 
 @synthesize billVendorTextField;
 @synthesize billVendorInputAccessoryView;
@@ -217,16 +226,30 @@ typedef enum {
     return [Bill class];
 }
 
+- (void)setBusObj:(BDCBusinessObjectWithAttachments *)busObj {
+    [super setBusObj:busObj];
+    
+    self.approvers = self.approvers;    // actually resetting modifiedApprovers and reload section
+}
+
 - (BOOL)isAP {
     return YES;
 }
 
 - (NSIndexPath *)getAttachmentPath {
-    return [NSIndexPath indexPathForRow:0 inSection:kBillDocs];
+    if (self.mode != kCreateMode && self.mode != kAttachMode) {
+        return [NSIndexPath indexPathForRow:0 inSection:3];
+    } else {
+        return [NSIndexPath indexPathForRow:0 inSection:2];
+    }
 }
 
 - (NSIndexSet *)getNonAttachmentSections {
-    return [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(kBillInfo, kBillLineItems)];
+    if (self.mode != kCreateMode && self.mode != kAttachMode) {
+        return [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(kBillInfo, kBillApprovers)];
+    } else {
+        return [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(kBillInfo, kBillLineItems)];
+    }
 }
 
 - (NSString *)getDocImageAPI {
@@ -261,7 +284,6 @@ typedef enum {
 //    [self.shaddowBusObj read];
 //}
 
-#pragma mark - private methods
 
 - (void)updateLineItems {
     self.totalAmount = [NSDecimalNumber zero];
@@ -273,6 +295,15 @@ typedef enum {
 
 - (void)setLineItems:(NSArray *)lineItems {    
     [self updateLineItems];
+}
+
+- (void)setApprovers:(NSArray *)approvers {
+    _approvers = approvers;
+    self.modifiedApprovers = [NSMutableArray arrayWithArray:approvers];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kBillApprovers] withRowAnimation:UITableViewRowAnimationAutomatic];
+    });
 }
 
 - (void)addMoreItems {
@@ -301,6 +332,13 @@ typedef enum {
     if ([self tryTap]) {
         [self.view findAndResignFirstResponder];
         [self performSegueWithIdentifier:BILL_SCAN_PHOTO_SEGUE sender:self];
+    }
+}
+
+- (void)addMoreApprover {
+    if ([self tryTap]) {
+        [self.view findAndResignFirstResponder];
+        [self performSegueWithIdentifier:BILL_ADD_APPROVER_SEGUE sender:self];
     }
 }
 
@@ -337,6 +375,18 @@ typedef enum {
         
         if ([shaddowBill.lineItems count] == 0) {
             [UIHelper showInfo:@"No amount" withStatus:kError];
+            return;
+        }
+        
+        NSDecimalNumber *newAmount = [NSDecimalNumber zero];
+        for (APLineItem *item in shaddowBill.lineItems) {
+            newAmount = [newAmount decimalNumberByAdding:item.amount];
+        }
+                
+        if (self.mode == kUpdateMode
+            && shaddowBill.paymentStatus && ![shaddowBill.paymentStatus isEqualToString:PAYMENT_UNPAID]
+            && [newAmount compare:((Bill *)self.busObj).amount] != NSOrderedSame) {
+            [UIHelper showInfo:@"This bill is already paid.\n\nThe total amount can't be modified." withStatus:kError];
             return;
         }
         
@@ -483,6 +533,15 @@ typedef enum {
                 [self.attachmentImageView addSubview:self.attachmentImageObscure];
                 [self.previewScrollView addSubview:self.attachmentImageDownloadingIndicator];
             }
+        }
+    } else {
+        // retrieve approvers in view/edit mode
+        self.approvers = [NSArray array];
+        self.modifiedApprovers = [NSMutableArray array];
+        [Approver setListDelegate:self];
+        
+        if (self.shaddowBusObj && self.shaddowBusObj.objectId) {      // safety check
+            [Approver retrieveListForObject:self.shaddowBusObj.objectId];
         }
     }
     
@@ -836,6 +895,8 @@ typedef enum {
     } else if ([segue.identifier isEqualToString:BILL_PAY_BILL_SEGUE]) {
         [segue.destinationViewController setBill:(Bill *)self.shaddowBusObj];
         [segue.destinationViewController setPayBillDelegate:self];
+    } else if ([segue.identifier isEqualToString:BILL_ADD_APPROVER_SEGUE]) {
+        //TODO: set object or object id to self
     }
 }
 
@@ -843,7 +904,11 @@ typedef enum {
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    if (self.mode == kCreateMode || self.mode == kAttachMode) {
+        return 3;
+    } else {
+        return 4;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -862,7 +927,15 @@ typedef enum {
             return [((Bill *)self.shaddowBusObj).lineItems count];
         }
     } else {
-        return 1 + (self.mode == kAttachMode);
+        if (self.mode != kCreateMode && self.mode != kAttachMode) {
+            if (section == 2) {
+                return self.modifiedApprovers.count;
+            } else {
+                return 1;
+            }
+        } else {
+            return 1 + (self.mode == kAttachMode);
+        }
     }
 }
 
@@ -904,6 +977,7 @@ typedef enum {
                 cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_LABEL_FONT_SIZE];
                 cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE];
             }
+            cell.accessoryType = UITableViewCellAccessoryNone;
             
             switch (indexPath.row) {
                 case kBillVendor:
@@ -1048,7 +1122,7 @@ typedef enum {
             APLineItem *item = [shaddowBill.lineItems objectAtIndex:indexPath.row];
             ChartOfAccount *account = item.account;
             
-            if (self.mode == kViewMode || (((Bill *)self.shaddowBusObj).paymentStatus && ![((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID])) {
+            if (self.mode == kViewMode) { // || (((Bill *)self.shaddowBusObj).paymentStatus && ![((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID])) {
                 cell.textLabel.text = account ? account.fullName : @" ";
                 cell.textLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE];
                 [cell.textLabel sizeToFit];
@@ -1090,6 +1164,104 @@ typedef enum {
             }
 
             self.totalAmount = [self.totalAmount decimalNumberByAdding:item.amount];
+        }
+            break;
+        case 2: //kBillApprovers:
+        {
+            if (self.mode != kCreateMode && self.mode != kAttachMode) {
+//                cell = [tableView dequeueReusableCellWithIdentifier:BILL_APPROVER_CELL_ID];
+//                if (!cell) {
+                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:BILL_APPROVER_CELL_ID];
+//                }
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                cell.userInteractionEnabled = YES;
+                
+                Approver *approver = self.modifiedApprovers[indexPath.row];
+                
+                UILabel *approverNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(55, 1, 175, CELL_HEIGHT - 2)];
+                approverNameLabel.text = approver.name;
+                approverNameLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE];
+                approverNameLabel.backgroundColor = [UIColor clearColor];
+                [cell addSubview:approverNameLabel];
+                
+                CGFloat statusLabelX;
+                CGFloat statusDateLabelX;
+                if (self.mode == kViewMode || approver.status == kApproverApproved || approver.status == kApproverDenied || approver.status == kApproverRerouted) {
+                    statusLabelX = SCREEN_WIDTH - 90;
+                    statusDateLabelX = SCREEN_WIDTH - 140;
+                } else {
+                    statusLabelX = SCREEN_WIDTH - 115;
+                    statusDateLabelX = SCREEN_WIDTH - 165;
+                }
+                
+                CGRect statusRect;
+                if (approver.status == kApproverNew || approver.status == kApproverStale) {
+                    statusRect = CGRectMake(statusLabelX, 1, 70, CELL_HEIGHT - 2);
+                } else {
+                    statusRect = CGRectMake(statusLabelX, 2, 70, CELL_HEIGHT / 2);
+                    
+                    UILabel *approverStatusDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(statusDateLabelX, CELL_HEIGHT / 2 + 2, 120, CELL_HEIGHT / 2 - 2)];
+                    approverStatusDateLabel.text = approver.statusDate;
+                    approverStatusDateLabel.textAlignment = NSTextAlignmentRight;
+                    approverStatusDateLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE - 1];
+                    approverStatusDateLabel.textColor = [UIColor grayColor];
+                    approverStatusDateLabel.backgroundColor = [UIColor clearColor];
+                    [cell addSubview:approverStatusDateLabel];
+                }
+                
+                UILabel *approverStatusLabel = [[UILabel alloc] initWithFrame:statusRect];
+                approverStatusLabel.text = approver.statusName;
+                approverStatusLabel.textAlignment = NSTextAlignmentRight;
+                approverStatusLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE];
+                approverStatusLabel.textColor = APP_LABEL_BLUE_COLOR;
+                approverStatusLabel.backgroundColor = [UIColor clearColor];
+                [cell addSubview:approverStatusLabel];
+                
+                if (self.mode == kViewMode || approver.status == kApproverApproved || approver.status == kApproverDenied || approver.status == kApproverRerouted) {
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                        NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@", DOMAIN_URL, approver.profilePicUrl]]];
+                        
+                        if (data != nil) {
+                            if ([UIImage imageWithData: data]) {
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    UIImageView *approverPic = [[UIImageView alloc] initWithImage:[UIImage imageWithData: data]];
+                                    approverPic.frame = CGRectMake(12, 2, 39, 39);
+                                    [cell addSubview:approverPic];
+                                });
+                            }
+                        }
+                    });
+//                } else {
+//                    for (UIView *subView in cell.subviews) {
+//                        if ([subView isKindOfClass:[UIImageView class]]) {
+//                            [subView removeFromSuperview];
+//                            break;
+//                        }
+//                    }
+                }
+                
+            } else {
+                // copy of case kBillDocs
+                if (indexPath.row == 0) {
+                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:BILL_ATTACH_CELL_ID];
+                    
+                    [cell.contentView addSubview:self.attachmentScrollView];
+                    [cell.contentView addSubview:self.attachmentPageControl];
+                    cell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+                } else {
+                    cell = [tableView dequeueReusableCellWithIdentifier:BILL_IMAGE_CELL_ID];
+                    if (!cell) {
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:BILL_IMAGE_CELL_ID];
+                    }
+                    
+                    cell.backgroundColor = [UIColor clearColor];
+                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                    
+                    self.previewScrollView.zoomScale = 1.1;
+                    
+                    [cell.contentView addSubview:self.previewScrollView];
+                }
+            }
         }
             break;
         case kBillDocs:
@@ -1134,10 +1306,14 @@ typedef enum {
     } else if (indexPath.section == kBillLineItems) {
         return CELL_HEIGHT;
     } else {
-        if (indexPath.row == 0) {
-            return IMG_HEIGHT + IMG_PADDING + ATTACHMENT_PV_HEIGHT + ((self.mode == kAttachMode) ? 110 : 0);
+        if (indexPath.section == 2 && self.mode != kCreateMode && self.mode != kAttachMode) {
+            return CELL_HEIGHT;
         } else {
-            return NORMAL_SCREEN_HEIGHT + 30;
+            if (indexPath.row == 0) {
+                return IMG_HEIGHT + IMG_PADDING + ATTACHMENT_PV_HEIGHT + ((self.mode == kAttachMode) ? 110 : 0);
+            } else {
+                return NORMAL_SCREEN_HEIGHT + 30;
+            }
         }
     }
 }
@@ -1145,8 +1321,6 @@ typedef enum {
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     if (section == kBillInfo) {
         return 0;
-    } else if (section == kBillLineItems) {
-        return 30;
     } else {
         return 30;
     }
@@ -1166,63 +1340,13 @@ typedef enum {
     if (section == kBillInfo) {
         return nil;
     } else if (section == kBillLineItems) {
-        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 360, 40)];
-        headerView.backgroundColor = [UIColor clearColor];
-        
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 100, 20)];
-        label.text = @"Line Items";
-        label.font = [UIFont fontWithName:@"Helvetica-Bold" size:17];
-        label.backgroundColor = [UIColor clearColor];
-        if (false && self.mode == kAttachMode) {        // not in use!
-            label.textColor = [UIColor yellowColor];
-        } else {
-            label.textColor = APP_SYSTEM_BLUE_COLOR;
-            label.shadowColor = [UIColor whiteColor];
-            label.shadowOffset = CGSizeMake(0, 1);
-        }
-        
-        [headerView addSubview:label];
-        
-        if (self.mode != kViewMode && (!((Bill *)self.shaddowBusObj).paymentStatus || [((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID])) {
-            UIButton *addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
-            CGRect frame = CGRectMake(265, -10, 40, 40);
-            addButton.frame = frame;
-            addButton.backgroundColor = [UIColor clearColor];
-            [addButton addTarget:self action:@selector(addMoreItems) forControlEvents:UIControlEventTouchUpInside];
-            
-            [headerView addSubview:addButton];
-        }
-        
-        return headerView;
+        return [self initializeSectionHeaderViewWithLabel:@"Line Items" needAddButton:(self.mode != kViewMode && (!((Bill *)self.shaddowBusObj).paymentStatus || [((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID])) addAction:@selector(addMoreItems)];
     } else {
-        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 360, 30)];
-        headerView.backgroundColor = [UIColor clearColor];
-        
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 200, 20)];
-        label.text = @"Documents";
-        label.font = [UIFont fontWithName:@"Helvetica-Bold" size:17];
-        label.backgroundColor = [UIColor clearColor];
-        if (false && self.mode == kAttachMode) {    // not in use!
-            label.textColor = [UIColor yellowColor];
+        if (section == 2 && self.mode != kCreateMode && self.mode != kAttachMode) {
+            return [self initializeSectionHeaderViewWithLabel:@"Approvers" needAddButton:(self.mode != kViewMode) addAction:@selector(addMoreApprover)];
         } else {
-            label.textColor = APP_SYSTEM_BLUE_COLOR;
-            label.shadowColor = [UIColor whiteColor];
-            label.shadowOffset = CGSizeMake(0, 1);
+            return [self initializeSectionHeaderViewWithLabel:@"Documents" needAddButton:(self.mode != kViewMode) addAction:@selector(addMoreAttachment)];
         }
-        
-        [headerView addSubview:label];
-        
-        if (self.mode != kViewMode) {
-            UIButton *cameraButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
-            CGRect frame = CGRectMake(265, -10, 40, 40);
-            cameraButton.frame = frame;
-            cameraButton.backgroundColor = [UIColor clearColor];
-            [cameraButton addTarget:self action:@selector(addMoreAttachment) forControlEvents:UIControlEventTouchUpInside];
-            
-            [headerView addSubview:cameraButton];
-        }
-        
-        return headerView;
     }
 }
 
@@ -1272,20 +1396,52 @@ typedef enum {
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == kBillLineItems && self.mode != kViewMode) {
-        return YES;
-    } else {
-        return NO;
+    if (self.mode != kViewMode) {
+        if (indexPath.section == kBillLineItems) {
+            return YES;
+        }
+        
+        if (self.mode == kUpdateMode && indexPath.section == kBillApprovers) {
+            Approver *approver = self.modifiedApprovers[indexPath.row];
+            if (approver.status != kApproverApproved && approver.status != kApproverDenied && approver.status != kApproverRerouted) {
+                return YES;
+            }
+        }
     }
+    
+    return NO;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.mode == kUpdateMode) {
+        if (indexPath.section == kBillApprovers) {
+            Approver *approver = self.modifiedApprovers[indexPath.row];
+            if (approver.status != kApproverApproved && approver.status != kApproverDenied && approver.status != kApproverRerouted) {
+                return YES;
+            }
+        }
+    }
+    
+    return NO;
+}
+
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+    Approver *approver = self.modifiedApprovers[sourceIndexPath.row];
+    [self.modifiedApprovers removeObjectAtIndex:sourceIndexPath.row];
+    [self.modifiedApprovers insertObject:approver atIndex:destinationIndexPath.row];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == kBillLineItems) {
-        if (editingStyle == UITableViewCellEditingStyleDelete) {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        if (indexPath.section == kBillLineItems) {
             // Delete the row from the data source
             [((Bill *)self.shaddowBusObj).lineItems removeObjectAtIndex:indexPath.row];
             [self updateLineItems];
+        } else {
+            [self.modifiedApprovers removeObjectAtIndex:indexPath.row];
+            NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:kBillApprovers];
+            [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
         }
     }
 }
@@ -1532,7 +1688,14 @@ typedef enum {
 
 #pragma mark - model delegate
 
-- (void)didReadObject {    
+- (void)doneSaveObject {
+    [super doneSaveObject];
+    
+    // Save Approvers
+    [Approver setList:self.modifiedApprovers forObject:self.shaddowBusObj.objectId];
+}
+
+- (void)didReadObject {
     self.totalAmount = [NSDecimalNumber zero];
     [super didReadObject];
 
@@ -1541,16 +1704,21 @@ typedef enum {
     
     [self setActions];
     [self.actionMenuVC.tableView reloadData];
+    
+    [Approver setListDelegate:self];
+    [Approver retrieveListForObject:self.shaddowBusObj.objectId];
 }
-
-//- (void)didCreateObject:(NSString *)newObjectId {
-//    [super didCreateObject:newObjectId];
-//}
 
 - (void)didUpdateObject {
     [super didUpdateObject];
     
-    ((Bill *)self.busObj).amount = self.totalAmount;
+    NSDecimalNumber *amount = [NSDecimalNumber zero];
+    for (APLineItem *item in ((Bill *)self.busObj).lineItems) {
+        amount = [amount decimalNumberByAdding:item.amount];
+    }
+    
+    ((Bill *)self.busObj).amount = amount;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.actionMenuVC.tableView reloadData];
     });
@@ -1605,6 +1773,12 @@ typedef enum {
     // update payment status to scheduled
     NSIndexPath *path = [NSIndexPath indexPathForRow:kBillPaymentStatus inSection:kBillInfo];
     [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationNone];
+}
+
+#pragma mark - Approver delegate
+
+- (void)didGetApprovers:(NSArray *)theApprovers {
+    self.approvers = theApprovers;
 }
 
 @end

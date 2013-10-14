@@ -144,6 +144,9 @@
 		7EC4EE931800991700DD18E0 /* Up.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EC4EE921800991700DD18E0 /* Up.png */; };
 		7EC4EE9918009DF000DD18E0 /* PlusIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EC4EE9818009DF000DD18E0 /* PlusIcon.png */; };
 		7EC4EEAD1800A60700DD18E0 /* CheckMarkIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EC4EEAC1800A60700DD18E0 /* CheckMarkIcon.png */; };
+		7ED50F721807C092002064C4 /* Approver.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED50F711807C092002064C4 /* Approver.m */; };
+		7ED50F751807CE13002064C4 /* ApproversTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED50F741807CE13002064C4 /* ApproversTableViewController.m */; };
+		7ED50F791807CE66002064C4 /* EditApproverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED50F781807CE66002064C4 /* EditApproverViewController.m */; };
 		7EE3920A17DD2184007B1126 /* directionsIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EE3920917DD2184007B1126 /* directionsIcon.png */; };
 		7EF87EB317F403D300FCE2C8 /* RecorderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF87EB217F403D300FCE2C8 /* RecorderViewController.m */; };
 /* End PBXBuildFile section */
@@ -354,6 +357,12 @@
 		7EC4EE921800991700DD18E0 /* Up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Up.png; sourceTree = "<group>"; };
 		7EC4EE9818009DF000DD18E0 /* PlusIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PlusIcon.png; sourceTree = "<group>"; };
 		7EC4EEAC1800A60700DD18E0 /* CheckMarkIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CheckMarkIcon.png; sourceTree = "<group>"; };
+		7ED50F701807C092002064C4 /* Approver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Approver.h; sourceTree = "<group>"; };
+		7ED50F711807C092002064C4 /* Approver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Approver.m; sourceTree = "<group>"; };
+		7ED50F731807CE13002064C4 /* ApproversTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApproversTableViewController.h; sourceTree = "<group>"; };
+		7ED50F741807CE13002064C4 /* ApproversTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApproversTableViewController.m; sourceTree = "<group>"; };
+		7ED50F771807CE66002064C4 /* EditApproverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditApproverViewController.h; sourceTree = "<group>"; };
+		7ED50F781807CE66002064C4 /* EditApproverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditApproverViewController.m; sourceTree = "<group>"; };
 		7EE3920917DD2184007B1126 /* directionsIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = directionsIcon.png; sourceTree = "<group>"; };
 		7EF87EB117F403D300FCE2C8 /* RecorderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecorderViewController.h; sourceTree = "<group>"; };
 		7EF87EB217F403D300FCE2C8 /* RecorderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecorderViewController.m; sourceTree = "<group>"; };
@@ -503,6 +512,7 @@
 			children = (
 				7E91E416159394C4005104AF /* APViewController.h */,
 				7E91E417159394C4005104AF /* APViewController.m */,
+				7ED50F761807CE2C002064C4 /* Approver */,
 				0E7F8B43172A5B8F0090464C /* Bill */,
 				0E7F8B44172A5B9F0090464C /* Vendor */,
 				7E91E441159BCC2F005104AF /* CreateBillViewController.h */,
@@ -642,6 +652,8 @@
 				0E8FBAD1160D10B00074C01B /* Item.m */,
 				7E370EC017E6D813005B3538 /* CustomerContact.h */,
 				7E370EC117E6D814005B3538 /* CustomerContact.m */,
+				7ED50F701807C092002064C4 /* Approver.h */,
+				7ED50F711807C092002064C4 /* Approver.m */,
 				0E3A156C173F753B007F2DC6 /* BankAccount.h */,
 				0E3A156D173F753B007F2DC6 /* BankAccount.m */,
 				0E3A156F1742F958007F2DC6 /* Document.h */,
@@ -818,6 +830,17 @@
 			name = Images;
 			sourceTree = "<group>";
 		};
+		7ED50F761807CE2C002064C4 /* Approver */ = {
+			isa = PBXGroup;
+			children = (
+				7ED50F731807CE13002064C4 /* ApproversTableViewController.h */,
+				7ED50F741807CE13002064C4 /* ApproversTableViewController.m */,
+				7ED50F771807CE66002064C4 /* EditApproverViewController.h */,
+				7ED50F781807CE66002064C4 /* EditApproverViewController.m */,
+			);
+			name = Approver;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -952,6 +975,7 @@
 				7E91E41515928886005104AF /* LoginViewController.m in Sources */,
 				7E91E418159394C4005104AF /* APViewController.m in Sources */,
 				7E91E4211593F83B005104AF /* ScannerViewController.m in Sources */,
+				7ED50F791807CE66002064C4 /* EditApproverViewController.m in Sources */,
 				7E91E42E15993E6D005104AF /* BOSelectorViewController.m in Sources */,
 				7E579F5A15A21F1E009D1455 /* Bill.m in Sources */,
 				7E579F5E15A234EB009D1455 /* APIHandler.m in Sources */,
@@ -961,6 +985,7 @@
 				0E2C0AC315EC44390059C739 /* Invoice.m in Sources */,
 				0E2C0ACB15F12D9B0059C739 /* InvoicesTableViewController.m in Sources */,
 				0EC88C9715F1374900A490EE /* AROverViewController.m in Sources */,
+				7ED50F751807CE13002064C4 /* ApproversTableViewController.m in Sources */,
 				0EC88C9A15F139C100A490EE /* CustomersTableViewController.m in Sources */,
 				0E95DA2415F13C2C006D9752 /* VendorsTableViewController.m in Sources */,
 				0EA09F1515F927A100BBD180 /* Util.m in Sources */,
@@ -977,6 +1002,7 @@
 				0E8ED1071619731900BFBDD0 /* AttachmentPreviewViewController.m in Sources */,
 				0EE2C139162D231600BB00DA /* SlidingTableViewController.m in Sources */,
 				0ED59D4C162DDFB9008DE1C9 /* RootMenuViewController.m in Sources */,
+				7ED50F721807C092002064C4 /* Approver.m in Sources */,
 				0ED59D4F162DFD4F008DE1C9 /* SlidingViewController.m in Sources */,
 				0E1A79171633790D001B24BF /* EditItemViewController.m in Sources */,
 				0EA29AAC16D2E6FA00386617 /* EditCustomerViewController.m in Sources */,

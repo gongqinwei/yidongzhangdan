@@ -641,30 +641,32 @@ enum VendorInfoType {
     if (section == kVendorInfo || section == kVendorAddr) {
         return nil;
     } else {
-        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 360, 30)];
-        headerView.backgroundColor = [UIColor clearColor];
+        return [self initializeSectionHeaderViewWithLabel:@"Documents" needAddButton:(self.mode != kViewMode) addAction:@selector(addMoreAttachment)];
         
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 200, 20)];
-        label.text = @"Documents";
-        label.font = [UIFont fontWithName:@"Helvetica-Bold" size:17];
-        label.backgroundColor = [UIColor clearColor];
-        label.textColor = APP_SYSTEM_BLUE_COLOR;
-        label.shadowColor = [UIColor whiteColor];
-        label.shadowOffset = CGSizeMake(0, 1);
-        
-        [headerView addSubview:label];
-        
-        if (self.mode != kViewMode) {
-            UIButton *cameraButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
-            CGRect frame = CGRectMake(265, -10, 40, 40);
-            cameraButton.frame = frame;
-            cameraButton.backgroundColor = [UIColor clearColor];
-            [cameraButton addTarget:self action:@selector(addMoreAttachment) forControlEvents:UIControlEventTouchUpInside];
-            
-            [headerView addSubview:cameraButton];
-        }
-        
-        return headerView;
+//        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 360, 30)];
+//        headerView.backgroundColor = [UIColor clearColor];
+//        
+//        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 200, 20)];
+//        label.text = @"Documents";
+//        label.font = [UIFont fontWithName:@"Helvetica-Bold" size:17];
+//        label.backgroundColor = [UIColor clearColor];
+//        label.textColor = APP_SYSTEM_BLUE_COLOR;
+//        label.shadowColor = [UIColor whiteColor];
+//        label.shadowOffset = CGSizeMake(0, 1);
+//        
+//        [headerView addSubview:label];
+//        
+//        if (self.mode != kViewMode) {
+//            UIButton *cameraButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+//            CGRect frame = CGRectMake(265, -10, 40, 40);
+//            cameraButton.frame = frame;
+//            cameraButton.backgroundColor = [UIColor clearColor];
+//            [cameraButton addTarget:self action:@selector(addMoreAttachment) forControlEvents:UIControlEventTouchUpInside];
+//            
+//            [headerView addSubview:cameraButton];
+//        }
+//        
+//        return headerView;
     }
 }
 

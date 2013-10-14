@@ -14,6 +14,7 @@
 #import "Item.h"
 #import "Bill.h"
 #import "Vendor.h"
+#import "Approver.h"
 #import "Document.h"
 #import "ChartOfAccount.h"
 #import "SplashViewController.h"
@@ -112,17 +113,10 @@
                 [Customer retrieveListForActive:NO reload:NO];
                 
                 if (currentOrg.enableAP) {
+                    [currentOrg getOrgPrefs];
                     [Bill retrieveListForActive:NO reload:NO];
                     [Vendor retrieveListForActive:NO reload:NO];
                 }
-
-
-                // should do it before retrieving all other entities; but don't want to do async here; should be good for next wakeup
-//                [currentOrg getOrgFeatures];
-                
-                // depricated
-//                [currentOrg retrieveNeedApprovalToPayBill];
-                [currentOrg getOrgPrefs];
             } else {
                 self.window.rootViewController = initialController;
                 [self.window makeKeyAndVisible];
