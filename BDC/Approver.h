@@ -29,6 +29,14 @@ typedef enum {
     kApproverStale
 } ApproverStatusEnum;
 
+@class Approver;
+
+@protocol ApproverDelegate <NSObject>
+
+- (void)didAddApprover:(Approver *)approver;
+- (void)failedToAddApprover;
+
+@end
 
 @protocol ApproverListDelegate <ListViewDelegate>
 
@@ -36,6 +44,7 @@ typedef enum {
 - (void)didGetApprovers;
 - (void)failedToGetApprovers;
 - (void)didGetApprovers:(NSArray *)approvers;
+- (void)didAddApprover:(Approver *)approver;
 
 @end
 
@@ -47,6 +56,7 @@ typedef enum {
 @property (nonatomic, assign) int status;
 @property (nonatomic, strong) NSString *statusName;
 @property (nonatomic, strong) NSString *statusDate;     //for display purpose only, no need to convert to NSSDate
+@property (nonatomic, strong) id<ApproverDelegate> createDelegate;
 
 
 + (void)setListDelegate:(id<ApproverListDelegate>)listDelegate;
@@ -54,5 +64,6 @@ typedef enum {
 + (Approver *)objectForKey:(NSString *)approverId;
 + (void)retrieveListForObject:(NSString *)objId;
 + (void)setList:(NSArray *)approvers forObject:(NSString *)objId;
+- (void)createWithFirstName:(NSString *)fname lastName:(NSString *)lname andEmail:(NSString *)email;
 
 @end

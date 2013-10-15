@@ -14,6 +14,8 @@
 
 @interface ApproversTableViewController () <ApproverListDelegate>
 
+@property (nonatomic, strong) NSMutableSet *newlyApproverSet;
+
 @end
 
 
@@ -21,6 +23,7 @@
 
 @synthesize approverLists = _approverLists;
 @synthesize selectDelegate;
+@synthesize newlyApproverSet;
 
 
 - (Class)busObjClass {
@@ -43,6 +46,7 @@
         }
         
         [self.selectDelegate didSelectApprovers:selectedApprovers];
+        self.newlyApproverSet = [NSMutableSet set];
         
         [self.navigationController popViewControllerAnimated:YES];
     }
@@ -68,6 +72,10 @@
     
     self.mode = kSelectMode;
     self.createNewSegue = APPROVER_CREATE_APPROVER_SEGUE;
+    
+    if (!self.newlyApproverSet) {
+        self.newlyApproverSet = [NSMutableSet set];
+    }
 }
 
 #pragma mark - Table view data source
@@ -90,8 +98,6 @@
 //    if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
 //    }
-    
-    cell.accessoryType = UITableViewCellAccessoryNone;
     
     Approver *approver = self.approverLists[indexPath.section][indexPath.row];
     
@@ -121,6 +127,12 @@
                 }
             }
         });
+    }
+    if ([self.newlyApproverSet containsObject:approver]) {
+        [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    } else {
+        cell.accessoryType = UITableViewCellAccessoryNone;
     }
     
     return cell;
@@ -185,5 +197,10 @@
     
 }
 
+- (void)didAddApprover:(Approver *)approver {
+    [self.newlyApproverSet addObject:approver];
+    
+    [self setApproverList:[Approver list]];
+}
 
 @end

@@ -232,9 +232,9 @@ typedef enum {
 - (void)setBusObj:(BDCBusinessObjectWithAttachments *)busObj {
     [super setBusObj:busObj];
     
-//    if (self.mode != kCreateMode && self.mode != kAttachMode) {
+    if (self.mode != kCreateMode && self.mode != kAttachMode) {
         self.approvers = self.approvers;    // actually resetting modifiedApprovers and reload section
-//    }
+    }
 }
 
 - (BOOL)isAP {

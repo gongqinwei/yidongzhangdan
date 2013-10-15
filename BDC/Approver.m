@@ -23,6 +23,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
 @synthesize status;
 @synthesize statusDate;
 @synthesize statusName;
+@synthesize createDelegate;
 
 
 + (void)setListDelegate:(id<ApproverListDelegate>)theDelegate {
@@ -173,6 +174,30 @@ static id <ApproverListDelegate> ListDelegate = nil;
         } else {
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             Debug(@"Failed to save approvers! %@", [err localizedDescription]);
+        }
+    }];
+}
+
+- (void)createWithFirstName:(NSString *)fname lastName:(NSString *)lname andEmail:(NSString *)email {
+    NSString *action = [NSString stringWithFormat:@"%@?fname=%@&lname=%@&email=%@", APPROVER_CREATE_API, fname, lname, email];
+    
+    __weak Approver *weakSelf = self;
+    
+    [APIHandler asyncCallWithAction:action Info:nil AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        NSInteger response_status;
+        NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        
+        if(response_status == RESPONSE_SUCCESS) {
+            [self populateObjectWithInfo:info];
+
+            [approvers setObject:self forKey:self.objectId];
+            
+            [weakSelf.createDelegate didAddApprover:self];
+            [ListDelegate didAddApprover:self];
+        } else {
+            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [weakSelf.createDelegate failedToAddApprover];
+            Debug(@"Failed to create approver: %@", [err localizedDescription]);
         }
     }];
 }

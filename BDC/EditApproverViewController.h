@@ -7,8 +7,11 @@
 //
 
 #import "SlidingDetailsTableViewController.h"
+#import "Approver.h"
 
 @interface EditApproverViewController : SlidingDetailsTableViewController
+
+@property (nonatomic, strong) Approver *approver;
 
 @property (weak, nonatomic) IBOutlet UITextField *firstName;
 @property (weak, nonatomic) IBOutlet UITextField *lastName;
