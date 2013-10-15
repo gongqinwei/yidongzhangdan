@@ -2307,11 +2307,11 @@
             </objects>
             <point key="canvasLocation" x="-873" y="1757"/>
         </scene>
-        <!--Approvers Table View Controller-->
+        <!--Approvers Table View Controller - Select Approvers-->
         <scene sceneID="oL9-fm-Xoq">
             <objects>
                 <tableViewController id="TWe-gc-5HJ" customClass="ApproversTableViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Yhb-Bg-9fx">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Yhb-Bg-9fx">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2330,7 +2330,7 @@
                             <outlet property="delegate" destination="TWe-gc-5HJ" id="N7U-ob-nkf"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="02d-h9-Jgm"/>
+                    <navigationItem key="navigationItem" title="Select Approvers" id="02d-h9-Jgm"/>
                     <connections>
                         <segue destination="xyN-Wc-9d9" kind="push" identifier="CreateNewApprover" id="Oau-Ps-G1G"/>
                     </connections>
@@ -2759,22 +2759,22 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Vyp-zG-ZzN"/>
+        <segue reference="WRK-Bd-AdY"/>
         <segue reference="3HC-XA-11p"/>
         <segue reference="3ag-eg-oXf"/>
         <segue reference="ifQ-ST-XVY"/>
-        <segue reference="FTU-IK-7vF"/>
-        <segue reference="nLD-mQ-6wj"/>
         <segue reference="wxy-Zp-Lfl"/>
         <segue reference="CeX-f9-mSc"/>
-        <segue reference="rr1-4I-AAm"/>
+        <segue reference="nLD-mQ-6wj"/>
+        <segue reference="FTU-IK-7vF"/>
         <segue reference="fqJ-Rf-CsZ"/>
         <segue reference="bpG-n7-YKA"/>
+        <segue reference="rr1-4I-AAm"/>
         <segue reference="f4h-vQ-zhx"/>
-        <segue reference="WRK-Bd-AdY"/>
-        <segue reference="dP9-hw-whd"/>
+        <segue reference="Vyp-zG-ZzN"/>
+        <segue reference="xP7-Be-EUo"/>
+        <segue reference="ZY0-OV-uKN"/>
         <segue reference="zBW-fL-edY"/>
-        <segue reference="crQ-7s-jkT"/>
         <segue reference="01U-I1-ojU"/>
         <segue reference="4YZ-nK-Ds9"/>
         <segue reference="2iZ-iS-Zfa"/>

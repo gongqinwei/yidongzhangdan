@@ -15,6 +15,7 @@
 #import "AttachmentPreviewViewController.h"
 #import "EditVendorViewController.h"
 #import "PayBillViewController.h"
+#import "ApproversTableViewController.h"
 //#import "EditAPLineItemViewController.h"
 #import "Util.h"
 #import "Constants.h"
@@ -77,7 +78,7 @@ typedef enum {
 #define ACCOUNT_PICKER_TAG              2
 
 
-@interface EditBillViewController () <VendorSelectDelegate, ScannerDelegate, PayBillDelegate, ApproverListDelegate, UITextFieldDelegate, UIScrollViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
+@interface EditBillViewController () <VendorSelectDelegate, ScannerDelegate, PayBillDelegate, ApproverListDelegate, ApproverSelectDelegate, UITextFieldDelegate, UIScrollViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
 
 @property (nonatomic, strong) NSDecimalNumber *totalAmount;
 @property (nonatomic, strong) UIDatePicker *billDatePicker;
@@ -150,6 +151,7 @@ typedef enum {
 
 @property (nonatomic, strong) NSArray *approvers;
 @property (nonatomic, strong) NSMutableArray *modifiedApprovers;
+@property (nonatomic, strong) NSMutableSet *approverIdSet;
 
 @end
 
@@ -174,6 +176,7 @@ typedef enum {
 @synthesize vendors;
 @synthesize approvers = _approvers;
 @synthesize modifiedApprovers;
+@synthesize approverIdSet;
 
 @synthesize billVendorTextField;
 @synthesize billVendorInputAccessoryView;
@@ -300,6 +303,7 @@ typedef enum {
 - (void)setApprovers:(NSArray *)approvers {
     _approvers = approvers;
     self.modifiedApprovers = [NSMutableArray arrayWithArray:approvers];
+    self.approverIdSet = [NSMutableSet setWithArray:approvers];
 
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kBillApprovers] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -538,6 +542,7 @@ typedef enum {
         // retrieve approvers in view/edit mode
         self.approvers = [NSArray array];
         self.modifiedApprovers = [NSMutableArray array];
+        self.approverIdSet = [NSMutableSet set];
         [Approver setListDelegate:self];
         
         if (self.shaddowBusObj && self.shaddowBusObj.objectId) {      // safety check
@@ -896,7 +901,8 @@ typedef enum {
         [segue.destinationViewController setBill:(Bill *)self.shaddowBusObj];
         [segue.destinationViewController setPayBillDelegate:self];
     } else if ([segue.identifier isEqualToString:BILL_ADD_APPROVER_SEGUE]) {
-        //TODO: set object or object id to self
+//        [segue.destinationViewController setMode:kSelectMode];
+        [segue.destinationViewController setSelectDelegate:self];
     }
 }
 
@@ -1218,19 +1224,27 @@ typedef enum {
                 [cell addSubview:approverStatusLabel];
                 
                 if (self.mode == kViewMode || approver.status == kApproverApproved || approver.status == kApproverDenied || approver.status == kApproverRerouted) {
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                        NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@", DOMAIN_URL, approver.profilePicUrl]]];
-                        
-                        if (data != nil) {
-                            if ([UIImage imageWithData: data]) {
-                                dispatch_async(dispatch_get_main_queue(), ^{
-                                    UIImageView *approverPic = [[UIImageView alloc] initWithImage:[UIImage imageWithData: data]];
-                                    approverPic.frame = CGRectMake(12, 2, 39, 39);
-                                    [cell addSubview:approverPic];
-                                });
+                    if (approver.profilePicData) {
+                        UIImageView *approverPic = [[UIImageView alloc] initWithImage:[UIImage imageWithData: approver.profilePicData]];
+                        approverPic.frame = CGRectMake(12, 2, 39, 39);
+                        [cell addSubview:approverPic];
+                    } else {
+                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                            NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@", DOMAIN_URL, approver.profilePicUrl]]];
+                            
+                            if (data != nil) {
+                                approver.profilePicData = data;
+                                
+                                if ([UIImage imageWithData: data]) {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        UIImageView *approverPic = [[UIImageView alloc] initWithImage:[UIImage imageWithData: data]];
+                                        approverPic.frame = CGRectMake(12, 2, 39, 39);
+                                        [cell addSubview:approverPic];
+                                    });
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
 //                } else {
 //                    for (UIView *subView in cell.subviews) {
 //                        if ([subView isKindOfClass:[UIImageView class]]) {
@@ -1779,6 +1793,24 @@ typedef enum {
 
 - (void)didGetApprovers:(NSArray *)theApprovers {
     self.approvers = theApprovers;
+}
+
+- (void)didGetApprovers {
+    
+}
+
+- (void)failedToGetApprovers {
+    
+}
+
+- (void)didSelectApprovers:(NSArray *)approvers {
+    for (Approver *approver in approvers) {
+        if (![self.approverIdSet containsObject:approver]) {
+            [self.modifiedApprovers addObject:approver];
+        }
+    }
+    
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kBillApprovers] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 @end

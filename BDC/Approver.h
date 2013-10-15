@@ -42,6 +42,7 @@ typedef enum {
 @interface Approver : BDCBusinessObject
 
 @property (nonatomic, strong) NSString *profilePicUrl;
+@property (nonatomic, strong) NSData *profilePicData;
 @property (nonatomic, assign) int sortOrder;
 @property (nonatomic, assign) int status;
 @property (nonatomic, strong) NSString *statusName;

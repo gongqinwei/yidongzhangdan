@@ -18,6 +18,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
 @implementation Approver
 
 @synthesize profilePicUrl;
+@synthesize profilePicData;
 @synthesize sortOrder;
 @synthesize status;
 @synthesize statusDate;
@@ -37,7 +38,9 @@ static id <ApproverListDelegate> ListDelegate = nil;
 }
 
 + (id)list {
-    return [NSMutableArray arrayWithArray:[approvers allValues]];
+    NSSortDescriptor *order = [[NSSortDescriptor alloc] initWithKey:APPROVER_NAME ascending:YES selector:nil];
+    NSArray *sortedApprovers = [[approvers allValues] sortedArrayUsingDescriptors:[NSArray arrayWithObjects:order, nil]];
+    return [NSMutableArray arrayWithArray:sortedApprovers];
 }
 
 + (Approver *)objectForKey:(NSString *)approverId {
@@ -51,6 +54,10 @@ static id <ApproverListDelegate> ListDelegate = nil;
     self.isActive = YES;
     
     [super populateObjectWithInfo:dict];
+}
+
++ (void)retrieveListForActive:(BOOL)isActive {
+    [Approver retrieveList];
 }
 
 + (void)retrieveList {
@@ -77,13 +84,13 @@ static id <ApproverListDelegate> ListDelegate = nil;
                 [approvers setObject:approver forKey:approver.objectId];
             }
             
-//            [ListDelegate didGetApprovers];
+            [ListDelegate didGetApprovers];
         } else if (response_status == RESPONSE_TIMEOUT) {
-//            [ListDelegate failedToGetApprovers];
+            [ListDelegate failedToGetApprovers];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
             Debug(@"Time out when retrieving list of approvers");
         } else {
-//            [ListDelegate failedToGetApprovers];
+            [ListDelegate failedToGetApprovers];
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             Debug(@"Failed to retrieve list of approvers! %@", [err localizedDescription]);
         }
@@ -168,6 +175,14 @@ static id <ApproverListDelegate> ListDelegate = nil;
             Debug(@"Failed to save approvers! %@", [err localizedDescription]);
         }
     }];
+}
+
+- (BOOL)isEqual:(id)other {
+    return [self.objectId isEqual:((Approver *)other).objectId];
+}
+
+- (NSUInteger)hash {
+    return [self.objectId hash];
 }
 
 @end
