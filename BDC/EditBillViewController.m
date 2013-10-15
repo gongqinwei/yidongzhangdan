@@ -1721,8 +1721,10 @@ typedef enum {
 - (void)doneSaveObject {
     [super doneSaveObject];
     
-    // Save Approvers
-    [Approver setList:self.modifiedApprovers forObject:self.shaddowBusObj.objectId];
+    if (self.mode != kCreateMode && self.mode != kAttachMode) {
+        // Save Approvers
+        [Approver setList:self.modifiedApprovers forObject:self.shaddowBusObj.objectId];
+    }
 }
 
 - (void)didReadObject {
