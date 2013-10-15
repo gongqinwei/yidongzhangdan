@@ -10,4 +10,8 @@
 
 @interface EditApproverViewController : SlidingDetailsTableViewController
 
+@property (weak, nonatomic) IBOutlet UITextField *firstName;
+@property (weak, nonatomic) IBOutlet UITextField *lastName;
+@property (weak, nonatomic) IBOutlet UITextField *email;
+
 @end

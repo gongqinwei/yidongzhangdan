@@ -67,6 +67,7 @@
     self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
     
     self.mode = kSelectMode;
+    self.createNewSegue = APPROVER_CREATE_APPROVER_SEGUE;
 }
 
 #pragma mark - Table view data source
@@ -146,7 +147,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(Approver *)sender
 {
     if ([segue.identifier isEqualToString:APPROVER_CREATE_APPROVER_SEGUE]) {
-//        [segue.destinationViewController setMode:kCreateMode];
+        [segue.destinationViewController setMode:kCreateMode];
     }
 }
 

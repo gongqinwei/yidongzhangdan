@@ -151,7 +151,7 @@ typedef enum {
 
 @property (nonatomic, strong) NSArray *approvers;
 @property (nonatomic, strong) NSMutableArray *modifiedApprovers;
-@property (nonatomic, strong) NSMutableSet *approverIdSet;
+@property (nonatomic, strong) NSMutableSet *approverSet;
 
 @end
 
@@ -176,7 +176,7 @@ typedef enum {
 @synthesize vendors;
 @synthesize approvers = _approvers;
 @synthesize modifiedApprovers;
-@synthesize approverIdSet;
+@synthesize approverSet;
 
 @synthesize billVendorTextField;
 @synthesize billVendorInputAccessoryView;
@@ -232,7 +232,9 @@ typedef enum {
 - (void)setBusObj:(BDCBusinessObjectWithAttachments *)busObj {
     [super setBusObj:busObj];
     
-    self.approvers = self.approvers;    // actually resetting modifiedApprovers and reload section
+//    if (self.mode != kCreateMode && self.mode != kAttachMode) {
+        self.approvers = self.approvers;    // actually resetting modifiedApprovers and reload section
+//    }
 }
 
 - (BOOL)isAP {
@@ -303,10 +305,12 @@ typedef enum {
 - (void)setApprovers:(NSArray *)approvers {
     _approvers = approvers;
     self.modifiedApprovers = [NSMutableArray arrayWithArray:approvers];
-    self.approverIdSet = [NSMutableSet setWithArray:approvers];
+    self.approverSet = [NSMutableSet setWithArray:approvers];
 
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kBillApprovers] withRowAnimation:UITableViewRowAnimationAutomatic];
+        NSIndexPath *approvalStatusPath = [NSIndexPath indexPathForRow:kBillApprovalStatus inSection:kBillInfo];
+        [self.tableView reloadRowsAtIndexPaths:@[approvalStatusPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     });
 }
 
@@ -445,7 +449,7 @@ typedef enum {
         self.viewHasAppeared = YES;
         
         [self.billVendorTextField becomeFirstResponder];
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:kBillDocs] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:3] atScrollPosition:UITableViewScrollPositionTop animated:YES];
         [self.billVendorInputAccessoryTextField becomeFirstResponder];
         if (self.vendors.count) {
             [self didSelectVendor:self.vendors[0]];
@@ -542,7 +546,7 @@ typedef enum {
         // retrieve approvers in view/edit mode
         self.approvers = [NSArray array];
         self.modifiedApprovers = [NSMutableArray array];
-        self.approverIdSet = [NSMutableSet set];
+        self.approverSet = [NSMutableSet set];
         [Approver setListDelegate:self];
         
         if (self.shaddowBusObj && self.shaddowBusObj.objectId) {      // safety check
@@ -1080,6 +1084,10 @@ typedef enum {
                     } else {
                         cell.detailTextLabel.text = @"Unassigned";
                     }
+                    
+                    if (self.modifiedApprovers && self.modifiedApprovers.count) {
+                        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    }
                     break;
                 case kBillPaymentStatus:
 //                    cell.textLabel.numberOfLines = 2;
@@ -1453,7 +1461,9 @@ typedef enum {
             [((Bill *)self.shaddowBusObj).lineItems removeObjectAtIndex:indexPath.row];
             [self updateLineItems];
         } else {
+            [self.approverSet removeObject:self.modifiedApprovers[indexPath.row]];
             [self.modifiedApprovers removeObjectAtIndex:indexPath.row];
+            
             NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:kBillApprovers];
             [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
         }
@@ -1494,6 +1504,12 @@ typedef enum {
                         vendor.editBillDelegate = self;
                         [self performSegueWithIdentifier:BILL_VIEW_VENDOR_DETAILS_SEGUE sender:vendor];
                     }
+                        break;
+                    case kBillApprovalStatus:
+                        if (self.modifiedApprovers && self.modifiedApprovers.count) {
+                            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kBillApprovers] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                        }
+                        
                         break;
                     default:
                         break;
@@ -1805,8 +1821,9 @@ typedef enum {
 
 - (void)didSelectApprovers:(NSArray *)approvers {
     for (Approver *approver in approvers) {
-        if (![self.approverIdSet containsObject:approver]) {
+        if (![self.approverSet containsObject:approver]) {
             [self.modifiedApprovers addObject:approver];
+            [self.approverSet addObject:approver];
         }
     }
     
