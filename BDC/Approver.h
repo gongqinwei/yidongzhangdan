@@ -13,6 +13,7 @@
 #define APPROVER_USER_ID        @"userId"
 #define APPROVER_NAME           @"name"
 #define APPROVER_PIC_URL        @"profilePicUrl"
+#define APPROVER_SMART_DATA     @"smartDataEntry"
 #define APPROVER_SORT_ORDER     @"sortOrder"
 #define APPROVER_STATUS         @"status"
 #define APPROVER_STATUS_DATE    @"statusDate"
@@ -56,6 +57,7 @@ typedef enum {
 @property (nonatomic, assign) int status;
 @property (nonatomic, strong) NSString *statusName;
 @property (nonatomic, strong) NSString *statusDate;     //for display purpose only, no need to convert to NSSDate
+@property (nonatomic, assign) int smartDataEntry;
 @property (nonatomic, strong) id<ApproverDelegate> createDelegate;
 
 
@@ -63,6 +65,7 @@ typedef enum {
 + (void)resetList;
 + (Approver *)objectForKey:(NSString *)approverId;
 + (void)retrieveListForObject:(NSString *)objId;
++ (void)retrieveListForVendor:(NSString *)vendorId andSmartData:(BOOL)smartData;
 + (void)setList:(NSArray *)approvers forObject:(NSString *)objId;
 - (void)createWithFirstName:(NSString *)fname lastName:(NSString *)lname andEmail:(NSString *)email;
 

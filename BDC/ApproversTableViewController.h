@@ -8,6 +8,7 @@
 
 #import "SlidingListTableViewController.h"
 #import "Approver.h"
+#import "Vendor.h"
 
 @protocol ApproverSelectDelegate <NSObject>
 
@@ -19,6 +20,7 @@
 
 @interface ApproversTableViewController : SlidingListTableViewController
 
+@property (nonatomic, strong) Vendor *vendor;
 @property (nonatomic, strong) NSMutableArray *approverLists;
 @property (nonatomic, weak) id<ApproverSelectDelegate> selectDelegate;
 

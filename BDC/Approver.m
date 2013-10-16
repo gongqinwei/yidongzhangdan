@@ -23,6 +23,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
 @synthesize status;
 @synthesize statusDate;
 @synthesize statusName;
+@synthesize smartDataEntry;
 @synthesize createDelegate;
 
 
@@ -52,6 +53,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
     self.objectId = [dict objectForKey:ID];
     self.name = [dict objectForKey:APPROVER_NAME];
     self.profilePicUrl = [dict objectForKey:APPROVER_PIC_URL];
+    self.smartDataEntry = [[dict objectForKey:APPROVER_SMART_DATA] intValue];
     self.isActive = YES;
     
     [super populateObjectWithInfo:dict];
@@ -86,6 +88,58 @@ static id <ApproverListDelegate> ListDelegate = nil;
             }
             
             [ListDelegate didGetApprovers];
+        } else if (response_status == RESPONSE_TIMEOUT) {
+            [ListDelegate failedToGetApprovers];
+            [UIHelper showInfo:SysTimeOut withStatus:kError];
+            Debug(@"Time out when retrieving list of approvers");
+        } else {
+            [ListDelegate failedToGetApprovers];
+            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            Debug(@"Failed to retrieve list of approvers! %@", [err localizedDescription]);
+        }
+    }];
+}
+
++ (void)retrieveListForVendor:(NSString *)vendorId andSmartData:(BOOL)smartData {
+    [UIAppDelegate incrNetworkActivities];
+    
+    NSString *action = [NSString stringWithFormat:@"%@?Vendor=%@&type=bill", APPROVER_LIST_API, vendorId];
+    
+    [APIHandler asyncCallWithAction:action Info:nil AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        NSInteger response_status;
+        NSArray *jsonApprovers = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        
+        [UIAppDelegate decrNetworkActivities];
+        
+        if(response_status == RESPONSE_SUCCESS) {
+            if (approvers) {
+                [approvers removeAllObjects];
+            } else {
+                approvers = [NSMutableDictionary dictionary];
+            }
+            
+            NSMutableArray *smartData = [NSMutableArray array];
+            
+            for (id item in jsonApprovers) {
+                NSDictionary *dict = (NSDictionary*)item;
+                Approver *approver = [[Approver alloc] init];
+                [approver populateObjectWithInfo:dict];
+                
+                [approvers setObject:approver forKey:approver.objectId];
+                
+                if (approver.smartDataEntry) {
+                    [smartData addObject:approver];
+                }
+            }
+            
+            NSSortDescriptor *smartOrder = [[NSSortDescriptor alloc] initWithKey:APPROVER_SMART_DATA ascending:YES selector:nil];
+            NSArray *sortedSmartData = [smartData sortedArrayUsingDescriptors:[NSArray arrayWithObjects:smartOrder, nil]];
+            
+            if (smartData) {
+                [ListDelegate didGetApprovers:sortedSmartData];
+            } else {
+                [ListDelegate didGetApprovers];
+            }
         } else if (response_status == RESPONSE_TIMEOUT) {
             [ListDelegate failedToGetApprovers];
             [UIHelper showInfo:SysTimeOut withStatus:kError];

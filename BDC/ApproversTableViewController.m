@@ -22,6 +22,7 @@
 @implementation ApproversTableViewController
 
 @synthesize approverLists = _approverLists;
+@synthesize vendor;
 @synthesize selectDelegate;
 @synthesize newlyApproverSet;
 
@@ -36,6 +37,15 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
     });
+}
+
+- (void)refreshView {
+    if (self.vendor && self.vendor.objectId) {
+        self.refreshControl.attributedTitle = REFRESHING;
+        [Approver retrieveListForVendor:self.vendor.objectId andSmartData:NO];
+    } else {
+        [super refreshView];
+    }
 }
 
 - (void)navigateDone {
