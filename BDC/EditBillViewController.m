@@ -546,6 +546,7 @@ typedef enum {
         }
     } else {
         if (self.shaddowBusObj && self.shaddowBusObj.objectId) {      // safety check
+            [Approver setListDelegate:self];
             [Approver retrieveListForObject:self.shaddowBusObj.objectId];
         }
     }

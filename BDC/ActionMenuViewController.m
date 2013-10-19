@@ -27,9 +27,9 @@
 #define ACTION_MENU_CELL_HEIGHT                 40
 #define ASCENDING                               @"Asc"
 #define DESCENDIDNG                             @"Desc"
-#define SECTION_HEADER_LABEL_RECT               CGRectMake(15, 7, 70, 15)
-#define TOGGLE_ARROW_RECT                       CGRectMake(80, 10, 10, 10)
-#define TOGGLE_ARROW_CENTER                     CGPointMake(85, 15)
+#define ACTION_MENU_SECTION_HEADER_LABEL_RECT   CGRectMake(15, 7, 70, 15)
+#define ACTION_MENU_TOGGLE_ARROW_RECT           CGRectMake(80, 10, 10, 10)
+#define ACTION_MENU_TOGGLE_ARROW_CENTER         CGPointMake(85, 15)
 
 
 @interface ActionMenuViewController () <UISearchBarDelegate, UISearchDisplayDelegate>
@@ -162,8 +162,8 @@ static ActionMenuViewController * _sharedInstance = nil;
     self.orderSectionCollapsed = YES;
     
     self.orderSectionToggleImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:TOGGLE_ARROW_IMG_NAME]];
-    self.orderSectionToggleImage.frame = TOGGLE_ARROW_RECT;
-    self.orderSectionToggleImage.center = TOGGLE_ARROW_CENTER;
+    self.orderSectionToggleImage.frame = ACTION_MENU_TOGGLE_ARROW_RECT;
+    self.orderSectionToggleImage.center = ACTION_MENU_TOGGLE_ARROW_CENTER;
     self.orderSectionToggleImage.transform = CGAffineTransformMakeRotation(-M_PI_2);
     
     self.orderSectionToggleButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SLIDING_DISTANCE - 110, ACTION_MENU_SECTION_HEADER_HEIGHT)];
@@ -493,7 +493,7 @@ static ActionMenuViewController * _sharedInstance = nil;
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, ACTION_MENU_SECTION_HEADER_HEIGHT)];
     headerView.backgroundColor = [UIColor darkGrayColor];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:SECTION_HEADER_LABEL_RECT];
+    UILabel *label = [[UILabel alloc] initWithFrame:ACTION_MENU_SECTION_HEADER_LABEL_RECT];
     [UIHelper initializeHeaderLabel:label];
 
     if (tableView == self.searchDisplayController.searchResultsTableView) {

@@ -95,6 +95,7 @@
                     [Bill retrieveListForActive:YES reload:YES];
                     [Vendor retrieveListForActive:YES];
                     [ChartOfAccount retrieveListForActive:YES];
+                    [Bill retrieveListForApproval];
                 }
                 
                 [Invoice retrieveListForActive:YES reload:YES];

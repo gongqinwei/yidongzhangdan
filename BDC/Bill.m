@@ -26,13 +26,20 @@
                                         \"filters\" : [{\"field\" : \"isActive\", \"op\" : \"=\", \"value\" : \"2\"}, {\"field\" : \"paymentStatus\", \"op\" : \"!=\", \"value\" : \"0\"}] \
                                     }"
 
+#define LIST_TO_APPROVE_FILTER      @"{ \"type\" : \"Bill\" }"
+
+#define APPROVAL_FILTER             @"{ \"objectId\" : \"%@\", \"comment\" : \"%@\"  }"
+
 
 @implementation Bill
 
 static id<BillListDelegate> APDelegate = nil;
 static id<BillListDelegate> ListDelegate = nil;
+static id<BillListDelegate> ListForApprovalDelegate = nil;
 static NSMutableArray *bills = nil;
 static NSMutableArray *inactiveBills = nil;
+static NSMutableArray *billsToApprove;
+static NSMutableSet *billsToApproveSet;
 
 @synthesize vendorId;
 @synthesize vendorName;
@@ -47,9 +54,53 @@ static NSMutableArray *inactiveBills = nil;
 @synthesize detailsDelegate;
 
 
+- (void)approve {
+    [self approveWithComment:@""];
+}
+
+- (void)approveWithComment:(NSString *)comment {
+    [self makeApprovalDecision:APPROVE_API withComment:comment];
+}
+
+- (void)denyWithComment:(NSString *)comment {
+    [self makeApprovalDecision:DENY_API withComment:comment];
+}
+
+- (void)skipWithComment:(NSString *)comment {
+    [self makeApprovalDecision:SKIP_API withComment:comment];
+}
+
+- (void)makeApprovalDecision:(NSString *)action withComment:(NSString *)comment {
+    [UIAppDelegate incrNetworkActivities];
+    
+    NSString *filter = [NSString stringWithFormat:APPROVAL_FILTER, self.objectId, comment];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, filter, nil];
+    
+    [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        NSInteger response_status;
+        [APIHandler getResponse:response data:data error:&err status:&response_status];
+        
+        [UIAppDelegate decrNetworkActivities];
+        
+        if(response_status == RESPONSE_SUCCESS) {
+            [billsToApprove removeObject:self];
+            [billsToApproveSet removeObject:self];
+        } else if (response_status == RESPONSE_TIMEOUT) {
+            [ListForApprovalDelegate failedToProcessApproval];
+            [UIHelper showInfo:SysTimeOut withStatus:kError];
+            Debug(@"Time out when processing %@ for bill %@!", action, self.objectId);
+        } else {
+            [ListForApprovalDelegate failedToProcessApproval];
+            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            Debug(@"Failed to processing %@ for bill %@! %@", action, self.objectId, [err localizedDescription]);
+        }
+    }];
+}
+
 + (void)resetList {
     bills = [NSMutableArray array];
     inactiveBills = [NSMutableArray array];
+    billsToApprove = [NSMutableArray array];
 }
 
 + (void)setAPDelegate:(id<BillListDelegate>)delegate {
@@ -58,6 +109,10 @@ static NSMutableArray *inactiveBills = nil;
 
 + (void)setListDelegate:(id<BillListDelegate>)delegate {
     ListDelegate = delegate;
+}
+
++ (void)setListForApprovalDelegate:(id<BillListDelegate>)delegate {
+    ListForApprovalDelegate = delegate;
 }
 
 - (NSString *)name {
@@ -249,6 +304,60 @@ static NSMutableArray *inactiveBills = nil;
 
 + (int)countInactive {
     return inactiveBills.count;
+}
+
++ (id)listBillsToApprove {
+    return billsToApprove;
+}
+
++ (BOOL)isBillToApprove:(Bill *)bill {
+    return [billsToApproveSet containsObject:bill];
+}
+
++ (void)retrieveListForApproval {
+    [UIAppDelegate incrNetworkActivities];
+    
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, LIST_TO_APPROVE_FILTER, nil];
+    
+    [APIHandler asyncCallWithAction:LIST_TO_APPROVE_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        NSInteger response_status;
+        NSDictionary *pair = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        NSArray *jsonBills = [pair objectForKey:@"Bill"];
+        
+        [UIAppDelegate decrNetworkActivities];
+        
+        if(response_status == RESPONSE_SUCCESS) {
+            if (billsToApprove) {
+                [billsToApprove removeAllObjects];
+                [billsToApproveSet removeAllObjects];
+            } else {
+                billsToApprove = [NSMutableArray array];
+                billsToApproveSet = [NSMutableSet set];
+            }
+            
+            
+            for (id item in jsonBills) {
+                NSDictionary *dict = (NSDictionary*)item;
+                Bill *bill = [[Bill alloc] init];
+                [bill populateObjectWithInfo:dict];
+                
+                [billsToApprove addObject:bill];
+                [billsToApproveSet addObject:bill];
+            }
+            
+            billsToApprove = [Bill list:billsToApprove orderBy:BILL_NUMBER ascending:YES];
+            
+            [ListForApprovalDelegate didGetBillsToApprove:billsToApprove];
+        } else if (response_status == RESPONSE_TIMEOUT) {
+            [ListForApprovalDelegate failedToGetBillsToApprove];
+            [UIHelper showInfo:SysTimeOut withStatus:kError];
+            Debug(@"Time out when retrieving list of bill to approve!");
+        } else {
+            [ListForApprovalDelegate failedToGetBills];
+            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            Debug(@"Failed to retrieve list of bill to approve! %@", [err localizedDescription]);
+        }
+    }];
 }
 
 + (void)retrieveListForActive:(BOOL)isActive reload:(BOOL)needReload {

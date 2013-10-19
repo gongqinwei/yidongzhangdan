@@ -20,6 +20,7 @@
 #define CATEGORY_AP         @"Account Payables"
 #define MENU_BILLS          @"Bills"
 #define MENU_VENDORS        @"Vendors"
+#define MENU_APPROVE        @"Approve"
 
 #define CATEGORY_AR         @"Account Receivables"
 #define CATEGORY_AR_READONLY    @"Account Receivables (read only)"
@@ -35,7 +36,7 @@
 #define ROOT_MENU       [NSArray arrayWithObjects: \
                             [NSArray arrayWithObjects:MENU_USER, MENU_ORG,                                  CATEGORY_PROFILE, nil], \
                             [NSArray arrayWithObjects:MENU_SCANNER, MENU_INBOX,                             CATEGORY_TOOL, nil], \
-                            [NSArray arrayWithObjects:MENU_BILLS, MENU_VENDORS,                             CATEGORY_AP, nil], \
+                            [NSArray arrayWithObjects:MENU_BILLS, MENU_VENDORS, MENU_APPROVE,               CATEGORY_AP, nil], \
                             [NSArray arrayWithObjects:MENU_INVOICES, MENU_CUSTOMERS, MENU_ITEMS,            CATEGORY_AR, nil], \
                             [NSArray arrayWithObjects:MENU_INVOICES, MENU_CUSTOMERS,                        CATEGORY_AR_READONLY, nil], \
                             [NSArray arrayWithObjects:MENU_FEEDBACK, MENU_LEGAL, MENU_LOGOUT,               CATEGORY_MORE, nil], \
@@ -62,7 +63,8 @@ enum RootToolItems {
 
 enum RootAPItems {
     kAPBill,
-    kAPVendor
+    kAPVendor,
+    kAPApprove
 };
 
 enum RootARItems {

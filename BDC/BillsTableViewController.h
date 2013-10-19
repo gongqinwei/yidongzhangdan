@@ -8,6 +8,7 @@
 
 #import "SlidingListTableViewController.h"
 
+
 @interface BillsTableViewController : SlidingListTableViewController
 
 @property (nonatomic, strong) NSMutableArray *bills;

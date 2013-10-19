@@ -256,12 +256,4 @@ static id <ApproverListDelegate> ListDelegate = nil;
     }];
 }
 
-- (BOOL)isEqual:(id)other {
-    return [self.objectId isEqual:((Approver *)other).objectId];
-}
-
-- (NSUInteger)hash {
-    return [self.objectId hash];
-}
-
 @end

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0E01C34F172214FF00184702 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 0E01C34E172214FF00184702 /* .gitignore */; };
+		0E092B20180F397D00BC6E92 /* ApproveBillsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E092B1F180F397D00BC6E92 /* ApproveBillsTableViewController.m */; };
 		0E0B9E9D17751CE900C2AF30 /* TermOfServiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E0B9E9C17751CE900C2AF30 /* TermOfServiceViewController.m */; };
 		0E14EC601603ED960098EB03 /* warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E14EC5E1603ED960098EB03 /* warning.png */; };
 		0E14EC611603ED960098EB03 /* success.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E14EC5F1603ED960098EB03 /* success.png */; };
@@ -153,6 +154,8 @@
 
 /* Begin PBXFileReference section */
 		0E01C34E172214FF00184702 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		0E092B1E180F397D00BC6E92 /* ApproveBillsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApproveBillsTableViewController.h; sourceTree = "<group>"; };
+		0E092B1F180F397D00BC6E92 /* ApproveBillsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApproveBillsTableViewController.m; sourceTree = "<group>"; };
 		0E0B9E9B17751CE900C2AF30 /* TermOfServiceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TermOfServiceViewController.h; sourceTree = "<group>"; };
 		0E0B9E9C17751CE900C2AF30 /* TermOfServiceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TermOfServiceViewController.m; sourceTree = "<group>"; };
 		0E14EC5E1603ED960098EB03 /* warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = warning.png; sourceTree = "<group>"; };
@@ -389,6 +392,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E092B21180F398700BC6E92 /* Approve */ = {
+			isa = PBXGroup;
+			children = (
+				0E092B1E180F397D00BC6E92 /* ApproveBillsTableViewController.h */,
+				0E092B1F180F397D00BC6E92 /* ApproveBillsTableViewController.m */,
+			);
+			name = Approve;
+			sourceTree = "<group>";
+		};
 		0E2C0AAC15EC419A0059C739 /* TabBarImages */ = {
 			isa = PBXGroup;
 			children = (
@@ -512,6 +524,7 @@
 			children = (
 				7E91E416159394C4005104AF /* APViewController.h */,
 				7E91E417159394C4005104AF /* APViewController.m */,
+				0E092B21180F398700BC6E92 /* Approve */,
 				7ED50F761807CE2C002064C4 /* Approver */,
 				0E7F8B43172A5B8F0090464C /* Bill */,
 				0E7F8B44172A5B9F0090464C /* Vendor */,
@@ -994,6 +1007,7 @@
 				0E7DCAC41603CCC400D0B35E /* UIHelper.m in Sources */,
 				0E68460F1609863C00716412 /* SplashViewController.m in Sources */,
 				0EE9B110160AF3F7002A5950 /* Uploader.m in Sources */,
+				0E092B20180F397D00BC6E92 /* ApproveBillsTableViewController.m in Sources */,
 				0E8FBAD2160D10B00074C01B /* Item.m in Sources */,
 				0E8FBAD5160D844C0074C01B /* CreateBillViewController.m in Sources */,
 				0E8FBAD8160D84BC0074C01B /* EditInvoiceViewController.m in Sources */,

@@ -23,27 +23,6 @@
 
 
 #define BILL_DETAILS_CELL_ID                @"BillDetails"
-#define BILL_TABLE_SECTION_HEADER_HEIGHT    28
-#define BILL_TABLE_CELL_HEIGHT              90
-#define BILL_TABLE_LABEL_HEIGHT             15
-#define BILL_TABLE_LABEL_WIDTH              130
-#define BILL_NUM_RECT                       CGRectMake(10, 5, BILL_TABLE_LABEL_WIDTH, BILL_TABLE_LABEL_HEIGHT)
-#define VENDOR_RECT                         CGRectMake(10, 25, BILL_TABLE_LABEL_WIDTH, BILL_TABLE_LABEL_HEIGHT)
-#define BILL_DATE_RECT                      CGRectMake(160, 25, BILL_TABLE_LABEL_WIDTH, BILL_TABLE_LABEL_HEIGHT)
-#define APPROVAL_STATUS_RECT                CGRectMake(10, 45, BILL_TABLE_LABEL_WIDTH, BILL_TABLE_LABEL_HEIGHT)
-#define DUE_DATE_RECT                       CGRectMake(160, 45, BILL_TABLE_LABEL_WIDTH, BILL_TABLE_LABEL_HEIGHT)
-#define PAYMENT_STATUS_RECT                 CGRectMake(10, 65, BILL_TABLE_LABEL_WIDTH, BILL_TABLE_LABEL_HEIGHT)
-#define AMOUNT_RECT                         CGRectMake(160, 65, BILL_TABLE_LABEL_WIDTH, BILL_TABLE_LABEL_HEIGHT)
-#define SECTION_HEADER_RECT                 CGRectMake(0, 0, SCREEN_WIDTH, BILL_TABLE_SECTION_HEADER_HEIGHT)
-#define SECTION_HEADER_LABEL_RECT           CGRectMake(10, 7, 150, 15)
-#define SECTION_HEADER_LABEL_RECT2          CGRectMake(20, 7, 150, 15)
-#define SECTION_HEADER_QTY_AMT_RECT         CGRectMake(SCREEN_WIDTH - 170, 7, 170, 15)
-#define SECTION_ACCESSORY_RECT              CGRectMake(SCREEN_WIDTH - 30, 7, 30, 15)
-#define TOGGLE_ARROW_RECT                   CGRectMake(5, 10, 10, 10)
-#define TOGGLE_ARROW_CENTER                 CGPointMake(10, 15)
-#define BILL_NUM_FONT_SIZE                  16
-#define BILL_FONT_SIZE                      13
-
 #define VIEW_BILL_SEGUE                     @"ViewBill"
 #define CREATE_BILL_SEGUE                   @"CreateNewBill"
 
