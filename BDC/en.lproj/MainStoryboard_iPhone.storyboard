@@ -1487,6 +1487,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="oI3-C8-YgZ">
+                            <rect key="frame" x="0.0" y="305" width="320" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            <items>
+                                <barButtonItem id="ZVR-GA-2CS"/>
+                                <barButtonItem title="Deny" width="49" id="bys-a4-y07"/>
+                                <barButtonItem width="39" style="plain" systemItem="fixedSpace" id="p76-2T-CLl"/>
+                                <barButtonItem title="Approve" id="hZs-rS-EOv"/>
+                                <barButtonItem width="44" style="plain" systemItem="fixedSpace" id="eqA-cC-g1b"/>
+                                <barButtonItem title="Skip" id="2sp-Rh-IqT"/>
+                            </items>
+                        </toolbar>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BillInfo" textLabel="SXJ-ri-qAS" detailTextLabel="ifK-uP-2Ox" style="IBUITableViewCellStyleValue2" id="vlX-cw-Rqg">
                                 <rect key="frame" x="0.0" y="119" width="320" height="44"/>

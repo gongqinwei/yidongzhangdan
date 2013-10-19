@@ -10,4 +10,6 @@
 
 @interface EditBillViewController : SlidingDetailsTableViewController
 
+@property (nonatomic, assign) BOOL forApproval;
+
 @end

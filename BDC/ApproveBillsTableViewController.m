@@ -7,6 +7,7 @@
 //
 
 #import "ApproveBillsTableViewController.h"
+#import "EditBillViewController.h"
 #import "Bill.h"
 #import "Vendor.h"
 
@@ -179,6 +180,7 @@
     if ([segue.identifier isEqualToString:APPROVE_BILL_SEGUE]) {
         [segue.destinationViewController setBusObj:sender];
         [segue.destinationViewController setMode:kViewMode];
+        [segue.destinationViewController setForApproval:YES];
         [segue.destinationViewController setTitle:[NSString stringWithFormat:@"Approve %@", sender.invoiceNumber]];
     }
 }

@@ -177,6 +177,7 @@ typedef enum {
 @synthesize approvers = _approvers;
 @synthesize modifiedApprovers;
 @synthesize approverSet;
+@synthesize forApproval;
 
 @synthesize billVendorTextField;
 @synthesize billVendorInputAccessoryView;
@@ -759,6 +760,16 @@ typedef enum {
     
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.activityIndicator.hidesWhenStopped = YES;
+    
+    UIToolbar *approvalBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, CELL_HEIGHT)];
+    UIBarButtonItem *approveButton = [[UIBarButtonItem alloc]initWithTitle:@"Approve"style:UIBarButtonItemStyleBordered target:self action:@selector(approveBill)];
+    [approvalBar setItems:[NSArray arrayWithObjects:approveButton, nil]];
+    approvalBar.translucent = YES;
+    [self.view addSubview:approvalBar];
+}
+
+- (void)approveBill {
+    
 }
 
 - (void)getBillNumberFromTextField:(UITextField *)textField {
