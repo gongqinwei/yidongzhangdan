@@ -139,6 +139,7 @@
 		7EA5BF3217C98DCE0075EEF3 /* Mobill_logo29.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF3117C98DCE0075EEF3 /* Mobill_logo29.png */; };
 		7EA5BF4A17CC7CCF0075EEF3 /* Mobill50.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF4917CC7CCF0075EEF3 /* Mobill50.png */; };
 		7EA5BF4C17CC7D830075EEF3 /* Mobill40.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EA5BF4B17CC7D820075EEF3 /* Mobill40.png */; };
+		7EC3F8B0181337E600F5B6B7 /* ApprovalCommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EC3F8AF181337E600F5B6B7 /* ApprovalCommentViewController.m */; };
 		7EC4EE8D180098BD00DD18E0 /* Down.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EC4EE8C180098BD00DD18E0 /* Down.png */; };
 		7EC4EE8F180098CC00DD18E0 /* Left.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EC4EE8E180098CC00DD18E0 /* Left.png */; };
 		7EC4EE91180098D700DD18E0 /* Right.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EC4EE90180098D700DD18E0 /* Right.png */; };
@@ -354,6 +355,9 @@
 		7EA5BF3117C98DCE0075EEF3 /* Mobill_logo29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill_logo29.png; sourceTree = "<group>"; };
 		7EA5BF4917CC7CCF0075EEF3 /* Mobill50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill50.png; sourceTree = "<group>"; };
 		7EA5BF4B17CC7D820075EEF3 /* Mobill40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill40.png; sourceTree = "<group>"; };
+		7EC3F8AE181337E600F5B6B7 /* ApprovalCommentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApprovalCommentViewController.h; sourceTree = "<group>"; };
+		7EC3F8AF181337E600F5B6B7 /* ApprovalCommentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApprovalCommentViewController.m; sourceTree = "<group>"; };
+		7EC3F8B11813B0BC00F5B6B7 /* Approvable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Approvable.h; sourceTree = "<group>"; };
 		7EC4EE8C180098BD00DD18E0 /* Down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Down.png; sourceTree = "<group>"; };
 		7EC4EE8E180098CC00DD18E0 /* Left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Left.png; sourceTree = "<group>"; };
 		7EC4EE90180098D700DD18E0 /* Right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Right.png; sourceTree = "<group>"; };
@@ -397,6 +401,8 @@
 			children = (
 				0E092B1E180F397D00BC6E92 /* ApproveBillsTableViewController.h */,
 				0E092B1F180F397D00BC6E92 /* ApproveBillsTableViewController.m */,
+				7EC3F8AE181337E600F5B6B7 /* ApprovalCommentViewController.h */,
+				7EC3F8AF181337E600F5B6B7 /* ApprovalCommentViewController.m */,
 			);
 			name = Approve;
 			sourceTree = "<group>";
@@ -645,6 +651,7 @@
 			children = (
 				0E8FBAD9160D94840074C01B /* BDCBusinessObject.h */,
 				0E8FBADA160D94840074C01B /* BDCBusinessObject.m */,
+				7EC3F8B11813B0BC00F5B6B7 /* Approvable.h */,
 				7E579F8515ABA91A009D1455 /* Organization.h */,
 				7E579F8615ABA91A009D1455 /* Organization.m */,
 				0EA33395172733AC00FB92F3 /* APBusinessObject.h */,
@@ -996,6 +1003,7 @@
 				7E579F8715ABA91A009D1455 /* Organization.m in Sources */,
 				7E579F8A15ACE571009D1455 /* UserProfileViewController.m in Sources */,
 				0E2C0AC315EC44390059C739 /* Invoice.m in Sources */,
+				7EC3F8B0181337E600F5B6B7 /* ApprovalCommentViewController.m in Sources */,
 				0E2C0ACB15F12D9B0059C739 /* InvoicesTableViewController.m in Sources */,
 				0EC88C9715F1374900A490EE /* AROverViewController.m in Sources */,
 				7ED50F751807CE13002064C4 /* ApproversTableViewController.m in Sources */,

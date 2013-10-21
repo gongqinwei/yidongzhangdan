@@ -16,6 +16,7 @@
 #import "EditVendorViewController.h"
 #import "PayBillViewController.h"
 #import "ApproversTableViewController.h"
+#import "ApprovalCommentViewController.h"
 //#import "EditAPLineItemViewController.h"
 #import "Util.h"
 #import "Constants.h"
@@ -64,6 +65,7 @@ typedef enum {
 #define BILL_VIEW_VENDOR_DETAILS_SEGUE  @"ViewVendorDetails"
 #define BILL_PAY_BILL_SEGUE             @"PayBill"
 #define BILL_ADD_APPROVER_SEGUE         @"AddBillAprover"
+#define BILL_APPROVAL_COMMENT_SEGUE     @"WriteApprovalComment"
 
 #define BILL_LABEL_FONT_SIZE            13
 #define BillInfo                 [NSArray arrayWithObjects:@"Vendor", @"Invoice #", @"Inv Date", @"Due Date", @"Approval", @"Payment", nil]
@@ -78,7 +80,7 @@ typedef enum {
 #define ACCOUNT_PICKER_TAG              2
 
 
-@interface EditBillViewController () <VendorSelectDelegate, ScannerDelegate, PayBillDelegate, ApproverListDelegate, ApproverSelectDelegate, UITextFieldDelegate, UIScrollViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
+@interface EditBillViewController () <VendorSelectDelegate, ScannerDelegate, PayBillDelegate, ApproverListDelegate, ApproverSelectDelegate, ApprovalDelegate, UITextFieldDelegate, UIScrollViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
 
 @property (nonatomic, strong) NSDecimalNumber *totalAmount;
 @property (nonatomic, strong) UIDatePicker *billDatePicker;
@@ -233,9 +235,9 @@ typedef enum {
 - (void)setBusObj:(BDCBusinessObjectWithAttachments *)busObj {
     [super setBusObj:busObj];
     
-    if (self.mode != kCreateMode && self.mode != kAttachMode) {
-        self.approvers = self.approvers;    // actually resetting modifiedApprovers and reload section
-    }
+//    if (self.mode != kCreateMode && self.mode != kAttachMode) {
+//        self.approvers = self.approvers;    // actually resetting modifiedApprovers and reload section
+//    }
 }
 
 - (BOOL)isAP {
@@ -302,10 +304,10 @@ typedef enum {
 
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kBillApprovers] withRowAnimation:UITableViewRowAnimationAutomatic];
-        if (self.mode != kCreateMode && self.mode != kAttachMode) {
-            NSIndexPath *approvalStatusPath = [NSIndexPath indexPathForRow:kBillApprovalStatus inSection:kBillInfo];
-            [self.tableView reloadRowsAtIndexPaths:@[approvalStatusPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        }
+//        if (self.mode != kCreateMode && self.mode != kAttachMode) {
+//            NSIndexPath *approvalStatusPath = [NSIndexPath indexPathForRow:kBillApprovalStatus inSection:kBillInfo];
+//            [self.tableView reloadRowsAtIndexPaths:@[approvalStatusPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+//        }
     });
 }
 
@@ -437,6 +439,15 @@ typedef enum {
 
 #pragma mark - Life Cycle
 
+- (void)viewWillAppear:(BOOL)animated {
+    if (!_approvers && self.mode != kCreateMode && self.mode != kAttachMode) {
+        if (self.shaddowBusObj && self.shaddowBusObj.objectId) {      // safety check
+            [Approver setListDelegate:self];
+            [Approver retrieveListForObject:self.shaddowBusObj.objectId];
+        }
+    }
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
@@ -444,7 +455,7 @@ typedef enum {
         self.viewHasAppeared = YES;
         
         [self.billVendorTextField becomeFirstResponder];
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:3] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:kBillDocs] atScrollPosition:UITableViewScrollPositionTop animated:YES];
         [self.billVendorInputAccessoryTextField becomeFirstResponder];
         if (self.vendors.count) {
             [self didSelectVendor:self.vendors[0]];
@@ -489,8 +500,7 @@ typedef enum {
     }
     
     // retrieve approvers in view/edit mode
-//    self.approvers = [NSArray array];
-    _approvers = [NSArray array];
+//    _approvers = [NSArray array];
     self.modifiedApprovers = [NSMutableArray array];
     self.approverSet = [NSMutableSet set];
     
@@ -544,11 +554,6 @@ typedef enum {
                 [self.attachmentImageView addSubview:self.attachmentImageObscure];
                 [self.previewScrollView addSubview:self.attachmentImageDownloadingIndicator];
             }
-        }
-    } else {
-        if (self.shaddowBusObj && self.shaddowBusObj.objectId) {      // safety check
-            [Approver setListDelegate:self];
-            [Approver retrieveListForObject:self.shaddowBusObj.objectId];
         }
     }
     
@@ -761,15 +766,23 @@ typedef enum {
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.activityIndicator.hidesWhenStopped = YES;
     
-    UIToolbar *approvalBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, CELL_HEIGHT)];
-    UIBarButtonItem *approveButton = [[UIBarButtonItem alloc]initWithTitle:@"Approve"style:UIBarButtonItemStyleBordered target:self action:@selector(approveBill)];
-    [approvalBar setItems:[NSArray arrayWithObjects:approveButton, nil]];
-    approvalBar.translucent = YES;
-    [self.view addSubview:approvalBar];
+    if (self.forApproval) {
+        self.title = nil;
+        
+        UIBarButtonItem *approveButton = [[UIBarButtonItem alloc] initWithTitle:@"Approve" style:UIBarButtonItemStyleBordered target:self action:@selector(processApproval:)];
+        approveButton.tag = kApproverApproved;
+        
+        UIBarButtonItem *denyButton = [[UIBarButtonItem alloc] initWithTitle:@"Deny" style:UIBarButtonItemStyleBordered target:self action:@selector(processApproval:)];
+        denyButton.tag = kApproverDenied;
+        
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.navigationItem.rightBarButtonItem, denyButton, approveButton, nil];
+        
+        ((Bill *)self.busObj).approvalDelegate = self;
+    }
 }
 
-- (void)approveBill {
-    
+- (void)processApproval:(UIBarButtonItem *)sender {
+    [self performSegueWithIdentifier:BILL_APPROVAL_COMMENT_SEGUE sender:sender];
 }
 
 - (void)getBillNumberFromTextField:(UITextField *)textField {
@@ -915,6 +928,9 @@ typedef enum {
     } else if ([segue.identifier isEqualToString:BILL_ADD_APPROVER_SEGUE]) {
 //        [segue.destinationViewController setMode:kSelectMode];
         [segue.destinationViewController setSelectDelegate:self];
+    } else if ([segue.identifier isEqualToString:BILL_APPROVAL_COMMENT_SEGUE]) {
+        [segue.destinationViewController setBusObj:self.busObj];
+        [segue.destinationViewController setApprovalDecision:((UIBarButtonItem *)sender).tag];
     }
 }
 
@@ -1794,4 +1810,22 @@ typedef enum {
 - (void)didGetApprovers {}
 - (void)failedToGetApprovers {}
 - (void)didAddApprover:(Approver *)approver {}
+
+#pragma mark - Approval delegate
+
+- (void)didProcessApproval {
+    self.forApproval = NO;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.shaddowBusObj read];
+        
+        self.title = self.busObj.name;
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObject:self.navigationItem.rightBarButtonItems[0]];
+    });
+}
+
+- (void)failedToProcessApproval {
+    
+}
+
+
 @end

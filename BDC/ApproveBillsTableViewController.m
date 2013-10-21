@@ -178,10 +178,12 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(Bill *)sender
 {
     if ([segue.identifier isEqualToString:APPROVE_BILL_SEGUE]) {
+        [segue.destinationViewController setForApproval:YES];
         [segue.destinationViewController setBusObj:sender];
         [segue.destinationViewController setMode:kViewMode];
-        [segue.destinationViewController setForApproval:YES];
-        [segue.destinationViewController setTitle:[NSString stringWithFormat:@"Approve %@", sender.invoiceNumber]];
+
+        UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleBordered target:nil action:nil];
+        self.navigationItem.backBarButtonItem = backButton;
     }
 }
 
@@ -208,6 +210,11 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.refreshControl endRefreshing];
     });
+}
+
+- (void)didProcessApproval {
+    self.billsToApprove = [Bill listBillsToApprove];
+    [self.tableView reloadData];
 }
 
 - (void)failedToProcessApproval {

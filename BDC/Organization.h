@@ -11,6 +11,7 @@
 #import "BDCBusinessObjectWithAttachments.h"
 
 
+#define ORG_PREF_APPROVALS                      @"approvals"
 #define BILLS_NEED_APPROVALS                    @"billsNeedApprovals"
 #define DEFAULT_APPROVER                        @"defaultApprover"
 #define DEFAULT_APPROVER_FOR_ALL_FUTURE_BILLS   @"defaultApproverForAllFutureBills"

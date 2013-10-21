@@ -1487,18 +1487,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="oI3-C8-YgZ">
-                            <rect key="frame" x="0.0" y="305" width="320" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            <items>
-                                <barButtonItem id="ZVR-GA-2CS"/>
-                                <barButtonItem title="Deny" width="49" id="bys-a4-y07"/>
-                                <barButtonItem width="39" style="plain" systemItem="fixedSpace" id="p76-2T-CLl"/>
-                                <barButtonItem title="Approve" id="hZs-rS-EOv"/>
-                                <barButtonItem width="44" style="plain" systemItem="fixedSpace" id="eqA-cC-g1b"/>
-                                <barButtonItem title="Skip" id="2sp-Rh-IqT"/>
-                            </items>
-                        </toolbar>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BillInfo" textLabel="SXJ-ri-qAS" detailTextLabel="ifK-uP-2Ox" style="IBUITableViewCellStyleValue2" id="vlX-cw-Rqg">
                                 <rect key="frame" x="0.0" y="119" width="320" height="44"/>
@@ -1577,6 +1565,7 @@
                         <segue destination="Crd-D4-0GL" kind="push" identifier="ViewVendorDetails" id="dP9-hw-whd"/>
                         <segue destination="IyU-sG-dly" kind="modal" identifier="PayBill" id="V7c-Sb-YSA"/>
                         <segue destination="TWe-gc-5HJ" kind="push" identifier="AddBillAprover" id="f4h-vQ-zhx"/>
+                        <segue destination="07m-xa-SlI" kind="modal" identifier="WriteApprovalComment" id="k3Y-sK-dc5"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j3c-Mt-KhE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1968,6 +1957,56 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Yx-DX-cJr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-3527" y="-578"/>
+        </scene>
+        <!--Approval Comment View Controller-->
+        <scene sceneID="REf-Hv-gmt">
+            <objects>
+                <viewController id="07m-xa-SlI" customClass="ApprovalCommentViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="9d0-wx-cch"/>
+                        <viewControllerLayoutGuide type="bottom" id="Txb-n7-VHV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="d42-7n-gKK">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ckf-RB-J8Y">
+                                <rect key="frame" x="20" y="66" width="280" height="240"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xvw-c2-9is">
+                                <rect key="frame" x="-5" y="0.0" width="325" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Note" id="6Lp-Yo-qqm">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="gd1-Zx-DCW">
+                                            <connections>
+                                                <action selector="cancelApproval:" destination="07m-xa-SlI" id="bSV-B6-4DP"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" title="Submit" id="8te-Vk-e1N">
+                                            <connections>
+                                                <action selector="submitApproval:" destination="07m-xa-SlI" id="LD6-Uq-uDD"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="approvalButton" destination="8te-Vk-e1N" id="baq-r7-BEM"/>
+                        <outlet property="approvalCommentNavigationItem" destination="6Lp-Yo-qqm" id="WaN-76-N7a"/>
+                        <outlet property="approvalNoteView" destination="Ckf-RB-J8Y" id="PJN-tb-nyU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="icn-Tl-pPJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3055" y="1049"/>
         </scene>
         <!--Action Menu View Controller-->
         <scene sceneID="jSH-Kq-FQu">
@@ -2739,7 +2778,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vGO-Ax-ofn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3055" y="1049"/>
+            <point key="canvasLocation" x="-3527" y="1049"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="cYA-RG-aET">
@@ -2865,7 +2904,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wej-cm-A3n" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3527" y="1049"/>
+            <point key="canvasLocation" x="-3999" y="1049"/>
         </scene>
     </scenes>
     <resources>
@@ -2898,15 +2937,15 @@
         <segue reference="f4h-vQ-zhx"/>
         <segue reference="Vyp-zG-ZzN"/>
         <segue reference="crQ-7s-jkT"/>
-        <segue reference="zBW-fL-edY"/>
-        <segue reference="nLD-mQ-6wj"/>
         <segue reference="wxy-Zp-Lfl"/>
+        <segue reference="nLD-mQ-6wj"/>
         <segue reference="CeX-f9-mSc"/>
         <segue reference="rr1-4I-AAm"/>
+        <segue reference="fR5-hZ-eeX"/>
         <segue reference="fqJ-Rf-CsZ"/>
         <segue reference="bpG-n7-YKA"/>
-        <segue reference="2iZ-iS-Zfa"/>
         <segue reference="01U-I1-ojU"/>
         <segue reference="4YZ-nK-Ds9"/>
+        <segue reference="2iZ-iS-Zfa"/>
     </inferredMetricsTieBreakers>
 </document>

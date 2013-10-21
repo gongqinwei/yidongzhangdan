@@ -10,6 +10,7 @@
 #import "BDCBusinessObjectWithAttachments.h"
 #import "SlidingDetailsTableViewController.h"
 #import "SlidingListTableViewController.h"
+#import "Approvable.h"
 
 
 #define BILL_TABLE_SECTION_HEADER_HEIGHT    28
@@ -67,12 +68,14 @@
 - (void)failedToGetBills;
 - (void)didGetBillsToApprove:(NSMutableArray *)bills;
 - (void)failedToGetBillsToApprove;
+
+- (void)didProcessApproval;
 - (void)failedToProcessApproval;
 
 @end
 
 
-@interface Bill : BDCBusinessObjectWithAttachments
+@interface Bill : BDCBusinessObjectWithAttachments <Approvable>
 
 @property (nonatomic, strong) NSString *vendorId;
 @property (nonatomic, strong) NSString *vendorName;
@@ -86,12 +89,13 @@
 
 @property (nonatomic, strong) NSMutableArray *lineItems;
 @property (nonatomic, weak) id<BusObjectDelegate> detailsDelegate;
+@property (nonatomic, weak) id<ApprovalDelegate> approvalDelegate;
 
-// approval methods
-- (void)approve;
-- (void)approveWithComment:(NSString *)comment;
-- (void)denyWithComment:(NSString *)comment;
-- (void)skipWithComment:(NSString *)comment;
+//// approval methods
+//- (void)approve;
+//- (void)approveWithComment:(NSString *)comment;
+//- (void)denyWithComment:(NSString *)comment;
+//- (void)skipWithComment:(NSString *)comment;
 
 // delegates
 + (void)setAPDelegate:(id<BillListDelegate>)delegate;

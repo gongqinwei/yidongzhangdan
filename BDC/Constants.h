@@ -11,8 +11,8 @@
 
 #import "Labels.h"
 
-//#define LOCAL
-#define APPTEST
+#define LOCAL
+//#define APPTEST
 //#define APPSTAGE
 //#define PROD
 
@@ -20,8 +20,8 @@
 #ifdef LOCAL
 #define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
 #define ERR_DOMAIN          @"Local"
-#define DOMAIN_URL          @"http://10.1.9.89"
-//#define DOMAIN_URL          @"http://192.168.1.6"
+//#define DOMAIN_URL          @"http://10.1.9.89"
+#define DOMAIN_URL          @"http://192.168.1.12"
 #define APP_KEY             @"devKey"
 #define DEBUG_MODE
 #endif
@@ -56,6 +56,13 @@
 #endif
 
 #define KEYCHAIN_ID         @"BDCLogin"
+
+// Version
+#define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
+#define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
 //API Params
 #define ORG_ID              @"orgId"

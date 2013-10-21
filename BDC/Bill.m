@@ -52,6 +52,7 @@ static NSMutableSet *billsToApproveSet;
 @synthesize paymentStatus;
 @synthesize lineItems;
 @synthesize detailsDelegate;
+@synthesize approvalDelegate;
 
 
 - (void)approve {
@@ -85,11 +86,16 @@ static NSMutableSet *billsToApproveSet;
         if(response_status == RESPONSE_SUCCESS) {
             [billsToApprove removeObject:self];
             [billsToApproveSet removeObject:self];
+            
+            [self.approvalDelegate didProcessApproval];
+            [ListForApprovalDelegate didProcessApproval];
         } else if (response_status == RESPONSE_TIMEOUT) {
+            [self.approvalDelegate failedToProcessApproval];
             [ListForApprovalDelegate failedToProcessApproval];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
             Debug(@"Time out when processing %@ for bill %@!", action, self.objectId);
         } else {
+            [self.approvalDelegate failedToProcessApproval];
             [ListForApprovalDelegate failedToProcessApproval];
             [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             Debug(@"Failed to processing %@ for bill %@! %@", action, self.objectId, [err localizedDescription]);

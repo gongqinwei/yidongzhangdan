@@ -57,7 +57,8 @@ static Organization *selectedOrg = nil;
 - (void)getOrgPrefs {
     [APIHandler asyncCallWithAction:ORG_PREF_API Info:nil AndHandler:^(NSURLResponse *response, NSData *data, NSError *err) {
         NSInteger response_status;
-        NSDictionary *orgPrefs = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        NSDictionary *approvals = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        NSDictionary *orgPrefs = [approvals objectForKey:ORG_PREF_APPROVALS];
         
         if(response_status == RESPONSE_SUCCESS) {
             self.needApprovalToPayBill = [[orgPrefs objectForKey:BILLS_NEED_APPROVALS] boolValue];
