@@ -11,8 +11,8 @@
 
 #import "Labels.h"
 
-#define LOCAL
-//#define APPTEST
+//#define LOCAL
+#define APPTEST
 //#define APPSTAGE
 //#define PROD
 

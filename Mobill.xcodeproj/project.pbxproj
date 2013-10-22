@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0E01C34F172214FF00184702 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 0E01C34E172214FF00184702 /* .gitignore */; };
 		0E092B20180F397D00BC6E92 /* ApproveBillsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E092B1F180F397D00BC6E92 /* ApproveBillsTableViewController.m */; };
+		0E092B2618164EF200BC6E92 /* ApproveIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E092B2518164EF200BC6E92 /* ApproveIcon.png */; };
 		0E0B9E9D17751CE900C2AF30 /* TermOfServiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E0B9E9C17751CE900C2AF30 /* TermOfServiceViewController.m */; };
 		0E14EC601603ED960098EB03 /* warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E14EC5E1603ED960098EB03 /* warning.png */; };
 		0E14EC611603ED960098EB03 /* success.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E14EC5F1603ED960098EB03 /* success.png */; };
@@ -157,6 +158,7 @@
 		0E01C34E172214FF00184702 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		0E092B1E180F397D00BC6E92 /* ApproveBillsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApproveBillsTableViewController.h; sourceTree = "<group>"; };
 		0E092B1F180F397D00BC6E92 /* ApproveBillsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApproveBillsTableViewController.m; sourceTree = "<group>"; };
+		0E092B2518164EF200BC6E92 /* ApproveIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ApproveIcon.png; sourceTree = "<group>"; };
 		0E0B9E9B17751CE900C2AF30 /* TermOfServiceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TermOfServiceViewController.h; sourceTree = "<group>"; };
 		0E0B9E9C17751CE900C2AF30 /* TermOfServiceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TermOfServiceViewController.m; sourceTree = "<group>"; };
 		0E14EC5E1603ED960098EB03 /* warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = warning.png; sourceTree = "<group>"; };
@@ -415,6 +417,7 @@
 				0EE2C128162CEB9100BB00DA /* InboxIcon.png */,
 				0E5F512C17782623001095C9 /* BillsIcon.png */,
 				0E3552CB1778B7F9007D1CB2 /* VendorsIcon.png */,
+				0E092B2518164EF200BC6E92 /* ApproveIcon.png */,
 				0E5F512B17782623001095C9 /* InvoicesIcon.png */,
 				0E5F512F177827D7001095C9 /* CustomersIcon.png */,
 				0E5F5131177827D8001095C9 /* ItemsIcon.png */,
@@ -930,6 +933,7 @@
 				0EB2192917472EE600382C44 /* csv_icon.png in Resources */,
 				0ECF42B3175BC22A00BA7C7B /* doc_icon.png in Resources */,
 				0ECF42B5175BC24600BA7C7B /* docx_icon.png in Resources */,
+				0E092B2618164EF200BC6E92 /* ApproveIcon.png in Resources */,
 				0ECF42B7175BC27400BA7C7B /* exe_icon.png in Resources */,
 				0ECF42B9175BC29500BA7C7B /* gif_icon.png in Resources */,
 				0ECF42BB175BC2C100BA7C7B /* jpg_icon.png in Resources */,
