@@ -171,6 +171,9 @@ static ActionMenuViewController * _sharedInstance = nil;
     [self.orderSectionToggleButton addTarget:self action:@selector(toggleOrderSection:) forControlEvents:UIControlEventTouchUpInside];
     
     _sharedInstance = self;
+    
+//    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background_leather.png"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background_wooden.png"]];
 }
 
 - (void)viewDidUnload {
@@ -266,6 +269,8 @@ static ActionMenuViewController * _sharedInstance = nil;
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier2];
         }
     }
+    
+    cell.backgroundColor = [UIColor clearColor];
     
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         cell.textLabel.text = ((BDCBusinessObject *)[[self.searchResults objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]).name;

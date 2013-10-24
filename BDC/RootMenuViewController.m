@@ -201,6 +201,17 @@ static RootMenuViewController * _sharedInstance = nil;
 //    [UIView setAnimationDuration:0.2];
 //    self.view.frame = tempFrame;
 //    [UIView commitAnimations];
+    
+    
+//    UIGraphicsBeginImageContext(self.view.frame.size);
+//    [[UIImage imageNamed:@"Background_linen.png"] drawInRect:self.view.bounds];
+//    UIImage *background = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    self.view.backgroundColor = [UIColor colorWithPatternImage:background];
+    
+//    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background_wooden.png"]];
+//    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background_leather.png"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background_linen.png"]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -253,6 +264,8 @@ static RootMenuViewController * _sharedInstance = nil;
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
+    
+    cell.backgroundColor = [UIColor clearColor];
     
     if (indexPath.section == kRootProfile) {
         if (indexPath.row == kProfileUser) {    // temporarily same as profile org. will change to user name/email once BDC API implemented
