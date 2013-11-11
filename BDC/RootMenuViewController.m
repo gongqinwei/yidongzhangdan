@@ -131,7 +131,9 @@ static RootMenuViewController * _sharedInstance = nil;
                 vcID = [vcID stringByReplacingOccurrencesOfString:@" " withString:@""];
                 UINavigationController *navVC = [self.storyboard instantiateViewControllerWithIdentifier:vcID];
                 [self.menuItems setObject:navVC forKey:vcID];
-                [UIHelper adjustScreen:navVC];
+                if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+                    [UIHelper adjustScreen:navVC];
+                }
             }
         }
     }
@@ -202,16 +204,7 @@ static RootMenuViewController * _sharedInstance = nil;
 //    self.view.frame = tempFrame;
 //    [UIView commitAnimations];
     
-    
-//    UIGraphicsBeginImageContext(self.view.frame.size);
-//    [[UIImage imageNamed:@"Background_linen.png"] drawInRect:self.view.bounds];
-//    UIImage *background = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-//    self.view.backgroundColor = [UIColor colorWithPatternImage:background];
-    
-//    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background_wooden.png"]];
-//    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background_leather.png"]];
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background_linen.png"]];
+//    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background_linen.jpg"]];
 }
 
 - (void)didReceiveMemoryWarning

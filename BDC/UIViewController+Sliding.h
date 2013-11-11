@@ -46,7 +46,7 @@
 
 @class ActionMenuViewController;
 
-@interface UIViewController (Sliding) <SlideDelegate, ActionMenuDelegate>
+@interface UIViewController (Sliding) <SlideDelegate, ActionMenuDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic, strong) id<SlideDelegate> slidingInDelegate;
 @property (nonatomic, strong) id<SlideDelegate> slidingOutDelegate;

@@ -29,8 +29,6 @@ typedef enum {
 + (void)addShaddowForView:(UIView *)view;
 + (void)removeShaddowForView:(UIView *)view;
 
-+ (void)enterFullScreen;    // depricated
-+ (void)quitFullScreen;     // depricated
 + (void)adjustScreen:(UIViewController *)vc;
 
 + (void)switchViewController:(UIViewController *)vc toTab:(int)tabIndex withSegue:(NSString *)segueId animated:(BOOL)animated;

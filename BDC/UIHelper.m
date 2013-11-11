@@ -167,16 +167,6 @@
     view.layer.shadowColor = nil;
 }
 
-+ (void)enterFullScreen {
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:NO];
-    [UIApplication sharedApplication].keyWindow.frame=CGRectMake(0, 0, SCREEN_WIDTH, FULL_SCREEN_HEIGHT);
-}
-
-+ (void)quitFullScreen {
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
-    [UIApplication sharedApplication].keyWindow.frame=CGRectMake(0, FULL_SCREEN_HEIGHT - NORMAL_SCREEN_HEIGHT, SCREEN_WIDTH, NORMAL_SCREEN_HEIGHT);
-}
-
 + (void)switchViewController:(UIViewController *)vc toTab:(int)tabIndex withSegue:(NSString *)segueId animated:(BOOL)animated {
     if (!animated) {
         if (segueId != nil) {

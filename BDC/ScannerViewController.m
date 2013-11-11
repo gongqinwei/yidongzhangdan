@@ -117,7 +117,14 @@ enum PhotoSourceType {
     [self.preview addGestureRecognizer:tap];
     
     self.actions = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
-    [self.actions showInView:self.view];
+//    [self.actions showInView:self.view];
+    
+    UIWindow* window = [[UIApplication sharedApplication] keyWindow];
+    if ([window.subviews containsObject:self.view]) {
+        [self.actions showInView:self.view];
+    } else {
+        [self.actions showInView:window];
+    }
     
 //    if (self.mode == kAttachMode) {
 //        Debug(@"nav bar: %@", self.navigationItem.leftBarButtonItem);

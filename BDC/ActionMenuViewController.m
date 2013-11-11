@@ -172,8 +172,7 @@ static ActionMenuViewController * _sharedInstance = nil;
     
     _sharedInstance = self;
     
-//    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background_leather.png"]];
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background_wooden.png"]];
+//    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background_linen.jpg"]];
 }
 
 - (void)viewDidUnload {

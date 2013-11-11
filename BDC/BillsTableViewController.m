@@ -165,11 +165,37 @@
     return self;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)setupTitle {
     if (self.mode == kAttachMode) {
         self.title = @"Select Bill";
-        [super viewWillAppear:animated];
+    } else {
+        self.title = @"Bills";
     }
+    
+    NSShadow *shadow = [[NSShadow alloc] init];
+    shadow.shadowColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.8];
+    shadow.shadowOffset = CGSizeMake(0, 1);
+    [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                           [UIColor colorWithRed:245.0/255.0 green:245.0/255.0 blue:245.0/255.0 alpha:1.0], NSForegroundColorAttributeName,
+                                                           shadow, NSShadowAttributeName,
+                                                           [UIFont fontWithName:@"HelveticaNeue-CondensedBlack" size:21.0], NSFontAttributeName, nil]];
+}
+
+//- (void)viewWillAppear:(BOOL)animated {
+//    [self setupTitle];
+//    [super viewWillAppear:animated];
+//}
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+
+    [super navigationController:navigationController willShowViewController:viewController animated:animated];
+    [self setupTitle];
+}
+
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+
+    [super navigationController:navigationController willShowViewController:viewController animated:animated];
+    [self setupTitle];
 }
 
 - (void)viewDidLoad
@@ -224,6 +250,8 @@
         [segue.destinationViewController setTitle:@"New Bill"];
         [segue.destinationViewController setMode:kCreateMode];
     }
+    
+//    self.navigationController.delegate = segue.destinationViewController;
 }
 
 #pragma mark - Table view data source

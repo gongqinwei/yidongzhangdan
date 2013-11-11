@@ -97,6 +97,54 @@ static double animatedDistance = 0;
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
+- (void)setupBarButtons {
+//    if (self.mode == kSelectMode || self.mode == kAttachMode) {
+//        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]
+//                                         initWithTitle: @"Cancel"
+//                                         style: UIBarButtonItemStyleBordered
+//                                         target: self action:@selector(navigateCancel)];
+//        
+//        self.navigationItem.leftBarButtonItem = cancelButton;
+//    }
+//    
+//    if (self.mode == kSelectMode) {
+//        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc]
+//                                       initWithTitle: @"Done"
+//                                       style: UIBarButtonItemStyleDone
+//                                       target: self action:@selector(navigateDone)];
+//        
+//        self.navigationItem.rightBarButtonItem = doneButton;
+//    } else if (self.mode == kAttachMode) {
+//        UIBarButtonItem *attachButton = [[UIBarButtonItem alloc]
+//                                         initWithTitle: @"Attach"
+//                                         style: UIBarButtonItemStyleDone
+//                                         target: self action:@selector(navigateAttach)];
+//        
+//        self.navigationItem.rightBarButtonItem = attachButton;
+//    } else {
+//        [self setSlidingMenuLeftBarButton];
+//        [self setActionMenuRightBarButton];
+//    }
+    
+    if (self.mode == kViewMode) {
+        [self setActionMenuRightBarButton];
+    } else {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveBusObj:)];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelEdit:)];
+    }
+}
+
+//- (void)viewWillAppear:(BOOL)animated {
+//    [self setupBarButtons];
+//}
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    [self setupBarButtons];
+}
+
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    [self setupBarButtons];
+}
 
 - (void)setMode:(ViewMode)mode {
     super.mode = mode;
@@ -117,8 +165,6 @@ static double animatedDistance = 0;
         
         [self.actionMenuVC.tableView reloadData];
         
-//        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleMenu:)];
-//        self.navigationItem.rightBarButtonItem.tag = 1;
         [self setActionMenuRightBarButton];
         self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
         

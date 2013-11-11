@@ -114,14 +114,11 @@
         self.refreshControl = refresh;
     }
     
-    [self setSlidingMenuLeftBarButton];
-    [self setActionMenuRightBarButton];
-    
     self.alphabets = ALPHABETS;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    if (self.mode == kSelectMode || self.mode == kAttachMode) {        
+- (void)setupBarButtons {
+    if (self.mode == kSelectMode || self.mode == kAttachMode) {
         UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]
                                          initWithTitle: @"Cancel"
                                          style: UIBarButtonItemStyleBordered
@@ -144,7 +141,26 @@
                                          target: self action:@selector(navigateAttach)];
         
         self.navigationItem.rightBarButtonItem = attachButton;
+    } else {
+        [self setSlidingMenuLeftBarButton];
+        [self setActionMenuRightBarButton];
     }
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [self setupBarButtons];
+}
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    Debug(@"--- %@", viewController);
+    
+    [self setupBarButtons];
+}
+
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    Debug(@"--- %@", viewController);
+    
+    [self setupBarButtons];
 }
 
 // private

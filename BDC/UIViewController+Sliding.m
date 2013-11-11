@@ -80,6 +80,20 @@ static char const * const TapRecognizerKey = "tapRecognizer";
     self.actionMenuVC = nil;
     self.slidingOutDelegate = [RootMenuViewController sharedInstance];
     self.slidingInDelegate = self;
+    
+//    [self paintNavigationGradient];
+    
+    self.navigationController.delegate = self;
+}
+
+- (void)paintNavigationGradient {
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height)];
+        CAGradientLayer *gradient = [CAGradientLayer layer];
+        gradient.frame = view.bounds;
+        gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:248/255.0 green:248/255.0 blue:255/255.0 alpha:1.0] CGColor], (id)[[UIColor colorWithRed:118/255.0 green:141/255.0 blue:176/255.0 alpha:1.0] CGColor], nil];
+        [self.navigationController.navigationBar.layer insertSublayer:gradient atIndex:1];
+    }
 }
 
 - (BOOL)tryTap {
@@ -116,7 +130,9 @@ static char const * const TapRecognizerKey = "tapRecognizer";
                 self.actionMenuVC = [self.storyboard instantiateViewControllerWithIdentifier:@"ActionMenu"];
                 self.actionMenuVC.targetViewController = self;
                 self.slidingInDelegate = self;
-                [UIHelper adjustScreen:self.actionMenuVC];
+                if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+                    [UIHelper adjustScreen:self.actionMenuVC];
+                }
             }
             [[RootMenuViewController sharedInstance].view insertSubview:self.actionMenuVC.view atIndex:1];
             

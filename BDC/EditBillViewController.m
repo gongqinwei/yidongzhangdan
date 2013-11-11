@@ -774,7 +774,7 @@ typedef enum {
         
         UIBarButtonItem *denyButton = [[UIBarButtonItem alloc] initWithTitle:@"Deny" style:UIBarButtonItemStyleBordered target:self action:@selector(processApproval:)];
         denyButton.tag = kApproverDenied;
-        
+
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.navigationItem.rightBarButtonItem, denyButton, approveButton, nil];
         
         ((Bill *)self.busObj).approvalDelegate = self;
