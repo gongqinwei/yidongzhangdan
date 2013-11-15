@@ -712,6 +712,7 @@ typedef enum {
             }
 
             cell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+            cell.backgroundColor = [UIColor clearColor];
             
             if (indexPath.row == 0) {
                 if (self.mode != kCreateMode && self.mode != kAttachMode) {
@@ -741,7 +742,7 @@ typedef enum {
     } else if (indexPath.section == kInvoiceLineItems) {
         return CELL_HEIGHT;
     } else {
-        return IMG_HEIGHT + IMG_PADDING + ATTACHMENT_PV_HEIGHT;
+        return IMG_HEIGHT + IMG_PADDING + ATTACHMENT_PV_HEIGHT + (SYSTEM_VERSION_LESS_THAN(@"7.0") ? 0 : 10);
     }
 }
 

@@ -34,8 +34,24 @@
 @synthesize numNetworkActivities = _numNetworkActivities;
 @synthesize isFirstLaunch;
 
+- (void)setupNavigationBarForiOS7 {
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        NSShadow *shadow = [[NSShadow alloc] init];
+        shadow.shadowColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.8];
+        shadow.shadowOffset = CGSizeMake(0, 1);
+        [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                               [UIColor colorWithRed:245.0/255.0 green:245.0/255.0 blue:245.0/255.0 alpha:1.0], NSForegroundColorAttributeName,
+                                                               shadow, NSShadowAttributeName,
+                                                               [UIFont fontWithName:APP_BOLD_FONT size:20.0], NSFontAttributeName, nil]];
+        
+        [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"iOS7NavBarBackground.png"] forBarMetrics:UIBarMetricsDefault];
+    }
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [self setupNavigationBarForiOS7];
+    
     self.isFirstLaunch = YES;
     self.numNetworkActivities = 0;
     

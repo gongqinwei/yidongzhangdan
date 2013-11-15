@@ -155,6 +155,13 @@
                                vc.view.frame.size.height);
 }
 
++ (void)adjustActionMenuScreenForiOS7:(UIViewController *)vc {
+    vc.view.frame = CGRectMake(vc.view.frame.origin.x,
+                               vc.view.frame.origin.y + STATUS_BAR_HEIGHT,
+                               vc.view.frame.size.width,
+                               vc.view.frame.size.height);
+}
+
 + (void)addShaddowForView:(UIView *)view {
     view.layer.shadowOpacity = 0.8f;
     view.layer.shadowRadius = 10.0f;

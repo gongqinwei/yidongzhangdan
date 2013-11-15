@@ -171,14 +171,6 @@
     } else {
         self.title = @"Bills";
     }
-    
-    NSShadow *shadow = [[NSShadow alloc] init];
-    shadow.shadowColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.8];
-    shadow.shadowOffset = CGSizeMake(0, 1);
-    [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
-                                                           [UIColor colorWithRed:245.0/255.0 green:245.0/255.0 blue:245.0/255.0 alpha:1.0], NSForegroundColorAttributeName,
-                                                           shadow, NSShadowAttributeName,
-                                                           [UIFont fontWithName:@"HelveticaNeue-CondensedBlack" size:21.0], NSFontAttributeName, nil]];
 }
 
 //- (void)viewWillAppear:(BOOL)animated {
@@ -187,13 +179,11 @@
 //}
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-
     [super navigationController:navigationController willShowViewController:viewController animated:animated];
     [self setupTitle];
 }
 
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-
     [super navigationController:navigationController willShowViewController:viewController animated:animated];
     [self setupTitle];
 }
@@ -293,7 +283,11 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = BILL_DETAILS_CELL_ID;
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = nil;
+    
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    }
     
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];

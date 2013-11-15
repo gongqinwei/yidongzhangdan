@@ -2015,8 +2015,9 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="NRC-ht-aHf">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
-                        <color key="separatorColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="tintColor" red="0.1960784314" green="0.30980392159999998" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="separatorColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                         <searchBar key="tableHeaderView" contentMode="redraw" id="vtG-U0-SMN">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
@@ -2931,7 +2932,8 @@
         <segue reference="nLD-mQ-6wj"/>
         <segue reference="znb-5y-98g"/>
         <segue reference="WRK-Bd-AdY"/>
-        <segue reference="dDa-B4-rpb"/>
+        <segue reference="0I6-iw-p0z"/>
+        <segue reference="jip-NJ-HyG"/>
         <segue reference="f4h-vQ-zhx"/>
         <segue reference="Vyp-zG-ZzN"/>
         <segue reference="dP9-hw-whd"/>
@@ -2943,7 +2945,6 @@
         <segue reference="fqJ-Rf-CsZ"/>
         <segue reference="bpG-n7-YKA"/>
         <segue reference="rr1-4I-AAm"/>
-        <segue reference="jip-NJ-HyG"/>
         <segue reference="2iZ-iS-Zfa"/>
         <segue reference="ysq-5e-jjh"/>
         <segue reference="5Ki-uI-G54"/>

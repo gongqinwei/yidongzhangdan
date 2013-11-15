@@ -117,7 +117,7 @@ static ActionMenuViewController * _sharedInstance = nil;
     self.searchDisplayController.searchBar.placeholder = @"Search Bill.com";
     
     self.activenessSwitch = [[UISegmentedControl alloc] initWithItems:@[@"Active", @"Inactive"]];
-    self.activenessSwitch.frame = CGRectMake(1.0, 0.0, SLIDING_DISTANCE - 2.0, 30.0);
+    self.activenessSwitch.frame = CGRectMake(1.0, 0.0, SLIDING_DISTANCE, 31.0);
     self.activenessSwitch.segmentedControlStyle = UISegmentedControlStyleBar;
     [self.activenessSwitch addTarget:self action:@selector(switchActiveness) forControlEvents:UIControlEventValueChanged];
     
@@ -136,8 +136,14 @@ static ActionMenuViewController * _sharedInstance = nil;
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;        
         self.actionDelegate = self.targetViewController;
         
-        self.ascSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(SLIDING_DISTANCE - 108.0, 1.0, 40.0, ACTION_MENU_SECTION_HEADER_HEIGHT)];
-        self.ascSwitch.transform = CGAffineTransformMakeScale(0.8, 0.8);
+        if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+            self.ascSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(SLIDING_DISTANCE - 108.0, 1.0, 40.0, ACTION_MENU_SECTION_HEADER_HEIGHT)];
+            self.ascSwitch.transform = CGAffineTransformMakeScale(0.8, 0.8);
+        } else {
+            self.ascSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(SLIDING_DISTANCE - 85.0, 0.0, 40.0, ACTION_MENU_SECTION_HEADER_HEIGHT)];
+            self.ascSwitch.transform = CGAffineTransformMakeScale(0.7, 0.7);
+        }
+        
         [self.ascSwitch addTarget:self action:@selector(switchAscending) forControlEvents:UIControlEventValueChanged];
         
         self.ascLabel = [[UILabel alloc] initWithFrame:CGRectMake(SLIDING_DISTANCE - 37.0, 9.0, 37.0, 15.0)];
@@ -495,7 +501,11 @@ static ActionMenuViewController * _sharedInstance = nil;
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, ACTION_MENU_SECTION_HEADER_HEIGHT)];
-    headerView.backgroundColor = [UIColor darkGrayColor];
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        headerView.backgroundColor = [UIColor darkGrayColor];
+    } else {
+        headerView.backgroundColor = [UIColor grayColor];
+    }
     
     UILabel *label = [[UILabel alloc] initWithFrame:ACTION_MENU_SECTION_HEADER_LABEL_RECT];
     [UIHelper initializeHeaderLabel:label];

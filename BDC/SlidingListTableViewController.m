@@ -152,14 +152,10 @@
 }
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    Debug(@"--- %@", viewController);
-    
     [self setupBarButtons];
 }
 
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    Debug(@"--- %@", viewController);
-    
     [self setupBarButtons];
 }
 

@@ -1276,6 +1276,7 @@ typedef enum {
                 [cell.contentView addSubview:self.attachmentScrollView];
                 [cell.contentView addSubview:self.attachmentPageControl];
                 cell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+                cell.backgroundColor = [UIColor clearColor];
             } else {
                 cell = [tableView dequeueReusableCellWithIdentifier:BILL_IMAGE_CELL_ID];
                 if (!cell) {
@@ -1307,7 +1308,7 @@ typedef enum {
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kBillDocs) {
         if (indexPath.row == 0) {
-            return IMG_HEIGHT + IMG_PADDING + ATTACHMENT_PV_HEIGHT + ((self.mode == kAttachMode) ? 110 : 0);
+            return IMG_HEIGHT + IMG_PADDING + ATTACHMENT_PV_HEIGHT + ((self.mode == kAttachMode) ? 110 : (SYSTEM_VERSION_LESS_THAN(@"7.0") ? 0 : 10));
         } else {
             return NORMAL_SCREEN_HEIGHT + 30;
         }

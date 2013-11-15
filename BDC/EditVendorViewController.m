@@ -372,7 +372,7 @@ enum VendorInfoType {
                         
 //                        cell.detailTextLabel.text = shaddowVendor.email;
                         
-                        UITextView *emailView = [[UITextView alloc] initWithFrame:TABLE_CELL_DETAIL_TEXT_RECT];
+                        UITextView *emailView = [[UITextView alloc] initWithFrame:SYSTEM_VERSION_LESS_THAN(@"7.0") ? TABLE_CELL_DETAIL_TEXT_RECT : TABLE_CELL_DETAIL_TEXT_RECT_7];
                         emailView.font = [UIFont systemFontOfSize:TABLE_CELL_DETAIL_TEXT_FONT];
                         emailView.text = shaddowVendor.email;
                         emailView.backgroundColor = [UIColor clearColor];
@@ -397,8 +397,8 @@ enum VendorInfoType {
                         [cell addSubview:phoneImg];
                         
 //                        cell.detailTextLabel.text = shaddowVendor.phone;
-                        
-                        UITextView *phoneView = [[UITextView alloc] initWithFrame:TABLE_CELL_DETAIL_TEXT_RECT];
+
+                        UITextView *phoneView = [[UITextView alloc] initWithFrame:SYSTEM_VERSION_LESS_THAN(@"7.0") ? TABLE_CELL_DETAIL_TEXT_RECT : TABLE_CELL_DETAIL_TEXT_RECT_7];
                         phoneView.font = [UIFont systemFontOfSize:TABLE_CELL_DETAIL_TEXT_FONT];
                         phoneView.text = shaddowVendor.phone;
                         phoneView.backgroundColor = [UIColor clearColor];
@@ -605,6 +605,7 @@ enum VendorInfoType {
             [cell.contentView addSubview:self.attachmentScrollView];
             [cell.contentView addSubview:self.attachmentPageControl];
             cell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+            cell.backgroundColor = [UIColor clearColor];
         }
             break;
             
@@ -625,7 +626,7 @@ enum VendorInfoType {
             return CELL_HEIGHT;
         }
     } else {
-        return IMG_HEIGHT + IMG_PADDING + ATTACHMENT_PV_HEIGHT;
+        return IMG_HEIGHT + IMG_PADDING + ATTACHMENT_PV_HEIGHT + (SYSTEM_VERSION_LESS_THAN(@"7.0") ? 0 : 10);
     }
 }
 

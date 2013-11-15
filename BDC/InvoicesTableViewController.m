@@ -236,7 +236,11 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = INVOICE_DETAILS_CELL_ID;
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = nil;
+    
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    }
     
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];

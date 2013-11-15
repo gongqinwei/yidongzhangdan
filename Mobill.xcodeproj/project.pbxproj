@@ -153,6 +153,7 @@
 		7EE3920A17DD2184007B1126 /* directionsIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EE3920917DD2184007B1126 /* directionsIcon.png */; };
 		7EF87EB317F403D300FCE2C8 /* RecorderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF87EB217F403D300FCE2C8 /* RecorderViewController.m */; };
 		7EFA900E1818D9C2001F81E6 /* Background_linen.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7EFA900D1818D9C2001F81E6 /* Background_linen.jpg */; };
+		7EFA901A1834AF24001F81E6 /* iOS7NavBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EFA90191834AF24001F81E6 /* iOS7NavBarBackground.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -377,6 +378,7 @@
 		7EF87EB117F403D300FCE2C8 /* RecorderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecorderViewController.h; sourceTree = "<group>"; };
 		7EF87EB217F403D300FCE2C8 /* RecorderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecorderViewController.m; sourceTree = "<group>"; };
 		7EFA900D1818D9C2001F81E6 /* Background_linen.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Background_linen.jpg; sourceTree = "<group>"; };
+		7EFA90191834AF24001F81E6 /* iOS7NavBarBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iOS7NavBarBackground.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -415,6 +417,7 @@
 			isa = PBXGroup;
 			children = (
 				7EFA900D1818D9C2001F81E6 /* Background_linen.jpg */,
+				7EFA90191834AF24001F81E6 /* iOS7NavBarBackground.png */,
 			);
 			name = Background;
 			sourceTree = "<group>";
@@ -974,6 +977,7 @@
 				0E5F5134177827D8001095C9 /* ItemsIcon.png in Resources */,
 				0E5F513617782A95001095C9 /* MyCompaniesIcon.png in Resources */,
 				0E5F513E1778329C001095C9 /* FeedbackIcon.png in Resources */,
+				7EFA901A1834AF24001F81E6 /* iOS7NavBarBackground.png in Resources */,
 				0E5F51401778329C001095C9 /* LogOutIcon.png in Resources */,
 				7EC4EE8D180098BD00DD18E0 /* Down.png in Resources */,
 				0E5F51441778332F001095C9 /* ScannerIcon.png in Resources */,

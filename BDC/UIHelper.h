@@ -30,6 +30,7 @@ typedef enum {
 + (void)removeShaddowForView:(UIView *)view;
 
 + (void)adjustScreen:(UIViewController *)vc;
++ (void)adjustActionMenuScreenForiOS7:(UIViewController *)vc;
 
 + (void)switchViewController:(UIViewController *)vc toTab:(int)tabIndex withSegue:(NSString *)segueId animated:(BOOL)animated;
 

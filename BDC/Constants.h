@@ -199,6 +199,7 @@
 #define CELL_HEIGHT                     44
 #define INFO_INPUT_RECT                 CGRectMake(CELL_WIDTH - 170, 5, 170, CELL_HEIGHT - 10)
 #define TABLE_CELL_DETAIL_TEXT_RECT     CGRectMake(85, 5, CELL_WIDTH - 100, CELL_HEIGHT - 10)
+#define TABLE_CELL_DETAIL_TEXT_RECT_7   CGRectMake(107, 6, CELL_WIDTH - 100, CELL_HEIGHT - 10)
 #define TABLE_CELL_DETAIL_TEXT_FONT     13.0
 
 #define INVALID_OPTION                  -1
