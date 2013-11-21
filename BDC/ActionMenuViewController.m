@@ -316,13 +316,13 @@ static ActionMenuViewController * _sharedInstance = nil;
                             }
                         }
                     } else {
-                        cell.imageView.image = [UIImage imageNamed:@"emailIcon.png"];
+                        cell.imageView.image = [UIImage imageNamed:@"Map.png"];
                         cell.textLabel.text = [self.crudActions objectAtIndex:indexPath.row];
                         cell.accessoryType = UITableViewCellAccessoryNone;
                         [self addSelectedBackGroundForCell:cell];
                     }
                 } else {
-                    cell.imageView.image = [UIImage imageNamed:@"emailIcon.png"];
+                    cell.imageView.image = [UIImage imageNamed:@"Create.png"];
                     cell.textLabel.text = [self.crudActions objectAtIndex:indexPath.row];
                     cell.accessoryType = UITableViewCellAccessoryNone;
                     [self addSelectedBackGroundForCell:cell];
@@ -330,7 +330,7 @@ static ActionMenuViewController * _sharedInstance = nil;
             }
         } else {
             NSString *action = [self.crudActions objectAtIndex:indexPath.row];
-            cell.imageView.image = [UIImage imageNamed:@"emailIcon.png"];
+            cell.imageView.image = [UIImage imageNamed:@"Create.png"];
             cell.textLabel.text = action;
             cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
             if ([action isEqualToString:ACTION_BDC_PROCESSING] || [action isEqualToString:ACTION_BDC_PROCESSING2]) {
