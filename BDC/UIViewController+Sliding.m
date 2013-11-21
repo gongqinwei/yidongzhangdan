@@ -151,7 +151,9 @@ static char const * const TapRecognizerKey = "tapRecognizer";
                 });
             } else {
                 if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-                    [self setSlidingMenuLeftBarButton];
+                    if (self.navigationController.viewControllers[0] == self.navigationController.topViewController) {
+                        [self setSlidingMenuLeftBarButton];
+                    }
                 }
             }
             

@@ -62,6 +62,18 @@
     self.approvalNoteView.layer.cornerRadius = 8.0f;
     self.approvalNoteView.layer.masksToBounds = YES;
     [self.approvalNoteView becomeFirstResponder];
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        [self prefersStatusBarHidden];
+        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+    }
+    else {
+        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+    }
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
 }
 
 @end

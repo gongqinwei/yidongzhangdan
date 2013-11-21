@@ -316,11 +316,13 @@ static ActionMenuViewController * _sharedInstance = nil;
                             }
                         }
                     } else {
+                        cell.imageView.image = [UIImage imageNamed:@"emailIcon.png"];
                         cell.textLabel.text = [self.crudActions objectAtIndex:indexPath.row];
                         cell.accessoryType = UITableViewCellAccessoryNone;
                         [self addSelectedBackGroundForCell:cell];
                     }
                 } else {
+                    cell.imageView.image = [UIImage imageNamed:@"emailIcon.png"];
                     cell.textLabel.text = [self.crudActions objectAtIndex:indexPath.row];
                     cell.accessoryType = UITableViewCellAccessoryNone;
                     [self addSelectedBackGroundForCell:cell];
@@ -328,6 +330,7 @@ static ActionMenuViewController * _sharedInstance = nil;
             }
         } else {
             NSString *action = [self.crudActions objectAtIndex:indexPath.row];
+            cell.imageView.image = [UIImage imageNamed:@"emailIcon.png"];
             cell.textLabel.text = action;
             cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
             if ([action isEqualToString:ACTION_BDC_PROCESSING] || [action isEqualToString:ACTION_BDC_PROCESSING2]) {
@@ -344,7 +347,7 @@ static ActionMenuViewController * _sharedInstance = nil;
             if ([action isEqualToString:ACTION_PAY]) {
                 [self.payAmountLabel removeFromSuperview];
                 self.payAmountLabel = nil;
-                self.payAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 7, 185, cell.viewForBaselineLayout.bounds.size.height - 12)];
+                self.payAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 5, 185, cell.viewForBaselineLayout.bounds.size.height - 12)];
                 self.payAmountLabel.textAlignment = NSTextAlignmentRight;
                 
                 if ([((NSArray *)[BankAccount list]) count]) {

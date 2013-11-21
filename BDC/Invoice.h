@@ -105,4 +105,6 @@
 + (id)list:(NSArray *)invArr orderBy:(NSString *)attribue ascending:(Boolean)isAscending;
 + (void)resetList;
 
+- (void)sendInvoice;
+
 @end

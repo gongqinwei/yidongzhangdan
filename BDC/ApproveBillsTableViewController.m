@@ -61,7 +61,11 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = APPROVER_DETAILS_CELL_ID;
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = nil;
+    
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    }
     
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
@@ -92,7 +96,7 @@
     lblStatus.text = [APPROVAL_STATUSES objectForKey:bill.approvalStatus];
     if ([APPROVAL_APPROVED isEqualToString:bill.approvalStatus]) {
         lblStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_FONT_SIZE];
-        lblStatus.textColor = [UIColor colorWithRed:60/255.0 green:180/255.0 blue:60/255.0 alpha:1.0];
+        lblStatus.textColor = [UIColor colorWithRed:34/255.0 green:139/255.0 blue:34/255.0 alpha:1.0];
     } else if ([APPROVAL_DENIED isEqualToString:bill.approvalStatus]) {
         lblStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_FONT_SIZE];
         lblStatus.textColor = [UIColor redColor];
@@ -214,7 +218,9 @@
 
 - (void)didProcessApproval {
     self.billsToApprove = [Bill listBillsToApprove];
-    [self.tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
 }
 
 - (void)failedToProcessApproval {

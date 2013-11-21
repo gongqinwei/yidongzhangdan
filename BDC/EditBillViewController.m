@@ -272,6 +272,16 @@ typedef enum {
     [self setActions];
 }
 
+- (void)cancelEdit:(UIBarButtonItem *)sender {
+    if ([self tryTap]) {
+        if (self.mode == kUpdateMode) {
+            [self setApprovers:self.approvers];
+        }
+    }
+    
+    [super cancelEdit:sender];
+}
+
 - (void)refreshView {
     [super refreshView];
     
@@ -326,7 +336,9 @@ typedef enum {
         if (self.mode == kAttachMode && self.firstItemAdded) {
             UITextField *itemAccountField = self.itemAccountTextFields[self.itemAccountTextFields.count - 1];
             [itemAccountField becomeFirstResponder];
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:kBillDocs] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:kBillDocs] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            }
         } else if (self.mode != kAttachMode) {
             self.billAmountLabel.text = [Util formatCurrency:self.totalAmount];
         }
@@ -355,11 +367,6 @@ typedef enum {
     [self.billNumInputAccessoryTextField resignFirstResponder];
     [self.billDateInputAccessoryTextField resignFirstResponder];
     [self.billDueDateInputAccessoryTextField resignFirstResponder];
-}
-
-- (void)hideAdditionalKeyboardAndScrollUp {
-    [self hideAdditionalKeyboard];
-    
 }
 
 - (IBAction)saveBusObj:(UIBarButtonItem *)sender {
@@ -412,26 +419,30 @@ typedef enum {
     if (self.mode == kViewMode && [Organization getSelectedOrg].enableAP) {
         self.crudActions = nil;
         
-        if (((Bill *)self.shaddowBusObj).paymentStatus && ![((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]) {
-            self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, nil];
+        if (self.forApproval) {
+            self.crudActions = [NSArray arrayWithObjects:ACTION_APPROVE, ACTION_DENY, nil];
         } else {
-            if (self.isActive) {
-                self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
+            if (((Bill *)self.shaddowBusObj).paymentStatus && ![((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]) {
+                self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, nil];
             } else {
-                self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
+                if (self.isActive) {
+                    self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
+                } else {
+                    self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
+                }
             }
-        }
-        
-        if (self.isActive) {
-            Organization *org = [Organization getSelectedOrg];
             
-            if ((!org.needApprovalToPayBill
-                 || [((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_UNASSIGNED]
-                 || [((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_APPROVED])
-                && ([((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]
-                    || [((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_PARTIAL]))
-            {
-                self.crudActions = [@[ACTION_PAY] arrayByAddingObjectsFromArray:self.crudActions];
+            if (self.isActive) {
+                Organization *org = [Organization getSelectedOrg];
+                
+                if ((!org.needApprovalToPayBill
+                     || [((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_UNASSIGNED]
+                     || [((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_APPROVED])
+                    && ([((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]
+                        || [((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_PARTIAL]))
+                {
+                    self.crudActions = [@[ACTION_PAY] arrayByAddingObjectsFromArray:self.crudActions];
+                }
             }
         }
     }
@@ -439,30 +450,30 @@ typedef enum {
 
 #pragma mark - Life Cycle
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        if (self.mode == kAttachMode && !self.viewHasAppeared) {
+            self.viewHasAppeared = YES;
+            
+            [self.billVendorTextField becomeFirstResponder];
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:kBillDocs] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+            [self.billVendorInputAccessoryTextField becomeFirstResponder];
+            if (self.vendors.count) {
+                [self didSelectVendor:self.vendors[0]];
+            }
+        }
+    }
+    
+    [Approver setListDelegate:self];
+    
     if (!_approvers && self.mode != kCreateMode && self.mode != kAttachMode) {
         if (self.shaddowBusObj && self.shaddowBusObj.objectId) {      // safety check
             [Approver setListDelegate:self];
             [Approver retrieveListForObject:self.shaddowBusObj.objectId];
         }
     }
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    if (self.mode == kAttachMode && !self.viewHasAppeared) {
-        self.viewHasAppeared = YES;
-        
-        [self.billVendorTextField becomeFirstResponder];
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:kBillDocs] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-        [self.billVendorInputAccessoryTextField becomeFirstResponder];
-        if (self.vendors.count) {
-            [self didSelectVendor:self.vendors[0]];
-        }
-    }
-    
-    [Approver setListDelegate:self];
 }
 
 - (void)viewDidLoad
@@ -509,7 +520,7 @@ typedef enum {
             [self addMoreItems];
         }
         
-        if (self.mode == kAttachMode) {
+        if (self.mode == kAttachMode && SYSTEM_VERSION_LESS_THAN(@"7.0")) {
             self.attachmentImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, SCREEN_WIDTH - 20, NORMAL_SCREEN_HEIGHT)];
 
             BOOL usingImageData = YES;
@@ -529,7 +540,14 @@ typedef enum {
                 self.attachmentImageView.image = [UIImage imageWithData:imgData];
             }
             
-            self.previewScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, SCREEN_WIDTH - 20, NORMAL_SCREEN_HEIGHT - PORTRAIT_KEYBOARD_HEIGHT)];
+            CGRect previewFrame;
+            if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+                previewFrame = CGRectMake(0.0, 0.0, SCREEN_WIDTH - 20, NORMAL_SCREEN_HEIGHT - PORTRAIT_KEYBOARD_HEIGHT);
+            } else {
+                previewFrame = CGRectMake(10.0, 0.0, SCREEN_WIDTH - 20, NORMAL_SCREEN_HEIGHT - PORTRAIT_KEYBOARD_HEIGHT);
+            }
+            
+            self.previewScrollView = [[UIScrollView alloc] initWithFrame:previewFrame];
             self.previewScrollView.delegate = self;
             self.previewScrollView.contentSize = self.attachmentImageView.bounds.size;
             self.previewScrollView.showsHorizontalScrollIndicator = NO;
@@ -767,22 +785,37 @@ typedef enum {
     self.activityIndicator.hidesWhenStopped = YES;
     
     if (self.forApproval) {
-        self.title = nil;
+//        self.title = nil;
+//        
+//        UIBarButtonItem *approveButton = [[UIBarButtonItem alloc] initWithTitle:@"Approve" style:UIBarButtonItemStyleBordered target:self action:@selector(processApproval:)];
+//        approveButton.tag = kApproverApproved;
+//        
+//        UIBarButtonItem *denyButton = [[UIBarButtonItem alloc] initWithTitle:@"Deny" style:UIBarButtonItemStyleBordered target:self action:@selector(processApproval:)];
+//        denyButton.tag = kApproverDenied;
+//
+//        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.navigationItem.rightBarButtonItem, denyButton, approveButton, nil];
         
-        UIBarButtonItem *approveButton = [[UIBarButtonItem alloc] initWithTitle:@"Approve" style:UIBarButtonItemStyleBordered target:self action:@selector(processApproval:)];
-        approveButton.tag = kApproverApproved;
+        UIImage *actionImage = [UIImage imageNamed:@"ApproveIcon.png"];
+        CGRect frameActionImg = CGRectMake(0, 0, actionImage.size.width, actionImage.size.height);
         
-        UIBarButtonItem *denyButton = [[UIBarButtonItem alloc] initWithTitle:@"Deny" style:UIBarButtonItemStyleBordered target:self action:@selector(processApproval:)];
-        denyButton.tag = kApproverDenied;
-
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.navigationItem.rightBarButtonItem, denyButton, approveButton, nil];
+        UIButton *actionButton = [[UIButton alloc] initWithFrame:frameActionImg];
+        [actionButton setBackgroundImage:actionImage forState:UIControlStateNormal];
+        [actionButton addTarget:self action:@selector(toggleMenu:) forControlEvents:UIControlEventTouchUpInside];
+        [actionButton setShowsTouchWhenHighlighted:YES];
+        actionButton.tag = 1;
+        UIBarButtonItem *actionBarButton =[[UIBarButtonItem alloc] initWithCustomView:actionButton];
+        self.navigationItem.rightBarButtonItem = actionBarButton;
         
         ((Bill *)self.busObj).approvalDelegate = self;
     }
 }
 
-- (void)processApproval:(UIBarButtonItem *)sender {
-    [self performSegueWithIdentifier:BILL_APPROVAL_COMMENT_SEGUE sender:sender];
+//- (void)processApproval:(UIBarButtonItem *)sender {
+//    [self performSegueWithIdentifier:BILL_APPROVAL_COMMENT_SEGUE sender:sender];
+//}
+
+- (void)processApproval:(ApproverStatusEnum)decision {
+    [self performSegueWithIdentifier:BILL_APPROVAL_COMMENT_SEGUE sender:[NSNumber numberWithInt:decision]];
 }
 
 - (void)getBillNumberFromTextField:(UITextField *)textField {
@@ -798,7 +831,7 @@ typedef enum {
         [self.billVendorInputAccessoryTextField resignFirstResponder];
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kBillInfo] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     } else if (sender == self.billNumInputAccessoryDoneItem) {
-        if (self.mode != kAttachMode) {
+        if (self.mode != kAttachMode || SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
             [self.billNumTextField resignFirstResponder];
         } else {
             ((Bill *)self.shaddowBusObj).invoiceNumber = self.billNumInputAccessoryTextField.text;
@@ -807,7 +840,7 @@ typedef enum {
             [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kBillInfo] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
         }
     } else if (sender == self.billDateInputAccessoryDoneItem) {
-        if (self.mode != kAttachMode) {
+        if (self.mode != kAttachMode || SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
             [self.billDateTextField resignFirstResponder];
         } else {
             [self.billDateInputAccessoryTextField becomeFirstResponder];
@@ -815,7 +848,7 @@ typedef enum {
             [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kBillInfo] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
         }
     } else if (sender == self.billDueDateInputAccessoryDoneItem) {
-        if (self.mode != kAttachMode) {
+        if (self.mode != kAttachMode || SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
             [self.billDueDateTextField resignFirstResponder];
         } else {
             [self.billDueDateInputAccessoryTextField becomeFirstResponder];
@@ -824,13 +857,17 @@ typedef enum {
         }
     } else if (sender == self.billItemAccountInputAccessoryDoneItem) {
         [self.view findAndResignFirstResponder];
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kBillInfo] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kBillInfo] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        }
     } else if (sender == self.billItemAmountInputAccessoryDoneItem) {
         [self.view findAndResignFirstResponder];
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kBillInfo] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+        if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kBillInfo] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+        }
         self.billAmountLabel.text = [Util formatCurrency:self.totalAmount];
     } else {
-        if (self.mode != kAttachMode) {
+        if (self.mode != kAttachMode || SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
             [self changeFirstResponderFor:sender];
             [self resetInputAccessoryNavSwitches];
         } else {
@@ -866,7 +903,7 @@ typedef enum {
     if (sender == self.billVendorInputAccessoryNextItem) {
         [self.billNumTextField becomeFirstResponder];
     } else if (sender == self.billNumInputAccessoryNavSwitch && self.billNumInputAccessoryNavSwitch.selectedSegmentIndex == 0) {
-        if (self.mode == kAttachMode) {
+        if (self.mode == kAttachMode && SYSTEM_VERSION_LESS_THAN(@"7.0")) {
             [self getBillNumberFromTextField:self.billNumInputAccessoryTextField];
             [self.billVendorTextField becomeFirstResponder];
         } else {
@@ -874,7 +911,7 @@ typedef enum {
             [self performSegueWithIdentifier:BILL_SELECT_VENDOR_SEGUE sender:self];
         }
     } else if (sender == self.billNumInputAccessoryNavSwitch && self.billNumInputAccessoryNavSwitch.selectedSegmentIndex == 1) {
-        if (self.mode == kAttachMode) {
+        if (self.mode == kAttachMode && SYSTEM_VERSION_LESS_THAN(@"7.0")) {
             [self getBillNumberFromTextField:self.billNumInputAccessoryTextField];
         } else {
             [self getBillNumberFromTextField:self.billNumTextField];
@@ -930,7 +967,7 @@ typedef enum {
         [segue.destinationViewController setSelectDelegate:self];
     } else if ([segue.identifier isEqualToString:BILL_APPROVAL_COMMENT_SEGUE]) {
         [segue.destinationViewController setBusObj:self.busObj];
-        [segue.destinationViewController setApprovalDecision:((UIBarButtonItem *)sender).tag];
+        [segue.destinationViewController setApprovalDecision:((NSNumber *)sender).intValue];
     }
 }
 
@@ -959,7 +996,7 @@ typedef enum {
     } else if (section == kBillApprovers) {
         return self.modifiedApprovers.count;
     } else if (section == kBillDocs) {
-        return 1 + (self.mode == kAttachMode);
+        return 1 + (self.mode == kAttachMode && SYSTEM_VERSION_LESS_THAN(@"7.0"));
     } else {
         return 0;
     }
@@ -1025,7 +1062,7 @@ typedef enum {
                             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                         }
                         
-                        if (self.mode == kAttachMode) {
+                        if (self.mode == kAttachMode && SYSTEM_VERSION_LESS_THAN(@"7.0")) {
                             [cell addSubview:self.billVendorTextField]; // just for bringing up keyboard
                         }
                     }
@@ -1400,7 +1437,7 @@ typedef enum {
             return YES;
         }
         
-        if (self.mode == kUpdateMode && indexPath.section == kBillApprovers) {
+        if ((self.mode == kCreateMode || self.mode == kAttachMode || self.mode == kUpdateMode) && indexPath.section == kBillApprovers) {
             Approver *approver = self.modifiedApprovers[indexPath.row];
             if (approver.status != kApproverApproved && approver.status != kApproverDenied && approver.status != kApproverRerouted) {
                 return YES;
@@ -1412,7 +1449,7 @@ typedef enum {
 }
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.mode == kUpdateMode) {
+    if (self.mode == kCreateMode || self.mode == kAttachMode || self.mode == kUpdateMode) {
         if (indexPath.section == kBillApprovers) {
             Approver *approver = self.modifiedApprovers[indexPath.row];
             if (approver.status != kApproverApproved && approver.status != kApproverDenied && approver.status != kApproverRerouted) {
@@ -1553,7 +1590,7 @@ typedef enum {
 //            }
         }
         
-        if (self.mode == kAttachMode) {
+        if (self.mode == kAttachMode && SYSTEM_VERSION_LESS_THAN(@"7.0")) {
             [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:kBillDocs] atScrollPosition:UITableViewScrollPositionTop animated:YES];
             
             if (textField == self.billNumTextField) { // textField.tag == kBillNumber * TAG_BASE) {
@@ -1584,7 +1621,7 @@ typedef enum {
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    if (self.mode == kAttachMode) {
+    if (self.mode == kAttachMode && SYSTEM_VERSION_LESS_THAN(@"7.0")) {
         if (textField == self.billNumTextField) { // textField.tag == kBillNumber * TAG_BASE) {
             self.billNumInputAccessoryTextField.text = [textField.text stringByReplacingCharactersInRange:range withString:string];
         } else if (textField.objectTag && textField.tag % 2) {
@@ -1778,6 +1815,12 @@ typedef enum {
         if ([((NSArray *)[BankAccount list]) count]) {
             [self performSegueWithIdentifier:BILL_PAY_BILL_SEGUE sender:self];
         }
+    } else if ([action isEqualToString:ACTION_APPROVE]) {
+        [self processApproval:kApproverApproved];
+    } else if ([action isEqualToString:ACTION_DENY]) {
+        [self processApproval:kApproverDenied];
+    } else if ([action isEqualToString:ACTION_SKIP]) {
+        [self processApproval:kApproverRerouted];
     } else {
         [super didSelectCrudAction:action];
     }

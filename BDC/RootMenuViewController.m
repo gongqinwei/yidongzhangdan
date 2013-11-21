@@ -64,8 +64,8 @@ static RootMenuViewController * _sharedInstance = nil;
         self.currVC.navigation = navVC;
         self.currVC.navigationId = identifier;
         [self.currVC slideIn];
-    } else if ([self.currVC.navigationId isEqualToString:identifier]) {
-        [self.currVC toggleMenu:self];
+    } else if ([self.currVC.navigationId isEqualToString:identifier] && SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        [self.currVC toggleMenu:self];        
     } else {
         [self.currVC slideOut];
         

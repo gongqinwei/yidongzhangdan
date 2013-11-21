@@ -44,7 +44,7 @@ typedef enum {
 } InvoiceActionIndice;
 
 #define INVOICE_ACTIONS     [NSArray arrayWithObjects:@"Edit invoice", @"Email Invoice", @"Delete invoice", @"Cancel", nil]
-#define ACTION_EMAIL        @"Email Invoice"
+#define ACTION_EMAIL        @"Email to Customer"
 
 #define INV_INFO_CELL_ID                @"InvoiceInfo"
 #define INV_ITEM_CELL_ID                @"InvoiceLineItem"
@@ -140,7 +140,7 @@ typedef enum {
         if (self.isActive) {
             self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
             if (self.pdfReady) {
-//                self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];      //TEMP: UNCOMMENT ONCE SEND INVOICE API IS DONE
+                self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];
             }
         } else {
             self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
@@ -391,8 +391,8 @@ typedef enum {
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                self.pdfReady = YES;                               
-//                               self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];      //TEMP: UNCOMMENT ONCE SEND INVOICE API IS DONE
-//                               Debug(@"Succeeded! Received %d bytes of data for PDF", [self.invoicePDFData length]);
+                               self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];
+                               Debug(@"Succeeded! Received %d bytes of data for PDF", [self.invoicePDFData length]);
                            }];
 }
 
@@ -1086,7 +1086,7 @@ typedef enum {
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     self.pdfReady = YES;
-//    self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];      //TEMP: UNCOMMENT ONCE SEND INVOICE API IS DONE
+    self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];
     
     Debug(@"Succeeded! Received %d bytes of data for PDF", [self.invoicePDFData length]);
 }
@@ -1171,13 +1171,15 @@ typedef enum {
     [super didSelectCrudAction:action];
     
     if ([action isEqualToString:ACTION_EMAIL]) {
-        Customer *customer = [Customer objectForKey:((Invoice *)self.shaddowBusObj).customerId];
-        if (customer.email) {
-            [self sendInvoiceEmail];
-        } else {
-            [UIHelper showInfo:@"Fill in an email for this customer before you send them the invoice." withStatus:kInfo];
-            [self performSegueWithIdentifier:INV_VIEW_CUSTOMER_DETAILS_SEGUE sender:customer];
-        }
+        [((Invoice *)self.busObj) sendInvoice];
+        
+//        Customer *customer = [Customer objectForKey:((Invoice *)self.shaddowBusObj).customerId];
+//        if (customer.email) {
+//            [self sendInvoiceEmail];
+//        } else {
+//            [UIHelper showInfo:@"Fill in an email for this customer before you send them the invoice." withStatus:kInfo];
+//            [self performSegueWithIdentifier:INV_VIEW_CUSTOMER_DETAILS_SEGUE sender:customer];
+//        }
     }
 }
 

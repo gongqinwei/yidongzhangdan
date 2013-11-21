@@ -26,6 +26,9 @@
 #define ACTION_BDC_PROCESSING2      @"for association now. Please refresh Inbox in a minute."
 #define ACTION_LIST_VENDOR_BILLS    @"List Bills"
 #define ACTION_LIST_CUSTOMER_INVS   @"List Invoices"
+#define ACTION_APPROVE              @"Approve"
+#define ACTION_DENY                 @"Deny"
+#define ACTION_SKIP                 @"Skip"
 
 
 @protocol SlideDelegate <NSObject>

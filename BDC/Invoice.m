@@ -78,6 +78,22 @@ static NSMutableArray *inactiveInvoices = nil;
 @synthesize lineItems;
 @synthesize detailsDelegate;
 
+- (void)sendInvoice {
+    NSString *action = [INVOICE_SEND_API stringByAppendingFormat:@"?%@=%@", ID, self.objectId]; // [NSString stringWithFormat:@"%@?Vendor=%@&type=bill", APPROVER_LIST_API, vendorId];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+    
+    [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        NSInteger response_status;
+        [APIHandler getResponse:response data:data error:&err status:&response_status];
+        
+        if(response_status == RESPONSE_SUCCESS) {
+            [UIHelper showInfo: EMAIL_SENT withStatus:kSuccess];
+        } else {
+            [UIHelper showInfo: EMAIL_FAILED withStatus:kFailure];
+        }
+    }];
+}
 
 + (void)resetList {
     invoices = [NSMutableArray array];

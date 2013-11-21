@@ -293,17 +293,29 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    Bill *bill;
+    Bill *bill = nil;
     
     if (!self.isActive) {
         bill = [self.bills objectAtIndex:indexPath.row];
     } else {
         if ([self.sortAttribute isEqualToString:BILL_VENDOR_NAME]) {
-            bill = [[self.vendorBills objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+            if (((NSArray *)[self.vendorBills objectAtIndex:indexPath.section]).count > indexPath.row) {
+                bill = [[self.vendorBills objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+            } else {
+                return cell;
+            }
         } else if ([self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
-            bill = [((NSArray *)[self.dueDateBills objectAtIndex:indexPath.section]) objectAtIndex:indexPath.row];
+            if (((NSArray *)[self.dueDateBills objectAtIndex:indexPath.section]).count > indexPath.row) {
+                bill = [((NSArray *)[self.dueDateBills objectAtIndex:indexPath.section]) objectAtIndex:indexPath.row];
+            } else {
+                return cell;
+            }
         } else if ([self.sortAttribute isEqualToString:BILL_APPROVAL_STATUS]) {
-            bill = [((NSArray *)[self.approvalBills objectAtIndex:indexPath.section]) objectAtIndex:indexPath.row];
+            if (((NSArray *)[self.approvalBills objectAtIndex:indexPath.section]).count > indexPath.row) {
+                bill = [((NSArray *)[self.approvalBills objectAtIndex:indexPath.section]) objectAtIndex:indexPath.row];
+            } else {
+                return cell;
+            }
         } else {
             bill = [self.bills objectAtIndex:indexPath.row];
         }
@@ -323,7 +335,7 @@
     [cell addSubview:lblVendor];
     
     UILabel * lblInvDate = [[UILabel alloc] initWithFrame:BILL_DATE_RECT];
-    lblInvDate.text = [@"Inv Date " stringByAppendingString:[Util formatDate:bill.invoiceDate format:nil]];
+    lblInvDate.text = [Util formatDate:bill.invoiceDate format:nil]; //[@"Inv Date " stringByAppendingString:[Util formatDate:bill.invoiceDate format:nil]];
     lblInvDate.font = [UIFont fontWithName:APP_FONT size:BILL_FONT_SIZE];
     lblInvDate.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblInvDate];
@@ -332,7 +344,7 @@
     lblStatus.text = [APPROVAL_STATUSES objectForKey:bill.approvalStatus];
     if ([APPROVAL_APPROVED isEqualToString:bill.approvalStatus]) {
         lblStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_FONT_SIZE];
-        lblStatus.textColor = [UIColor colorWithRed:60/255.0 green:180/255.0 blue:60/255.0 alpha:1.0];
+        lblStatus.textColor = [UIColor colorWithRed:34/255.0 green:139/255.0 blue:34/255.0 alpha:1.0];
     } else if ([APPROVAL_DENIED isEqualToString:bill.approvalStatus]) {
         lblStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:BILL_FONT_SIZE];
         lblStatus.textColor = [UIColor redColor];
@@ -510,7 +522,11 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return YES;
+    if (self.tableView.editing) {
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath

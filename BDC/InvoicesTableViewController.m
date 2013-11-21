@@ -29,7 +29,8 @@
 #define CUSTOMER_RECT                       CGRectMake(10, 25, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
 #define INVOICE_DATE_RECT                   CGRectMake(160, 25, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
 #define STATUS_RECT                         CGRectMake(10, 45, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
-#define DUE_DATE_RECT                       CGRectMake(160, 45, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
+#define DUE_DATE_LABEL_RECT                 CGRectMake(160, 52, 25, INVOICE_TABLE_LABEL_HEIGHT)
+#define DUE_DATE_RECT                       CGRectMake(188, 45, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
 #define AMOUNT_RECT                         CGRectMake(10, 65, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
 #define AMOUNT_DUE_RECT                     CGRectMake(188, 65, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
 #define SECTION_HEADER_RECT                 CGRectMake(0, 0, SCREEN_WIDTH, INVOICE_TABLE_SECTION_HEADER_HEIGHT)
@@ -274,7 +275,7 @@
     [cell addSubview:lblCustomer];
     
     UILabel * lblInvDate = [[UILabel alloc] initWithFrame:INVOICE_DATE_RECT];
-    lblInvDate.text = [@"Inv Date " stringByAppendingString:[Util formatDate:inv.invoiceDate format:nil]];
+    lblInvDate.text = [Util formatDate:inv.invoiceDate format:nil]; //[@"Inv Date " stringByAppendingString:[Util formatDate:inv.invoiceDate format:nil]];
     lblInvDate.font = [UIFont fontWithName:APP_FONT size:INVOICE_FONT_SIZE];
     lblInvDate.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblInvDate];
@@ -283,7 +284,7 @@
     lblStatus.text = [PAYMENT_STATUSES objectForKey:inv.paymentStatus];
     if ([PAYMENT_PAID isEqualToString:inv.paymentStatus]) {
         lblStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:INVOICE_FONT_SIZE];
-        lblStatus.textColor = [UIColor colorWithRed:60/255.0 green:180/255.0 blue:60/255.0 alpha:1.0];
+        lblStatus.textColor = [UIColor colorWithRed:34/255.0 green:139/255.0 blue:34/255.0 alpha:1.0];
     } else if ([PAYMENT_UNPAID isEqualToString:inv.paymentStatus]
                && [Util isDay:inv.dueDate earlierThanDay:[NSDate date]] ) {
         lblStatus.font = [UIFont fontWithName:APP_BOLD_FONT size:INVOICE_FONT_SIZE];
@@ -303,8 +304,14 @@
     lblStatus.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblStatus];
     
+    UILabel * lblDueDateLabel = [[UILabel alloc] initWithFrame:DUE_DATE_LABEL_RECT];
+    lblDueDateLabel.text = @"Due";
+    lblDueDateLabel.font = [UIFont fontWithName:APP_FONT size:INVOICE_FONT_SIZE];
+    lblDueDateLabel.textAlignment = NSTextAlignmentLeft;
+    [cell addSubview:lblDueDateLabel];
+    
     UILabel * lblDueDate = [[UILabel alloc] initWithFrame:DUE_DATE_RECT];
-    lblDueDate.text = [@"Due " stringByAppendingString:[Util formatDate:inv.dueDate format:nil]];
+    lblDueDate.text = [Util formatDate:inv.dueDate format:nil]; //[@"Due " stringByAppendingString:[Util formatDate:inv.dueDate format:nil]];
     lblDueDate.font = [UIFont fontWithName:APP_FONT size:INVOICE_FONT_SIZE];
     lblDueDate.textAlignment = NSTextAlignmentLeft;
     [cell addSubview:lblDueDate];
@@ -425,9 +432,12 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return YES;
+    if (self.tableView.editing) {
+        return YES;
+    } else {
+        return NO;
+    }
 }
-
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
