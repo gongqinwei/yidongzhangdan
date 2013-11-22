@@ -122,7 +122,7 @@ static id <ContactListDelegate> ListDelegate = nil;
             Debug(@"Time out when retrieving list of contacts");
         } else {
             [ListDelegate failedToGetContacts];
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve contacts for %@! %@", customerId, [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to retrieve contacts for %@! %@", customerId, [err localizedDescription]);
         }
     }];
@@ -168,7 +168,7 @@ static id <ContactListDelegate> ListDelegate = nil;
             [UIHelper showInfo:SysTimeOut withStatus:kError];
             Debug(@"Time out when retrieving list of contacts");
         } else {
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of contacts! %@", [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to retrieve list of contacts! %@", [err localizedDescription]);
         }
     }];
@@ -232,11 +232,12 @@ static id <ContactListDelegate> ListDelegate = nil;
             }
         } else {
             [weakSelf.editDelegate failedToSaveObject];
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             
             if ([theAction isEqualToString:UPDATE]) {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to update contact %@: %@", self.objectId, [err localizedDescription]] withStatus:kFailure];
                 Debug(@"Failed to update contact %@: %@", self.objectId, [err localizedDescription]);
             } else {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to create contact: %@", [err localizedDescription]] withStatus:kFailure];
                 Debug(@"Failed to create contact: %@", [err localizedDescription]);
             }
         }
@@ -266,7 +267,7 @@ static id <ContactListDelegate> ListDelegate = nil;
             
             [ListDelegate didDeleteObject];
         } else {
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to %@ contact %@: %@", act, self.objectId, [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to %@ contact %@: %@", act, self.objectId, [err localizedDescription]);
         }
     }];

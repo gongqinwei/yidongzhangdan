@@ -918,7 +918,7 @@ static double animatedDistance = 0;
                         
                         Debug(@"Successfully deleted attachment %@", doc.name);
                     } else {
-                        [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+                        [UIHelper showInfo:[NSString stringWithFormat:@"Failed to delete attachment %@: %@", docId, [err localizedDescription]] withStatus:kFailure];
                         Debug(@"Failed to delete attachment %@: %@", docId, [err localizedDescription]);
                     }
                 }];
@@ -953,7 +953,7 @@ static double animatedDistance = 0;
                         
                         Debug(@"Successfully associate document %@", doc.name);
                     } else {
-                        [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+                        [UIHelper showInfo:[NSString stringWithFormat:@"Failed to associate document %@: %@", doc.name, [err localizedDescription]] withStatus:kFailure];
                         Debug(@"Failed to associate document %@: %@", doc.name, [err localizedDescription]);
                     }
                 }];

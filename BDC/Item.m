@@ -88,11 +88,12 @@ static NSMutableDictionary *inactiveItems = nil;
             }
         } else {
             [weakSelf.editDelegate failedToSaveObject];
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             
             if ([theAction isEqualToString:UPDATE]) {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to update item %@: %@", self.objectId, [err localizedDescription]] withStatus:kFailure];
                 Debug(@"Failed to update item %@: %@", self.objectId, [err localizedDescription]);
             } else {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to create item: %@", [err localizedDescription]] withStatus:kFailure];
                 Debug(@"Failed to create item: %@", [err localizedDescription]);
             }
         }
@@ -127,7 +128,7 @@ static NSMutableDictionary *inactiveItems = nil;
             
             [ListDelegate didDeleteObject];
         } else {
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to %@ item %@: %@", act, self.objectId, [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to %@ item %@: %@", act, self.objectId, [err localizedDescription]);
         }
     }];
@@ -237,7 +238,7 @@ static NSMutableDictionary *inactiveItems = nil;
             Debug(@"Time out when retrieving list of items!");
         } else {
             [ListDelegate failedToGetItems];
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of items for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to retrieve list of items for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
         }
     }];

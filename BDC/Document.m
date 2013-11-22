@@ -238,7 +238,7 @@ static NSLock *DocumentsLock = nil;
             } else if ([category isEqualToString:FILE_CATEGORY_DOCUMENT]) {
                 [DocumentListDelegate failedToGetDocuments];
             }
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of %@! %@", category, [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to retrieve list of %@! %@", category, [err localizedDescription]);
         }
     }];

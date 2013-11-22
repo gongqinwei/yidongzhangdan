@@ -270,7 +270,7 @@
 //                }
 //            }];
         } else {
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Cannot switch to %@! %@", self.selectedOrg.name, [err localizedDescription]] withStatus:kError];
             Debug(@"%@", [err localizedDescription]);
         }
     }];

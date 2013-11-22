@@ -76,7 +76,7 @@ static NSArray *bankAccounts = nil;
             [UIHelper showInfo:SysTimeOut withStatus:kError];
             Debug(@"Time out when retrieving list of bank accounts!");
         } else {
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of bank accounts! %@", [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to retrieve list of bank accounts! %@", [err localizedDescription]);
         }
     }];

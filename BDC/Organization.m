@@ -156,7 +156,7 @@ static Organization *selectedOrg = nil;
                 [delegate didGetOrgs:nil status:kFailListOrgs];
             }
         } else {
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve org list! %@", [err localizedDescription]] withStatus:kFailure];
             [delegate didGetOrgs:nil status:kFailLogin];
         }
     }];

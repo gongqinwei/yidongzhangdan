@@ -95,11 +95,12 @@ static NSMutableDictionary *inactiveAccounts = nil;
             }
         } else {
             [weakSelf.editDelegate failedToSaveObject];
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             
             if ([theAction isEqualToString:UPDATE]) {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to update account %@: %@", self.objectId, [err localizedDescription]] withStatus:kFailure];
                 Debug(@"Failed to update account %@: %@", self.objectId, [err localizedDescription]);
             } else {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to create account: %@", [err localizedDescription]] withStatus:kFailure];
                 Debug(@"Failed to create account: %@", [err localizedDescription]);
             }
         }
@@ -233,7 +234,7 @@ static NSMutableDictionary *inactiveAccounts = nil;
             Debug(@"Time out when retrieving list of accounts!");
         } else {
             [ListDelegate failedToGetAccounts];
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of accounts for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to retrieve list of accounts for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
         }
     }];

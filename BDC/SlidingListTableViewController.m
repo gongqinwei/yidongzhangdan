@@ -173,7 +173,7 @@
 
 - (void)handleAttachFailure:(NSError *)err forObject:(BDCBusinessObject *)obj {
     [self.activityIndicator stopAnimating];
-    [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+    [UIHelper showInfo:[NSString stringWithFormat:@"Failed to associate document %@ with %@: %@", self.document.name, obj.name, [err localizedDescription]] withStatus:kFailure];
     Debug(@"Failed to associate document %@ with %@: %@", self.document.name, obj.name, [err localizedDescription]);
 }
 

@@ -121,7 +121,7 @@ static char const * const TapRecognizerKey = "tapRecognizer";
                 if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
                     [UIHelper adjustScreen:self.actionMenuVC];
                 } else {
-                    [UIHelper adjustActionMenuScreenForiOS7:self.actionMenuVC];
+//                    [UIHelper adjustActionMenuScreenForiOS7:self.actionMenuVC];
                 }
             }
             [[RootMenuViewController sharedInstance].view insertSubview:self.actionMenuVC.view atIndex:1];

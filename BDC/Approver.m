@@ -94,7 +94,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
             Debug(@"Time out when retrieving list of approvers");
         } else {
             [ListDelegate failedToGetApprovers];
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of approvers! %@", [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to retrieve list of approvers! %@", [err localizedDescription]);
         }
     }];
@@ -146,7 +146,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
             Debug(@"Time out when retrieving list of approvers");
         } else {
             [ListDelegate failedToGetApprovers];
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of approvers! %@", [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to retrieve list of approvers! %@", [err localizedDescription]);
         }
     }];
@@ -191,7 +191,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
             Debug(@"Time out when retrieving approvers");
         } else {
             [ListDelegate failedToGetApprovers];
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve approvers! %@", [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to retrieve approvers! %@", [err localizedDescription]);
         }
     }];
@@ -226,7 +226,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
             [UIHelper showInfo:SysTimeOut withStatus:kError];
             Debug(@"Time out when saving approvers");
         } else {
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to save approvers! %@", [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to save approvers! %@", [err localizedDescription]);
         }
     }];
@@ -249,7 +249,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
             [weakSelf.createDelegate didAddApprover:self];
             [ListDelegate didAddApprover:self];
         } else {
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to create approver: %@", [err localizedDescription]] withStatus:kFailure];
             [weakSelf.createDelegate failedToAddApprover];
             Debug(@"Failed to create approver: %@", [err localizedDescription]);
         }

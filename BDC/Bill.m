@@ -97,7 +97,7 @@ static NSMutableSet *billsToApproveSet;
         } else {
             [self.approvalDelegate failedToProcessApproval];
             [ListForApprovalDelegate failedToProcessApproval];
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to processing %@ for bill %@! %@", action, self.objectId, [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to processing %@ for bill %@! %@", action, self.objectId, [err localizedDescription]);
         }
     }];
@@ -229,11 +229,12 @@ static NSMutableSet *billsToApproveSet;
             }
         } else {
             [weakSelf.editDelegate failedToSaveObject];
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
             
             if ([theAction isEqualToString:UPDATE]) {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to update bill %@: %@", self.name, [err localizedDescription]] withStatus:kFailure];
                 Debug(@"Failed to update bill %@: %@", self.name, [err localizedDescription]);
             } else {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to create bill: %@", [err localizedDescription]] withStatus:kFailure];
                 Debug(@"Failed to create bill: %@", [err localizedDescription]);
             }
         }
@@ -267,7 +268,7 @@ static NSMutableSet *billsToApproveSet;
             
             [ListDelegate didDeleteObject];
         } else {
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to %@ bill %@: %@", act, self.objectId, [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to %@ bill %@: %@", act, self.objectId, [err localizedDescription]);
         }
     }];
@@ -360,7 +361,7 @@ static NSMutableSet *billsToApproveSet;
             Debug(@"Time out when retrieving list of bill to approve!");
         } else {
             [ListForApprovalDelegate failedToGetBills];
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of bill to approve! %@", [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to retrieve list of bill to approve! %@", [err localizedDescription]);
         }
     }];
@@ -417,7 +418,7 @@ static NSMutableSet *billsToApproveSet;
             Debug(@"Time out when retrieving list of bill for %@!", isActive ? @"active" : @"inactive");
         } else {
             [ListDelegate failedToGetBills];
-            [UIHelper showInfo:[err localizedDescription] withStatus:kFailure];
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of bill for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]] withStatus:kFailure];
             Debug(@"Failed to retrieve list of bill for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
         }
     }];
