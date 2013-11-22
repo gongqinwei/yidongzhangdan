@@ -276,6 +276,7 @@ static ActionMenuViewController * _sharedInstance = nil;
     }
     
     cell.backgroundColor = [UIColor clearColor];
+    cell.imageView.image = nil;
     
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         cell.textLabel.text = ((BDCBusinessObject *)[[self.searchResults objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]).name;
@@ -316,28 +317,30 @@ static ActionMenuViewController * _sharedInstance = nil;
                             }
                         }
                     } else {
-                        cell.imageView.image = [UIImage imageNamed:@"Map.png"];
-                        cell.textLabel.text = [self.crudActions objectAtIndex:indexPath.row];
+                        NSString *action = [self.crudActions objectAtIndex:indexPath.row];
+                        cell.textLabel.text = action;
+                        cell.imageView.image = [self getIconForAction:action];
                         cell.accessoryType = UITableViewCellAccessoryNone;
                         [self addSelectedBackGroundForCell:cell];
                     }
                 } else {
-                    cell.imageView.image = [UIImage imageNamed:@"Create.png"];
-                    cell.textLabel.text = [self.crudActions objectAtIndex:indexPath.row];
+                    NSString *action = [self.crudActions objectAtIndex:indexPath.row];
+                    cell.textLabel.text = action;
+                    cell.imageView.image = [self getIconForAction:action];
                     cell.accessoryType = UITableViewCellAccessoryNone;
                     [self addSelectedBackGroundForCell:cell];
                 }
             }
         } else {
             NSString *action = [self.crudActions objectAtIndex:indexPath.row];
-            cell.imageView.image = [UIImage imageNamed:@"Create.png"];
             cell.textLabel.text = action;
+            cell.imageView.image = [self getIconForAction:action];
             cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
             if ([action isEqualToString:ACTION_BDC_PROCESSING] || [action isEqualToString:ACTION_BDC_PROCESSING2]) {
                 cell.textLabel.numberOfLines = 3;
                 cell.textLabel.font = [UIFont systemFontOfSize:14];
             } else {
-                cell.textLabel.numberOfLines = 1;
+                cell.textLabel.numberOfLines = 2;
                 cell.textLabel.adjustsFontSizeToFitWidth = YES;
                 cell.textLabel.minimumScaleFactor = 10;
             }
@@ -374,6 +377,21 @@ static ActionMenuViewController * _sharedInstance = nil;
     }
     
     return cell;
+}
+
+- (UIImage *)getIconForAction:(NSString *)action {
+    NSString *iconName;
+    
+    NSRange end = [action rangeOfString:@" "];
+    if (end.location == NSNotFound) {
+        iconName = action;
+    } else {
+        NSRange firstWordRange = NSMakeRange(0, end.location);
+        iconName = [action substringWithRange:firstWordRange];
+    }
+    
+    iconName = [iconName stringByAppendingString:@".png"];
+    return [UIImage imageNamed:iconName];
 }
 
 #pragma mark - Table view delegate
