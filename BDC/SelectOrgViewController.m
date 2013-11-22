@@ -141,7 +141,14 @@
 //    cell.detailTextLabel.text = [NSString stringWithFormat:@"%d bills overdue", indexPath.row + 1];
     
     NSString *imageName = @"CompanyIcon.png";
-    cell.imageView.image = [UIImage imageNamed:imageName];
+    UIImage *img = [UIImage imageNamed:imageName];
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        UIImageView *imgView = [[UIImageView alloc] initWithImage:img];
+        imgView.frame = CGRectMake(2, 2, 39, 39);
+        [cell addSubview:imgView];
+    } else {
+        cell.imageView.image = img;
+    }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100&orgId=%@", DOMAIN_URL, ORG_LOGO_API, org.objectId]]];

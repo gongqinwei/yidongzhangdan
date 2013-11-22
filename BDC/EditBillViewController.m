@@ -458,8 +458,9 @@ typedef enum {
             self.viewHasAppeared = YES;
             
             [self.billVendorTextField becomeFirstResponder];
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:kBillDocs] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:kBillDocs] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
             [self.billVendorInputAccessoryTextField becomeFirstResponder];
+            
             if (self.vendors.count) {
                 [self didSelectVendor:self.vendors[0]];
             }
@@ -881,19 +882,19 @@ typedef enum {
                     
                     [self resetInputAccessoryNavSwitches];
                     
-                    if (sender == self.billVendorInputAccessoryNextItem) {
-                        [self.billNumInputAccessoryTextField becomeFirstResponder];
-                    } else if (sender == self.billNumInputAccessoryNavSwitch && self.billNumInputAccessoryNavSwitch.selectedSegmentIndex == 0) {
-                        [self.billVendorInputAccessoryTextField becomeFirstResponder];
-                    } else if (sender == self.billNumInputAccessoryNavSwitch && self.billNumInputAccessoryNavSwitch.selectedSegmentIndex == 1) {
-                        [self.billDateInputAccessoryTextField becomeFirstResponder];
-                    } else if (sender == self.billDateInputAccessoryNavSwitch && self.billDateInputAccessoryNavSwitch.selectedSegmentIndex == 0) {
-                        [self.billNumInputAccessoryTextField becomeFirstResponder];
-                    } else if (sender == self.billDateInputAccessoryNavSwitch && self.billDateInputAccessoryNavSwitch.selectedSegmentIndex == 1) {
-                        [self.billDueDateInputAccessoryTextField becomeFirstResponder];
-                    } else if (sender == self.billDueDateInputAccessoryPrevItem) {
-                        [self.billDateInputAccessoryTextField becomeFirstResponder];
-                    }
+//                    if (sender == self.billVendorInputAccessoryNextItem) {
+//                        [self.billNumInputAccessoryTextField becomeFirstResponder];
+//                    } else if (sender == self.billNumInputAccessoryNavSwitch && self.billNumInputAccessoryNavSwitch.selectedSegmentIndex == 0) {
+//                        [self.billVendorInputAccessoryTextField becomeFirstResponder];
+//                    } else if (sender == self.billNumInputAccessoryNavSwitch && self.billNumInputAccessoryNavSwitch.selectedSegmentIndex == 1) {
+//                        [self.billDateInputAccessoryTextField becomeFirstResponder];
+//                    } else if (sender == self.billDateInputAccessoryNavSwitch && self.billDateInputAccessoryNavSwitch.selectedSegmentIndex == 0) {
+//                        [self.billNumInputAccessoryTextField becomeFirstResponder];
+//                    } else if (sender == self.billDateInputAccessoryNavSwitch && self.billDateInputAccessoryNavSwitch.selectedSegmentIndex == 1) {
+//                        [self.billDueDateInputAccessoryTextField becomeFirstResponder];
+//                    } else if (sender == self.billDueDateInputAccessoryPrevItem) {
+//                        [self.billDateInputAccessoryTextField becomeFirstResponder];
+//                    }
                 }];
         }
     }
@@ -994,6 +995,7 @@ typedef enum {
             return [((Bill *)self.shaddowBusObj).lineItems count];
         }
     } else if (section == kBillApprovers) {
+//        Debug(@"======= Num approvers: %d", self.modifiedApprovers.count);
         return self.modifiedApprovers.count;
     } else if (section == kBillDocs) {
         return 1 + (self.mode == kAttachMode && SYSTEM_VERSION_LESS_THAN(@"7.0"));

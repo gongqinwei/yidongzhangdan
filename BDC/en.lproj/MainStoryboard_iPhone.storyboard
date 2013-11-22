@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="fDp-RE-MoE">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="fDp-RE-MoE">
     <dependencies>
         <deployment defaultVersion="1552" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
@@ -1455,11 +1455,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BillDetails" id="dDu-gc-PaD">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BillDetails" id="dDu-gc-PaD">
                                 <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dDu-gc-PaD" id="Vwd-uY-Ogs">
-                                    <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -2930,24 +2930,24 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="bpG-n7-YKA"/>
-        <segue reference="fqJ-Rf-CsZ"/>
-        <segue reference="CeX-f9-mSc"/>
+        <segue reference="3HC-XA-11p"/>
+        <segue reference="3ag-eg-oXf"/>
         <segue reference="znb-5y-98g"/>
         <segue reference="WRK-Bd-AdY"/>
-        <segue reference="v63-Az-wLD"/>
-        <segue reference="f4h-vQ-zhx"/>
-        <segue reference="3ag-eg-oXf"/>
-        <segue reference="nLD-mQ-6wj"/>
-        <segue reference="FTU-IK-7vF"/>
         <segue reference="wxy-Zp-Lfl"/>
         <segue reference="Hnb-9H-Um4"/>
+        <segue reference="CeX-f9-mSc"/>
         <segue reference="GuY-KC-qoW"/>
-        <segue reference="rr1-4I-AAm"/>
+        <segue reference="FTU-IK-7vF"/>
+        <segue reference="nLD-mQ-6wj"/>
         <segue reference="crQ-7s-jkT"/>
         <segue reference="fR5-hZ-eeX"/>
-        <segue reference="ysq-5e-jjh"/>
+        <segue reference="fqJ-Rf-CsZ"/>
+        <segue reference="bpG-n7-YKA"/>
+        <segue reference="rr1-4I-AAm"/>
+        <segue reference="f4h-vQ-zhx"/>
         <segue reference="2iZ-iS-Zfa"/>
+        <segue reference="ysq-5e-jjh"/>
         <segue reference="5Ki-uI-G54"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -12,9 +12,9 @@
 #import "Labels.h"
 
 //#define LOCAL
-//#define APPTEST
+#define APPTEST
 //#define APPSTAGE
-#define PROD
+//#define PROD
 
 
 #ifdef LOCAL

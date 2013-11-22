@@ -30,7 +30,7 @@
 #define INVOICE_DATE_RECT                   CGRectMake(160, 25, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
 #define STATUS_RECT                         CGRectMake(10, 45, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
 #define DUE_DATE_LABEL_RECT                 CGRectMake(160, 52, 25, INVOICE_TABLE_LABEL_HEIGHT)
-#define DUE_DATE_RECT                       CGRectMake(188, 45, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
+#define DUE_DATE_RECT                       CGRectMake(188, 45, INVOICE_TABLE_LABEL_WIDTH - 20, INVOICE_TABLE_LABEL_HEIGHT)
 #define AMOUNT_RECT                         CGRectMake(10, 65, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
 #define AMOUNT_DUE_RECT                     CGRectMake(188, 65, INVOICE_TABLE_LABEL_WIDTH, INVOICE_TABLE_LABEL_HEIGHT)
 #define SECTION_HEADER_RECT                 CGRectMake(0, 0, SCREEN_WIDTH, INVOICE_TABLE_SECTION_HEADER_HEIGHT)
@@ -330,6 +330,8 @@
     
     if (self.mode == kAttachMode) {
         cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+    } else {
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
     return cell;
