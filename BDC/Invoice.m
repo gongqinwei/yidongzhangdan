@@ -83,7 +83,7 @@ static NSMutableArray *inactiveInvoices = nil;
     NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
-    [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+    [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {        
         NSInteger response_status;
         [APIHandler getResponse:response data:data error:&err status:&response_status];
         

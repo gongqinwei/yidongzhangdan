@@ -741,9 +741,15 @@ typedef enum {
         return CELL_HEIGHT;
     } else if (indexPath.section == kInvoiceLineItems) {
         return CELL_HEIGHT;
-    } else {
-        return IMG_HEIGHT + IMG_PADDING + ATTACHMENT_PV_HEIGHT + (SYSTEM_VERSION_LESS_THAN(@"7.0") ? 0 : 10);
+    } else if (indexPath.section == kInvoiceAttachments) {
+        if (indexPath.row == 0) {
+            return IMG_HEIGHT + IMG_PADDING;
+        } else {
+            return IMG_HEIGHT + IMG_PADDING + ATTACHMENT_PV_HEIGHT + (SYSTEM_VERSION_LESS_THAN(@"7.0") ? 0 : 10);
+        }
     }
+    
+    return 0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {

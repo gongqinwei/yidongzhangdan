@@ -11,12 +11,15 @@
 #import "RootMenuViewController.h"
 #import "UIHelper.h"
 #import "Util.h"
+#import "BDCAppDelegate.h"
 
 static Handler sessionValidatingHandler = nil;
 
 @implementation APIHandler
 
 + (void) asyncCallWithAction:(NSString*)action Info:(NSDictionary*)info AndHandler:(Handler)handler {
+    [UIAppDelegate incrNetworkActivities];
+    
     NSString *urlStr = [NSString stringWithFormat:@"%@/%@/%@", DOMAIN_URL, API_BASE, action];
     NSURL *url = [NSURL URLWithString:urlStr];
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:API_TIMEOUT];
@@ -42,6 +45,8 @@ static Handler sessionValidatingHandler = nil;
     [req setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
     
     sessionValidatingHandler = ^(NSURLResponse * response, NSData * data, NSError * err) {
+        [UIAppDelegate decrNetworkActivities];
+        
         NSInteger response_status;
         NSDictionary *json = [APIHandler getResponse:response data:data error:&err status:&response_status];
                 

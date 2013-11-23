@@ -786,16 +786,6 @@ typedef enum {
     self.activityIndicator.hidesWhenStopped = YES;
     
     if (self.forApproval) {
-//        self.title = nil;
-//        
-//        UIBarButtonItem *approveButton = [[UIBarButtonItem alloc] initWithTitle:@"Approve" style:UIBarButtonItemStyleBordered target:self action:@selector(processApproval:)];
-//        approveButton.tag = kApproverApproved;
-//        
-//        UIBarButtonItem *denyButton = [[UIBarButtonItem alloc] initWithTitle:@"Deny" style:UIBarButtonItemStyleBordered target:self action:@selector(processApproval:)];
-//        denyButton.tag = kApproverDenied;
-//
-//        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.navigationItem.rightBarButtonItem, denyButton, approveButton, nil];
-        
         UIImage *actionImage = [UIImage imageNamed:@"ApproveIcon.png"];
         CGRect frameActionImg = CGRectMake(0, 0, actionImage.size.width, actionImage.size.height);
         
@@ -811,12 +801,17 @@ typedef enum {
     }
 }
 
-//- (void)processApproval:(UIBarButtonItem *)sender {
-//    [self performSegueWithIdentifier:BILL_APPROVAL_COMMENT_SEGUE sender:sender];
-//}
-
 - (void)processApproval:(ApproverStatusEnum)decision {
-    [self performSegueWithIdentifier:BILL_APPROVAL_COMMENT_SEGUE sender:[NSNumber numberWithInt:decision]];
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        [self performSegueWithIdentifier:BILL_APPROVAL_COMMENT_SEGUE sender:[NSNumber numberWithInt:decision]];
+    } else {
+        UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil];
+        ApprovalCommentViewController *approvalCommentVC = (ApprovalCommentViewController *)[mainstoryboard instantiateViewControllerWithIdentifier:@"ApprovalComment"];
+        
+        [approvalCommentVC setBusObj:(Bill *)self.busObj];
+        [approvalCommentVC setApprovalDecision:decision];
+        [self presentViewController:approvalCommentVC animated:YES completion:nil];
+    }
 }
 
 - (void)getBillNumberFromTextField:(UITextField *)textField {
@@ -995,7 +990,6 @@ typedef enum {
             return [((Bill *)self.shaddowBusObj).lineItems count];
         }
     } else if (section == kBillApprovers) {
-//        Debug(@"======= Num approvers: %d", self.modifiedApprovers.count);
         return self.modifiedApprovers.count;
     } else if (section == kBillDocs) {
         return 1 + (self.mode == kAttachMode && SYSTEM_VERSION_LESS_THAN(@"7.0"));

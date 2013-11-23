@@ -848,6 +848,7 @@ enum VendorInfoType {
 - (void)didSelectCrudAction:(NSString *)action {
     if ([action isEqualToString:ACTION_LIST_VENDOR_BILLS]) {
         BillsTableViewController *billsVC = [[RootMenuViewController sharedInstance] showView:MENU_BILLS].childViewControllers[0];
+        [billsVC.navigationController popToRootViewControllerAnimated:NO];
         [billsVC didSelectSortAttribute:BILL_VENDOR_NAME ascending:YES active:YES];
         [billsVC.tableView reloadData];
         

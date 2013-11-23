@@ -894,6 +894,7 @@ enum CustomerInfoType {
 - (void)didSelectCrudAction:(NSString *)action {
     if ([action isEqualToString:ACTION_LIST_CUSTOMER_INVS]) {
         InvoicesTableViewController *invsVC = [[RootMenuViewController sharedInstance] showView:MENU_INVOICES].childViewControllers[0];
+        [invsVC.navigationController popToRootViewControllerAnimated:NO];
         [invsVC didSelectSortAttribute:INV_CUSTOMER_NAME ascending:YES active:YES];
         [invsVC.tableView reloadData];
         
