@@ -130,6 +130,7 @@
 		7E579F8415AB9561009D1455 /* SelectOrgViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F8315AB9561009D1455 /* SelectOrgViewController.m */; };
 		7E579F8715ABA91A009D1455 /* Organization.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F8615ABA91A009D1455 /* Organization.m */; };
 		7E579F8A15ACE571009D1455 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F8915ACE571009D1455 /* UserProfileViewController.m */; };
+		7E7D741E1840820A009B114C /* ApprovalCommentiOS6ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E7D741D1840820A009B114C /* ApprovalCommentiOS6ViewController.m */; };
 		7E91E3F015927C15005104AF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E91E3EF15927C15005104AF /* UIKit.framework */; };
 		7E91E3F215927C15005104AF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E91E3F115927C15005104AF /* Foundation.framework */; };
 		7E91E3F415927C15005104AF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E91E3F315927C15005104AF /* CoreGraphics.framework */; };
@@ -349,6 +350,8 @@
 		7E579F8615ABA91A009D1455 /* Organization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Organization.m; sourceTree = "<group>"; };
 		7E579F8815ACE571009D1455 /* UserProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileViewController.h; sourceTree = "<group>"; };
 		7E579F8915ACE571009D1455 /* UserProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileViewController.m; sourceTree = "<group>"; };
+		7E7D741C1840820A009B114C /* ApprovalCommentiOS6ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApprovalCommentiOS6ViewController.h; sourceTree = "<group>"; };
+		7E7D741D1840820A009B114C /* ApprovalCommentiOS6ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApprovalCommentiOS6ViewController.m; sourceTree = "<group>"; };
 		7E91E3EB15927C15005104AF /* Mobill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mobill.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E91E3EF15927C15005104AF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7E91E3F115927C15005104AF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -433,6 +436,8 @@
 				0E092B1F180F397D00BC6E92 /* ApproveBillsTableViewController.m */,
 				7EC3F8AE181337E600F5B6B7 /* ApprovalCommentViewController.h */,
 				7EC3F8AF181337E600F5B6B7 /* ApprovalCommentViewController.m */,
+				7E7D741C1840820A009B114C /* ApprovalCommentiOS6ViewController.h */,
+				7E7D741D1840820A009B114C /* ApprovalCommentiOS6ViewController.m */,
 			);
 			name = Approve;
 			sourceTree = "<group>";
@@ -1064,6 +1069,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E7D741E1840820A009B114C /* ApprovalCommentiOS6ViewController.m in Sources */,
 				0E7DCAC11603A1DD00D0B35E /* KeychainItemWrapper.m in Sources */,
 				7E91E3FC15927C15005104AF /* main.m in Sources */,
 				7E91E40015927C15005104AF /* BDCAppDelegate.m in Sources */,

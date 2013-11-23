@@ -66,6 +66,7 @@ typedef enum {
 #define BILL_PAY_BILL_SEGUE             @"PayBill"
 #define BILL_ADD_APPROVER_SEGUE         @"AddBillAprover"
 #define BILL_APPROVAL_COMMENT_SEGUE     @"WriteApprovalComment"
+#define BILL_APPROVAL_COMMENT_6_SEGUE   @"WriteApprovalCommentiOS6"
 
 #define BILL_LABEL_FONT_SIZE            13
 #define BillInfo                 [NSArray arrayWithObjects:@"Vendor", @"Invoice #", @"Inv Date", @"Due Date", @"Approval", @"Payment", nil]
@@ -802,15 +803,17 @@ typedef enum {
 }
 
 - (void)processApproval:(ApproverStatusEnum)decision {
-    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
         [self performSegueWithIdentifier:BILL_APPROVAL_COMMENT_SEGUE sender:[NSNumber numberWithInt:decision]];
     } else {
-        UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil];
-        ApprovalCommentViewController *approvalCommentVC = (ApprovalCommentViewController *)[mainstoryboard instantiateViewControllerWithIdentifier:@"ApprovalComment"];
+        [self performSegueWithIdentifier:BILL_APPROVAL_COMMENT_6_SEGUE sender:[NSNumber numberWithInt:decision]];
         
-        [approvalCommentVC setBusObj:(Bill *)self.busObj];
-        [approvalCommentVC setApprovalDecision:decision];
-        [self presentViewController:approvalCommentVC animated:YES completion:nil];
+//        UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil];
+//        ApprovalCommentViewController *approvalCommentVC = (ApprovalCommentViewController *)[mainstoryboard instantiateViewControllerWithIdentifier:@"ApprovalComment"];
+//        
+//        [approvalCommentVC setBusObj:(Bill *)self.busObj];
+//        [approvalCommentVC setApprovalDecision:decision];
+//        [self presentViewController:approvalCommentVC animated:YES completion:nil];
     }
 }
 
@@ -961,7 +964,7 @@ typedef enum {
     } else if ([segue.identifier isEqualToString:BILL_ADD_APPROVER_SEGUE]) {
 //        [segue.destinationViewController setMode:kSelectMode];
         [segue.destinationViewController setSelectDelegate:self];
-    } else if ([segue.identifier isEqualToString:BILL_APPROVAL_COMMENT_SEGUE]) {
+    } else if ([segue.identifier isEqualToString:BILL_APPROVAL_COMMENT_SEGUE] || [segue.identifier isEqualToString:BILL_APPROVAL_COMMENT_6_SEGUE]) {
         [segue.destinationViewController setBusObj:self.busObj];
         [segue.destinationViewController setApprovalDecision:((NSNumber *)sender).intValue];
     }

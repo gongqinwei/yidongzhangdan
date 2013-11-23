@@ -153,6 +153,8 @@
     
     if (self.mode == kAttachMode) {
         cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+    } else {
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
     return cell;

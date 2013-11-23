@@ -1,22 +1,21 @@
 //
-//  ApprovalCommentViewController.m
+//  ApprovalCommentiOS6ViewController.m
 //  Mobill
 //
-//  Created by Qinwei Gong on 10/19/13.
+//  Created by Qinwei Gong on 11/22/13.
 //  Copyright (c) 2013 Mobill Inc. All rights reserved.
 //
 
-#import "ApprovalCommentViewController.h"
+#import "ApprovalCommentiOS6ViewController.h"
 #import "UIHelper.h"
 
 
-@interface ApprovalCommentViewController ()
+@interface ApprovalCommentiOS6ViewController ()
 
 @end
 
-@implementation ApprovalCommentViewController
+@implementation ApprovalCommentiOS6ViewController
 
-@synthesize approvalCommentNavigationItem;
 @synthesize approvalButton;
 @synthesize approvalNoteView;
 @synthesize busObj;
@@ -36,20 +35,15 @@
         [busObj skipWithComment:self.approvalNoteView.text];
     }
     
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (IBAction)cancelApproval:(UIBarButtonItem *)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-//    self.approvalCommentNavigationItem 
     if (self.approvalDecision != kApproverDenied) {
-        self.approvalCommentNavigationItem.title = @"Note (Optional)";
+        self.title = @"Note (Optional)";
     }
     
     if (self.approvalDecision == kApproverApproved) {
@@ -64,5 +58,6 @@
     self.approvalNoteView.layer.masksToBounds = YES;
     [self.approvalNoteView becomeFirstResponder];
 }
+
 
 @end
