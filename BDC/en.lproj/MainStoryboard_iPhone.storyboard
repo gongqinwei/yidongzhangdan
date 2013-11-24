@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="fDp-RE-MoE">
     <dependencies>
-        <deployment defaultVersion="1552" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
     <scenes>
@@ -2969,21 +2968,21 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Vyp-zG-ZzN"/>
-        <segue reference="dDa-B4-rpb"/>
-        <segue reference="dP9-hw-whd"/>
-        <segue reference="f4h-vQ-zhx"/>
-        <segue reference="WRK-Bd-AdY"/>
-        <segue reference="crQ-7s-jkT"/>
+        <segue reference="GuY-KC-qoW"/>
         <segue reference="znb-5y-98g"/>
+        <segue reference="WRK-Bd-AdY"/>
+        <segue reference="v63-Az-wLD"/>
+        <segue reference="f4h-vQ-zhx"/>
+        <segue reference="zBW-fL-edY"/>
         <segue reference="FTU-IK-7vF"/>
         <segue reference="3ag-eg-oXf"/>
         <segue reference="nLD-mQ-6wj"/>
         <segue reference="wxy-Zp-Lfl"/>
+        <segue reference="Hnb-9H-Um4"/>
         <segue reference="CeX-f9-mSc"/>
         <segue reference="rr1-4I-AAm"/>
+        <segue reference="crQ-7s-jkT"/>
         <segue reference="fqJ-Rf-CsZ"/>
-        <segue reference="fR5-hZ-eeX"/>
         <segue reference="bpG-n7-YKA"/>
         <segue reference="2iZ-iS-Zfa"/>
         <segue reference="ysq-5e-jjh"/>

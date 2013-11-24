@@ -372,6 +372,8 @@ static ActionMenuViewController * _sharedInstance = nil;
                 self.payAmountLabel.backgroundColor = [UIColor clearColor];
                 
                 [cell addSubview:self.payAmountLabel];
+            } else if ([action isEqualToString:ACTION_APPROVE] || [action isEqualToString:ACTION_DENY]) {
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             }
         }
     }

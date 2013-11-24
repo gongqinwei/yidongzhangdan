@@ -386,6 +386,11 @@ enum CustomerInfoType {
                         emailView.backgroundColor = [UIColor clearColor];
                         emailView.editable = NO;
                         emailView.dataDetectorTypes = UIDataDetectorTypeLink;
+                        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+                            emailView.selectable = YES;
+                            emailView.scrollEnabled = NO;
+                            emailView.editable = NO;
+                        }
                         
                         [cell addSubview:emailView];
                     } else {
@@ -411,6 +416,11 @@ enum CustomerInfoType {
                         phoneView.backgroundColor = [UIColor clearColor];
                         phoneView.editable = NO;
                         phoneView.dataDetectorTypes = UIDataDetectorTypePhoneNumber;
+                        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+                            phoneView.selectable = YES;
+                            phoneView.scrollEnabled = NO;
+                            phoneView.editable = NO;
+                        }
                         
                         [cell addSubview:phoneView];
                     } else {
