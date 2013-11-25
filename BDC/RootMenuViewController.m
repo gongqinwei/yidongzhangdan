@@ -189,6 +189,7 @@ static RootMenuViewController * _sharedInstance = nil;
     [Customer retrieveListForActive:NO reload:NO];
     
     if (self.currentOrg.enableAP) {
+        [BankAccount retrieveList];
         [Bill retrieveListForActive:NO reload:NO];
         [Vendor retrieveListForActive:NO reload:NO];
     }

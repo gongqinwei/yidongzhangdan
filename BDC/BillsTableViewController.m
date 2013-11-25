@@ -216,8 +216,6 @@
     for(Bill *bill in self.bills) {
         self.totalBillAmount = [self.totalBillAmount decimalNumberByAdding:bill.amount];
     }
-    
-    [BankAccount retrieveList];
 }
 
 - (void)viewDidUnload

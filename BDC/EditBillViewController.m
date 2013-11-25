@@ -250,7 +250,7 @@ typedef enum {
 }
 
 - (NSIndexSet *)getNonAttachmentSections {
-    return [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(kBillInfo, kBillApprovers)];
+    return [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(kBillInfo, kBillLineItems)];  // leave kBillApprovers alone, let it refresh separately
 }
 
 - (NSString *)getDocImageAPI {

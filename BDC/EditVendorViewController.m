@@ -138,8 +138,10 @@ enum VendorInfoType {
 }
 
 - (void)addMoreAttachment {
-    [self.view findAndResignFirstResponder];
-    [self performSegueWithIdentifier:VENDOR_SCAN_PHOTO_SEGUE sender:self];
+    if ([self tryTap]) {
+        [self.view findAndResignFirstResponder];
+        [self performSegueWithIdentifier:VENDOR_SCAN_PHOTO_SEGUE sender:self];
+    }
 }
 
 #pragma mark - Life Cycle methods

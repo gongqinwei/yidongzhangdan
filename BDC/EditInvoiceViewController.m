@@ -204,13 +204,17 @@ typedef enum {
 }
 
 - (void)addMoreItems {
-    [self.view findAndResignFirstResponder];
-    [self performSegueWithIdentifier:INV_SELECT_ITEMS_SEGUE sender:self];
+    if ([self tryTap]) {
+        [self.view findAndResignFirstResponder];
+        [self performSegueWithIdentifier:INV_SELECT_ITEMS_SEGUE sender:self];
+    }
 }
 
 - (void)addMoreAttachment {
-    [self.view findAndResignFirstResponder];
-    [self performSegueWithIdentifier:INV_SCAN_PHOTO_SEGUE sender:self];
+    if ([self tryTap]) {
+        [self.view findAndResignFirstResponder];
+        [self performSegueWithIdentifier:INV_SCAN_PHOTO_SEGUE sender:self];
+    }
 }
 
 - (void)pdfTapped:(UITapGestureRecognizer *)gestureRecognizer {

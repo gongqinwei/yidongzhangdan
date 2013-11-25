@@ -17,6 +17,7 @@
 #import "Approver.h"
 #import "Document.h"
 #import "ChartOfAccount.h"
+#import "BankAccount.h"
 #import "SplashViewController.h"
 #import "InboxViewController.h"
 #import "APIHandler.h"
@@ -133,6 +134,7 @@
                     [currentOrg getOrgPrefs];
                     [Bill retrieveListForActive:NO reload:NO];
                     [Vendor retrieveListForActive:NO reload:NO];
+                    [BankAccount retrieveList];
                 }
             } else {
                 self.window.rootViewController = initialController;
