@@ -32,6 +32,37 @@
     return [CustomerContact class];
 }
 
+//Overriding
+- (void)setupBarButtons {
+    
+    if (self.mode == kSelectMode || self.mode == kAttachMode) {
+        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]
+                                         initWithTitle: @"Cancel"
+                                         style: UIBarButtonItemStyleBordered
+                                         target: self action:@selector(navigateCancel)];
+        
+        self.navigationItem.leftBarButtonItem = cancelButton;
+    }
+    
+    if (self.mode == kSelectMode) {
+        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc]
+                                       initWithTitle: @"Done"
+                                       style: UIBarButtonItemStyleDone
+                                       target: self action:@selector(navigateDone)];
+        
+        self.navigationItem.rightBarButtonItem = doneButton;
+    } else if (self.mode == kAttachMode) {
+        UIBarButtonItem *attachButton = [[UIBarButtonItem alloc]
+                                         initWithTitle: @"Attach"
+                                         style: UIBarButtonItemStyleDone
+                                         target: self action:@selector(navigateAttach)];
+        
+        self.navigationItem.rightBarButtonItem = attachButton;
+    } else {
+        [self setActionMenuRightBarButton];
+    }
+}
+
 - (void)setContacts:(NSMutableArray *)contacts {
     _contacts = [self sortAlphabeticallyForList:contacts];
     
