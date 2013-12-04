@@ -11,11 +11,14 @@
 #import "Vendor.h"
 #import "MapViewController.h"
 #import "Util.h"
+#import "ImportAddressBookViewController.h"
+
 
 #define VENDOR_CELL_ID                  @"VendorItem"
 #define VENDOR_VIEW_VENDOR_SEGUE        @"ViewVendor"
 #define VENDOR_CREATE_VENDOR_SEGUE      @"CreateVendor"
-#define VENDOR_LIST_MAP                 @"ViewVendorsMap"
+#define VENDOR_LIST_MAP_SEGUE           @"ViewVendorsMap"
+#define VENDOR_IMPORT_AB_SEGUE          @"ImportVendors"
 
 #define ALL_INACTIVE_VENDORS            @"All Deleted Vendors"
 
@@ -108,7 +111,7 @@
     if (self.mode != kSelectMode && self.mode != kAttachMode) {
         self.sortAttributes = [NSArray array];
         if ([Organization getSelectedOrg].enableAP) {
-            self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, ACTION_MAP, nil];
+            self.crudActions = [NSArray arrayWithObjects:ACTION_IMPORT, ACTION_CREATE, ACTION_DELETE, ACTION_MAP, nil];
             self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
         }
     } else {
@@ -229,9 +232,11 @@
         [segue.destinationViewController setMode:kViewMode];
     } else if ([segue.identifier isEqualToString:VENDOR_CREATE_VENDOR_SEGUE]) {
         [segue.destinationViewController setMode:kCreateMode];
-    } else if ([segue.identifier isEqualToString:VENDOR_LIST_MAP]) {
+    } else if ([segue.identifier isEqualToString:VENDOR_LIST_MAP_SEGUE]) {
         [segue.destinationViewController setAnnotations:[Vendor list]];
         [segue.destinationViewController setSelectObjDelegate:self];
+    } else if ([segue.identifier isEqualToString:VENDOR_IMPORT_AB_SEGUE]) {
+        [segue.destinationViewController setImportingClass:[self busObjClass]];
     }
 }
 
@@ -325,7 +330,9 @@
     [super didSelectCrudAction:action];
     
     if ([action isEqualToString:ACTION_MAP]) {
-        [self performSegueWithIdentifier:VENDOR_LIST_MAP sender:self];
+        [self performSegueWithIdentifier:VENDOR_LIST_MAP_SEGUE sender:self];
+    } else if ([action isEqualToString:ACTION_IMPORT]) {
+        [self performSegueWithIdentifier:VENDOR_IMPORT_AB_SEGUE sender:self];
     }
 }
 

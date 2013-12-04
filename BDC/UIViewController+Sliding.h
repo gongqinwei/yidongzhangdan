@@ -29,6 +29,8 @@
 #define ACTION_APPROVE              @"Approve"
 #define ACTION_DENY                 @"Deny"
 #define ACTION_SKIP                 @"Skip"
+#define ACTION_IMPORT               @"Import from Address Book"
+#define ACTION_VENDOR_INVITE        @"Invite for ePayment"
 
 
 @protocol SlideDelegate <NSObject>

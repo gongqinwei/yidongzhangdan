@@ -15,14 +15,15 @@
 #import "BDCAppDelegate.h"
 
 
+#define VENDOR_INVITE_DATA          @"{ \"vendorId\" : \"%@\", \"email\" : \"%@\"  }"
+
+
 @implementation Vendor
 
 static id <VendorListDelegate> ListDelegate = nil;
 static NSMutableDictionary * vendors = nil;
 static NSMutableDictionary * inactiveVendors = nil;
 
-@synthesize email;
-@synthesize phone;
 @synthesize payBy;
 @synthesize editBillDelegate;
 
@@ -132,7 +133,7 @@ static NSMutableDictionary * inactiveVendors = nil;
         NSArray *jsonVendors = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         [UIAppDelegate decrNetworkActivities];
-        
+
         if(response_status == RESPONSE_SUCCESS) {
             NSMutableDictionary *vendorDict;
             if (isActive) {
@@ -198,7 +199,15 @@ static NSMutableDictionary * inactiveVendors = nil;
     target.editBillDelegate = source.editBillDelegate;
 }
 
+- (void)createAndInvite {
+    [self saveFor:CREATE andInvite:YES];
+}
+
 - (void)saveFor:(NSString *)action {
+    [self saveFor:action andInvite:NO];
+}
+
+- (void)saveFor:(NSString *)action andInvite:(BOOL)invite {
     NSString *theAction = [NSString stringWithString:action];
     
     action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, action, VENDOR_API];
@@ -270,6 +279,10 @@ static NSMutableDictionary * inactiveVendors = nil;
             } else {
                 [weakSelf.editDelegate didCreateObject:vendorId];
             }
+            
+            if (invite) {
+                [self sendVendorInvite];
+            }
         } else {
             [weakSelf.editDelegate failedToSaveObject];
             
@@ -280,6 +293,24 @@ static NSMutableDictionary * inactiveVendors = nil;
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to create vendor: %@", [err localizedDescription]] withStatus:kFailure];
                 Debug(@"Failed to create vendor: %@", [err localizedDescription]);
             }
+        }
+    }];
+}
+
+- (void)sendVendorInvite {
+    NSString *data = [NSString stringWithFormat:VENDOR_INVITE_DATA, self.objectId, [Util URLEncode:self.email]];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, data, nil];
+    
+    [APIHandler asyncCallWithAction:VENDOR_INVITE_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        NSInteger response_status;
+        [APIHandler getResponse:response data:data error:&err status:&response_status];
+        
+        if(response_status == RESPONSE_SUCCESS) {
+            [UIHelper showInfo:[NSString stringWithFormat:@"%@ invited.\nePayment pending.", self.name] withStatus:kInfo];
+        } else if (response_status == RESPONSE_TIMEOUT) {
+            [UIHelper showInfo:SysTimeOut withStatus:kError];
+        } else {
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to invite %@! %@", self.name, [err localizedDescription]] withStatus:kFailure];
         }
     }];
 }

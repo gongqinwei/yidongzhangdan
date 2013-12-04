@@ -231,7 +231,7 @@
         [self performSegueWithIdentifier:segueId sender:self];
     } else if (indexPath.row == 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [UIHelper showInfo:@"Document upload in progress.\n\nI'll show up in Inbox once uploaded." withStatus:kInfo];
+            [UIHelper showInfo:@"Document upload in progress.\n\nIt'll show up in Inbox once uploaded." withStatus:kInfo];
         });
         
         [self uploadToInbox:self];

@@ -36,11 +36,6 @@
 
 @interface Customer : BDCBusinessObjectWithAttachmentsAndAddress
 
-@property (nonatomic, strong) NSString *email;
-@property (nonatomic, strong) NSString *phone;
-//@property (nonatomic, strong) NSString *altPhone;
-//@property (nonatomic, strong) NSString *fax;
-
 @property (nonatomic, weak) id<BusObjectDelegate> editInvoiceDelegate;
 
 + (void)setListDelegate:(id<CustomerListDelegate>)listDelegate;

@@ -27,11 +27,6 @@ static id <CustomerListDelegate> ListDelegate = nil;
 static NSMutableDictionary * customers = nil;
 static NSMutableDictionary * inactiveCustomers = nil;
 
-@synthesize email;
-@synthesize phone;
-//@synthesize altPhone;
-//@synthesize fax;
-
 @synthesize editDelegate;
 @synthesize editInvoiceDelegate;
 

@@ -186,12 +186,12 @@ static RootMenuViewController * _sharedInstance = nil;
     }
     
     [Invoice retrieveListForActive:NO reload:NO];
-    [Customer retrieveListForActive:NO reload:NO];
+    [Customer retrieveListForActive:NO];
     
     if (self.currentOrg.enableAP) {
         [BankAccount retrieveList];
         [Bill retrieveListForActive:NO reload:NO];
-        [Vendor retrieveListForActive:NO reload:NO];
+        [Vendor retrieveListForActive:NO];
     }
     
 //    [Document retrieveListForCategory:FILE_CATEGORY_ATTACHMENT]; // for future

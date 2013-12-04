@@ -142,7 +142,10 @@
         
         self.navigationItem.rightBarButtonItem = attachButton;
     } else {
-        [self setSlidingMenuLeftBarButton];
+        if (self == self.navigationController.viewControllers[0]) {
+            [self setSlidingMenuLeftBarButton];
+        }
+
         [self setActionMenuRightBarButton];
     }
 }

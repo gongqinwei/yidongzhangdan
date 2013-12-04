@@ -41,8 +41,6 @@ typedef enum {
 
 @interface Vendor : BDCBusinessObjectWithAttachmentsAndAddress
 
-@property (nonatomic, strong) NSString *email;
-@property (nonatomic, strong) NSString *phone;
 @property (nonatomic, strong) NSString *payBy;
 
 @property (nonatomic, weak) id<BusObjectDelegate> editBillDelegate;
@@ -50,5 +48,7 @@ typedef enum {
 + (void)setListDelegate:(id<VendorListDelegate>)listDelegate;
 + (void)resetList;
 + (Vendor *)objectForKey:(NSString *)vendorId;
+
+- (void)sendVendorInvite;
 
 @end

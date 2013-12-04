@@ -135,6 +135,7 @@
 #define DENY_API            @"Deny.json"
 #define SKIP_API            @"Skip.json"
 #define INVOICE_SEND_API    @"SendInvoice.json"
+#define VENDOR_INVITE_API   @"SendVendorInvite.json"
 #define ENUM_API            @"Enum.json"
 #define ORG_PAY_NEED_APPROVAL_API   @"OrgBillPayNeedApproval.json"  // not used any more
 
@@ -269,6 +270,24 @@ Due Date: %@<br> \
 <br> \
 A PDF version of this invoice is also attached for your records.<br>"
 
+#define RECOMMEND_MOBILL_EMAIL  @" \
+Hi %@,<br> \
+<br> \
+As you know, we are using Bill.com to manage our bills and invoices. It's awesome.<br><br> \
+We just want to share something even more awesome: there is a native iPhone app called \"Mobill\" for Bill.com now!<br><br> \
+It's sleek, simple and convenient to use, yet pretty powerful! A perfect mobile app for Bill.com, and we highly recommend it. Check it out!<br> \
+%@<br><br> \
+And if you want to try it out first before paying for it, you can download its free edition.<br> \
+%@<br><br> \
+We love it very much, and we hope you will like it too!<br><br> \
+Best regards,<br> \
+<br> \
+%@<br> \
+<br>"
+
+#define MOBILL_APP_STORE_LINK       @"http://itunes.apple.com/us/app/id696521463?mt=8"
+#define MOBILL_LITE_APP_STORE_LINK  @"http://itunes.apple.com/us/app/id765927170?mt=8"
+
 
 // Approval Status
 #define APPROVAL_UNASSIGNED     @"0"
@@ -290,7 +309,7 @@ A PDF version of this invoice is also attached for your records.<br>"
 #define VENDOR_PAYMENT_CHECK    @"0"
 #define VENDOR_PAYMENT_ACH      @"1"
 #define VENDOR_PAYMENT_RPPS     @"2"
-#define VENDOR_PAYMENT_TYPES    [NSDictionary dictionaryWithObjectsAndKeys:@"Check", VENDOR_PAYMENT_CHECK, @"ACH", VENDOR_PAYMENT_ACH, @"RPPS", VENDOR_PAYMENT_RPPS, nil]
+#define VENDOR_PAYMENT_TYPES    [NSDictionary dictionaryWithObjectsAndKeys:@"Check", VENDOR_PAYMENT_CHECK, @"ePayment", VENDOR_PAYMENT_ACH, @"RPPS", VENDOR_PAYMENT_RPPS, nil]
 
 typedef enum {
     kSucceedLogin, kFailLogin, kFailListOrgs

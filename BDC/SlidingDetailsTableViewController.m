@@ -690,7 +690,7 @@ static double animatedDistance = 0;
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 360, 40)];
     headerView.backgroundColor = [UIColor clearColor];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 200, 20)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 3, 200, 20)];
     label.text = labelText;
     label.font = [UIFont fontWithName:@"Helvetica-Bold" size:17];
     label.backgroundColor = [UIColor clearColor];

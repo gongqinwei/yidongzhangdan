@@ -27,14 +27,16 @@
 #define ACTION_MENU_CELL_HEIGHT                 40
 #define ASCENDING                               @"Asc"
 #define DESCENDIDNG                             @"Desc"
-#define ACTION_MENU_SECTION_HEADER_LABEL_RECT   CGRectMake(15, 7, 70, 15)
+#define ACTION_MENU_SECTION_HEADER_LABEL_RECT   CGRectMake(20, 7, 70, 15)
 #define ACTION_MENU_TOGGLE_ARROW_RECT           CGRectMake(80, 10, 10, 10)
 #define ACTION_MENU_TOGGLE_ARROW_CENTER         CGPointMake(85, 15)
+#define ACTION_MENU_SECTION_HEADER_RECT         CGRectMake(0, 0, SLIDING_DISTANCE, ACTION_MENU_SECTION_HEADER_HEIGHT)
 
 
 @interface ActionMenuViewController () <UISearchBarDelegate, UISearchDisplayDelegate>
 
 @property (nonatomic, strong) NSMutableArray *searchResults;
+@property (nonatomic, strong) NSArray *searchResultsCopy;
 @property (nonatomic, strong) NSMutableArray *searchResultTypes;
 @property (nonatomic, strong) UILabel *ascLabel;
 @property (nonatomic, strong) UILabel *payAmountLabel;
@@ -52,6 +54,7 @@
 @synthesize lastSortAttribute;
 @synthesize searchBar;
 @synthesize searchResults;
+@synthesize searchResultsCopy;
 @synthesize searchResultTypes;
 @synthesize activenessSwitch;
 @synthesize ascSwitch;
@@ -535,6 +538,18 @@ static ActionMenuViewController * _sharedInstance = nil;
 
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         label.text = [self.searchResultTypes objectAtIndex:section];
+        
+        UIButton *btn = [[UIButton alloc] initWithFrame:ACTION_MENU_SECTION_HEADER_RECT];
+        btn.alpha = 0.1;
+        btn.tag = section;
+        [btn addTarget:self action:@selector(toggleSearchResultsSection:) forControlEvents:UIControlEventTouchUpInside];
+        [headerView addSubview:btn];
+        
+        UIImageView *arrowImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:TOGGLE_ARROW_IMG_NAME]];
+        arrowImage.frame = TOGGLE_ARROW_RECT;
+        arrowImage.center = TOGGLE_ARROW_CENTER;
+        arrowImage.transform = CGAffineTransformMakeRotation(- M_PI_2 * ([self.searchDisplayController.searchResultsTableView numberOfRowsInSection:section] == 0));
+        [headerView addSubview:arrowImage];
     } else {
         if (self.targetViewController.sortAttributes) {
             if (section == 0) {
@@ -563,6 +578,18 @@ static ActionMenuViewController * _sharedInstance = nil;
     return headerView;
 }
 
+- (void)toggleSearchResultsSection:(UIButton *)sender {
+    int section = sender.tag;
+    NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:section];
+    
+    if ([self.searchDisplayController.searchResultsTableView numberOfRowsInSection:section] > 0) {
+        [self.searchResults replaceObjectAtIndex:section withObject:[NSArray array]];
+    } else {
+        [self.searchResults replaceObjectAtIndex:section withObject:self.searchResultsCopy[section]];
+    }
+    [self.searchDisplayController.searchResultsTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+}
 
 #pragma mark - Search Display Controller delegate
 
@@ -614,6 +641,8 @@ static ActionMenuViewController * _sharedInstance = nil;
         [self.searchResults addObject:filteredItems];
         [self.searchResultTypes addObject:@"Items"];
     }
+    
+    self.searchResultsCopy = [NSArray arrayWithArray:self.searchResults];
 }
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {

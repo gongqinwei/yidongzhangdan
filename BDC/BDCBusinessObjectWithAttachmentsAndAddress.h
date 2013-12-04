@@ -24,7 +24,14 @@
 @property (nonatomic, strong) NSMutableString *formattedAddress;
 @property (nonatomic, assign) int numOfLinesInAddr;
 
+@property (nonatomic, strong) NSString *email;
+@property (nonatomic, strong) NSString *phone;
+//@property (nonatomic, strong) NSString *altPhone;
+//@property (nonatomic, strong) NSString *fax;
+
 - (int)formatAddress:(NSMutableString *)addr;
 - (void) geoCodeUsingAddress:(NSString *)address;
+
+- (void)createAndInvite;
 
 @end

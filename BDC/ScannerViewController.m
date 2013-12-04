@@ -11,7 +11,10 @@
 #import "APIHandler.h"
 #import "BOSelectorViewController.h"
 #import "Util.h"
+#import "UIHelper.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import <AVFoundation/AVFoundation.h>
+
 
 #define SELECT_BO_SEGUE         @"Select_BO_to_attach"
 #define PREVIEW_SCAN_SEGUE      @"PreviewScan"
@@ -106,6 +109,14 @@ enum PhotoSourceType {
     self.navigationItem.hidesBackButton = YES;
 }
 
+- (void)viewDidLayoutSubviews {
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        self.fileLabel.frame = CGRectMake(37, 90, 40, 21);
+        self.fileName.frame = CGRectMake(80, 85, 170, 31);
+        self.preview.frame = CGRectMake(65, 125, 200, 240);
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -167,12 +178,11 @@ enum PhotoSourceType {
             if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
                 NSArray *mediaType = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
                 if([mediaType containsObject:(NSString *)kUTTypeImage]) {
-                    self.picker = [[UIImagePickerController alloc] init];
-                    self.picker.delegate = self;
-                    self.picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-                    self.picker.mediaTypes = [NSArray arrayWithObject:(NSString *)kUTTypeImage];
-//                    self.picker.allowsEditing = YES;
-                    [self presentViewController:self.picker animated:YES completion:nil];
+                    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+                        [self presentCamera];
+                    } else {
+                        [self checkCameraAccess];
+                    }
                 }
             }
 
@@ -189,6 +199,38 @@ enum PhotoSourceType {
                 [self dismissViewControllerAnimated:YES completion:nil];
             }
             break;
+    }
+}
+
+- (void)presentCamera {
+    self.picker = [[UIImagePickerController alloc] init];
+    self.picker.delegate = self;
+    self.picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    self.picker.mediaTypes = [NSArray arrayWithObject:(NSString *)kUTTypeImage];
+//                    self.picker.allowsEditing = YES;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:self.picker animated:YES completion:nil];
+    });
+}
+
+- (void)checkCameraAccess {
+    // Request authorization to Camera
+    NSString *mediaType = AVMediaTypeVideo;
+    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:mediaType];
+    
+    if (authStatus == AVAuthorizationStatusNotDetermined) {
+        [AVCaptureDevice requestAccessForMediaType:mediaType completionHandler:^(BOOL granted) {
+            if(granted) {
+                [self presentCamera];
+            }
+        }];
+    } else if (authStatus == AVAuthorizationStatusAuthorized) {
+        // The user has previously given access, add the contact
+        [self presentCamera];
+    } else {
+        // The user has previously denied access
+        // Send an alert telling user to change privacy setting in settings app
+        [UIHelper showInfo:@"You've disabled camera for Mobill" withStatus:kError];
     }
 }
 

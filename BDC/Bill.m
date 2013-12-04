@@ -28,7 +28,7 @@
 
 #define LIST_TO_APPROVE_FILTER      @"{ \"type\" : \"Bill\" }"
 
-#define APPROVAL_FILTER             @"{ \"objectId\" : \"%@\", \"comment\" : \"%@\"  }"
+#define APPROVAL_DATA               @"{ \"objectId\" : \"%@\", \"comment\" : \"%@\"  }"
 
 
 @implementation Bill
@@ -74,7 +74,7 @@ static NSMutableSet *billsToApproveSet;
 - (void)makeApprovalDecision:(NSString *)action withComment:(NSString *)comment {
     [UIAppDelegate incrNetworkActivities];
     
-    NSString *filter = [NSString stringWithFormat:APPROVAL_FILTER, self.objectId, comment];
+    NSString *filter = [NSString stringWithFormat:APPROVAL_DATA, self.objectId, comment];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, filter, nil];
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {

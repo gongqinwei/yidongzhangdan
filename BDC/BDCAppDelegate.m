@@ -128,12 +128,12 @@
                 }
                 
                 [Invoice retrieveListForActive:NO reload:NO];
-                [Customer retrieveListForActive:NO reload:NO];
+                [Customer retrieveListForActive:NO];
                 
                 if (currentOrg.enableAP) {
                     [currentOrg getOrgPrefs];
                     [Bill retrieveListForActive:NO reload:NO];
-                    [Vendor retrieveListForActive:NO reload:NO];
+                    [Vendor retrieveListForActive:NO];
                     [BankAccount retrieveList];
                 }
             } else {

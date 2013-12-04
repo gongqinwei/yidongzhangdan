@@ -72,7 +72,6 @@
 		0EAA1CA8183ED2B700DEE589 /* Associate.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EAA1CA7183ED2B700DEE589 /* Associate.png */; };
 		0EAA1CAA183ED40600DEE589 /* Accept.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EAA1CA9183ED40600DEE589 /* Accept.png */; };
 		0EAA1CAE183ED62F00DEE589 /* List.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EAA1CAD183ED62F00DEE589 /* List.png */; };
-		0EAA1CB4183ED82C00DEE589 /* Map.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EAA1CB3183ED82C00DEE589 /* Map.png */; };
 		0EAE1BAA170B9B780091B7FC /* UIViewController+Sliding.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EAE1BA9170B9B780091B7FC /* UIViewController+Sliding.m */; };
 		0EB2192917472EE600382C44 /* csv_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EB2192817472EE600382C44 /* csv_icon.png */; };
 		0EB21936174B3B2300382C44 /* BDCBusinessObjectWithAttachments.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB21935174B3B2300382C44 /* BDCBusinessObjectWithAttachments.m */; };
@@ -116,6 +115,7 @@
 		0EEB9F751756B26B00AAAC35 /* SlidingCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB9F741756B26B00AAAC35 /* SlidingCollectionViewController.m */; };
 		0EEB9F781756B5AE00AAAC35 /* InboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB9F771756B5AE00AAAC35 /* InboxViewController.m */; };
 		0EEB9F7C1756B91300AAAC35 /* DocumentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB9F7B1756B91300AAAC35 /* DocumentCell.m */; };
+		7E1DF190184E94B70009F0C3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E1DF18F184E94B70009F0C3 /* AVFoundation.framework */; };
 		7E370EAE17DD89C8005B3538 /* phoneIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EAD17DD89C8005B3538 /* phoneIcon.png */; };
 		7E370EB617DD8E3F005B3538 /* emailIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EB517DD8E3F005B3538 /* emailIcon.png */; };
 		7E370EB817DD90EC005B3538 /* emailIcon1.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EB717DD90EC005B3538 /* emailIcon1.png */; };
@@ -130,7 +130,16 @@
 		7E579F8415AB9561009D1455 /* SelectOrgViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F8315AB9561009D1455 /* SelectOrgViewController.m */; };
 		7E579F8715ABA91A009D1455 /* Organization.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F8615ABA91A009D1455 /* Organization.m */; };
 		7E579F8A15ACE571009D1455 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F8915ACE571009D1455 /* UserProfileViewController.m */; };
+		7E7979C1184B1FD0003FE1E4 /* Import.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7979C0184B1FD0003FE1E4 /* Import.png */; };
+		7E7979C3184CE209003FE1E4 /* Map.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7979C2184CE209003FE1E4 /* Map.png */; };
+		7E7979C6184DAFF8003FE1E4 /* UIButton7.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E7979C5184DAFF8003FE1E4 /* UIButton7.m */; };
+		7E7979C8184E8BB2003FE1E4 /* Invite.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7979C7184E8BB2003FE1E4 /* Invite.png */; };
 		7E7D741E1840820A009B114C /* ApprovalCommentiOS6ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E7D741D1840820A009B114C /* ApprovalCommentiOS6ViewController.m */; };
+		7E7D742418455597009B114C /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E7D742218455597009B114C /* AddressBook.framework */; };
+		7E7D742518455597009B114C /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E7D742318455597009B114C /* AddressBookUI.framework */; };
+		7E7D742818455716009B114C /* ImportAddressBookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E7D742718455716009B114C /* ImportAddressBookViewController.m */; };
+		7E7D742B184561DA009B114C /* ABPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E7D742A184561DA009B114C /* ABPerson.m */; };
+		7E7D742F1846D663009B114C /* ImportABPersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E7D742E1846D663009B114C /* ImportABPersonViewController.m */; };
 		7E91E3F015927C15005104AF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E91E3EF15927C15005104AF /* UIKit.framework */; };
 		7E91E3F215927C15005104AF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E91E3F115927C15005104AF /* Foundation.framework */; };
 		7E91E3F415927C15005104AF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E91E3F315927C15005104AF /* CoreGraphics.framework */; };
@@ -269,7 +278,6 @@
 		0EAA1CA7183ED2B700DEE589 /* Associate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Associate.png; sourceTree = "<group>"; };
 		0EAA1CA9183ED40600DEE589 /* Accept.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Accept.png; sourceTree = "<group>"; };
 		0EAA1CAD183ED62F00DEE589 /* List.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = List.png; sourceTree = "<group>"; };
-		0EAA1CB3183ED82C00DEE589 /* Map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Map.png; sourceTree = "<group>"; };
 		0EAE1BA8170B9B780091B7FC /* UIViewController+Sliding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Sliding.h"; sourceTree = "<group>"; };
 		0EAE1BA9170B9B780091B7FC /* UIViewController+Sliding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIViewController+Sliding.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		0EB2192817472EE600382C44 /* csv_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = csv_icon.png; sourceTree = "<group>"; };
@@ -328,6 +336,7 @@
 		0EEB9F771756B5AE00AAAC35 /* InboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InboxViewController.m; sourceTree = "<group>"; };
 		0EEB9F7A1756B91300AAAC35 /* DocumentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentCell.h; sourceTree = "<group>"; };
 		0EEB9F7B1756B91300AAAC35 /* DocumentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentCell.m; sourceTree = "<group>"; };
+		7E1DF18F184E94B70009F0C3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		7E370EAD17DD89C8005B3538 /* phoneIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phoneIcon.png; sourceTree = "<group>"; };
 		7E370EB517DD8E3F005B3538 /* emailIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailIcon.png; sourceTree = "<group>"; };
 		7E370EB717DD90EC005B3538 /* emailIcon1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailIcon1.png; sourceTree = "<group>"; };
@@ -350,8 +359,21 @@
 		7E579F8615ABA91A009D1455 /* Organization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Organization.m; sourceTree = "<group>"; };
 		7E579F8815ACE571009D1455 /* UserProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileViewController.h; sourceTree = "<group>"; };
 		7E579F8915ACE571009D1455 /* UserProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileViewController.m; sourceTree = "<group>"; };
+		7E7979C0184B1FD0003FE1E4 /* Import.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Import.png; sourceTree = "<group>"; };
+		7E7979C2184CE209003FE1E4 /* Map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Map.png; sourceTree = "<group>"; };
+		7E7979C4184DAFF8003FE1E4 /* UIButton7.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIButton7.h; sourceTree = "<group>"; };
+		7E7979C5184DAFF8003FE1E4 /* UIButton7.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIButton7.m; sourceTree = "<group>"; };
+		7E7979C7184E8BB2003FE1E4 /* Invite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Invite.png; sourceTree = "<group>"; };
 		7E7D741C1840820A009B114C /* ApprovalCommentiOS6ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApprovalCommentiOS6ViewController.h; sourceTree = "<group>"; };
 		7E7D741D1840820A009B114C /* ApprovalCommentiOS6ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApprovalCommentiOS6ViewController.m; sourceTree = "<group>"; };
+		7E7D742218455597009B114C /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		7E7D742318455597009B114C /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		7E7D742618455716009B114C /* ImportAddressBookViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImportAddressBookViewController.h; sourceTree = "<group>"; };
+		7E7D742718455716009B114C /* ImportAddressBookViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImportAddressBookViewController.m; sourceTree = "<group>"; };
+		7E7D7429184561DA009B114C /* ABPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABPerson.h; sourceTree = "<group>"; };
+		7E7D742A184561DA009B114C /* ABPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABPerson.m; sourceTree = "<group>"; };
+		7E7D742D1846D663009B114C /* ImportABPersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImportABPersonViewController.h; sourceTree = "<group>"; };
+		7E7D742E1846D663009B114C /* ImportABPersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImportABPersonViewController.m; sourceTree = "<group>"; };
 		7E91E3EB15927C15005104AF /* Mobill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mobill.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E91E3EF15927C15005104AF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7E91E3F115927C15005104AF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -413,6 +435,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E1DF190184E94B70009F0C3 /* AVFoundation.framework in Frameworks */,
+				7E7D742418455597009B114C /* AddressBook.framework in Frameworks */,
+				7E7D742518455597009B114C /* AddressBookUI.framework in Frameworks */,
 				7E98A9A317DC5C3100698ED4 /* MapKit.framework in Frameworks */,
 				7E98A9A117DC5C1200698ED4 /* CoreLocation.framework in Frameworks */,
 				0E3A157D17455CA0007F2DC6 /* QuickLook.framework in Frameworks */,
@@ -516,6 +541,8 @@
 				0E999E0E16DE5E8E00F1E39F /* UIView+FindAndResignFirstResponder.m */,
 				0EAE1BA8170B9B780091B7FC /* UIViewController+Sliding.h */,
 				0EAE1BA9170B9B780091B7FC /* UIViewController+Sliding.m */,
+				7E7979C4184DAFF8003FE1E4 /* UIButton7.h */,
+				7E7979C5184DAFF8003FE1E4 /* UIButton7.m */,
 			);
 			name = "Categories-DataStructure";
 			sourceTree = "<group>";
@@ -702,8 +729,10 @@
 				0E92713D183EBAA600DE0AE6 /* Deny.png */,
 				0E927145183EBEA500DE0AE6 /* Edit.png */,
 				0E927153183EC5D800DE0AE6 /* Email.png */,
+				7E7979C0184B1FD0003FE1E4 /* Import.png */,
+				7E7979C7184E8BB2003FE1E4 /* Invite.png */,
 				0EAA1CAD183ED62F00DEE589 /* List.png */,
-				0EAA1CB3183ED82C00DEE589 /* Map.png */,
+				7E7979C2184CE209003FE1E4 /* Map.png */,
 				0EAA1C9F183ECDD700DEE589 /* Pay.png */,
 				0E927155183EC70900DE0AE6 /* Undelete.png */,
 			);
@@ -746,6 +775,8 @@
 				0EB21935174B3B2300382C44 /* BDCBusinessObjectWithAttachments.m */,
 				0E188B8A176C435300493EE1 /* BDCBusinessObjectWithAttachmentsAndAddress.h */,
 				0E188B8B176C435300493EE1 /* BDCBusinessObjectWithAttachmentsAndAddress.m */,
+				7E7D7429184561DA009B114C /* ABPerson.h */,
+				7E7D742A184561DA009B114C /* ABPerson.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -801,11 +832,23 @@
 				7E370EBF17E6D7B9005B3538 /* Map */,
 				0EA29AB516DDBE9900386617 /* Login */,
 				0EA29AB616DDBEE500386617 /* Menu */,
+				7E7D742C1846D570009B114C /* Import */,
 				0EEB9F791756B8A400AAAC35 /* Document */,
 				0EA29AB316DDBE2000386617 /* AP */,
 				0EA29AB216DDBDAC00386617 /* AR */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		7E7D742C1846D570009B114C /* Import */ = {
+			isa = PBXGroup;
+			children = (
+				7E7D742618455716009B114C /* ImportAddressBookViewController.h */,
+				7E7D742718455716009B114C /* ImportAddressBookViewController.m */,
+				7E7D742D1846D663009B114C /* ImportABPersonViewController.h */,
+				7E7D742E1846D663009B114C /* ImportABPersonViewController.m */,
+			);
+			name = Import;
 			sourceTree = "<group>";
 		};
 		7E91E3E015927C15005104AF = {
@@ -840,6 +883,9 @@
 		7E91E3EE15927C15005104AF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7E1DF18F184E94B70009F0C3 /* AVFoundation.framework */,
+				7E7D742218455597009B114C /* AddressBook.framework */,
+				7E7D742318455597009B114C /* AddressBookUI.framework */,
 				7E91E3EF15927C15005104AF /* UIKit.framework */,
 				7E91E3F115927C15005104AF /* Foundation.framework */,
 				7E91E3F315927C15005104AF /* CoreGraphics.framework */,
@@ -982,6 +1028,7 @@
 				7EC4EE931800991700DD18E0 /* Up.png in Resources */,
 				7E91E3FA15927C15005104AF /* InfoPlist.strings in Resources */,
 				7E91E40315927C15005104AF /* MainStoryboard_iPhone.storyboard in Resources */,
+				7E7979C3184CE209003FE1E4 /* Map.png in Resources */,
 				7E91E40615927C15005104AF /* MainStoryboard_iPad.storyboard in Resources */,
 				7E4A1B6417F76ABA00B3255C /* RootMenu.png in Resources */,
 				7E579F6515A80C8F009D1455 /* BDClogo.png in Resources */,
@@ -1016,6 +1063,7 @@
 				0ECF42C7175BC3D100BA7C7B /* ppt_icon.png in Resources */,
 				0ECF42C9175BC3E800BA7C7B /* pptx_icon.png in Resources */,
 				0ECF42CB175BC40A00BA7C7B /* rar_icon.png in Resources */,
+				7E7979C8184E8BB2003FE1E4 /* Invite.png in Resources */,
 				0ECF42CD175BC41F00BA7C7B /* tiff_icon.png in Resources */,
 				0ECF42CF175BC43900BA7C7B /* unknown_file_icon.png in Resources */,
 				0E92713E183EBAA600DE0AE6 /* Deny.png in Resources */,
@@ -1030,6 +1078,7 @@
 				0E5F512A177813FB001095C9 /* ProfileIcon.png in Resources */,
 				0E5F512D17782623001095C9 /* InvoicesIcon.png in Resources */,
 				0E5F512E17782623001095C9 /* BillsIcon.png in Resources */,
+				7E7979C1184B1FD0003FE1E4 /* Import.png in Resources */,
 				0E5F5132177827D8001095C9 /* CustomersIcon.png in Resources */,
 				0E5F5134177827D8001095C9 /* ItemsIcon.png in Resources */,
 				0E5F513617782A95001095C9 /* MyCompaniesIcon.png in Resources */,
@@ -1051,7 +1100,6 @@
 				0E927138183EB4D900DE0AE6 /* Approve.png in Resources */,
 				7EA5BF3217C98DCE0075EEF3 /* Mobill_logo29.png in Resources */,
 				7EA5BF4A17CC7CCF0075EEF3 /* Mobill50.png in Resources */,
-				0EAA1CB4183ED82C00DEE589 /* Map.png in Resources */,
 				7EA5BF4C17CC7D830075EEF3 /* Mobill40.png in Resources */,
 				7EC4EE91180098D700DD18E0 /* Right.png in Resources */,
 				7EE3920A17DD2184007B1126 /* directionsIcon.png in Resources */,
@@ -1080,6 +1128,7 @@
 				7ED50F791807CE66002064C4 /* EditApproverViewController.m in Sources */,
 				7E91E42E15993E6D005104AF /* BOSelectorViewController.m in Sources */,
 				7E579F5A15A21F1E009D1455 /* Bill.m in Sources */,
+				7E7D742F1846D663009B114C /* ImportABPersonViewController.m in Sources */,
 				7E579F5E15A234EB009D1455 /* APIHandler.m in Sources */,
 				7E579F8415AB9561009D1455 /* SelectOrgViewController.m in Sources */,
 				7E579F8715ABA91A009D1455 /* Organization.m in Sources */,
@@ -1095,6 +1144,7 @@
 				0EA09F1915FAAD0100BBD180 /* Customer.m in Sources */,
 				0EA09F1F15FC792800BBD180 /* InvoiceDetailsViewController.m in Sources */,
 				0E7DCAC41603CCC400D0B35E /* UIHelper.m in Sources */,
+				7E7979C6184DAFF8003FE1E4 /* UIButton7.m in Sources */,
 				0E68460F1609863C00716412 /* SplashViewController.m in Sources */,
 				0EE9B110160AF3F7002A5950 /* Uploader.m in Sources */,
 				0E092B20180F397D00BC6E92 /* ApproveBillsTableViewController.m in Sources */,
@@ -1119,6 +1169,7 @@
 				0EE1186017266650001AF86E /* BillsTableViewController.m in Sources */,
 				0EA33397172733AC00FB92F3 /* APBusinessObject.m in Sources */,
 				0EA3339A172754D100FB92F3 /* APLineItem.m in Sources */,
+				7E7D742818455716009B114C /* ImportAddressBookViewController.m in Sources */,
 				0EA3339D172755F800FB92F3 /* ChartOfAccount.m in Sources */,
 				0E7F8B3F1727B3920090464C /* EditBillViewController.m in Sources */,
 				0E7F8B42172860B00090464C /* Vendor.m in Sources */,
@@ -1139,6 +1190,7 @@
 				7E370EBD17E6D56D005B3538 /* EditContactViewController.m in Sources */,
 				7E370EC217E6D815005B3538 /* CustomerContact.m in Sources */,
 				7E370EC517E82EE0005B3538 /* ContactsTableViewController.m in Sources */,
+				7E7D742B184561DA009B114C /* ABPerson.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

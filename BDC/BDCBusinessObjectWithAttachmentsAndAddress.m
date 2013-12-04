@@ -25,6 +25,11 @@
 @synthesize longitude;
 @synthesize formattedAddress;
 @synthesize numOfLinesInAddr;
+@synthesize email;
+@synthesize phone;
+//@synthesize altPhone;
+//@synthesize fax;
+
 
 - (id) init {
     if (self = [super init]) {
@@ -156,6 +161,10 @@
     
     self.latitude = lat;
     self.longitude = lon;
+}
+
+- (void)createAndInvite {
+    [self create];
 }
 
 #pragma mark - MKAnnotation

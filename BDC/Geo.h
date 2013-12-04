@@ -396,6 +396,70 @@ nil]
 @"PW", \
 nil]
 
+#define US_STATE_NAMES       [NSArray arrayWithObjects: \
+@"alabama", \
+@"alaska", \
+@"arizona", \
+@"arkansas", \
+@"california", \
+@"colorado", \
+@"connecticut", \
+@"delaware", \
+@"district of columbia", \
+@"florida", \
+@"georgia", \
+@"hawaii", \
+@"idaho", \
+@"illinois", \
+@"indiana", \
+@"iowa", \
+@"kansas", \
+@"kentucky", \
+@"louisiana", \
+@"maine", \
+@"maryland", \
+@"massachusetts", \
+@"michigan", \
+@"minnesota", \
+@"mississippi", \
+@"missouri", \
+@"montana", \
+@"nebraska", \
+@"nevada", \
+@"new hampshire", \
+@"new jersey", \
+@"new mexico", \
+@"new york", \
+@"north carolina", \
+@"north dakota", \
+@"ohio", \
+@"oklahoma", \
+@"oregon", \
+@"pennsylvania", \
+@"puerto rico", \
+@"rhode island", \
+@"south carolina", \
+@"south dakota", \
+@"tennessee", \
+@"texas", \
+@"utah", \
+@"vermont", \
+@"virgin islands", \
+@"virginia", \
+@"washington", \
+@"west virginia", \
+@"wisconsin", \
+@"wyoming", \
+@"american samoa", \
+@"federated states of micronesia", \
+@"guam", \
+@"marshall islands", \
+@"military americas, florida", \
+@"military california, pacific", \
+@"military international, new york", \
+@"northern mariana islands", \
+@"palau", \
+nil]
 
 #endif
 

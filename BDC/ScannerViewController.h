@@ -17,6 +17,8 @@
 @end
 
 @interface ScannerViewController : SlidingViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+
+@property (weak, nonatomic) IBOutlet UILabel *fileLabel;
 @property (weak, nonatomic) IBOutlet UITextField *fileName;
 @property (weak, nonatomic) IBOutlet UIImageView *preview;
 @property (weak, nonatomic) IBOutlet UIButton *submit;

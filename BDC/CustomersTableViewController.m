@@ -11,11 +11,14 @@
 #import "Customer.h"
 #import "MapViewController.h"
 #import "Util.h"
+#import "ImportAddressBookViewController.h"
+
 
 #define CUSTOMER_CELL_ID                    @"CustomerItem"
 #define CUSTOMER_VIEW_CUSTOMER_SEGUE        @"ViewCustomer"
 #define CUSTOMER_CREATE_CUSTOMER_SEGUE      @"CreateCustomer"
 #define CUSTOMER_LIST_MAP                   @"ViewCustomersMap"
+#define CUSTOMER_IMPORT_AB_SEGUE            @"ImportCustomers"
 
 #define ALL_INACTIVE_CUSTOMERS              @"All Deleted Customers"
 
@@ -117,7 +120,7 @@
         self.sortAttributes = [NSArray array];
         
         if (org.enableAR) {
-            self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, ACTION_MAP, nil];
+            self.crudActions = [NSArray arrayWithObjects:ACTION_IMPORT, ACTION_CREATE, ACTION_DELETE, ACTION_MAP, nil];
             self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
         }
     } else {
@@ -242,6 +245,8 @@
     } else if ([segue.identifier isEqualToString:CUSTOMER_LIST_MAP]) {
         [segue.destinationViewController setAnnotations:[Customer list]];
         [segue.destinationViewController setSelectObjDelegate:self];
+    } else if ([segue.identifier isEqualToString:CUSTOMER_IMPORT_AB_SEGUE]) {
+        [segue.destinationViewController setImportingClass:[self busObjClass]];
     }
 }
 
@@ -336,6 +341,8 @@
     
     if ([action isEqualToString:ACTION_MAP]) {
         [self performSegueWithIdentifier:CUSTOMER_LIST_MAP sender:self];
+    } else if ([action isEqualToString:ACTION_IMPORT]) {
+        [self performSegueWithIdentifier:CUSTOMER_IMPORT_AB_SEGUE sender:self];
     }
 }
 

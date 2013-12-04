@@ -253,9 +253,17 @@
         inv = [self.invoices objectAtIndex:indexPath.row];
     } else {
         if ([self.sortAttribute isEqualToString:INV_CUSTOMER_NAME]) {
-            inv = [[self.customerInvoices objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+            if (((NSArray *)[self.customerInvoices objectAtIndex:indexPath.section]).count > indexPath.row) {
+                inv = [[self.customerInvoices objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+            } else {
+                return cell;
+            }
         } else if ([self.sortAttribute isEqualToString:INV_DUE_DATE]) {
-            inv = [((NSArray *)[self.dueDateInvoices objectAtIndex:indexPath.section]) objectAtIndex:indexPath.row];
+            if (((NSArray *)[self.dueDateInvoices objectAtIndex:indexPath.section]).count > indexPath.row) {
+                inv = [((NSArray *)[self.dueDateInvoices objectAtIndex:indexPath.section]) objectAtIndex:indexPath.row];
+            } else {
+                return cell;
+            }
         } else {
             inv = [self.invoices objectAtIndex:indexPath.row];
         }
@@ -613,27 +621,25 @@
             if ([self.sortAttribute isEqualToString:INV_CUSTOMER_NAME]) {
                 if ([self.tableView numberOfRowsInSection:section] > 0) {
                     [self.customerInvoices replaceObjectAtIndex:section withObject:[NSMutableArray array]];
-                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
                 } else {
                     [self.customerInvoices replaceObjectAtIndex:section withObject:[self.invoiceListsCopy objectAtIndex:section]];
-                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
                 }
             } else if ([self.sortAttribute isEqualToString:INV_DUE_DATE]) {
                 if ([self.tableView numberOfRowsInSection:section] > 0) {
                     [self.dueDateInvoices replaceObjectAtIndex:section withObject:[NSMutableArray array]];
-                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
                 } else {
                     [self.dueDateInvoices replaceObjectAtIndex:section withObject:[self.invoiceListsCopy objectAtIndex:section]];
-                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
                 }
             }
             
-            for (UIView *view in sender.superview.subviews) {
-                if ([view isMemberOfClass:[UIImageView class]]) {
-                    UIImageView *toggleImage = (UIImageView *)view;
-                    toggleImage.transform = CGAffineTransformMakeRotation(- M_PI_2 * ([self.tableView numberOfRowsInSection:section] == 0));
-                }
-            }
+            [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+            
+//            for (UIView *view in sender.superview.subviews) {
+//                if ([view isMemberOfClass:[UIImageView class]]) {
+//                    UIImageView *toggleImage = (UIImageView *)view;
+//                    toggleImage.transform = CGAffineTransformMakeRotation(- M_PI_2 * ([self.tableView numberOfRowsInSection:section] == 0));
+//                }
+//            }
         }
     }
 }

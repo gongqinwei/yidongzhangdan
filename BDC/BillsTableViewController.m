@@ -693,35 +693,31 @@
             if ([self.sortAttribute isEqualToString:BILL_VENDOR_NAME]) {
                 if ([self.tableView numberOfRowsInSection:section] > 0) {
                     [self.vendorBills replaceObjectAtIndex:section withObject:[NSMutableArray array]];
-                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
                 } else {
                     [self.vendorBills replaceObjectAtIndex:section withObject:[self.billListsCopy objectAtIndex:section]];
-                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
                 }
             } else if ([self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
                 if ([self.tableView numberOfRowsInSection:section] > 0) {
                     [self.dueDateBills replaceObjectAtIndex:section withObject:[NSMutableArray array]];
-                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
                 } else {
                     [self.dueDateBills replaceObjectAtIndex:section withObject:[self.billListsCopy objectAtIndex:section]];
-                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
                 }
             } else {    // approval status
                 if ([self.tableView numberOfRowsInSection:section] > 0) {
                     [self.approvalBills replaceObjectAtIndex:section withObject:[NSMutableArray array]];
-                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
                 } else {
                     [self.approvalBills replaceObjectAtIndex:section withObject:[self.billListsCopy objectAtIndex:section]];
-                    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
                 }
             }
             
-            for (UIView *view in sender.superview.subviews) {
-                if ([view isMemberOfClass:[UIImageView class]]) {
-                    UIImageView *toggleImage = (UIImageView *)view;
-                    toggleImage.transform = CGAffineTransformMakeRotation(- M_PI_2 * ([self.tableView numberOfRowsInSection:section] == 0));
-                }
-            }
+            [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+            
+//            for (UIView *view in sender.superview.subviews) {
+//                if ([view isMemberOfClass:[UIImageView class]]) {
+//                    UIImageView *toggleImage = (UIImageView *)view;
+//                    toggleImage.transform = CGAffineTransformMakeRotation(- M_PI_2 * ([self.tableView numberOfRowsInSection:section] == 0));
+//                }
+//            }
         }
     }
 }

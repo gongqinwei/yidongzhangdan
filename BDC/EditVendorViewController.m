@@ -146,6 +146,15 @@ enum VendorInfoType {
 
 #pragma mark - Life Cycle methods
 
+- (void)setupActionMenu {
+    Vendor *vendor = (Vendor *)self.shaddowBusObj;
+    if (vendor.email && [vendor.payBy isEqualToString:[NSString stringWithFormat:@"%d", kCheck]]) {
+        self.crudActions = [self.crudActions arrayByAddingObjectsFromArray:@[ACTION_LIST_VENDOR_BILLS, ACTION_VENDOR_INVITE]];
+    } else {
+        self.crudActions = [self.crudActions arrayByAddingObject:ACTION_LIST_VENDOR_BILLS];
+    }
+}
+
 - (void)viewDidLoad
 {
     if (!self.busObj) {
@@ -163,7 +172,7 @@ enum VendorInfoType {
         }
     } else {
         if ([[RootMenuViewController sharedInstance].currVC.navigationId isEqualToString:MENU_VENDORS]) {
-            self.crudActions = [self.crudActions arrayByAddingObject:ACTION_LIST_VENDOR_BILLS];
+            [self setupActionMenu];
         }
     }
     
@@ -854,6 +863,9 @@ enum VendorInfoType {
     [super doneSaveObject];
     [self formatAddr];
     [((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj) geoCodeUsingAddress:((BDCBusinessObjectWithAttachmentsAndAddress *)self.shaddowBusObj).formattedAddress];
+    
+    [self setupActionMenu];
+    [self.actionMenuVC.tableView reloadData];
 }
 
 #pragma mark - Action Menu delegate
@@ -878,6 +890,8 @@ enum VendorInfoType {
         } else {
             [UIHelper showInfo:[NSString stringWithFormat:@"There's no unpaid bills for %@", self.busObj.name] withStatus:kInfo];
         }
+    } else if ([action isEqualToString:ACTION_VENDOR_INVITE]) {
+        [((Vendor *)self.busObj) sendVendorInvite];
     } else {
         [super didSelectCrudAction:action];
     }

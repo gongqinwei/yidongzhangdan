@@ -10,6 +10,7 @@
 #import "RootMenuViewController.h"
 #import "Constants.h"
 #import "UIHelper.h"
+#import "UIButton7.h"
 #import <QuartzCore/QuartzCore.h>
 #import <objc/runtime.h>
 
@@ -149,6 +150,8 @@ static char const * const TapRecognizerKey = "tapRecognizer";
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.slidingInDelegate viewDidSlideIn];
                 });
+                
+                self.actionMenuVC.searchDisplayController.active = NO;
             } else {
                 if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
                     if (self.navigationController.viewControllers[0] == self.navigationController.topViewController) {
@@ -244,7 +247,14 @@ static char const * const TapRecognizerKey = "tapRecognizer";
     UIImage *logoImage = [UIImage imageNamed:@"RootMenu.png"];
     CGRect frameLogoImg = CGRectMake(0, 0, logoImage.size.width, logoImage.size.height);
 
-    UIButton *logoButton = [[UIButton alloc] initWithFrame:frameLogoImg];
+    UIButton *logoButton;
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        logoButton = [[UIButton alloc] initWithFrame:frameLogoImg];
+    } else {
+        logoButton = [[UIButton7 alloc] initWithFrame:frameLogoImg];
+        ((UIButton7 *)logoButton).position = kLeft;
+    }
+    
     [logoButton setBackgroundImage:logoImage forState:UIControlStateNormal];
     [logoButton addTarget:self action:@selector(toggleMenu:) forControlEvents:UIControlEventTouchUpInside];
     [logoButton setShowsTouchWhenHighlighted:YES];
@@ -257,7 +267,13 @@ static char const * const TapRecognizerKey = "tapRecognizer";
     UIImage *actionImage = [UIImage imageNamed:@"ActionMenu.png"];
     CGRect frameActionImg = CGRectMake(0, 0, actionImage.size.width, actionImage.size.height);
 
-    UIButton *actionButton = [[UIButton alloc] initWithFrame:frameActionImg];
+    UIButton *actionButton;
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        actionButton = [[UIButton alloc] initWithFrame:frameActionImg];
+    } else {
+        actionButton = [[UIButton7 alloc] initWithFrame:frameActionImg];
+        ((UIButton7 *)actionButton).position = kRight;
+    }
     [actionButton setBackgroundImage:actionImage forState:UIControlStateNormal];
     [actionButton addTarget:self action:@selector(toggleMenu:) forControlEvents:UIControlEventTouchUpInside];
     [actionButton setShowsTouchWhenHighlighted:YES];
