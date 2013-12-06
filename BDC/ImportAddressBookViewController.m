@@ -79,13 +79,17 @@
                 [person.name appendString:person.company];
             }
             
+            if (person.name.length == 0) {
+                continue;
+            }
+            
             ABMultiValueRef phones = ABRecordCopyValue(contact, kABPersonPhoneProperty);
             if (ABMultiValueGetCount(phones) > 0) {
                 CFStringRef phoneNumberRef = ABMultiValueCopyValueAtIndex(phones, 0);
                 person.phone = (__bridge NSString *)phoneNumberRef;
-                CFRelease(phoneNumberRef);
+//                CFRelease(phoneNumberRef);
             }
-            CFRelease(phones);
+//            CFRelease(phones);
             
             ABMultiValueRef emails = ABRecordCopyValue(contact, kABPersonEmailProperty);
             person.emails = [NSMutableDictionary dictionary];
@@ -94,8 +98,8 @@
                 CFStringRef locLabel = ABMultiValueCopyLabelAtIndex(emails, j);
                 NSString *emailLabel =(__bridge_transfer NSString*) ABAddressBookCopyLocalizedLabel(locLabel);
                 NSString *email = (__bridge NSString *)emailRef;
-                CFRelease(emailRef);
-                CFRelease(locLabel);
+//                CFRelease(emailRef);
+//                CFRelease(locLabel);
                 [person.emails setObject:emailLabel forKey:email];
             }
             CFRelease(emails);
