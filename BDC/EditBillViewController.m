@@ -26,6 +26,7 @@
 #import "BankAccount.h"
 #import "Organization.h"
 #import "Document.h"
+#import "BDCAppDelegate.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <MessageUI/MessageUI.h>
@@ -1810,6 +1811,13 @@ typedef enum {
 #pragma mark - Action Menu delegate
 
 - (void)didSelectCrudAction:(NSString *)action {
+    if (![action isEqualToString:ACTION_PAY] && ![action isEqualToString:ACTION_APPROVE] && ![action isEqualToString:ACTION_DENY] && ![action isEqualToString:ACTION_SKIP]) {
+        [super didSelectCrudAction:action];
+    }
+        
+#ifdef LITE_VERSION
+    [UIAppDelegate presentUpgrade];
+#else
     if ([action isEqualToString:ACTION_PAY]) {
         if ([((NSArray *)[BankAccount list]) count]) {
             [self performSegueWithIdentifier:BILL_PAY_BILL_SEGUE sender:self];
@@ -1820,9 +1828,8 @@ typedef enum {
         [self processApproval:kApproverDenied];
     } else if ([action isEqualToString:ACTION_SKIP]) {
         [self processApproval:kApproverRerouted];
-    } else {
-        [super didSelectCrudAction:action];
     }
+#endif
 }
 
 #pragma mark - Pay Bill delegate

@@ -286,7 +286,9 @@ static NSMutableArray *inactiveInvoices = nil;
     for (id lineItem in jsonItems) {
         Item *item = [[Item alloc] init];
         item.objectId = [lineItem objectForKey:INV_ITEM_ID];
-        item.qty = [[lineItem objectForKey:INV_ITEM_QUANTITY] integerValue];
+        if ([[lineItem objectForKey:INV_ITEM_QUANTITY] respondsToSelector:@selector(integerValue)]) {
+            item.qty = [[lineItem objectForKey:INV_ITEM_QUANTITY] integerValue];
+        }
         item.price = [Util id2Decimal:[lineItem objectForKey:INV_ITEM_PRICE]];
         [self.lineItems addObject:item];
     }

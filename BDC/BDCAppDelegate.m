@@ -22,18 +22,35 @@
 #import "InboxViewController.h"
 #import "APIHandler.h"
 
-@interface BDCAppDelegate ()
+
+@interface BDCAppDelegate () <UIAlertViewDelegate>
 
 @property (nonatomic, assign) BOOL isFirstLaunch;
 
 @end
 
+static NSString *const iOSAppStoreURLFormat = @"http://itunes.apple.com/app/id%d?at=10l6dK";
 
 @implementation BDCAppDelegate
 
 @synthesize window = _window;
 @synthesize numNetworkActivities = _numNetworkActivities;
 @synthesize isFirstLaunch;
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat: iOSAppStoreURLFormat, FULL_VERSION_ID]]];
+    }
+}
+
+- (void)presentUpgrade {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade"
+                                                    message:@"You need Mobill full version to use this advanced feature"
+                                                   delegate:self
+                                          cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles:@"Upgrade", nil];
+    [alert show];
+}
 
 - (void)setupNavigationBarForiOS7 {
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {

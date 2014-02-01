@@ -10,6 +10,7 @@
 #import "EditBillViewController.h"
 #import "Bill.h"
 #import "Vendor.h"
+#import "BDCAppDelegate.h"
 
 
 #define APPROVER_DETAILS_CELL_ID        @"ApproverItem"
@@ -168,10 +169,14 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+#ifdef LITE_VERSION
+        [UIAppDelegate presentUpgrade];
+#else
         Bill *bill = [self.billsToApprove objectAtIndex:indexPath.row];
         [self.billsToApprove removeObjectAtIndex:indexPath.row];
         [bill approve];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+#endif
     }
 }
 

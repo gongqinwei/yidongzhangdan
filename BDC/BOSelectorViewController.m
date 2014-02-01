@@ -22,6 +22,7 @@
 #import "APIHandler.h"
 #import "Constants.h"
 #import "UIHelper.h"
+#import "BDCAppDelegate.h"
 
 #define RESET_SCANNER_FROM_BO_SELECT_SEGUE          @"ResetScanner"
 #define ATTACH_TO_NEW_BILL_SEGUE                    @"AttachToNewBill"
@@ -221,6 +222,9 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+#ifdef LITE_VERSION
+    [UIAppDelegate presentUpgrade];
+#else
     if (indexPath.section < [AttachToExistingSegues count]) {
         NSString *segueId;
         if (self.pickOrCreateSwitch.selectedSegmentIndex == 1) {
@@ -250,6 +254,7 @@
 //        [RootMenuViewController sharedInstance].currVC.navigation = navVC;
 //        [RootMenuViewController sharedInstance].currVC.navigationId = MENU_INBOX;
     }
+#endif
 }
 
 

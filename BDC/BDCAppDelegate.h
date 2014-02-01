@@ -19,4 +19,6 @@
 - (void)incrNetworkActivities;
 - (void)decrNetworkActivities;
 
+- (void)presentUpgrade;
+
 @end

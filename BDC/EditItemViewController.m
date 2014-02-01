@@ -21,14 +21,18 @@ enum ItemInfoType {
 #define INVALID_ITEM_TYPE   -1
 #define ItemInfo            [NSArray arrayWithObjects:@"Type", @"Name", @"Price", @"Qty", nil]
 #define DOLLAR_RECT         CGRectMake(CELL_WIDTH - 185, 5, 10, CELL_HEIGHT - 10)
+#define DESC_HEIGHT         100
+#define ItemDesc            @"Description"
+#define DESC_RECT           CGRectMake(15, 5, CELL_WIDTH - 10, DESC_HEIGHT - 10)
 
-@interface EditItemViewController () <UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
+@interface EditItemViewController () <UITextFieldDelegate, UITextViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
 @property (nonatomic, strong) UIPickerView *itemTypePickerView;
 @property (nonatomic, strong) UITextField *itemTypeTextField;
 @property (nonatomic, strong) UITextField *itemNameTextField;
 @property (nonatomic, strong) UITextField *itemPriceTextField;
 @property (nonatomic, strong) UITextField *itemQtyTextField;
+@property (nonatomic, strong) UITextView *itemDescView;
 
 @end
 
@@ -48,6 +52,10 @@ enum ItemInfoType {
 
 - (BOOL)isAR {
     return YES;
+}
+
+- (NSIndexSet *)getNonAttachmentSections {
+    return [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 1)];
 }
 
 - (NSString *)getDocImageAPI {
@@ -70,6 +78,8 @@ enum ItemInfoType {
         [self.view findAndResignFirstResponder];
         
         Item *shaddowItem = (Item *)self.shaddowBusObj;
+        NSString *txt = [Util trim:self.itemDescView.text];
+        shaddowItem.desc = txt.length > 0 ? txt : nil;
         
         if (shaddowItem.type == INVALID_ITEM_TYPE) {
             [UIHelper showInfo:@"Missing type!" withStatus:kError];
@@ -160,6 +170,15 @@ enum ItemInfoType {
     self.itemQtyTextField.rightViewMode = UITextFieldViewModeUnlessEditing;
     self.itemQtyTextField.delegate = self;
     
+    self.itemDescView = [[UITextView alloc] initWithFrame:DESC_RECT];
+    self.itemDescView.delegate = self;
+    self.itemDescView.returnKeyType = UIReturnKeyDefault;
+    if (shaddowItem.desc && shaddowItem.desc.length > 0) {
+        self.itemDescView.text = shaddowItem.desc;
+    }
+    self.itemDescView.font = [UIFont fontWithName:APP_FONT size:15];
+    self.itemDescView.backgroundColor = [UIColor clearColor];
+    
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.activityIndicator.hidesWhenStopped = YES;    
 }
@@ -178,110 +197,152 @@ enum ItemInfoType {
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    if (self.mode == kCreateMode || self.mode == kUpdateMode || self.mode == kModifyMode) {
+        return 2;
+    } else {
+        Item *shaddowItem = (Item *)self.shaddowBusObj;
+        if (shaddowItem.desc) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (self.mode == kModifyMode) {
-        return [ItemInfo count];
+    if (section == 0) {
+        if (self.mode == kModifyMode) {
+            return [ItemInfo count];
+        } else {
+            return [ItemInfo count] - 1;
+        }
     } else {
-        return [ItemInfo count] - 1;
+        return 1;
     }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"ItemInfoItem";
+    static NSString *DescCellIdentifier = @"ItemDescription";
     
     UITableViewCell *cell;
-    if (self.modeChanged) {
-        if (self.mode == kViewMode) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
-        } else {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
-        }
-    } else {
-        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        if (!cell) {
+    
+    if (indexPath.section == 0) {
+        if (self.modeChanged) {
             if (self.mode == kViewMode) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
             } else {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
             }
+        } else {
+            cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            if (!cell) {
+                if (self.mode == kViewMode) {
+                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
+                } else {
+                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+                }
+            }
         }
-    }
+        
+        cell.textLabel.text = [ItemInfo objectAtIndex:indexPath.row]; //[ItemInfo objectForKey:[NSNumber numberWithInt:indexPath.row]];
+        cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:APP_LABEL_FONT_SIZE];
+        cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:APP_LABEL_FONT_SIZE];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        Item *shaddowItem = (Item *)self.shaddowBusObj;
+        
+        switch (indexPath.row) {
+            case kItemType:
+                if (self.mode == kCreateMode) {
+                    self.itemTypeTextField.text = @"";
+                    self.itemTypeTextField.backgroundColor = cell.backgroundColor;
+                    
+                    [cell addSubview:self.itemTypeTextField];
+                } else {
+                    cell.detailTextLabel.text = [ItemTypeNames objectAtIndex: shaddowItem.type];
+                }
+                break;
+            case kItemName:
+            {
+                if (self.mode == kViewMode || self.mode == kModifyMode) {
+                    cell.detailTextLabel.text = self.shaddowBusObj.name;
+                } else {
+                    if (self.shaddowBusObj != nil) {
+                        self.itemNameTextField.text = self.shaddowBusObj.name;
+                    }
+                    self.itemNameTextField.backgroundColor = cell.backgroundColor;
+                    
+                    [cell addSubview:self.itemNameTextField];
+                }
+            }
+                break;
+            case kItemPrice:
+            {
+                if (self.mode == kViewMode) {
+                    cell.detailTextLabel.text = [Util formatCurrency:shaddowItem.price];
+                } else {
+                    UILabel *dollarLabel = [[UILabel alloc] initWithFrame:DOLLAR_RECT];
+                    dollarLabel.text = @"$";
+                    dollarLabel.backgroundColor = [UIColor clearColor];
+                    [cell addSubview:dollarLabel];
+                    
+                    if (self.shaddowBusObj != nil) {
+                        self.itemPriceTextField.text = [shaddowItem.price stringValue];
+                    }
+                    self.itemPriceTextField.backgroundColor = cell.backgroundColor;
+                    
+                    [cell addSubview:self.itemPriceTextField];
+                }
+            }
+                break;
+            case kItemQuantity:
+            {
+                if (self.mode == kModifyMode) {
+                    if (self.shaddowBusObj != nil) {
+                        self.itemQtyTextField.text = [NSString stringWithFormat:@"%d", shaddowItem.qty];
+                    }
+                    self.itemQtyTextField.backgroundColor = cell.backgroundColor;
+                    
+                    [cell addSubview:self.itemQtyTextField];
+                }
+            }
+                break;
+            default:
+                break;
+        }
+    } else {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:DescCellIdentifier];
+        
+        if (self.mode == kCreateMode || self.mode == kUpdateMode || self.mode == kModifyMode) {
+            self.itemDescView.editable = YES;
+        } else {
+            self.itemDescView.editable = NO;
+        }
 
-    cell.textLabel.text = [ItemInfo objectAtIndex:indexPath.row]; //[ItemInfo objectForKey:[NSNumber numberWithInt:indexPath.row]];
-    cell.textLabel.font = [UIFont fontWithName:APP_BOLD_FONT size:APP_LABEL_FONT_SIZE];
-    cell.detailTextLabel.font = [UIFont fontWithName:APP_FONT size:APP_LABEL_FONT_SIZE];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
-    Item *shaddowItem = (Item *)self.shaddowBusObj;
-    
-    switch (indexPath.row) {
-        case kItemType:
-            if (self.mode == kCreateMode) {
-                self.itemTypeTextField.text = @"";
-                self.itemTypeTextField.backgroundColor = cell.backgroundColor;
-                
-                [cell addSubview:self.itemTypeTextField];
-            } else {
-                cell.detailTextLabel.text = [ItemTypeNames objectAtIndex: shaddowItem.type];
-            }
-            break;
-        case kItemName:
-        {
-            if (self.mode == kViewMode || self.mode == kModifyMode) {
-                cell.detailTextLabel.text = self.shaddowBusObj.name;
-            } else {
-                if (self.shaddowBusObj != nil) {
-                    self.itemNameTextField.text = self.shaddowBusObj.name;
-                }
-                self.itemNameTextField.backgroundColor = cell.backgroundColor;
-                
-                [cell addSubview:self.itemNameTextField];
-            }
-        }
-            break;
-        case kItemPrice:
-        {
-            if (self.mode == kViewMode) {
-                cell.detailTextLabel.text = [Util formatCurrency:shaddowItem.price];
-            } else {
-                UILabel *dollarLabel = [[UILabel alloc] initWithFrame:DOLLAR_RECT];
-                dollarLabel.text = @"$";
-                dollarLabel.backgroundColor = [UIColor clearColor];
-                [cell addSubview:dollarLabel];
-                
-                if (self.shaddowBusObj != nil) {
-                    self.itemPriceTextField.text = [shaddowItem.price stringValue];
-                }
-                self.itemPriceTextField.backgroundColor = cell.backgroundColor;
-                
-                [cell addSubview:self.itemPriceTextField];
-            }
-        }
-            break;
-        case kItemQuantity:
-        {
-            if (self.mode == kModifyMode) {
-                if (self.shaddowBusObj != nil) {
-                    self.itemQtyTextField.text = [NSString stringWithFormat:@"%d", shaddowItem.qty];
-                }
-                self.itemQtyTextField.backgroundColor = cell.backgroundColor;
-                
-                [cell addSubview:self.itemQtyTextField];
-            }
-        }
-            break;
-        default:
-            break;
+        [cell addSubview:self.itemDescView];
     }
 
     return cell;
 }
 
+- (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        return CELL_HEIGHT;
+    } else {
+        return DESC_HEIGHT;
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (section == 0) {
+        return nil;
+    } else {
+        return ItemDesc;
+    }
+}
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -307,6 +368,7 @@ enum ItemInfoType {
 //    [self textFieldDoneEditing:self.editingField];
     [super tableView:self.tableView didSelectRowAtIndexPath:indexPath];
     [self.itemTypeTextField resignFirstResponder];
+    [self.itemDescView resignFirstResponder];
 }
 
 #pragma mark - Text Field delegate
@@ -316,24 +378,23 @@ enum ItemInfoType {
     Item *shaddowItem = (Item *)self.shaddowBusObj;
     
     NSString *txt = [Util trim:textField.text];
-        if (textField.tag == kItemName * TAG_BASE) {
-            self.shaddowBusObj.name = txt;
-        } else if (textField.tag == kItemPrice * TAG_BASE) {
-            if ([txt length] == 0) {
-                shaddowItem.price = 0;
-                self.itemPriceTextField.text = @"0.00";
-            } else {
-                shaddowItem.price = [NSDecimalNumber decimalNumberWithString: txt];
-            }
-        } else if (textField.tag == kItemQuantity * TAG_BASE) {
-            if ([txt length] == 0) {
-                shaddowItem.qty = 0;
-                self.itemQtyTextField.text = @"0";
-            } else {
-                shaddowItem.qty = [txt intValue];
-            }
+    if (textField.tag == kItemName * TAG_BASE) {
+        self.shaddowBusObj.name = txt;
+    } else if (textField.tag == kItemPrice * TAG_BASE) {
+        if ([txt length] == 0) {
+            shaddowItem.price = 0;
+            self.itemPriceTextField.text = @"0.00";
+        } else {
+            shaddowItem.price = [NSDecimalNumber decimalNumberWithString: txt];
         }
-//    }
+    } else if (textField.tag == kItemQuantity * TAG_BASE) {
+        if ([txt length] == 0) {
+            shaddowItem.qty = 0;
+            self.itemQtyTextField.text = @"0";
+        } else {
+            shaddowItem.qty = [txt intValue];
+        }
+    }
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField*)textField {
@@ -345,6 +406,14 @@ enum ItemInfoType {
     [self textFieldDoneEditing:textField];
     
     [super textFieldDidEndEditing:textField];
+}
+
+#pragma mark - Text View Delegate
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    Item *shaddowItem = (Item *)self.shaddowBusObj;
+    NSString *txt = [Util trim:textView.text];
+    shaddowItem.desc = txt.length > 0 ? txt : nil;
 }
 
 #pragma mark - UIPickerView Datascource

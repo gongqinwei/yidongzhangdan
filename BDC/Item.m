@@ -23,6 +23,7 @@ static NSMutableDictionary *inactiveItems = nil;
 @synthesize price;
 @synthesize qty;
 @synthesize type;
+@synthesize desc;
 
 
 + (void)resetList {
@@ -53,6 +54,7 @@ static NSMutableDictionary *inactiveItems = nil;
         [objStr appendFormat:@"\"%@\" : \"%@\", ", ID, self.objectId];
     }
     [objStr appendFormat:@"\"%@\" : \"%@\", ", ITEM_NAME, self.name];
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", ITEM_DESC, self.desc == nil ? @"" : self.desc];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", ITEM_TYPE, [NSString stringWithFormat:@"%d", [[ItemTypes objectAtIndex:self.type] intValue]]];
     [objStr appendFormat:@"\"%@\" : %@ ", ITEM_PRICE, self.price];
     [objStr appendString:@"}"];
@@ -186,6 +188,7 @@ static NSMutableDictionary *inactiveItems = nil;
     self.name = [dict objectForKey:ITEM_NAME];
     self.type = [ItemTypes indexOfObject:[NSNumber numberWithInt: [[dict objectForKey:ITEM_TYPE] intValue]]];
     self.price = [Util id2Decimal:[dict objectForKey:ITEM_PRICE]];
+    self.desc = ([dict objectForKey:ITEM_DESC] == (id)[NSNull null]) ? nil : [dict objectForKey:ITEM_DESC];
     self.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
 }
 
@@ -255,6 +258,7 @@ static NSMutableDictionary *inactiveItems = nil;
     target.name = source.name;
     target.price = source.price;
     target.qty = source.qty;
+    target.desc = source.desc;
     target.editDelegate = source.editDelegate;
 //    target.editInvoiceDelegate = source.editInvoiceDelegate;
 }

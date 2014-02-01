@@ -24,6 +24,7 @@ typedef enum {
 #define ITEM_PRICE          @"price"
 #define ITEM_QTY            @"quantity"
 #define ITEM_AMOUNT         @"amount"
+#define ITEM_DESC           @"description"
 
 #define ItemTypes       [NSArray arrayWithObjects:[NSNumber numberWithInt:kService], [NSNumber numberWithInt:kProduct], [NSNumber numberWithInt:kDiscount], [NSNumber numberWithInt:kSalesTax], nil]
 
@@ -47,6 +48,7 @@ typedef enum {
 @property (nonatomic, assign) int type;
 @property (nonatomic, strong) NSDecimalNumber *price;
 @property (nonatomic, assign) int qty;
+@property (nonatomic, strong) NSString *desc;
 
 + (void)setListDelegate:(id<ItemListDelegate>)listDelegate;
 + (void)resetList;

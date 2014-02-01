@@ -21,6 +21,7 @@
 #import "Customer.h"
 #import "Organization.h"
 #import "Document.h"
+#import "BDCAppDelegate.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <MessageUI/MessageUI.h>
@@ -1181,6 +1182,9 @@ typedef enum {
     [super didSelectCrudAction:action];
     
     if ([action isEqualToString:ACTION_EMAIL]) {
+#ifdef LITE_VERSION
+        [UIAppDelegate presentUpgrade];
+#else
         [((Invoice *)self.busObj) sendInvoice];
         
 //        Customer *customer = [Customer objectForKey:((Invoice *)self.shaddowBusObj).customerId];
@@ -1190,6 +1194,7 @@ typedef enum {
 //            [UIHelper showInfo:@"Fill in an email for this customer before you send them the invoice." withStatus:kInfo];
 //            [self performSegueWithIdentifier:INV_VIEW_CUSTOMER_DETAILS_SEGUE sender:customer];
 //        }
+#endif
     }
 }
 
