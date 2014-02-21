@@ -142,10 +142,12 @@ static NSMutableDictionary *inactiveAccounts = nil;
         if (account.parent && ![account.parent isEqualToString:EMPTY_ID]) {
             [sortedArray removeObject:account];
             ChartOfAccount *parent = [ChartOfAccount objectForKey:account.parent];
-            int parentIndex = [sortedArray indexOfObject:parent];
-            [sortedArray insertObject:account atIndex:parentIndex + 1];
-            
-            [ChartOfAccount indentNameForAccount:account];
+            if ([sortedArray containsObject:parent]) {
+                int parentIndex = [sortedArray indexOfObject:parent];
+                [sortedArray insertObject:account atIndex:parentIndex + 1];
+                
+                [ChartOfAccount indentNameForAccount:account];
+            }
         }
     }
     
