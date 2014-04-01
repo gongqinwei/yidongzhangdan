@@ -15,6 +15,8 @@
 #import "APLineItem.h"
 
 #define COMPRESSION_THRESHOLD       500000
+#define DOCUMENT_PREFIX             @"00h"
+#define ATTACHMENT_PREFIX           @"att"
 
 
 static NSMutableArray *documents = nil;
@@ -29,7 +31,7 @@ static NSLock *DocumentsLock = nil;
 @synthesize thumbnail = _thumbnail;
 @synthesize fileUrl;
 @synthesize isPublic;
-@synthesize page;
+//@synthesize page;
 @synthesize associatedTo;
 @synthesize createdDate;
 @synthesize documentDelegate;
@@ -54,12 +56,20 @@ static NSLock *DocumentsLock = nil;
     doc.data = self.data;
     doc.fileUrl = self.fileUrl;
     doc.isPublic = self.isPublic;
-    doc.page = self.page;
+//    doc.page = self.page;
     doc.associatedTo = self.associatedTo;
     doc.createdDate = self.createdDate;
     doc.documentDelegate = self.documentDelegate;
     
     return doc;
+}
+
+- (DocType)getDocType {
+    if ([self.objectId hasPrefix:DOCUMENT_PREFIX]) {
+        return kDocument;
+    } else {
+        return kAttachment;
+    }
 }
 
 - (void)setData:(NSData *)data {

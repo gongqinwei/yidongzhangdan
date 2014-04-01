@@ -17,6 +17,7 @@
 #import "Util.h"
 #import "UIHelper.h"
 #import "Geo.h"
+#import "BDCAppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
 
@@ -141,8 +142,12 @@ enum CustomerInfoType {
 
 - (void)addMoreAttachment {
     if ([self tryTap]) {
+#ifdef LITE_VERSION
+        [UIAppDelegate presentUpgrade];
+#else
         [self.view findAndResignFirstResponder];
         [self performSegueWithIdentifier:CUSTOMER_SCAN_PHOTO_SEGUE sender:self];
+#endif
     }
 }
 

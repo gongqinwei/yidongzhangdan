@@ -15,6 +15,7 @@
 #import "Util.h"
 #import "UIHelper.h"
 #import "Geo.h"
+#import "BDCAppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
 enum VendorSections {
@@ -139,8 +140,12 @@ enum VendorInfoType {
 
 - (void)addMoreAttachment {
     if ([self tryTap]) {
+#ifdef LITE_VERSION
+        [UIAppDelegate presentUpgrade];
+#else
         [self.view findAndResignFirstResponder];
         [self performSegueWithIdentifier:VENDOR_SCAN_PHOTO_SEGUE sender:self];
+#endif
     }
 }
 

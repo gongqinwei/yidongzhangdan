@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:Mobill.xcodeproj">
+      location = "self:Mobill Lite.xcodeproj">
    </FileRef>
 </Workspace>

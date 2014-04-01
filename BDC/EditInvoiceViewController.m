@@ -213,8 +213,12 @@ typedef enum {
 
 - (void)addMoreAttachment {
     if ([self tryTap]) {
+#ifdef LITE_VERSION
+        [UIAppDelegate presentUpgrade];
+#else
         [self.view findAndResignFirstResponder];
         [self performSegueWithIdentifier:INV_SCAN_PHOTO_SEGUE sender:self];
+#endif
     }
 }
 
@@ -1179,8 +1183,6 @@ typedef enum {
 #pragma mark - Action Menu delegate
 
 - (void)didSelectCrudAction:(NSString *)action {
-    [super didSelectCrudAction:action];
-    
     if ([action isEqualToString:ACTION_EMAIL]) {
 #ifdef LITE_VERSION
         [UIAppDelegate presentUpgrade];
@@ -1195,6 +1197,8 @@ typedef enum {
 //            [self performSegueWithIdentifier:INV_VIEW_CUSTOMER_DETAILS_SEGUE sender:customer];
 //        }
 #endif
+    } else {
+        [super didSelectCrudAction:action];
     }
 }
 

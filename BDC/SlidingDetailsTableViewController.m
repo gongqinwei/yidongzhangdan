@@ -13,12 +13,20 @@
 #import "APIHandler.h"
 #import "UIHelper.h"
 #import "Uploader.h"
+#import "TutorialControl.h"
 #import <QuartzCore/QuartzCore.h>
 
 
 #define IMG_PADDING                     10
 #define IMG_WIDTH                       CELL_WIDTH / 4
 #define IMG_HEIGHT                      IMG_WIDTH - IMG_PADDING
+#define DETAILS_VC_TUTORIAL             @"DETAILS_VC_TUTORIAL"
+#define DETAILS_VC_EDIT_TUTORIAL        @"DETAILS_VC_EDIT_TUTORIAL"
+#define SWIPE_RIGHT_TUTORIAL_RECT       CGRectMake((SCREEN_WIDTH - 136) / 2, 80, 136, 65)
+#define SWIPE_RIGHT_ARROW_RECT          CGRectMake((SCREEN_WIDTH + 136) / 2 + 10, 100, 50, 25)
+#define SWIPE_LEFT_TUTORIAL_RECT        CGRectMake((SCREEN_WIDTH - 136) / 2, 180, 136, 65)
+#define SWIPE_LEFT_ARROW_RECT           CGRectMake((SCREEN_WIDTH - 136) / 2 - 50 - 10, 200, 50, 25)
+#define DELETE_DOC_TUTORIAL_RECT        CGRectMake((SCREEN_WIDTH - 220) / 2, 320, 220, 65)
 
 
 static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
@@ -28,6 +36,8 @@ static double animatedDistance = 0;
 
 
 @interface SlidingDetailsTableViewController()
+
+@property (nonatomic, strong) TutorialControl *detailsVCTutorialOverlay;
 
 - (void)doneSaveObject;
 
@@ -78,6 +88,8 @@ static double animatedDistance = 0;
 
 // Overriding
 - (IBAction)toggleMenu:(id)sender {
+    [self.detailsVCTutorialOverlay removeFromSuperview];
+    
     if (self.mode == kAttachMode) {
         CGRect frame = self.navigationController.view.frame;
         if (frame.origin.x == 0) {
@@ -177,6 +189,20 @@ static double animatedDistance = 0;
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelEdit:)];
         
         self.refreshControl = nil;
+        
+        // one time tutorial
+        BOOL tutorialValue = [[NSUserDefaults standardUserDefaults] boolForKey:DETAILS_VC_EDIT_TUTORIAL];
+        if (!tutorialValue) {
+            self.detailsVCTutorialOverlay = [[TutorialControl alloc] init];
+            [self.detailsVCTutorialOverlay addText:@"Swipe right to reveal menu" at:SWIPE_RIGHT_TUTORIAL_RECT];
+            [self.detailsVCTutorialOverlay addImageNamed:@"arrow_right.png" at:SWIPE_RIGHT_ARROW_RECT];
+            [self.detailsVCTutorialOverlay addText:@"Swipe left to reveal actions" at:SWIPE_LEFT_TUTORIAL_RECT];
+            [self.detailsVCTutorialOverlay addImageNamed:@"arrow_left.png" at:SWIPE_LEFT_ARROW_RECT];
+            [self.detailsVCTutorialOverlay addText:@"Long press each attachment icon (if any) to delete" at:DELETE_DOC_TUTORIAL_RECT];
+            [self.view addSubview:self.detailsVCTutorialOverlay];
+            
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:DETAILS_VC_EDIT_TUTORIAL];
+        }
     }
     
     @synchronized (self) {
@@ -206,6 +232,8 @@ static double animatedDistance = 0;
 }
 
 - (void)cancelEdit:(UIBarButtonItem *)sender {
+    [self.detailsVCTutorialOverlay removeFromSuperview];
+    
     if ([self tryTap]) {
         if (self.mode == kAttachMode) {
             [self hideAdditionalKeyboard];
@@ -404,12 +432,14 @@ static double animatedDistance = 0;
 }
 
 - (IBAction)saveBusObj:(UIBarButtonItem *)sender {
+    [self.detailsVCTutorialOverlay removeFromSuperview];
+    
     self.navigationItem.rightBarButtonItem.customView = self.activityIndicator;
     [self.activityIndicator startAnimating];
 }
 
 - (void)retrieveDocAttachments {
-    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"%@\" : \"%@\"}", ID, self.busObj.objectId, OBJ_ID, self.busObj.objectId];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"%@\" : \"%@\", \"start\" : 0, \"max\" : 999}", ID, self.busObj.objectId, OBJ_ID, self.busObj.objectId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
     [APIHandler asyncCallWithAction:RETRIEVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
@@ -454,13 +484,13 @@ static double animatedDistance = 0;
                             doc = [[Document alloc] init];
                             doc.objectId = docId;
                             doc.name = docName;
-                            doc.fileUrl = [dict objectForKey:@"fileUrl"];
-                            doc.isPublic = [[dict objectForKey:@"isPublic"] intValue];
-                            doc.page = [[dict objectForKey:@"page"] intValue];
+                            doc.fileUrl = [dict objectForKey:FILE_URL];
+                            doc.isPublic = [[dict objectForKey:FILE_IS_PUBLIC] intValue];
+//                            doc.page = [[dict objectForKey:@"page"] intValue];
                             
                             if ([doc isImageOrPDF]) {
                                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                                    NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?%@=%@&%@=%d&%@=%d&%@=%d", DOMAIN_URL, [self getDocImageAPI], [self getDocIDParam], doc.objectId, PAGE_NUMBER, (!doc.page || doc.page <= 0 ? 1: doc.page), IMAGE_WIDTH, DOCUMENT_CELL_DIMENTION * 2, IMAGE_HEIGHT, DOCUMENT_CELL_DIMENTION * 2]]];
+                                    NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?%@=%@&%@=%d&%@=%d&%@=%d", DOMAIN_URL, [self getDocImageAPI], [self getDocIDParam], doc.objectId, PAGE_NUMBER, 1, IMAGE_WIDTH, DOCUMENT_CELL_DIMENTION * 2, IMAGE_HEIGHT, DOCUMENT_CELL_DIMENTION * 2]]];
                                     
                                     if (data != nil) {
                                         doc.thumbnail = data;
@@ -632,6 +662,19 @@ static double animatedDistance = 0;
         [self setActionMenuRightBarButton];
     } else if (self.mode == kCreateMode) {
         [self resetScrollView];
+    }
+    
+    // one time tutorial
+    BOOL tutorialValue = [[NSUserDefaults standardUserDefaults] boolForKey:DETAILS_VC_TUTORIAL];
+    if (!tutorialValue) {
+        self.detailsVCTutorialOverlay = [[TutorialControl alloc] init];
+        [self.detailsVCTutorialOverlay addText:@"Swipe right to reveal menu" at:SWIPE_RIGHT_TUTORIAL_RECT];
+        [self.detailsVCTutorialOverlay addImageNamed:@"arrow_right.png" at:SWIPE_RIGHT_ARROW_RECT];
+        [self.detailsVCTutorialOverlay addText:@"Swipe left to reveal actions" at:SWIPE_LEFT_TUTORIAL_RECT];
+        [self.detailsVCTutorialOverlay addImageNamed:@"arrow_left.png" at:SWIPE_LEFT_ARROW_RECT];
+        [self.view addSubview:self.detailsVCTutorialOverlay];
+        
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:DETAILS_VC_TUTORIAL];
     }
 }
 
@@ -895,10 +938,10 @@ static double animatedDistance = 0;
             // 2. remove deleted attachments
             for (NSString *docId in toBeDeleted) {
                 Document *doc = [self.busObj.attachmentDict objectForKey:docId];
-                NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"objId\" : \"%@\", \"page\" : %d}", ID, docId, self.busObj.objectId, doc.page];
+                NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"objId\" : \"%@\"}", ID, docId, self.busObj.objectId];
                 NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
                 
-                [APIHandler asyncCallWithAction:REMOVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+                [APIHandler asyncCallWithAction:([doc getDocType] == kDocument) ? DEL_DOC_API : DEL_ATTACHMENT_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
                     NSInteger response_status;
                     [APIHandler getResponse:response data:data error:&err status:&response_status];
                     
@@ -1105,7 +1148,7 @@ static double animatedDistance = 0;
             if (doc.objectId && ![EMPTY_ID isEqualToString:doc.objectId]) {
                 if ([doc isImageOrPDF]) {
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                        NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?%@=%@&%@=%d&%@=%d&%@=%d", DOMAIN_URL, [self getDocImageAPI], [self getDocIDParam], doc.objectId, PAGE_NUMBER, (!doc.page || doc.page <= 0 ? 1: doc.page), IMAGE_WIDTH, DOCUMENT_CELL_DIMENTION * 2, IMAGE_HEIGHT, DOCUMENT_CELL_DIMENTION * 2]]];
+                        NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?%@=%@&%@=%d&%@=%d&%@=%d", DOMAIN_URL, [self getDocImageAPI], [self getDocIDParam], doc.objectId, PAGE_NUMBER, 1, IMAGE_WIDTH, DOCUMENT_CELL_DIMENTION * 2, IMAGE_HEIGHT, DOCUMENT_CELL_DIMENTION * 2]]];
                         
                         if (data != nil) {
                             doc.thumbnail = data;

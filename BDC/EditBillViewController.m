@@ -21,6 +21,7 @@
 #import "Util.h"
 #import "Constants.h"
 #import "UIHelper.h"
+#import "APIHandler.h"
 #import "Vendor.h"
 #import "Approver.h"
 #import "BankAccount.h"
@@ -349,8 +350,12 @@ typedef enum {
 
 - (void)addMoreAttachment {
     if ([self tryTap]) {
+#ifdef LITE_VERSION
+        [UIAppDelegate presentUpgrade];
+#else
         [self.view findAndResignFirstResponder];
         [self performSegueWithIdentifier:BILL_SCAN_PHOTO_SEGUE sender:self];
+#endif
     }
 }
 
@@ -361,6 +366,119 @@ typedef enum {
     }
 }
 
+/******
+- (void)retrieveDocAttachments {
+    //TODO: for bill, separate documents from attachments -> two scroll views: Pages(DocumentPages) and Documents(Attachments)
+    [super retrieveDocAttachments];     // retrieve attachment;
+    
+    // retrieve documents
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"%@\" : \"%@\", \"start\" : 0, \"max\" : 999}", ID, self.busObj.objectId, OBJ_ID, self.busObj.objectId];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+    
+    [APIHandler asyncCallWithAction:GET_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        NSInteger response_status;
+        NSDictionary *jsonDict = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        NSArray *jsonDocs = [jsonDict objectForKey:DOCUMENTS];
+        
+        if(response_status == RESPONSE_SUCCESS) {
+            @synchronized (self) {
+                if (!self.busObj.attachmentDict) {
+                    self.busObj.attachmentDict = [NSMutableDictionary dictionary];
+                }
+                
+                self.attachmentDict = [NSMutableDictionary dictionaryWithDictionary:self.busObj.attachmentDict];
+                
+                self.docsUploading = [NSMutableDictionary dictionary];
+                for (Document *doc in self.shaddowBusObj.attachments) {
+                    if (!doc.objectId) {
+                        // Assumption: fileName is unique.
+                        // This is a hack to work around the documentUploaded -> document/documentPage problem
+                        [self.docsUploading setObject:doc forKey:doc.name];
+                    }
+                }
+                
+                // reset scroll view first!
+                [self resetScrollView];
+                
+                int i = 0;
+                for (NSDictionary *dict in jsonDocs) {
+                    NSString *docId = [dict objectForKey:ID];
+                    
+                    Document *doc;
+                    if (![self.attachmentDict objectForKey:docId]) {
+                        NSString *docName = [dict objectForKey:FILE_NAME];
+                        doc = [self.docsUploading objectForKey:docName];
+                        
+                        if (doc) {
+                            doc.objectId = docId;
+                            [self.attachmentDict setObject:doc forKey:docId];
+                            [self.shaddowBusObj.attachmentDict setObject:doc forKey:docId];
+                            [self.busObj.attachmentDict setObject:doc forKey:docId];
+                        } else {
+                            doc = [[Document alloc] init];
+                            doc.objectId = docId;
+                            doc.name = docName;
+                            doc.fileUrl = [dict objectForKey:FILE_URL];
+                            doc.isPublic = [[dict objectForKey:FILE_IS_PUBLIC] intValue];
+                            //                            doc.page = [[dict objectForKey:@"page"] intValue];
+                            
+                            if ([doc isImageOrPDF]) {
+                                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                                    //                                    NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?%@=%@&%@=%d&%@=%d&%@=%d", DOMAIN_URL, [self getDocImageAPI], [self getDocIDParam], doc.objectId, PAGE_NUMBER, (!doc.page || doc.page <= 0 ? 1: doc.page), IMAGE_WIDTH, DOCUMENT_CELL_DIMENTION * 2, IMAGE_HEIGHT, DOCUMENT_CELL_DIMENTION * 2]]];
+                                    NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?%@=%@&%@=%d&%@=%d&%@=%d", DOMAIN_URL, [self getDocImageAPI], [self getDocIDParam], doc.objectId, PAGE_NUMBER, 1, IMAGE_WIDTH, DOCUMENT_CELL_DIMENTION * 2, IMAGE_HEIGHT, DOCUMENT_CELL_DIMENTION * 2]]];
+                                    
+                                    if (data != nil) {
+                                        doc.thumbnail = data;
+                                        
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            UIImageView *img = [self.attachmentScrollView.subviews objectAtIndex: i];
+                                            img.alpha = 0.0;
+                                            img.image = [UIImage imageWithData: data];
+                                            [img setNeedsDisplay];
+                                            
+                                            [UIView animateWithDuration:2.0
+                                                             animations:^{
+                                                                 img.alpha = 1.0;
+                                                             }
+                                                             completion:^ (BOOL finished) {
+                                                             }];
+                                        });
+                                    }
+                                });
+                            }
+                            
+                            [self.busObj.attachmentDict setObject:doc forKey:docId];
+                            [self.busObj.attachments insertObject:doc atIndex:i];
+                            [self.shaddowBusObj.attachmentDict setObject:doc forKey:docId];
+                            [self.shaddowBusObj.attachments insertObject:doc atIndex:i];
+                            [self.attachmentDict setObject:doc forKey:docId];
+                        }
+                        
+                        [self addAttachment:[[doc.name pathExtension] lowercaseString] data:nil needScale:NO];
+                    } else {
+                        doc = [self.attachmentDict objectForKey:docId];
+                        [self addAttachment:[[doc.name pathExtension] lowercaseString] data:doc.thumbnail needScale:NO];
+                    }
+                    
+                    [self layoutScrollImages:NO];
+                    
+                    i++;
+                }
+            }
+            
+            NSIndexPath *path = [self getAttachmentPath];
+            if (path) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:YES];
+                    [self.previewController reloadData];
+                });
+            }
+        } else {
+            Debug(@"Failed to retrieve documents for %@: %@", self.busObj.name, [err localizedDescription]);
+        }
+    }];
+}
+*******/
 
 #pragma mark - Target Action
 
@@ -1813,23 +1931,24 @@ typedef enum {
 - (void)didSelectCrudAction:(NSString *)action {
     if (![action isEqualToString:ACTION_PAY] && ![action isEqualToString:ACTION_APPROVE] && ![action isEqualToString:ACTION_DENY] && ![action isEqualToString:ACTION_SKIP]) {
         [super didSelectCrudAction:action];
-    }
+    } else {
         
 #ifdef LITE_VERSION
-    [UIAppDelegate presentUpgrade];
+        [UIAppDelegate presentUpgrade];
 #else
-    if ([action isEqualToString:ACTION_PAY]) {
-        if ([((NSArray *)[BankAccount list]) count]) {
-            [self performSegueWithIdentifier:BILL_PAY_BILL_SEGUE sender:self];
+        if ([action isEqualToString:ACTION_PAY]) {
+            if ([((NSArray *)[BankAccount list]) count]) {
+                [self performSegueWithIdentifier:BILL_PAY_BILL_SEGUE sender:self];
+            }
+        } else if ([action isEqualToString:ACTION_APPROVE]) {
+            [self processApproval:kApproverApproved];
+        } else if ([action isEqualToString:ACTION_DENY]) {
+            [self processApproval:kApproverDenied];
+        } else if ([action isEqualToString:ACTION_SKIP]) {
+            [self processApproval:kApproverRerouted];
         }
-    } else if ([action isEqualToString:ACTION_APPROVE]) {
-        [self processApproval:kApproverApproved];
-    } else if ([action isEqualToString:ACTION_DENY]) {
-        [self processApproval:kApproverDenied];
-    } else if ([action isEqualToString:ACTION_SKIP]) {
-        [self processApproval:kApproverRerouted];
-    }
 #endif
+    }
 }
 
 #pragma mark - Pay Bill delegate

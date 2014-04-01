@@ -20,6 +20,9 @@
 #define FILE_IS_PUBLIC              @"isPublic"
 #define FILE_PAGE_NUM               @"page"
 
+#define ATTACHMENTS                 @"Attachments"
+#define DOCUMENTS                   @"Documents"
+
 #define EBILL                       @"eBill"
 #define EBILL_EVENT                 @"event"
 #define EBILL_EVENT_TYPE            @"type"
@@ -37,6 +40,11 @@
 //#define EBILL_DUE_DATE              @"dueDate"
 //#define EBILL_AMOUNT                @"amount"
 //#define EBILL_VENDOR                @"vendorName"
+
+typedef enum {
+    kDocument,
+    kAttachment
+} DocType;
 
 
 @protocol DocumentDelegate <NSObject>
@@ -68,7 +76,7 @@
 @property (nonatomic, strong) NSData *thumbnail;
 @property (nonatomic, strong) NSString *fileUrl;
 @property (nonatomic, assign) BOOL isPublic;
-@property (nonatomic, assign) NSInteger page;
+//@property (nonatomic, assign) NSInteger page;
 @property (nonatomic, strong) NSString *associatedTo;
 @property (nonatomic, strong) NSDate *createdDate;
 @property (nonatomic, strong) id<DocumentDelegate> documentDelegate;
@@ -90,6 +98,7 @@
 
 - (BOOL)isImage;
 - (BOOL)isImageOrPDF;
+- (DocType)getDocType;
 
 + (void)setDocumentListDelegate:(id<DocumentListDelegate>)listDelegate;
 + (void)setAttachmentListDelegate:(id<DocumentListDelegate>)listDelegate;

@@ -11,7 +11,7 @@
 
 #import "Labels.h"
 
-//#define LITE_VERSION
+#define LITE_VERSION
 #define FULL_VERSION_ID     696521463
 
 //#define LOCAL
@@ -113,7 +113,11 @@
 #define LIST_ORG_API        @"ListOrgs.json"
 #define UPLOAD_API          @"UploadAttachment.json"
 #define RETRIEVE_DOCS_API   @"RetrieveAttachment.json"
+#define GET_DOCS_API        @"GetDocuments.json"
+#define GET_ATTACHMENTS_API @"GetAttachments.json"
 #define REMOVE_DOCS_API     @"RemoveAttachment.json"
+#define DEL_DOC_API         @"DeleteDocument.json"
+#define DEL_ATTACHMENT_API  @"DeleteAttachment.json"
 #define ASSIGN_DOCS_API     @"AssignDocument.json"
 #define USER_API            @"User.json"
 #define PROFILE_API         @"Profile.json"
@@ -191,7 +195,8 @@
 
 // UI related
 #define APP_LABEL_FONT_SIZE             13
-#define SCREEN_WIDTH                    320
+#define SCREEN_WIDTH                    [UIScreen mainScreen].bounds.size.width
+#define SCREEN_HEIGHT                   [UIScreen mainScreen].bounds.size.height
 #define STATUS_BAR_HEIGHT               20
 #define NORMAL_SCREEN_HEIGHT            460
 #define FULL_SCREEN_HEIGHT              NORMAL_SCREEN_HEIGHT + STATUS_BAR_HEIGHT
