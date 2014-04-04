@@ -14,6 +14,7 @@
 #import "UIHelper.h"
 #import "Uploader.h"
 #import "TutorialControl.h"
+#import "RateAppManager.h"
 #import <QuartzCore/QuartzCore.h>
 
 
@@ -1173,6 +1174,11 @@ static double animatedDistance = 0;
             }
         }
     }
+    
+#ifndef LITE_VERSION
+    // prompt for Rate app
+    [[RateAppManager sharedInstance] checkPromptForRate];
+#endif
 }
 
 //- (void)didAttachDocument:(Document *)doc {

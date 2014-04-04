@@ -28,6 +28,7 @@
 #import "Organization.h"
 #import "Document.h"
 #import "BDCAppDelegate.h"
+#import "RateAppManager.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <MessageUI/MessageUI.h>
@@ -1957,6 +1958,9 @@ typedef enum {
     // update payment status to scheduled
     NSIndexPath *path = [NSIndexPath indexPathForRow:kBillPaymentStatus inSection:kBillInfo];
     [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationNone];
+    
+    // prompt for Rate app
+    [[RateAppManager sharedInstance] checkPromptForRate];
 }
 
 #pragma mark - Approver delegate
@@ -1990,6 +1994,9 @@ typedef enum {
         self.title = self.busObj.name;
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObject:self.navigationItem.rightBarButtonItems[0]];
     });
+    
+    // prompt for Rate app
+    [[RateAppManager sharedInstance] checkPromptForRate];
 }
 
 - (void)failedToProcessApproval {

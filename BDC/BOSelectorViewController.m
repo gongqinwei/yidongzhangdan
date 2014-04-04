@@ -23,6 +23,8 @@
 #import "Constants.h"
 #import "UIHelper.h"
 #import "BDCAppDelegate.h"
+#import "RateAppManager.h"
+
 
 #define RESET_SCANNER_FROM_BO_SELECT_SEGUE          @"ResetScanner"
 #define ATTACH_TO_NEW_BILL_SEGUE                    @"AttachToNewBill"
@@ -79,6 +81,9 @@
                 
                 [Document addToInbox:self.document];
                 [UIHelper showInfo:[NSString stringWithFormat:@"Bill.com is still processing %@.\n\nNot available for association yet.", self.document.name] withStatus:kInfo];
+                
+                // prompt for Rate app
+                [[RateAppManager sharedInstance] checkPromptForRate];
             } else {
                 [UIHelper showInfo:@"Failed to upload picture to Inbox!" withStatus:kFailure];
             }

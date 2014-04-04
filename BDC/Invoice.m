@@ -15,6 +15,7 @@
 #import "Item.h"
 #import "UIHelper.h"
 #import "BDCAppDelegate.h"
+#import "RateAppManager.h"
 
 #define LIST_ACTIVE_INV_FILTER      @"{ \"start\" : 0, \
                                         \"max\" : 999, \
@@ -89,6 +90,9 @@ static NSMutableArray *inactiveInvoices = nil;
         
         if(response_status == RESPONSE_SUCCESS) {
             [UIHelper showInfo: EMAIL_SENT withStatus:kSuccess];
+            
+            // prompt for Rate app
+            [[RateAppManager sharedInstance] checkPromptForRate];
         } else {
             [UIHelper showInfo: EMAIL_FAILED withStatus:kFailure];
         }
