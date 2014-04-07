@@ -17,6 +17,7 @@
 #define APPROVER_SORT_ORDER     @"sortOrder"
 #define APPROVER_STATUS         @"status"
 #define APPROVER_STATUS_DATE    @"statusDate"
+#define STATUS_CHANGED_DATE     @"statusChangedDate"
 
 #define APPROVER_STATUSES       [NSArray arrayWithObjects:@"Sent", @"Viewed", @"Skipped", @"Denied", @"Approved", @"New", @"Stale", nil]
 

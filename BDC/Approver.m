@@ -155,10 +155,11 @@ static id <ApproverListDelegate> ListDelegate = nil;
 + (void)retrieveListForObject:(NSString *)objId {
     [UIAppDelegate incrNetworkActivities];
     
-    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", OBJ_ID, objId];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"entity\" : \"Bill\"}", OBJ_ID, objId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, objStr, nil];
     
     [APIHandler asyncCallWithAction:APPROVERS_GET_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+//    [APIHandler asyncCallWithAction:LIST_APPROVER_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
         NSArray *jsonApprovers = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
@@ -177,7 +178,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
                     approver.sortOrder = [[dict objectForKey:APPROVER_SORT_ORDER] intValue];
                     approver.status = [[dict objectForKey:APPROVER_STATUS] intValue];
                     approver.statusName = APPROVER_STATUSES[approver.status];
-                    approver.statusDate = [dict objectForKey:APPROVER_STATUS_DATE];
+                    approver.statusDate = [dict objectForKey:APPROVER_STATUS_DATE] ? [dict objectForKey:APPROVER_STATUS_DATE] : [dict objectForKey:STATUS_CHANGED_DATE];
                     
                     [approverArr addObject:approver];
                 }
@@ -210,7 +211,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
         }
     }
     
-    NSString *dataStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"%@\" : [%@]}", OBJ_ID, objId, APPROVERS, approverList];
+    NSString *dataStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"%@\" : [%@] , \"entity\" : \"Bill\" }", OBJ_ID, objId, APPROVERS, approverList];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, dataStr, nil];
     
     [APIHandler asyncCallWithAction:APPROVERS_SET_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {

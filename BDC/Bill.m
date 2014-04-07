@@ -28,7 +28,7 @@
 
 #define LIST_TO_APPROVE_FILTER      @"{ \"type\" : \"Bill\" }"
 
-#define APPROVAL_DATA               @"{ \"objectId\" : \"%@\", \"comment\" : \"%@\"  }"
+#define APPROVAL_DATA               @"{ \"objectId\" : \"%@\", \"comment\" : \"%@\" , \"entity\" : \"Bill\" }"
 
 
 @implementation Bill
