@@ -138,20 +138,6 @@ static RootMenuViewController * _sharedInstance = nil;
         }
     }
     
-    //start with Invoices view
-//    NSString *startingVCId = MENU_INVOICES;
-//    UINavigationController *navVC = [self.menuItems objectForKey:startingVCId];
-//    [self.view addSubview:navVC.view];
-//    
-//    self.currVC = [navVC.childViewControllers objectAtIndex:0];
-//    self.currVC.navigation = navVC;
-//    self.currVC.navigationId = startingVCId;
-//    
-//    NSIndexPath * initIndexPath = [NSIndexPath indexPathForRow:kARInvoice inSection:kRootAR];
-//    [self.menuTableView selectRowAtIndexPath:initIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-    
-////    [Invoice setARDelegate:(AROverViewController *)self.currVC];  //assumption: currVC is AROverViewController.
-    
     
     [Bill resetList];
     [Invoice resetList];

@@ -9,6 +9,7 @@
 #import "SplashViewController.h"
 #import "Util.h"
 #import "Organization.h"
+#import "User.h"
 #import "APIHandler.h"
 
 
@@ -84,6 +85,7 @@
 
 - (void)failedToGetOrgFeatures {
     [self backToLogin];
+//    [User useProfileToGetOrgFeatures];
 }
 
 - (void)didGetOrgs:(NSArray *)orgList status:(LoginStatus)status {
@@ -112,17 +114,17 @@
                 
                 [[Organization getSelectedOrg] getOrgFeatures];
             } else {
-                Debug(@"Splash View Controller: Failed to login!");
+                Error(@"Splash View Controller: Failed to login! %d, %@", status, err);
                 [self backToLogin];
             }
         }];
     } else if (status == kFailListOrgs) {
-        Debug(@"Splash View Controller: Failed to list orgs!");
+        Error(@"Splash View Controller: Failed to list orgs!");
         dispatch_async(dispatch_get_main_queue(), ^{
             [self performSegueWithIdentifier:@"PresentLogin" sender:self];
         });
     } else {
-        Debug(@"Splash View Controller: Failed to login!");
+        Error(@"Splash View Controller: Failed to login!");
         dispatch_async(dispatch_get_main_queue(), ^{
             [self performSegueWithIdentifier:@"PresentLogin" sender:self];
         });

@@ -12,6 +12,16 @@
 #import "APIHandler.h"
 #import "Uploader.h"
 #import "UIHelper.h"
+#import "TutorialControl.h"
+
+
+#define LIST_VC_TUTORIAL             @"LIST_VC_TUTORIAL"
+
+@interface SlidingListTableViewController()
+
+@property (nonatomic, strong) TutorialControl *listVCTutorialOverlay;
+
+@end
 
 
 @implementation SlidingListTableViewController
@@ -68,6 +78,8 @@
 }
 
 - (void)toggleMenu:(id)sender {
+    [self.listVCTutorialOverlay removeFromSuperview];
+    
     float origX = self.navigationController.view.frame.origin.x;
     
     [super toggleMenu:sender];
@@ -115,6 +127,19 @@
     }
     
     self.alphabets = ALPHABETS;
+    
+    // one time tutorial
+    BOOL tutorialValue = [[NSUserDefaults standardUserDefaults] boolForKey:LIST_VC_TUTORIAL];
+    if (!tutorialValue) {
+        self.listVCTutorialOverlay = [[TutorialControl alloc] init];
+        [self.listVCTutorialOverlay addText:@"Swipe right to reveal menu" at:SWIPE_RIGHT_TUTORIAL_RECT];
+        [self.listVCTutorialOverlay addImageNamed:@"arrow_right.png" at:SWIPE_RIGHT_ARROW_RECT];
+        [self.listVCTutorialOverlay addText:@"Swipe left to reveal actions" at:SWIPE_LEFT_TUTORIAL_RECT];
+        [self.listVCTutorialOverlay addImageNamed:@"arrow_left.png" at:SWIPE_LEFT_ARROW_RECT];
+        [self.view addSubview:self.listVCTutorialOverlay];
+        
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:LIST_VC_TUTORIAL];
+    }
 }
 
 - (void)setupBarButtons {

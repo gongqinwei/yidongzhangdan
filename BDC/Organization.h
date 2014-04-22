@@ -43,12 +43,16 @@
 @property (nonatomic, assign) BOOL showAP;
 @property (nonatomic, assign) BOOL enableAR;
 @property (nonatomic, assign) BOOL enableAP;
+@property (nonatomic, assign) BOOL canPay;
+@property (nonatomic, assign) BOOL canApprove;
+@property (nonatomic, assign) BOOL hasInbox;
 
 
 - (void)retrieveNeedApprovalToPayBill;      //depricated: use getOrgPrefs instead
 - (void)getOrgFeatures;
 - (void)getOrgPrefs;
 
++ (id<OrgDelegate>)getDelegate;
 + (void)setDelegate:(id<OrgDelegate>)theDelegate;
 
 + (Organization *)getSelectedOrg;

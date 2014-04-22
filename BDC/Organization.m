@@ -28,6 +28,9 @@ static Organization *selectedOrg = nil;
 @synthesize showAP;
 @synthesize enableAR;
 @synthesize enableAP;
+@synthesize canPay;
+@synthesize canApprove;
+@synthesize hasInbox;
 
 
 - (void)getOrgFeatures {
@@ -40,6 +43,10 @@ static Organization *selectedOrg = nil;
             self.showAP = [[orgFeatures objectForKey:SHOW_AP] boolValue];
             self.enableAR = [[orgFeatures objectForKey:ENABLE_AR] boolValue];
             self.enableAP = [[orgFeatures objectForKey:ENABLE_AP] boolValue];
+            
+            self.canApprove = YES;
+            self.canPay = YES;
+            self.hasInbox = YES;
             
             [delegate didGetOrgFeatures];
         } else {
@@ -99,7 +106,7 @@ static Organization *selectedOrg = nil;
 }
 
 + (int)count {
-    return orgs.count;
+    return (int)orgs.count;
 }
 
 + (void)setOrgs:(NSArray *)orgList {

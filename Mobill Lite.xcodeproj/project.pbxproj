@@ -132,6 +132,7 @@
 		7E579F8415AB9561009D1455 /* SelectOrgViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F8315AB9561009D1455 /* SelectOrgViewController.m */; };
 		7E579F8715ABA91A009D1455 /* Organization.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F8615ABA91A009D1455 /* Organization.m */; };
 		7E579F8A15ACE571009D1455 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F8915ACE571009D1455 /* UserProfileViewController.m */; };
+		7E5955281904341B008219D4 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E5955271904341B008219D4 /* User.m */; };
 		7E7979C1184B1FD0003FE1E4 /* Import.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7979C0184B1FD0003FE1E4 /* Import.png */; };
 		7E7979C3184CE209003FE1E4 /* Map.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7979C2184CE209003FE1E4 /* Map.png */; };
 		7E7979C6184DAFF8003FE1E4 /* UIButton7.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E7979C5184DAFF8003FE1E4 /* UIButton7.m */; };
@@ -368,6 +369,8 @@
 		7E579F8615ABA91A009D1455 /* Organization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Organization.m; sourceTree = "<group>"; };
 		7E579F8815ACE571009D1455 /* UserProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileViewController.h; sourceTree = "<group>"; };
 		7E579F8915ACE571009D1455 /* UserProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileViewController.m; sourceTree = "<group>"; };
+		7E5955261904341B008219D4 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		7E5955271904341B008219D4 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		7E7979C0184B1FD0003FE1E4 /* Import.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Import.png; sourceTree = "<group>"; };
 		7E7979C2184CE209003FE1E4 /* Map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Map.png; sourceTree = "<group>"; };
 		7E7979C4184DAFF8003FE1E4 /* UIButton7.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIButton7.h; sourceTree = "<group>"; };
@@ -797,6 +800,8 @@
 				0E188B8B176C435300493EE1 /* BDCBusinessObjectWithAttachmentsAndAddress.m */,
 				7E7D7429184561DA009B114C /* ABPerson.h */,
 				7E7D742A184561DA009B114C /* ABPerson.m */,
+				7E5955261904341B008219D4 /* User.h */,
+				7E5955271904341B008219D4 /* User.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -1170,6 +1175,7 @@
 				0EC88C9A15F139C100A490EE /* CustomersTableViewController.m in Sources */,
 				0E95DA2415F13C2C006D9752 /* VendorsTableViewController.m in Sources */,
 				0EA09F1515F927A100BBD180 /* Util.m in Sources */,
+				7E5955281904341B008219D4 /* User.m in Sources */,
 				0EA09F1915FAAD0100BBD180 /* Customer.m in Sources */,
 				0EA09F1F15FC792800BBD180 /* InvoiceDetailsViewController.m in Sources */,
 				0E7DCAC41603CCC400D0B35E /* UIHelper.m in Sources */,

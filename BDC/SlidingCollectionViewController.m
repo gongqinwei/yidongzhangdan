@@ -8,7 +8,19 @@
 
 #import "SlidingCollectionViewController.h"
 #import "RootMenuViewController.h"
+#import "TutorialControl.h"
 
+
+#define COLLECTION_VC_TUTORIAL                  @"COLLECTION_VC_TUTORIAL"
+#define COLLECTION_SWIPE_LEFT_TUTORIAL_RECT     CGRectMake((SCREEN_WIDTH - 150) / 2, 160, 180, 100)
+#define INFO_BUTTON_TUTORIAL_RECT               CGRectMake((SCREEN_WIDTH - 220) / 2, 300, 220, 65)
+
+
+@interface SlidingCollectionViewController()
+
+@property (nonatomic, strong) TutorialControl *collectionVCTutorialOverlay;
+
+@end
 
 @implementation SlidingCollectionViewController
 
@@ -63,6 +75,12 @@
     }
 }
 
+- (void)toggleMenu:(id)sender {
+    [self.collectionVCTutorialOverlay removeFromSuperview];
+    
+    [super toggleMenu:sender];
+}
+
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     
@@ -109,6 +127,20 @@
     
     [self setSlidingMenuLeftBarButton];
     [self setActionMenuRightBarButton];
+    
+    // one time tutorial
+    BOOL tutorialValue = [[NSUserDefaults standardUserDefaults] boolForKey:COLLECTION_VC_TUTORIAL];
+    if (!tutorialValue) {
+        self.collectionVCTutorialOverlay = [[TutorialControl alloc] init];
+        [self.collectionVCTutorialOverlay addText:@"Swipe right to reveal menu" at:SWIPE_RIGHT_TUTORIAL_RECT];
+        [self.collectionVCTutorialOverlay addImageNamed:@"arrow_right.png" at:SWIPE_RIGHT_ARROW_RECT];
+        [self.collectionVCTutorialOverlay addText:@"Select any document, and then you can swipe left to reveal actions" at:COLLECTION_SWIPE_LEFT_TUTORIAL_RECT];
+        [self.collectionVCTutorialOverlay addImageNamed:@"arrow_left.png" at:SWIPE_LEFT_ARROW_RECT];
+        [self.collectionVCTutorialOverlay addText:@"Click the \"i\" button in each document to view its info" at:INFO_BUTTON_TUTORIAL_RECT];
+        [self.view addSubview:self.collectionVCTutorialOverlay];
+        
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:COLLECTION_VC_TUTORIAL];
+    }
 }
 
 #pragma mark - QuickLook Preview Controller Data Source

@@ -32,6 +32,11 @@
 #define ACTION_IMPORT               @"Import from Address Book"
 #define ACTION_VENDOR_INVITE        @"Invite for ePayment"
 
+#define SWIPE_RIGHT_TUTORIAL_RECT       CGRectMake((SCREEN_WIDTH - 136) / 2, 80, 136, 65)
+#define SWIPE_RIGHT_ARROW_RECT          CGRectMake((SCREEN_WIDTH + 136) / 2 + 10, 100, 50, 25)
+#define SWIPE_LEFT_TUTORIAL_RECT        CGRectMake((SCREEN_WIDTH - 136) / 2, 180, 136, 65)
+#define SWIPE_LEFT_ARROW_RECT           CGRectMake((SCREEN_WIDTH - 136) / 2 - 50 - 10, 200, 50, 25)
+
 
 @protocol SlideDelegate <NSObject>
 

@@ -11,11 +11,15 @@
 #import "APIHandler.h"
 #import "Organization.h"
 #import "Util.h"
+#import "User.h"
 #import "SelectOrgViewController.h"
+#import "BDCAppDelegate.h"
+#import "UIHelper.h"
 #import <QuartzCore/QuartzCore.h>
 
 #define INVALID_CREDENTIAL          @"Wrong username/password!"
 #define FAIL_LIST_ORGS              @"Failed to retrieve Org list!"
+
 
 @interface LoginViewController () <OrgDelegate>
 
@@ -136,7 +140,7 @@
 }
 
 - (void)failedToGetOrgFeatures {
-    
+//    [User useProfileToGetOrgFeatures];
 }
 
 - (void)didGetOrgs:(NSArray *)orgList status:(LoginStatus)status {
@@ -177,7 +181,7 @@
 //                        [weakSelf.indicator stopAnimating];
                         weakSelf.warning.hidden = YES;
                         
-                        [self.firstOrg getOrgFeatures];
+                        [self.firstOrg getOrgFeatures]; //TODO: profile logic
                     });
                 }
             } else {
@@ -207,5 +211,6 @@
         });
     }
 }
+
 
 @end

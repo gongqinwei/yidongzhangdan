@@ -14,19 +14,15 @@
 #import "UIHelper.h"
 #import "Uploader.h"
 #import "TutorialControl.h"
-#import "RateAppManager.h"
 #import <QuartzCore/QuartzCore.h>
 
 
 #define IMG_PADDING                     10
 #define IMG_WIDTH                       CELL_WIDTH / 4
 #define IMG_HEIGHT                      IMG_WIDTH - IMG_PADDING
+
 #define DETAILS_VC_TUTORIAL             @"DETAILS_VC_TUTORIAL"
 #define DETAILS_VC_EDIT_TUTORIAL        @"DETAILS_VC_EDIT_TUTORIAL"
-#define SWIPE_RIGHT_TUTORIAL_RECT       CGRectMake((SCREEN_WIDTH - 136) / 2, 80, 136, 65)
-#define SWIPE_RIGHT_ARROW_RECT          CGRectMake((SCREEN_WIDTH + 136) / 2 + 10, 100, 50, 25)
-#define SWIPE_LEFT_TUTORIAL_RECT        CGRectMake((SCREEN_WIDTH - 136) / 2, 180, 136, 65)
-#define SWIPE_LEFT_ARROW_RECT           CGRectMake((SCREEN_WIDTH - 136) / 2 - 50 - 10, 200, 50, 25)
 #define DELETE_DOC_TUTORIAL_RECT        CGRectMake((SCREEN_WIDTH - 220) / 2, 320, 220, 65)
 
 

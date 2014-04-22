@@ -58,6 +58,8 @@
 #define Debug( s, ... )
 #endif
 
+#define Error( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
+
 #define KEYCHAIN_ID         @"BDCLogin"
 
 // Version
@@ -188,6 +190,21 @@
 
 #define StrDone             @"Done"
 #define SysTimeOut          @"System timed out"
+
+// User
+#define USER_EMAIL          @"UserEmail"
+#define USER_ID             @"UserId"
+#define USER_PROFILE_ID     @"UserProfileId"
+#define USER_FNAME          @"UserFname"
+#define USER_LNAME          @"UserLname"
+
+// Profile
+#define PROFILE_ADMIN       @"Administrator"
+#define PROFILE_ACCOUNTANT  @"Accountant"
+#define PROFILE_PAYER       @"Payer"
+#define PROFILE_APPROVER    @"Approver"
+#define PROFILE_CLERK       @"Clerk"
+
 
 //temp: should grab from DB
 #define VendorArray         [NSArray arrayWithObjects:@"Bill.com", @"Yahoo", @"Google", nil]

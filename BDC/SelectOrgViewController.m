@@ -9,6 +9,7 @@
 #import "SelectOrgViewController.h"
 #import "Constants.h"
 #import "Organization.h"
+#import "User.h"
 #import "Util.h"
 #import "APIHandler.h"
 #import "UIHelper.h"
@@ -329,6 +330,8 @@
         UITableViewCell *previousCell = [self.tableView cellForRowAtIndexPath:self.lastSelected];
         previousCell.accessoryView = nil;
     }
+    
+//    [User useProfileToGetOrgFeatures];
 }
 
 
