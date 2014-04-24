@@ -15,6 +15,9 @@
 #import "Uploader.h"
 #import "TutorialControl.h"
 #import <QuartzCore/QuartzCore.h>
+#ifndef LITE_VERSION
+#import "RateAppManager.h"
+#endif
 
 
 #define IMG_PADDING                     10
@@ -64,6 +67,8 @@ static double animatedDistance = 0;
 @synthesize attachmentImageView;
 @synthesize attachmentImageObscure;
 @synthesize attachmentImageDownloadingIndicator;
+
+@synthesize detailsVCTutorialOverlay;
 
 
 - (void)setBusObj:(BDCBusinessObjectWithAttachments *)busObj {

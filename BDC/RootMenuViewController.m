@@ -23,15 +23,23 @@
 #import "BankAccount.h"
 #import "Util.h"
 #import "UIHelper.h"
+#import "TutorialControl.h"
 #import <MessageUI/MessageUI.h>
 
 #define ROOT_MENU_SECTION_HEADER_HEIGHT     22
 #define ROOT_MENU_CELL_ID                   @"RootMenuItem"
+#define ROOT_MENU_TUTORIAL                  @"ROOT_MENU_TUTORIAL"
+#define SWIPE_UP_TUTORIAL_Y                 (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") ? 95 : 75)
+#define SWIPE_UP_TUTORIAL_RECT              CGRectMake((SCREEN_WIDTH - 300) / 2, SWIPE_UP_TUTORIAL_Y, 300, 65)
+#define SWIPE_UP_ARROW_Y                    (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") ? 40 : 20)
+#define SWIPE_UP_ARROW_RECT                 CGRectMake((SCREEN_WIDTH - 23) / 2, SWIPE_UP_ARROW_Y, 23, 50)
+
 
 @interface RootMenuViewController () <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate>
 
 @property (nonatomic, strong) Organization *currentOrg;
 @property (nonatomic, strong) NSMutableArray *rootMenu;
+@property (nonatomic, strong) TutorialControl *rootMenuTutorialOverlay;
 
 @end
 
@@ -43,6 +51,8 @@
 @synthesize menuTableView;
 @synthesize currVC;
 @synthesize menuItems;
+@synthesize rootMenuTutorialOverlay;
+
 
 static RootMenuViewController * _sharedInstance = nil;
 
@@ -192,6 +202,20 @@ static RootMenuViewController * _sharedInstance = nil;
 //    [UIView commitAnimations];
     
 //    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background_linen.jpg"]];
+    
+    
+    // one time tutorial
+    if ([Organization count] > 1) {
+        BOOL tutorialValue = [[NSUserDefaults standardUserDefaults] boolForKey:ROOT_MENU_TUTORIAL];
+        if (!tutorialValue) {
+            self.rootMenuTutorialOverlay = [[TutorialControl alloc] init];
+            [self.rootMenuTutorialOverlay addText:@"Always click here to switch company" at:SWIPE_UP_TUTORIAL_RECT];
+            [self.rootMenuTutorialOverlay addImageNamed:@"arrow_up.png" at:SWIPE_UP_ARROW_RECT];
+            [self.view addSubview:self.rootMenuTutorialOverlay];
+            
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:ROOT_MENU_TUTORIAL];
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning

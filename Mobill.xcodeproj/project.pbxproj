@@ -125,6 +125,7 @@
 		7E370EBD17E6D56D005B3538 /* EditContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E370EBC17E6D56C005B3538 /* EditContactViewController.m */; };
 		7E370EC217E6D815005B3538 /* CustomerContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E370EC117E6D814005B3538 /* CustomerContact.m */; };
 		7E370EC517E82EE0005B3538 /* ContactsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E370EC417E82EE0005B3538 /* ContactsTableViewController.m */; };
+		7E3C4E86190793DD0032F869 /* arrow_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E3C4E85190793DD0032F869 /* arrow_up.png */; };
 		7E4A1B6417F76ABA00B3255C /* RootMenu.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E4A1B6317F76ABA00B3255C /* RootMenu.png */; };
 		7E579F5A15A21F1E009D1455 /* Bill.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F5915A21F1E009D1455 /* Bill.m */; };
 		7E579F5E15A234EB009D1455 /* APIHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F5D15A234EB009D1455 /* APIHandler.m */; };
@@ -357,6 +358,7 @@
 		7E370EC117E6D814005B3538 /* CustomerContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerContact.m; sourceTree = "<group>"; };
 		7E370EC317E82EE0005B3538 /* ContactsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsTableViewController.h; sourceTree = "<group>"; };
 		7E370EC417E82EE0005B3538 /* ContactsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsTableViewController.m; sourceTree = "<group>"; };
+		7E3C4E85190793DD0032F869 /* arrow_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_up.png; sourceTree = "<group>"; };
 		7E4A1B6317F76ABA00B3255C /* RootMenu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RootMenu.png; sourceTree = "<group>"; };
 		7E579F5815A21F1E009D1455 /* Bill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bill.h; sourceTree = "<group>"; };
 		7E579F5915A21F1E009D1455 /* Bill.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bill.m; sourceTree = "<group>"; };
@@ -386,7 +388,7 @@
 		7E7D742A184561DA009B114C /* ABPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABPerson.m; sourceTree = "<group>"; };
 		7E7D742D1846D663009B114C /* ImportABPersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImportABPersonViewController.h; sourceTree = "<group>"; };
 		7E7D742E1846D663009B114C /* ImportABPersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImportABPersonViewController.m; sourceTree = "<group>"; };
-		7E91E3EB15927C15005104AF /* Mobill Lite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mobill Lite.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E91E3EB15927C15005104AF /* Mobill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mobill.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E91E3EF15927C15005104AF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7E91E3F115927C15005104AF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7E91E3F315927C15005104AF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -902,7 +904,7 @@
 		7E91E3EC15927C15005104AF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7E91E3EB15927C15005104AF /* Mobill Lite.app */,
+				7E91E3EB15927C15005104AF /* Mobill.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -966,6 +968,7 @@
 				0EB2190917472E1A00382C44 /* FileIcons */,
 				0E2C0AAC15EC419A0059C739 /* TabBarImages */,
 				7E579F6415A80C8F009D1455 /* BDClogo.png */,
+				7E3C4E85190793DD0032F869 /* arrow_up.png */,
 				7EC5EB5B18E941230085B9E2 /* arrow_left.png */,
 				7EC5EB5918E941170085B9E2 /* arrow_right.png */,
 				7EA5BF3117C98DCE0075EEF3 /* Mobill_logo29.png */,
@@ -1006,9 +1009,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		7E91E3EA15927C15005104AF /* Mobill Lite */ = {
+		7E91E3EA15927C15005104AF /* Mobill */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7E91E40C15927C15005104AF /* Build configuration list for PBXNativeTarget "Mobill Lite" */;
+			buildConfigurationList = 7E91E40C15927C15005104AF /* Build configuration list for PBXNativeTarget "Mobill" */;
 			buildPhases = (
 				7E91E3E715927C15005104AF /* Sources */,
 				7E91E3E815927C15005104AF /* Frameworks */,
@@ -1018,9 +1021,9 @@
 			);
 			dependencies = (
 			);
-			name = "Mobill Lite";
+			name = Mobill;
 			productName = BDC;
-			productReference = 7E91E3EB15927C15005104AF /* Mobill Lite.app */;
+			productReference = 7E91E3EB15927C15005104AF /* Mobill.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1032,8 +1035,13 @@
 				CLASSPREFIX = Mobill;
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Mobill Inc.";
+				TargetAttributes = {
+					7E91E3EA15927C15005104AF = {
+						DevelopmentTeam = DQ29659ZU2;
+					};
+				};
 			};
-			buildConfigurationList = 7E91E3E515927C15005104AF /* Build configuration list for PBXProject "Mobill Lite" */;
+			buildConfigurationList = 7E91E3E515927C15005104AF /* Build configuration list for PBXProject "Mobill" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -1045,7 +1053,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7E91E3EA15927C15005104AF /* Mobill Lite */,
+				7E91E3EA15927C15005104AF /* Mobill */,
 			);
 		};
 /* End PBXProject section */
@@ -1094,6 +1102,7 @@
 				0ECF42C9175BC3E800BA7C7B /* pptx_icon.png in Resources */,
 				0ECF42CB175BC40A00BA7C7B /* rar_icon.png in Resources */,
 				7E7979C8184E8BB2003FE1E4 /* Invite.png in Resources */,
+				7E3C4E86190793DD0032F869 /* arrow_up.png in Resources */,
 				0ECF42CD175BC41F00BA7C7B /* tiff_icon.png in Resources */,
 				0ECF42CF175BC43900BA7C7B /* unknown_file_icon.png in Resources */,
 				0E92713E183EBAA600DE0AE6 /* Deny.png in Resources */,
@@ -1334,13 +1343,14 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Qinwei Gong (DQ29659ZU2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BDC/BDC-Prefix.pch";
 				INFOPLIST_FILE = "BDC/BDC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				PRODUCT_NAME = "Mobill Lite";
-				PROVISIONING_PROFILE = "743C0ACD-9F4F-43A0-863E-4788C38599DF";
-				"PROVISIONING_PROFILE[sdk=*]" = "743C0ACD-9F4F-43A0-863E-4788C38599DF";
+				PRODUCT_NAME = Mobill;
+				PROVISIONING_PROFILE = "72436D91-C724-43D5-A991-961A5151ADB4";
+				"PROVISIONING_PROFILE[sdk=*]" = "19525DBB-FFEF-4B3D-BC0D-B8A8A75E5E6D";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -1352,15 +1362,15 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Qinwei Gong (DQ29659ZU2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Qinwei Gong (DQ29659ZU2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BDC/BDC-Prefix.pch";
 				INFOPLIST_FILE = "BDC/BDC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				PRODUCT_NAME = "Mobill Lite";
-				PROVISIONING_PROFILE = "743C0ACD-9F4F-43A0-863E-4788C38599DF";
-				"PROVISIONING_PROFILE[sdk=*]" = "6F0D6365-DB2B-400A-9D52-23C5ADA1CDB7";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6F0D6365-DB2B-400A-9D52-23C5ADA1CDB7";
+				PRODUCT_NAME = Mobill;
+				PROVISIONING_PROFILE = "22D0A2F5-0046-45FB-8B4C-36E823385E1D";
+				"PROVISIONING_PROFILE[sdk=*]" = "72436D91-C724-43D5-A991-961A5151ADB4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "72436D91-C724-43D5-A991-961A5151ADB4";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -1370,7 +1380,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7E91E3E515927C15005104AF /* Build configuration list for PBXProject "Mobill Lite" */ = {
+		7E91E3E515927C15005104AF /* Build configuration list for PBXProject "Mobill" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7E91E40A15927C15005104AF /* Debug */,
@@ -1379,7 +1389,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7E91E40C15927C15005104AF /* Build configuration list for PBXNativeTarget "Mobill Lite" */ = {
+		7E91E40C15927C15005104AF /* Build configuration list for PBXNativeTarget "Mobill" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7E91E40D15927C15005104AF /* Debug */,

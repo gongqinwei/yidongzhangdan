@@ -35,6 +35,8 @@
 @synthesize indice;
 @synthesize alphabets;
 
+@synthesize listVCTutorialOverlay;
+
 
 - (NSMutableArray *)sortAlphabeticallyForList:(NSArray *)list {
     NSMutableDictionary *buckets = [NSMutableDictionary dictionary];

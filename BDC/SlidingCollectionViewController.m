@@ -30,6 +30,8 @@
 @synthesize previewController;
 @synthesize dataInMemCache;
 
+@synthesize collectionVCTutorialOverlay;
+
 
 - (void)refreshView {
     self.refreshControl.attributedTitle = REFRESHING;
