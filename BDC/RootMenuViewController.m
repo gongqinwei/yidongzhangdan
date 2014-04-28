@@ -164,7 +164,7 @@ static RootMenuViewController * _sharedInstance = nil;
         [Vendor retrieveListForActive:YES];
         [ChartOfAccount retrieveListForActive:YES];
         [Approver retrieveList];
-        [Bill retrieveListForApproval];
+        [Bill retrieveListForApproval:nil];
         [self.currentOrg getOrgPrefs];
     }
 

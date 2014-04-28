@@ -107,6 +107,6 @@
 
 + (id)listBillsToApprove;
 + (BOOL)isBillToApprove:(Bill *)bill;
-+ (void)retrieveListForApproval;
++ (void)retrieveListForApproval:(void (^)(UIBackgroundFetchResult))completionHandler;
 
 @end

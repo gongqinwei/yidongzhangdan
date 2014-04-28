@@ -35,7 +35,7 @@
 
 - (void)refreshView {
     self.refreshControl.attributedTitle = REFRESHING;
-    [Bill retrieveListForApproval];
+    [Bill retrieveListForApproval:nil];
 }
 
 - (void)viewDidLoad

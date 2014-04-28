@@ -66,12 +66,24 @@ static NSString *const iOSAppStoreURLFormat = @"http://itunes.apple.com/app/id%d
     }
 }
 
+-(void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    if ([[Util getPassword] length] != 0) {
+        [Bill retrieveListForApproval:completionHandler];
+    } else {
+        completionHandler(UIBackgroundFetchResultNoData);
+    }
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [self setupNavigationBarForiOS7];
     
     self.isFirstLaunch = YES;
     self.numNetworkActivities = 0;
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
+    }
     
     return YES;
 }
@@ -94,6 +106,10 @@ static NSString *const iOSAppStoreURLFormat = @"http://itunes.apple.com/app/id%d
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+//    [self fetchData];
+}
+
+- (void) fetchData {
     UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil];
     UINavigationController *initialController = (UINavigationController *)[mainstoryboard instantiateInitialViewController];
     SplashViewController *splashScreen = initialController.childViewControllers[0];
@@ -129,7 +145,7 @@ static NSString *const iOSAppStoreURLFormat = @"http://itunes.apple.com/app/id%d
                     [Bill retrieveListForActive:YES reload:YES];
                     [Vendor retrieveListForActive:YES];
                     [ChartOfAccount retrieveListForActive:YES];
-                    [Bill retrieveListForApproval];
+                    [Bill retrieveListForApproval:nil];
                 }
                 
                 [Invoice retrieveListForActive:YES reload:YES];

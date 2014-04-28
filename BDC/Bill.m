@@ -89,6 +89,8 @@ static NSMutableSet *billsToApproveSet;
             
             [self.approvalDelegate didProcessApproval];
             [ListForApprovalDelegate didProcessApproval];
+            
+            [UIApplication sharedApplication].applicationIconBadgeNumber = billsToApprove.count;    //update badge
         } else if (response_status == RESPONSE_TIMEOUT) {
             [self.approvalDelegate failedToProcessApproval];
             [ListForApprovalDelegate failedToProcessApproval];
@@ -321,7 +323,7 @@ static NSMutableSet *billsToApproveSet;
     return [billsToApproveSet containsObject:bill];
 }
 
-+ (void)retrieveListForApproval {
++ (void)retrieveListForApproval:(void (^)(UIBackgroundFetchResult))completionHandler {
     [UIAppDelegate incrNetworkActivities];
     
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, LIST_TO_APPROVE_FILTER, nil];
@@ -342,7 +344,6 @@ static NSMutableSet *billsToApproveSet;
                 billsToApproveSet = [NSMutableSet set];
             }
             
-            
             for (id item in jsonBills) {
                 NSDictionary *dict = (NSDictionary*)item;
                 Bill *bill = [[Bill alloc] init];
@@ -355,14 +356,26 @@ static NSMutableSet *billsToApproveSet;
             billsToApprove = [Bill list:billsToApprove orderBy:BILL_NUMBER ascending:YES];
             
             [ListForApprovalDelegate didGetBillsToApprove:billsToApprove];
+            
+            [UIApplication sharedApplication].applicationIconBadgeNumber = billsToApprove.count;    // update badge
+            
+            if (completionHandler) {
+                completionHandler(UIBackgroundFetchResultNewData);
+            }
         } else if (response_status == RESPONSE_TIMEOUT) {
             [ListForApprovalDelegate failedToGetBillsToApprove];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            Debug(@"Time out when retrieving list of bill to approve!");
+            Error(@"Time out when retrieving list of bill to approve!");
+            if (completionHandler) {
+                completionHandler(UIBackgroundFetchResultFailed);
+            }
         } else {
             [ListForApprovalDelegate failedToGetBills];
             [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of bill to approve! %@", [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to retrieve list of bill to approve! %@", [err localizedDescription]);
+            Error(@"Failed to retrieve list of bill to approve! %@", [err localizedDescription]);
+            if (completionHandler) {
+                completionHandler(UIBackgroundFetchResultFailed);
+            }
         }
     }];
 }
