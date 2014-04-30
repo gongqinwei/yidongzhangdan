@@ -15,6 +15,7 @@
 #import "Uploader.h"
 #import "UIHelper.h"
 #import "BDCAppDelegate.h"
+#import "RootMenuViewController.h"
 
 #define LIST_ACTIVE_BILL_FILTER     @"{ \"start\" : 0, \
                                         \"max\" : 999, \
@@ -90,7 +91,7 @@ static NSMutableSet *billsToApproveSet;
             [self.approvalDelegate didProcessApproval];
             [ListForApprovalDelegate didProcessApproval];
             
-            [UIApplication sharedApplication].applicationIconBadgeNumber = billsToApprove.count;    //update badge
+            [Bill updateNumToApprove:billsToApprove.count];
         } else if (response_status == RESPONSE_TIMEOUT) {
             [self.approvalDelegate failedToProcessApproval];
             [ListForApprovalDelegate failedToProcessApproval];
@@ -103,6 +104,19 @@ static NSMutableSet *billsToApproveSet;
             Debug(@"Failed to processing %@ for bill %@! %@", action, self.objectId, [err localizedDescription]);
         }
     }];
+}
+
++ (void)updateNumToApprove:(int)count {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].applicationIconBadgeNumber = count;    //update badge
+        
+        if (count == 0) {
+            [RootMenuViewController sharedInstance].numBillsToApproveLabel.hidden = YES;
+        } else {
+            [RootMenuViewController sharedInstance].numBillsToApproveLabel.text = [NSString stringWithFormat:@"(%d)", count];
+            [RootMenuViewController sharedInstance].numBillsToApproveLabel.hidden = NO;
+        }
+    });
 }
 
 + (void)resetList {
@@ -357,7 +371,7 @@ static NSMutableSet *billsToApproveSet;
             
             [ListForApprovalDelegate didGetBillsToApprove:billsToApprove];
             
-            [UIApplication sharedApplication].applicationIconBadgeNumber = billsToApprove.count;    // update badge
+            [Bill updateNumToApprove:billsToApprove.count];
             
             if (completionHandler) {
                 completionHandler(UIBackgroundFetchResultNewData);

@@ -68,7 +68,10 @@ static NSString *const iOSAppStoreURLFormat = @"http://itunes.apple.com/app/id%d
 
 -(void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     if ([[Util getPassword] length] != 0) {
-        [Bill retrieveListForApproval:completionHandler];
+        Organization *currentOrg = [Organization getSelectedOrg];
+        if (currentOrg.enableAP) {
+            [Bill retrieveListForApproval:completionHandler];
+        }
     } else {
         completionHandler(UIBackgroundFetchResultNoData);
     }
@@ -106,7 +109,7 @@ static NSString *const iOSAppStoreURLFormat = @"http://itunes.apple.com/app/id%d
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-//    [self fetchData];
+    [self fetchData];
 }
 
 - (void) fetchData {

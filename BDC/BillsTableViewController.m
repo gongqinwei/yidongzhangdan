@@ -25,6 +25,9 @@
 #define BILL_DETAILS_CELL_ID                @"BillDetails"
 #define VIEW_BILL_SEGUE                     @"ViewBill"
 #define CREATE_BILL_SEGUE                   @"CreateNewBill"
+#define UNASSIGNED_CELL_BG_COLOR            0xF0FFFF
+#define APPROVED_CELL_BG_COLOR              0xF0FFF0
+
 
 @interface BillsTableViewController () <BillListDelegate>
 
@@ -216,6 +219,8 @@
     for(Bill *bill in self.bills) {
         self.totalBillAmount = [self.totalBillAmount decimalNumberByAdding:bill.amount];
     }
+    
+    [self didSelectSortAttribute:BILL_APPROVAL_STATUS ascending:YES active:YES];
 }
 
 - (void)viewDidUnload
@@ -401,6 +406,40 @@
         cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
     } else {
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    Organization *org = [Organization getSelectedOrg];
+    if (org.needApprovalToPayBill) {
+        UIView *cellBG = [[UIView alloc] init];
+        if ([bill.approvalStatus isEqual: APPROVAL_APPROVED]) {
+            cellBG.backgroundColor = UIColorFromRGB(APPROVED_CELL_BG_COLOR);
+            lblInvNum.backgroundColor = UIColorFromRGB(APPROVED_CELL_BG_COLOR);
+            lblVendor.backgroundColor = UIColorFromRGB(APPROVED_CELL_BG_COLOR);
+            lblInvDate.backgroundColor = UIColorFromRGB(APPROVED_CELL_BG_COLOR);
+            lblStatus.backgroundColor = UIColorFromRGB(APPROVED_CELL_BG_COLOR);
+            lblDueDate.backgroundColor = UIColorFromRGB(APPROVED_CELL_BG_COLOR);
+            lblPaymentStatus.backgroundColor = UIColorFromRGB(APPROVED_CELL_BG_COLOR);
+            lblAmount.backgroundColor = UIColorFromRGB(APPROVED_CELL_BG_COLOR);
+        } else if ([bill.approvalStatus isEqual: APPROVAL_UNASSIGNED]) {
+            cellBG.backgroundColor = UIColorFromRGB(UNASSIGNED_CELL_BG_COLOR);
+            lblInvNum.backgroundColor = UIColorFromRGB(UNASSIGNED_CELL_BG_COLOR);
+            lblVendor.backgroundColor = UIColorFromRGB(UNASSIGNED_CELL_BG_COLOR);
+            lblInvDate.backgroundColor = UIColorFromRGB(UNASSIGNED_CELL_BG_COLOR);
+            lblStatus.backgroundColor = UIColorFromRGB(UNASSIGNED_CELL_BG_COLOR);
+            lblDueDate.backgroundColor = UIColorFromRGB(UNASSIGNED_CELL_BG_COLOR);
+            lblPaymentStatus.backgroundColor = UIColorFromRGB(UNASSIGNED_CELL_BG_COLOR);
+            lblAmount.backgroundColor = UIColorFromRGB(UNASSIGNED_CELL_BG_COLOR);
+        } else {
+            cellBG.backgroundColor = [UIColor whiteColor];
+            lblInvNum.backgroundColor = [UIColor whiteColor];
+            lblVendor.backgroundColor = [UIColor whiteColor];
+            lblInvDate.backgroundColor = [UIColor whiteColor];
+            lblStatus.backgroundColor = [UIColor whiteColor];
+            lblDueDate.backgroundColor = [UIColor whiteColor];
+            lblPaymentStatus.backgroundColor = [UIColor whiteColor];
+            lblAmount.backgroundColor = [UIColor whiteColor];
+        }
+        cell.backgroundView = cellBG;
     }
     
     return cell;
@@ -609,6 +648,8 @@
                 bill = [[self.vendorBills objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
             } else if ([self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
                 bill = [[self.dueDateBills objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+            } else if ([self.sortAttribute isEqualToString:BILL_APPROVAL_STATUS]) {
+                bill = [[self.approvalBills objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
             } else {
                 bill = [self.bills objectAtIndex:indexPath.row];
             }

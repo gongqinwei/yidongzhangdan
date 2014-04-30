@@ -181,6 +181,8 @@
 		7ED50F751807CE13002064C4 /* ApproversTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED50F741807CE13002064C4 /* ApproversTableViewController.m */; };
 		7ED50F791807CE66002064C4 /* EditApproverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED50F781807CE66002064C4 /* EditApproverViewController.m */; };
 		7EE3920A17DD2184007B1126 /* directionsIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EE3920917DD2184007B1126 /* directionsIcon.png */; };
+		7EE9F93D190F80D2004FFBB5 /* disclosure_grey.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EE9F93C190F80D2004FFBB5 /* disclosure_grey.png */; };
+		7EE9F93F190F8140004FFBB5 /* disclosure_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EE9F93E190F8140004FFBB5 /* disclosure_white.png */; };
 		7EF87EB317F403D300FCE2C8 /* RecorderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF87EB217F403D300FCE2C8 /* RecorderViewController.m */; };
 		7EFA900E1818D9C2001F81E6 /* Background_linen.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7EFA900D1818D9C2001F81E6 /* Background_linen.jpg */; };
 		7EFA901A1834AF24001F81E6 /* iOS7NavBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EFA90191834AF24001F81E6 /* iOS7NavBarBackground.png */; };
@@ -444,6 +446,8 @@
 		7ED50F771807CE66002064C4 /* EditApproverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditApproverViewController.h; sourceTree = "<group>"; };
 		7ED50F781807CE66002064C4 /* EditApproverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditApproverViewController.m; sourceTree = "<group>"; };
 		7EE3920917DD2184007B1126 /* directionsIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = directionsIcon.png; sourceTree = "<group>"; };
+		7EE9F93C190F80D2004FFBB5 /* disclosure_grey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = disclosure_grey.png; sourceTree = "<group>"; };
+		7EE9F93E190F8140004FFBB5 /* disclosure_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = disclosure_white.png; sourceTree = "<group>"; };
 		7EF87EB117F403D300FCE2C8 /* RecorderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecorderViewController.h; sourceTree = "<group>"; };
 		7EF87EB217F403D300FCE2C8 /* RecorderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecorderViewController.m; sourceTree = "<group>"; };
 		7EFA900D1818D9C2001F81E6 /* Background_linen.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Background_linen.jpg; sourceTree = "<group>"; };
@@ -991,6 +995,8 @@
 				7E370EB517DD8E3F005B3538 /* emailIcon.png */,
 				7E370EB717DD90EC005B3538 /* emailIcon1.png */,
 				7E370EAD17DD89C8005B3538 /* phoneIcon.png */,
+				7EE9F93C190F80D2004FFBB5 /* disclosure_grey.png */,
+				7EE9F93E190F8140004FFBB5 /* disclosure_white.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -1070,6 +1076,7 @@
 			files = (
 				7EC4EE931800991700DD18E0 /* Up.png in Resources */,
 				7E91E3FA15927C15005104AF /* InfoPlist.strings in Resources */,
+				7EE9F93F190F8140004FFBB5 /* disclosure_white.png in Resources */,
 				7E91E40315927C15005104AF /* MainStoryboard_iPhone.storyboard in Resources */,
 				7E7979C3184CE209003FE1E4 /* Map.png in Resources */,
 				7E91E40615927C15005104AF /* MainStoryboard_iPad.storyboard in Resources */,
@@ -1105,6 +1112,7 @@
 				0EAA1CAA183ED40600DEE589 /* Accept.png in Resources */,
 				0ECF42C7175BC3D100BA7C7B /* ppt_icon.png in Resources */,
 				0ECF42C9175BC3E800BA7C7B /* pptx_icon.png in Resources */,
+				7EE9F93D190F80D2004FFBB5 /* disclosure_grey.png in Resources */,
 				0ECF42CB175BC40A00BA7C7B /* rar_icon.png in Resources */,
 				7E7979C8184E8BB2003FE1E4 /* Invite.png in Resources */,
 				7E3C4E86190793DD0032F869 /* arrow_up.png in Resources */,

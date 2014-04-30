@@ -84,6 +84,7 @@ enum RootMoreItems {
 @property (weak, nonatomic) IBOutlet UITableView *menuTableView;
 @property (nonatomic, strong) UIViewController *currVC;
 @property (nonatomic, strong) NSMutableDictionary *menuItems;
+@property (nonatomic, strong) UILabel *numBillsToApproveLabel;
 
 + (RootMenuViewController *)sharedInstance;
 - (UINavigationController *)showView:(NSString *)identifier;

@@ -33,6 +33,7 @@
 #define SWIPE_UP_TUTORIAL_RECT              CGRectMake((SCREEN_WIDTH - 300) / 2, SWIPE_UP_TUTORIAL_Y, 300, 65)
 #define SWIPE_UP_ARROW_Y                    (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") ? 40 : 20)
 #define SWIPE_UP_ARROW_RECT                 CGRectMake((SCREEN_WIDTH - 23) / 2, SWIPE_UP_ARROW_Y, 23, 50)
+#define CELL_DISCLOSURE_TAG                 7
 
 
 @interface RootMenuViewController () <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate>
@@ -40,6 +41,8 @@
 @property (nonatomic, strong) Organization *currentOrg;
 @property (nonatomic, strong) NSMutableArray *rootMenu;
 @property (nonatomic, strong) TutorialControl *rootMenuTutorialOverlay;
+
+@property (nonatomic, assign) BOOL isInit;  // no slided vc edge on root menu: show build-in disclosure indicator
 
 @end
 
@@ -52,6 +55,8 @@
 @synthesize currVC;
 @synthesize menuItems;
 @synthesize rootMenuTutorialOverlay;
+@synthesize isInit;
+@synthesize numBillsToApproveLabel;
 
 
 static RootMenuViewController * _sharedInstance = nil;
@@ -216,6 +221,13 @@ static RootMenuViewController * _sharedInstance = nil;
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:ROOT_MENU_TUTORIAL];
         }
     }
+    
+    self.isInit = YES;
+    
+    self.numBillsToApproveLabel = [[UILabel alloc] initWithFrame:CGRectMake(140, 13, 50, 20)];
+    self.numBillsToApproveLabel.backgroundColor = [UIColor clearColor];
+    self.numBillsToApproveLabel.textColor = [UIColor whiteColor];
+    self.numBillsToApproveLabel.font = [UIFont fontWithName:APP_FONT size:15];
 }
 
 - (void)didReceiveMemoryWarning
@@ -270,6 +282,9 @@ static RootMenuViewController * _sharedInstance = nil;
     }
     
     cell.backgroundColor = [UIColor clearColor];
+    if (!self.isInit) {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
     
     if (indexPath.section == kRootProfile) {
         if (indexPath.row == kProfileUser) {    // temporarily same as profile org. will change to user name/email once BDC API implemented
@@ -278,13 +293,21 @@ static RootMenuViewController * _sharedInstance = nil;
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             
             if ([Organization count] > 1) {
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                if (self.isInit) {
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                } else {
+                    [self addDisclosureIndicatorToCell:cell highlight:NO];
+                }
                 cell.userInteractionEnabled = YES;
             } else {
-                cell.accessoryType = UITableViewCellAccessoryNone;
+                if (self.isInit) {
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                } else {
+                    [self removeDisclosureIndicatorFromCell:cell];
+                }
                 cell.userInteractionEnabled = NO;
             }
-            
+        
             NSString *imageName = @"ProfileIcon.png";
             cell.imageView.image = [UIImage imageNamed:imageName];
             
@@ -305,7 +328,11 @@ static RootMenuViewController * _sharedInstance = nil;
             cell.textLabel.text = self.currentOrg.name;
             cell.textLabel.font = [UIFont boldSystemFontOfSize:20.0];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            cell.accessoryType = UITableViewCellAccessoryNone;
+            if (self.isInit) {
+                cell.accessoryType = UITableViewCellAccessoryNone;
+            } else {
+                [self removeDisclosureIndicatorFromCell:cell];
+            }
             cell.userInteractionEnabled = NO;
             
             NSString *imageName = @"ProfileIcon.png";
@@ -333,15 +360,47 @@ static RootMenuViewController * _sharedInstance = nil;
         cell.imageView.image = [UIImage imageNamed:imageName];
         cell.textLabel.font = [UIFont systemFontOfSize:17.0];
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        if (self.isInit) {
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        } else {
+            [self addDisclosureIndicatorToCell:cell highlight:NO];
+        }
         cell.userInteractionEnabled = YES;
         
         UIView *bgColorView = [[UIView alloc] init];
         [bgColorView setBackgroundColor:[UIColor colorWithRed:100/255.f green:100/255.f blue:100/255.f alpha:0.75]];
         cell.selectedBackgroundView = bgColorView;
+        
+        if (indexPath.section == kRootAP && indexPath.row == kAPApprove) {
+            [cell addSubview:self.numBillsToApproveLabel];
+        }
     }
     
     return cell;
+}
+
+- (void)addDisclosureIndicatorToCell:(UITableViewCell *)cell highlight:(BOOL)selected {
+    NSString *imageName;
+    if (selected) {
+        imageName = @"disclosure_grey.png";
+    } else {
+        imageName = @"disclosure_white.png";
+    }
+    UIImageView *disclosure = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
+    disclosure.frame = CGRectMake(SLIDING_DISTANCE - 30, (cell.frame.size.height - 16) / 2, 16, 16);
+    disclosure.tag = CELL_DISCLOSURE_TAG;
+    [cell addSubview:disclosure];
+}
+
+- (void)removeDisclosureIndicatorFromCell:(UITableViewCell *)cell {
+    for (UIView *view in cell.subviews) {
+        if (view.tag == CELL_DISCLOSURE_TAG) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [view removeFromSuperview];
+            });
+            break;
+        }
+    }
 }
 
 #pragma mark - Table view delegate
@@ -358,6 +417,11 @@ static RootMenuViewController * _sharedInstance = nil;
         [self sendFeedbackEmail];
     } else {
         [self showView:[[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+        
+        if (self.isInit) {
+            self.isInit = NO;
+            [self.menuTableView reloadData];
+        }
     }
 }
 
