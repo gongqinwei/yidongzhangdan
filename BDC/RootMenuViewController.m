@@ -115,6 +115,7 @@ static RootMenuViewController * _sharedInstance = nil;
         
     if (!self.currentOrg.showAR && !self.currentOrg.enableAP) {
         // Profile + More (theoretically should never happen - can't login)
+        [UIHelper showInfo:@"This company has no AR and disabled AP!\n\nPlease enable them in Bill.com first." withStatus:kWarning];
     } else {
         if (self.currentOrg.enableAP || self.currentOrg.enableAR) {
             [self.rootMenu addObject:[ROOT_MENU objectAtIndex:kRootTool]];  // + Documents section
