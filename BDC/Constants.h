@@ -11,7 +11,7 @@
 
 #import "Labels.h"
 
-//#define LITE_VERSION
+#define LITE_VERSION
 #define FULL_VERSION_ID     696521463
 
 //#define LOCAL
