@@ -41,9 +41,11 @@ static Organization *selectedOrg = nil;
         if(response_status == RESPONSE_SUCCESS) {
             self.showAR = [[orgFeatures objectForKey:SHOW_AR] boolValue];
             self.showAP = [[orgFeatures objectForKey:SHOW_AP] boolValue];
+            
             self.enableAR = [[orgFeatures objectForKey:ENABLE_AR] boolValue];
             self.enableAP = [[orgFeatures objectForKey:ENABLE_AP] boolValue];
             
+            // need to check based on either retrieval api's or role in future
             self.canApprove = YES;
             self.canPay = YES;
             self.hasInbox = YES;
@@ -52,11 +54,23 @@ static Organization *selectedOrg = nil;
         } else {
             if ([[orgFeatures objectForKey:RESPONSE_ERROR_CODE] isEqualToString:ORG_LOCKED_OUT]) {
                 [UIHelper showInfo:@"This account is past due and is locked out by Bill.com!" withStatus:kWarning];
+                [delegate failedToGetOrgFeatures];  //temp
             } else {
                 Debug(@"Failed to get org features for %@!", self.objectId);
+                
+                // temp solution: if can't get org features, display everything regardless
+                // let subsequent api calls fail
+                self.showAR = YES;
+                self.showAP = YES;
+                self.enableAR = YES;
+                self.enableAP = YES;
+                self.canApprove = YES;
+                self.canPay = YES;
+                self.hasInbox = YES;
+                [delegate didGetOrgFeatures];
             }
             
-            [delegate failedToGetOrgFeatures];
+//            [delegate failedToGetOrgFeatures];
         }
     }];
 }

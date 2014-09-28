@@ -12,6 +12,7 @@
 #import "UIHelper.h"
 #import "Util.h"
 #import "Bill.h"
+#import "User.h"
 #import "APLineItem.h"
 
 #define COMPRESSION_THRESHOLD       500000
@@ -166,12 +167,13 @@ static NSLock *DocumentsLock = nil;
     
     [APIHandler asyncCallWithAction:RETRIEVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
-        NSArray *jsonDocs = [APIHandler getResponse:response data:data error:&err status:&response_status];
-//        Debug(@"%@", jsonDocs);
+        id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
+            [[User GetLoginUser] markProfileFor:kInboxChecked checked:YES];
+            
             if ([category isEqualToString:FILE_CATEGORY_ATTACHMENT]) {
                 if (attachments) {
                     [attachments removeAllObjects];
@@ -185,6 +187,8 @@ static NSLock *DocumentsLock = nil;
                     documents = [NSMutableArray array];
                 }
             }
+            
+            NSArray *jsonDocs = (NSArray *)json;
             
             for (NSDictionary *dict in jsonDocs) {
                 Document *doc = [[Document alloc] init];
@@ -241,15 +245,22 @@ static NSLock *DocumentsLock = nil;
                 [DocumentListDelegate failedToGetDocuments];
             }
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            Debug(@"Time out when retrieving list of documents!");
+            Error(@"Time out when retrieving list of documents!");
         } else {
             if ([category isEqualToString:FILE_CATEGORY_ATTACHMENT]) {
                 [AttachmentListDelegate failedToGetDocuments];
             } else if ([category isEqualToString:FILE_CATEGORY_DOCUMENT]) {
                 [DocumentListDelegate failedToGetDocuments];
             }
-            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of %@! %@", category, [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to retrieve list of %@! %@", category, [err localizedDescription]);
+            
+            NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
+            if ([INVALID_PERMISSION isEqualToString:errCode]) {
+                [[User GetLoginUser] markProfileFor:kInboxChecked checked:NO];
+                [UIHelper showInfo:@"You don't have permission to access Inbox." withStatus:kWarning];
+            } else {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of %@! %@", category, [err localizedDescription]] withStatus:kFailure];
+                Error(@"Failed to retrieve list of %@! %@", category, [err localizedDescription]);
+            }
         }
     }];
 }

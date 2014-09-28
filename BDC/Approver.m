@@ -65,14 +65,15 @@ static id <ApproverListDelegate> ListDelegate = nil;
 
 + (void)retrieveList {
     [UIAppDelegate incrNetworkActivities];
-    
-    [APIHandler asyncCallWithAction:APPROVER_LIST_API Info:nil AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+
+    [APIHandler asyncGetCallWithAction:APPROVER_LIST_API Info:nil AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
-        NSArray *jsonApprovers = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
 
         [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
+            NSArray *jsonApprovers = (NSArray *)json;
             if (approvers) {
                 [approvers removeAllObjects];
             } else {
@@ -91,11 +92,11 @@ static id <ApproverListDelegate> ListDelegate = nil;
         } else if (response_status == RESPONSE_TIMEOUT) {
             [ListDelegate failedToGetApprovers];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            Debug(@"Time out when retrieving list of approvers");
+            Error(@"Time out when retrieving list of approvers");
         } else {
             [ListDelegate failedToGetApprovers];
             [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of approvers! %@", [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to retrieve list of approvers! %@", [err localizedDescription]);
+            Error(@"Failed to retrieve list of approvers! %@", [err localizedDescription]);
         }
     }];
 }
@@ -107,7 +108,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
     
     [APIHandler asyncCallWithAction:action Info:nil AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
-        NSArray *jsonApprovers = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         [UIAppDelegate decrNetworkActivities];
         
@@ -119,6 +120,8 @@ static id <ApproverListDelegate> ListDelegate = nil;
             }
             
             NSMutableArray *smartData = [NSMutableArray array];
+            
+            NSArray *jsonApprovers = (NSArray *)json;
             
             for (id item in jsonApprovers) {
                 NSDictionary *dict = (NSDictionary*)item;
@@ -143,11 +146,17 @@ static id <ApproverListDelegate> ListDelegate = nil;
         } else if (response_status == RESPONSE_TIMEOUT) {
             [ListDelegate failedToGetApprovers];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            Debug(@"Time out when retrieving list of approvers");
+            Error(@"Time out when retrieving list of approvers");
         } else {
             [ListDelegate failedToGetApprovers];
-            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of approvers! %@", [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to retrieve list of approvers! %@", [err localizedDescription]);
+            
+            NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
+            if ([INVALID_PERMISSION isEqualToString:errCode]) {
+                [UIHelper showInfo:@"You don't have permission to retrieve accounts." withStatus:kWarning];
+            } else {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of approvers! %@", [err localizedDescription]] withStatus:kFailure];
+                Error(@"Failed to retrieve list of approvers! %@", [err localizedDescription]);
+            }
         }
     }];
 }
@@ -189,11 +198,11 @@ static id <ApproverListDelegate> ListDelegate = nil;
         } else if (response_status == RESPONSE_TIMEOUT) {
             [ListDelegate failedToGetApprovers];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            Debug(@"Time out when retrieving approvers");
+            Error(@"Time out when retrieving approvers");
         } else {
             [ListDelegate failedToGetApprovers];
             [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve approvers! %@", [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to retrieve approvers! %@", [err localizedDescription]);
+            Error(@"Failed to retrieve approvers! %@", [err localizedDescription]);
         }
     }];
 }
@@ -225,20 +234,23 @@ static id <ApproverListDelegate> ListDelegate = nil;
             [Approver retrieveListForObject:objId];
         } else if (response_status == RESPONSE_TIMEOUT) {
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            Debug(@"Time out when saving approvers");
+            Error(@"Time out when saving approvers");
         } else {
             [UIHelper showInfo:[NSString stringWithFormat:@"Failed to save approvers! %@", [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to save approvers! %@", [err localizedDescription]);
+            Error(@"Failed to save approvers! %@", [err localizedDescription]);
         }
     }];
 }
 
 - (void)createWithFirstName:(NSString *)fname lastName:(NSString *)lname andEmail:(NSString *)email {
-    NSString *action = [NSString stringWithFormat:@"%@?fname=%@&lname=%@&email=%@", APPROVER_CREATE_API, fname, lname, email];
+//    NSString *action = [NSString stringWithFormat:@"%@?fname=%@&lname=%@&email=%@", APPROVER_CREATE_API, fname, lname, email];
+    NSString *action = APPROVER_CREATE_API;
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:@"fname", fname, @"lname", lname, @"email", email, nil];
     
     __weak Approver *weakSelf = self;
     
-    [APIHandler asyncCallWithAction:action Info:nil AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+//    [APIHandler asyncCallWithAction:action Info:nil AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+    [APIHandler asyncGetCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
         NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
@@ -252,7 +264,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
         } else {
             [UIHelper showInfo:[NSString stringWithFormat:@"Failed to create approver: %@", [err localizedDescription]] withStatus:kFailure];
             [weakSelf.createDelegate failedToAddApprover];
-            Debug(@"Failed to create approver: %@", [err localizedDescription]);
+            Error(@"Failed to create approver: %@", [err localizedDescription]);
         }
     }];
 }

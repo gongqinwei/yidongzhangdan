@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="fDp-RE-MoE">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="fDp-RE-MoE">
     <dependencies>
-        <deployment defaultVersion="1552" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <scenes>
-        <!--View Controller - Payables (unfinished)-->
+        <!--Payables (unfinished)-->
         <scene sceneID="pil-EU-SrW">
             <objects>
                 <viewController id="M27-b0-PNU" customClass="APViewController" sceneMemberID="viewController">
@@ -57,7 +56,7 @@
                                 <color key="tintColor" red="0.1960784314" green="0.30980392159999998" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="separatorColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="gray" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="RootMenuItem" textLabel="wmK-PN-RHH" style="IBUITableViewCellStyleDefault" id="dCX-Gn-gq3">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="gray" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="RootMenuItem" textLabel="wmK-PN-RHH" detailTextLabel="JE1-SD-nKn" style="IBUITableViewCellStyleSubtitle" id="dCX-Gn-gq3">
                                         <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dCX-Gn-gq3" id="FKW-Mx-dCq">
@@ -65,11 +64,18 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="wmK-PN-RHH">
-                                                    <rect key="frame" x="15" y="0.0" width="290" height="43"/>
+                                                    <rect key="frame" x="15" y="3" width="34" height="22"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="JE1-SD-nKn">
+                                                    <rect key="frame" x="15" y="25" width="43" height="15"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -113,7 +119,7 @@
             </objects>
             <point key="canvasLocation" x="-3527" y="-1284"/>
         </scene>
-        <!--Over View Controller - Receivables-->
+        <!--Receivables-->
         <scene sceneID="hCe-uk-LhR">
             <objects>
                 <tableViewController id="gDA-GN-8J4" customClass="AROverViewController" sceneMemberID="viewController">
@@ -436,7 +442,7 @@
             </objects>
             <point key="canvasLocation" x="-2513" y="4317"/>
         </scene>
-        <!--Invoices Table View Controller - Invoices-->
+        <!--Invoices-->
         <scene sceneID="IiF-m0-ebb">
             <objects>
                 <tableViewController id="Auy-Fb-tfc" customClass="InvoicesTableViewController" sceneMemberID="viewController">
@@ -582,7 +588,7 @@
             </objects>
             <point key="canvasLocation" x="-397" y="3869"/>
         </scene>
-        <!--Edit Invoice View Controller - Invoice-->
+        <!--Invoice-->
         <scene sceneID="izX-i6-Jr4">
             <objects>
                 <tableViewController storyboardIdentifier="InvoiceDetails" id="W2n-Tn-iyx" customClass="EditInvoiceViewController" sceneMemberID="viewController">
@@ -668,7 +674,7 @@
             </objects>
             <point key="canvasLocation" x="-1442" y="4317"/>
         </scene>
-        <!--Vendors Table View Controller - Vendors-->
+        <!--Vendors-->
         <scene sceneID="2FU-ac-bBd">
             <objects>
                 <tableViewController id="cTU-5g-PB7" customClass="VendorsTableViewController" sceneMemberID="viewController">
@@ -678,7 +684,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="VendorItem" textLabel="NNU-Nf-XQV" detailTextLabel="rxX-yR-R8K" style="IBUITableViewCellStyleSubtitle" id="dhn-uJ-Iua">
-                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dhn-uJ-Iua" id="jjW-eo-yBX">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -719,7 +725,7 @@
             </objects>
             <point key="canvasLocation" x="-1977" y="1049"/>
         </scene>
-        <!--Edit Vendor View Controller - Vendor-->
+        <!--Vendor-->
         <scene sceneID="GFp-tt-Yj3">
             <objects>
                 <tableViewController id="Crd-D4-0GL" customClass="EditVendorViewController" sceneMemberID="viewController">
@@ -729,7 +735,7 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="VendorInfoItem" textLabel="ABL-yU-CEB" detailTextLabel="gAh-Jg-9B6" style="IBUITableViewCellStyleValue2" id="FZh-Tl-X7S">
-                                <rect key="frame" x="0.0" y="119" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="55" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FZh-Tl-X7S" id="C4J-ty-kD9">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -753,7 +759,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="VendorAddress" textLabel="TIg-58-ovo" detailTextLabel="e1k-Tb-RLn" style="IBUITableViewCellStyleValue2" id="sdj-K3-01k">
-                                <rect key="frame" x="0.0" y="163" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="99" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="sdj-K3-01k" id="a9i-aW-v5W">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -777,7 +783,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="VendorAttachments" id="S7M-JZ-A4f">
-                                <rect key="frame" x="0.0" y="207" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="143" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="S7M-JZ-A4f" id="Lzd-tX-G0e">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -846,7 +852,7 @@
             </objects>
             <point key="canvasLocation" x="-4042" y="2811"/>
         </scene>
-        <!--Inbox View Controller - Inbox-->
+        <!--Inbox-->
         <scene sceneID="EUF-sU-6Jr">
             <objects>
                 <collectionViewController autoresizesArchivedViewToFullSize="NO" id="aQd-ff-dma" customClass="InboxViewController" sceneMemberID="viewController">
@@ -996,7 +1002,7 @@
             </objects>
             <point key="canvasLocation" x="1108" y="2825"/>
         </scene>
-        <!--Customers Table View Controller - Customers-->
+        <!--Customers-->
         <scene sceneID="9ui-aC-wlV">
             <objects>
                 <tableViewController id="3zY-p5-ksg" customClass="CustomersTableViewController" sceneMemberID="viewController">
@@ -1047,7 +1053,7 @@
             </objects>
             <point key="canvasLocation" x="-1993" y="5084"/>
         </scene>
-        <!--Items Table View Controller - Items-->
+        <!--Items-->
         <scene sceneID="SgH-qK-E23">
             <objects>
                 <tableViewController id="ejF-hn-A7T" customClass="ItemsTableViewController" sceneMemberID="viewController">
@@ -1097,7 +1103,7 @@
             </objects>
             <point key="canvasLocation" x="129" y="5084"/>
         </scene>
-        <!--Edit Item View Controller - Item Details-->
+        <!--Item Details-->
         <scene sceneID="ENW-yd-bLw">
             <objects>
                 <tableViewController storyboardIdentifier="ItemDetails" id="Huj-sl-FUL" customClass="EditItemViewController" sceneMemberID="viewController">
@@ -1153,7 +1159,7 @@
             </objects>
             <point key="canvasLocation" x="609" y="5084"/>
         </scene>
-        <!--User Profile View Controller - Profile (unfinished)-->
+        <!--Profile (unfinished)-->
         <scene sceneID="80Y-0i-q8F">
             <objects>
                 <viewController id="Eat-hH-ziO" customClass="UserProfileViewController" sceneMemberID="viewController">
@@ -1172,7 +1178,7 @@
             </objects>
             <point key="canvasLocation" x="159" y="-1200"/>
         </scene>
-        <!--Select Org View Controller - Select Company-->
+        <!--Select Company-->
         <scene sceneID="4lA-et-BqB">
             <objects>
                 <tableViewController id="Rf8-hn-Kkj" customClass="SelectOrgViewController" sceneMemberID="viewController">
@@ -1278,7 +1284,7 @@
             </objects>
             <point key="canvasLocation" x="-3055" y="-578"/>
         </scene>
-        <!--Term Of Service View Controller - Term of Service-->
+        <!--Term of Service-->
         <scene sceneID="KIs-lM-88w">
             <objects>
                 <viewController id="lt9-Ky-mg5" customClass="TermOfServiceViewController" sceneMemberID="viewController">
@@ -1312,7 +1318,7 @@
             </objects>
             <point key="canvasLocation" x="-3055" y="47"/>
         </scene>
-        <!--Approval CommentiOS6 View Controller - Note-->
+        <!--Note-->
         <scene sceneID="pvR-Uw-vmt">
             <objects>
                 <viewController id="wHY-aY-Jhp" customClass="ApprovalCommentiOS6ViewController" sceneMemberID="viewController">
@@ -1326,7 +1332,6 @@
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f7c-zW-n05">
                                 <rect key="frame" x="20" y="30" width="280" height="240"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -1438,12 +1443,10 @@
                             </button>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5o7-YU-Ymd">
                                 <rect key="frame" x="118" y="288" width="51" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="onTintColor" red="0.860550861" green="0.55843494319999998" blue="0.123207013" alpha="1" colorSpace="calibratedRGB"/>
                             </switch>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Stay logged in" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HpV-As-Szd">
                                 <rect key="frame" x="115" y="265" width="90" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="textColor" red="0.78916214920000005" green="0.51571736290000003" blue="0.16798126029999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -1486,7 +1489,7 @@
             </objects>
             <point key="canvasLocation" x="-2519" y="-955"/>
         </scene>
-        <!--Bills Table View Controller - Bills-->
+        <!--Bills-->
         <scene sceneID="SFB-nA-DNU">
             <objects>
                 <tableViewController id="k1G-B2-MSF" customClass="BillsTableViewController" sceneMemberID="viewController">
@@ -1519,7 +1522,7 @@
             </objects>
             <point key="canvasLocation" x="-3055" y="1757"/>
         </scene>
-        <!--Edit Bill View Controller - Bill-->
+        <!--Bill-->
         <scene sceneID="KOg-QU-rMP">
             <objects>
                 <tableViewController storyboardIdentifier="BillDetails" id="WEK-Fn-naN" customClass="EditBillViewController" sceneMemberID="viewController">
@@ -1529,7 +1532,7 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BillInfo" textLabel="SXJ-ri-qAS" detailTextLabel="ifK-uP-2Ox" style="IBUITableViewCellStyleValue2" id="vlX-cw-Rqg">
-                                <rect key="frame" x="0.0" y="119" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="55" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vlX-cw-Rqg" id="uUA-yc-8LW">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -1553,7 +1556,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BillLineItem" editingAccessoryType="disclosureIndicator" textLabel="aPH-Qw-Ujc" detailTextLabel="Zcl-nc-nUA" style="IBUITableViewCellStyleValue1" id="riO-yb-b3L">
-                                <rect key="frame" x="0.0" y="163" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="99" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="riO-yb-b3L" id="10B-XL-9uK">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -1577,7 +1580,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BillApprover" id="i0V-4m-gCJ">
-                                <rect key="frame" x="0.0" y="207" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="143" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="i0V-4m-gCJ" id="CXS-7h-5Fp">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -1585,7 +1588,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BillDoc" id="V08-ls-2hV">
-                                <rect key="frame" x="0.0" y="251" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="187" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="V08-ls-2hV" id="Mez-YG-r5w">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -1613,7 +1616,7 @@
             </objects>
             <point key="canvasLocation" x="-2513" y="1757"/>
         </scene>
-        <!--Create Bill View Controller - New Bill-->
+        <!--New Bill-->
         <scene sceneID="7YK-bK-BfQ">
             <objects>
                 <viewController id="xgg-fy-UQX" customClass="CreateBillViewController" sceneMemberID="viewController">
@@ -1677,7 +1680,7 @@
             </objects>
             <point key="canvasLocation" x="-4042" y="2145"/>
         </scene>
-        <!--Scanner View Controller - Scan-->
+        <!--Scan-->
         <scene sceneID="Akx-QF-4HO">
             <objects>
                 <viewController id="X9Q-mH-q7t" customClass="ScannerViewController" sceneMemberID="viewController">
@@ -1766,7 +1769,7 @@
             </objects>
             <point key="canvasLocation" x="-3055" y="2811"/>
         </scene>
-        <!--Selector View Controller - Associate with-->
+        <!--Associate with-->
         <scene sceneID="z8C-Ut-qmU">
             <objects>
                 <tableViewController id="ttA-Fa-UXM" customClass="BOSelectorViewController" sceneMemberID="viewController">
@@ -1942,7 +1945,7 @@
             </objects>
             <point key="canvasLocation" x="-1984" y="2811"/>
         </scene>
-        <!--Navigation Controller - Profile-->
+        <!--Profile-->
         <scene sceneID="SAk-R7-7uX">
             <objects>
                 <navigationController storyboardIdentifier="Profile" useStoryboardIdentifierAsRestorationIdentifier="YES" id="p7c-Nc-Aqm" sceneMemberID="viewController">
@@ -1962,7 +1965,7 @@
             </objects>
             <point key="canvasLocation" x="-323" y="-1200"/>
         </scene>
-        <!--Navigation Controller - Receivables-->
+        <!--Receivables-->
         <scene sceneID="etu-dQ-ihS">
             <objects>
                 <navigationController storyboardIdentifier="AROverview" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Zrs-fc-v2k" sceneMemberID="viewController">
@@ -2014,14 +2017,12 @@
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ckf-RB-J8Y">
                                 <rect key="frame" x="20" y="66" width="280" height="240"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xvw-c2-9is">
                                 <rect key="frame" x="0.0" y="18" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="Note" id="6Lp-Yo-qqm">
                                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="gd1-Zx-DCW">
@@ -2125,7 +2126,7 @@
             </objects>
             <point key="canvasLocation" x="-1448" y="47"/>
         </scene>
-        <!--ImportAB Person View Controller - Details-->
+        <!--Details-->
         <scene sceneID="H8l-Zr-EMO">
             <objects>
                 <tableViewController id="m03-th-Rmk" customClass="ImportABPersonViewController" sceneMemberID="viewController">
@@ -2135,7 +2136,7 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" accessoryType="checkmark" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ImportABPersonItem" textLabel="ny3-nz-5oc" detailTextLabel="xk0-jw-aa2" style="IBUITableViewCellStyleValue1" id="V1F-4l-Hot">
-                                <rect key="frame" x="0.0" y="119" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="55" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="V1F-4l-Hot" id="aMc-SH-Pam">
                                     <rect key="frame" x="0.0" y="0.0" width="281" height="43"/>
@@ -2170,7 +2171,7 @@
             </objects>
             <point key="canvasLocation" x="-4750" y="2811"/>
         </scene>
-        <!--Pay Bill View Controller - Pay Bill-->
+        <!--Pay Bill-->
         <scene sceneID="lgv-7Q-nMF">
             <objects>
                 <tableViewController id="IyU-sG-dly" customClass="PayBillViewController" sceneMemberID="viewController">
@@ -2446,7 +2447,7 @@
             </objects>
             <point key="canvasLocation" x="-873" y="1757"/>
         </scene>
-        <!--Approvers Table View Controller - Select Approvers-->
+        <!--Select Approvers-->
         <scene sceneID="oL9-fm-Xoq">
             <objects>
                 <tableViewController id="TWe-gc-5HJ" customClass="ApproversTableViewController" sceneMemberID="viewController">
@@ -2456,7 +2457,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" accessoryType="checkmark" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ApproverItem" id="vRm-t5-Ve2">
-                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vRm-t5-Ve2" id="yjQ-M7-edx">
                                     <rect key="frame" x="0.0" y="0.0" width="281" height="43"/>
@@ -2478,7 +2479,7 @@
             </objects>
             <point key="canvasLocation" x="-347" y="1049"/>
         </scene>
-        <!--Edit Approver View Controller - New Approver-->
+        <!--New Approver-->
         <scene sceneID="1CA-Ps-XE9">
             <objects>
                 <tableViewController id="xyN-Wc-9d9" customClass="EditApproverViewController" sceneMemberID="viewController">
@@ -2490,7 +2491,7 @@
                             <tableViewSection id="vtq-RM-5be">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ApproverFirstName" id="ECA-ni-Oh0">
-                                        <rect key="frame" x="0.0" y="64" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ECA-ni-Oh0" id="JiK-Yo-NU5">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -2498,13 +2499,11 @@
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="VD1-hv-uEL">
                                                     <rect key="frame" x="105" y="7" width="195" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" enablesReturnKeyAutomatically="YES"/>
                                                 </textField>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="First Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9kc-aR-Dcc">
                                                     <rect key="frame" x="15" y="11" width="84" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -2513,7 +2512,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ApproverLastName" id="FKw-Yw-MsC">
-                                        <rect key="frame" x="0.0" y="108" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="44" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FKw-Yw-MsC" id="fIV-20-Rk2">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -2521,13 +2520,11 @@
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Last Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Jz-LI-0nA">
                                                     <rect key="frame" x="15" y="11" width="82" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="hGE-V9-Ytm">
                                                     <rect key="frame" x="105" y="7" width="195" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" enablesReturnKeyAutomatically="YES"/>
                                                 </textField>
@@ -2535,7 +2532,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Email" id="vqT-Ft-euO">
-                                        <rect key="frame" x="0.0" y="152" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="88" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vqT-Ft-euO" id="dBa-e2-DdR">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -2543,13 +2540,11 @@
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="Xjd-3Y-3bK">
                                                     <rect key="frame" x="105" y="7" width="195" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress" enablesReturnKeyAutomatically="YES"/>
                                                 </textField>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Email" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KQC-gG-sWo">
                                                     <rect key="frame" x="15" y="11" width="54" height="18"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -2575,7 +2570,7 @@
             </objects>
             <point key="canvasLocation" x="207" y="1049"/>
         </scene>
-        <!--Import Address Book View Controller - Address Book-->
+        <!--Address Book-->
         <scene sceneID="Oic-6a-qR9">
             <objects>
                 <tableViewController id="Qrk-xa-och" customClass="ImportAddressBookViewController" sceneMemberID="viewController">
@@ -2585,7 +2580,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="gray" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ImportAddressBookItem" textLabel="wSz-3X-gRF" detailTextLabel="reU-tX-X7A" style="IBUITableViewCellStyleSubtitle" id="zKJ-Uf-hTd">
-                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zKJ-Uf-hTd" id="BzN-2p-Ieh">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -2623,7 +2618,7 @@
             </objects>
             <point key="canvasLocation" x="-5255" y="2811"/>
         </scene>
-        <!--Navigation Controller - Customers-->
+        <!--Customers-->
         <scene sceneID="INZ-lA-ULg">
             <objects>
                 <navigationController storyboardIdentifier="Customers" useStoryboardIdentifierAsRestorationIdentifier="YES" id="KPh-vY-HGF" sceneMemberID="viewController">
@@ -2824,7 +2819,7 @@
             </objects>
             <point key="canvasLocation" x="-1442" y="5822"/>
         </scene>
-        <!--Navigation Controller - Items-->
+        <!--Items-->
         <scene sceneID="jS2-je-OoM">
             <objects>
                 <navigationController storyboardIdentifier="Items" useStoryboardIdentifierAsRestorationIdentifier="YES" id="25h-H3-1Iv" sceneMemberID="viewController">
@@ -2844,7 +2839,7 @@
             </objects>
             <point key="canvasLocation" x="-347" y="5084"/>
         </scene>
-        <!--Navigation Controller - Scan-->
+        <!--Scan-->
         <scene sceneID="dpr-VK-pCS">
             <objects>
                 <navigationController storyboardIdentifier="Scanner" useStoryboardIdentifierAsRestorationIdentifier="YES" id="q04-jf-ahJ" sceneMemberID="viewController">
@@ -2864,7 +2859,7 @@
             </objects>
             <point key="canvasLocation" x="-3527" y="2811"/>
         </scene>
-        <!--Navigation Controller - Payables-->
+        <!--Payables-->
         <scene sceneID="ii7-d0-2gf">
             <objects>
                 <navigationController storyboardIdentifier="APOverview" useStoryboardIdentifierAsRestorationIdentifier="YES" id="uqQ-Ra-DvA" sceneMemberID="viewController">
@@ -2884,7 +2879,7 @@
             </objects>
             <point key="canvasLocation" x="-323" y="-537"/>
         </scene>
-        <!--Approve Bills Table View Controller - Approve-->
+        <!--Approve-->
         <scene sceneID="POm-Qc-4V7">
             <objects>
                 <tableViewController id="qw1-Jp-bB7" customClass="ApproveBillsTableViewController" sceneMemberID="viewController">
@@ -3075,32 +3070,32 @@
         <image name="VendorsIcon.png" width="22" height="24"/>
         <image name="bill.png" width="16" height="16"/>
     </resources>
-    <color key="tintColor" red="0.21649966245968943" green="0.34466001652381129" blue="0.58520009566326525" alpha="1" colorSpace="calibratedRGB"/>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="75L-RH-EbK"/>
-        <segue reference="e1N-Gr-piF"/>
-        <segue reference="CeX-f9-mSc"/>
-        <segue reference="znb-5y-98g"/>
-        <segue reference="rn3-5G-Kbh"/>
-        <segue reference="3ag-eg-oXf"/>
-        <segue reference="FTU-IK-7vF"/>
-        <segue reference="jJm-5t-hI9"/>
-        <segue reference="fR5-hZ-eeX"/>
-        <segue reference="fqJ-Rf-CsZ"/>
         <segue reference="qdh-4f-Obl"/>
-        <segue reference="sOH-cq-qZh"/>
-        <segue reference="Vyp-zG-ZzN"/>
-        <segue reference="dDa-B4-rpb"/>
+        <segue reference="CeX-f9-mSc"/>
+        <segue reference="ifQ-ST-XVY"/>
+        <segue reference="iJL-HJ-34E"/>
         <segue reference="f4h-vQ-zhx"/>
+        <segue reference="WRK-Bd-AdY"/>
+        <segue reference="FTU-IK-7vF"/>
+        <segue reference="GuY-KC-qoW"/>
+        <segue reference="3ag-eg-oXf"/>
+        <segue reference="sOH-cq-qZh"/>
         <segue reference="xP7-Be-EUo"/>
         <segue reference="crQ-7s-jkT"/>
-        <segue reference="2iZ-iS-Zfa"/>
+        <segue reference="jJm-5t-hI9"/>
+        <segue reference="fqJ-Rf-CsZ"/>
+        <segue reference="fR5-hZ-eeX"/>
+        <segue reference="e1N-Gr-piF"/>
+        <segue reference="75L-RH-EbK"/>
         <segue reference="ysq-5e-jjh"/>
+        <segue reference="2iZ-iS-Zfa"/>
         <segue reference="5Ki-uI-G54"/>
     </inferredMetricsTieBreakers>
+    <color key="tintColor" red="0.21649966245968943" green="0.34466001652381129" blue="0.58520009566326525" alpha="1" colorSpace="calibratedRGB"/>
 </document>

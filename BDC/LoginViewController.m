@@ -21,7 +21,7 @@
 #define FAIL_LIST_ORGS              @"Failed to retrieve Org list!"
 
 
-@interface LoginViewController () <OrgDelegate>
+@interface LoginViewController () <OrgDelegate, ProfileDelegate>
 
 @property (nonatomic, strong) Organization *firstOrg;
 
@@ -127,16 +127,19 @@
     [super touchesBegan:touches withEvent:event];
 }
 
+- (void)transitToLogin {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.indicator stopAnimating];
+        self.warning.hidden = YES;
+        
+        [self performSegueWithIdentifier:@"Login" sender:self];
+    });
+}
+
 #pragma mark - Organization delegate
 
 - (void)didGetOrgFeatures {
-    [Organization selectOrg:self.firstOrg];
-    
-    [self.indicator stopAnimating];
-    self.warning.hidden = YES;
-    
-    [self performSegueWithIdentifier:@"Login" sender:self];
-    
+    [self transitToLogin];
 }
 
 - (void)failedToGetOrgFeatures {
@@ -169,6 +172,8 @@
                 // set cookie for session id
                 NSString *sessionId = [responseData objectForKey:SESSION_ID_KEY];
                 [Util setSession:sessionId];
+                NSString *userId = [responseData objectForKey:USER_ID];
+                [Util setUserId:userId];
                                 
                 if ([orgList count] > 1) {
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -177,11 +182,18 @@
                         [weakSelf performSegueWithIdentifier:@"SelectOrg" sender:weakSelf];
                     });
                 } else {
+                    [Organization selectOrg:self.firstOrg];
+                    
+                    [User GetLoginUser].profileDelegate = self;
+                    
+                    [User GetUserInfo:userId];
+                    
+//                    [User RetrieveProfiles];      // only admin can list profiles
+                    [self.firstOrg getOrgFeatures];
+                    
                     dispatch_async(dispatch_get_main_queue(), ^{
 //                        [weakSelf.indicator stopAnimating];
                         weakSelf.warning.hidden = YES;
-                        
-                        [self.firstOrg getOrgFeatures]; //TODO: profile logic
                     });
                 }
             } else {
@@ -210,6 +222,11 @@
             weakSelf.warning.hidden = NO;
         });
     }
+}
+
+#pragma mark - Profile delegate method
+- (void)didFinishProfileCheckList {
+    [self transitToLogin];
 }
 
 

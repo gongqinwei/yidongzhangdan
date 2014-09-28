@@ -93,7 +93,7 @@ static id <ContactListDelegate> ListDelegate = nil;
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
-        NSArray *jsonContacts = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         [UIAppDelegate decrNetworkActivities];
         
@@ -106,6 +106,8 @@ static id <ContactListDelegate> ListDelegate = nil;
                 subContacts = [contacts objectForKey:customerId];
                 [subContacts removeAllObjects];
             }
+            
+            NSArray *jsonContacts = (NSArray *)json;
             
             for (id item in jsonContacts) {
                 NSDictionary *dict = (NSDictionary*)item;
@@ -122,8 +124,14 @@ static id <ContactListDelegate> ListDelegate = nil;
             Debug(@"Time out when retrieving list of contacts");
         } else {
             [ListDelegate failedToGetContacts];
-            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve contacts for %@! %@", customerId, [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to retrieve contacts for %@! %@", customerId, [err localizedDescription]);
+            
+            NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
+            if ([INVALID_PERMISSION isEqualToString:errCode]) {
+                [UIHelper showInfo:@"You don't have permission to retrieve accounts." withStatus:kWarning];
+            } else {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve contacts for %@! %@", customerId, [err localizedDescription]] withStatus:kFailure];
+                Error(@"Failed to retrieve contacts for %@! %@", customerId, [err localizedDescription]);
+            }
         }
     }];
 }

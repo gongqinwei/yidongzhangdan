@@ -11,7 +11,7 @@
 
 #import "Labels.h"
 
-#define LITE_VERSION
+//#define LITE_VERSION
 #define FULL_VERSION_ID     696521463
 
 //#define LOCAL
@@ -21,10 +21,10 @@
 
 
 #ifdef LOCAL
-#define APP_KEY_VALUE       @"01ASGHUMYGIIBVXKYAU0"
+#define APP_KEY_VALUE       @"01MDUVHZTMMHTDOVCCV0"
 #define ERR_DOMAIN          @"Local"
-//#define DOMAIN_URL          @"http://10.1.9.89"
-#define DOMAIN_URL          @"http://192.168.1.12"
+#define DOMAIN_URL          @"http://10.0.0.14"
+//#define DOMAIN_URL          @"http://192.168.1.12"
 #define APP_KEY             @"devKey"
 #define DEBUG_MODE
 #endif
@@ -72,6 +72,8 @@
 // Color
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
+#define HTTP_GET            @"GET"
+#define HTTP_POST           @"POST"
 
 //API Params
 #define ORG_ID              @"orgId"
@@ -137,10 +139,11 @@
 #define BANK_ACCOUNT_API    @"BankAccount.json"
 #define APPROVER_LIST_API   @"ui/ApproverList.json"
 #define APPROVERS_GET_API   @"GetApprovers.json"
-#define LIST_APPROVER_API   @"ListApprovers.json"
+#define LIST_APPROVER_API   @"ListApprovers.json"       // obsolete
 #define APPROVERS_SET_API   @"SetApprovers.json"
 #define APPROVER_CREATE_API @"ui/CreateBillApprover.json"
-#define LIST_TO_APPROVE_API @"ListToApprove.json"
+#define LIST_TO_APPROVE_API @"ListToApprove.json"       // to be obsolete
+#define LIST_APPROVALS_API  @"ListUserApprovals.json"
 #define APPROVE_API         @"Approve.json"
 #define DENY_API            @"Deny.json"
 #define SKIP_API            @"Skip.json"
@@ -179,6 +182,7 @@
 #define RESPONSE_TIMEOUT    2
 #define ORG_LOCKED_OUT      @"BDC_1107"
 #define INVALID_SESSION     @"BDC_1109"
+#define INVALID_PERMISSION  @"BDC_1145"
 #define RESPONSE_DATA_KEY   @"response_data"
 #define RESPONSE_STATUS_KEY @"response_status"
 #define RESPONSE_ERROR_CODE @"error_code"
@@ -193,7 +197,7 @@
 
 // User
 #define USER_EMAIL          @"UserEmail"
-#define USER_ID             @"UserId"
+#define USER_ID             @"usersId"
 #define USER_PROFILE_ID     @"UserProfileId"
 #define USER_FNAME          @"UserFname"
 #define USER_LNAME          @"UserLname"

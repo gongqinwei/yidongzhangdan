@@ -234,45 +234,15 @@
         
         if (status == RESPONSE_SUCCESS) {
             self.sessionId = [responseData objectForKey:SESSION_ID_KEY];
+            NSString *userId = [responseData objectForKey:USER_ID];
+            [Util setUserId:userId];
+            [User GetUserInfo:userId];
             
             [self.selectedOrg getOrgFeatures];
             
-//            [APIHandler asyncCallWithAction:ORG_FEATURE_API Info:nil AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
-//                NSInteger response_status;
-//                NSDictionary *orgFeatures = [APIHandler getResponse:response data:data error:&err status:&response_status];
-//                                
-//                if(response_status == RESPONSE_SUCCESS) {
-//                    selectedOrg.showAR = [[orgFeatures objectForKey:SHOW_AR] boolValue];
-//                    selectedOrg.showAP = [[orgFeatures objectForKey:SHOW_AP] boolValue];
-//                    selectedOrg.enableAR = [[orgFeatures objectForKey:ENABLE_AR] boolValue];
-//                    selectedOrg.enableAP = [[orgFeatures objectForKey:ENABLE_AP] boolValue];
-//                    
-//                    if (selectedOrg.showAP || selectedOrg.showAR) {
-//                        // persist
-//                        [Organization selectOrg:selectedOrg];
-//                        [Util setSession:sessionId];
-//                        
-//                        // redirect
-//                        dispatch_async(dispatch_get_main_queue(), ^{
-//                            weakSelf.searchDisplayController.active = NO;
-//                            [weakSelf performSegueWithIdentifier:@"GoToOrg" sender:weakSelf];
-//                        });
-//                    }
-//                } else if (response_status == RESPONSE_TIMEOUT) {
-//                    [UIHelper showInfo:SysTimeOut withStatus:kError];
-//                    Debug(SysTimeOut);
-//                } else {                    
-//                    if ([[orgFeatures objectForKey:RESPONSE_ERROR_CODE] isEqualToString:ORG_LOCKED_OUT]) {
-//                        [UIHelper showInfo:@"This account is past due and is locked out by Bill.com!" withStatus:kWarning];
-//                    } else {
-//                        [UIHelper showInfo:[err localizedDescription] withStatus:kWarning];
-//                        Debug(@"%@", [err localizedDescription]);
-//                    }
-//                }
-//            }];
         } else {
             [UIHelper showInfo:[NSString stringWithFormat:@"Cannot switch to %@! %@", self.selectedOrg.name, [err localizedDescription]] withStatus:kError];
-            Debug(@"%@", [err localizedDescription]);
+            Error(@"%@", [err localizedDescription]);
         }
     }];
 

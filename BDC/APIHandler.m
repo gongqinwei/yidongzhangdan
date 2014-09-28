@@ -17,6 +17,69 @@ static Handler sessionValidatingHandler = nil;
 
 @implementation APIHandler
 
++ (void) asyncGetCallWithAction:(NSString*)action Info:(NSDictionary*)info AndHandler:(Handler)handler {
+    [UIAppDelegate incrNetworkActivities];
+    
+    NSMutableString *urlStr = [NSMutableString string];
+    [urlStr appendFormat:@"%@/%@/%@?%@=%@", DOMAIN_URL, API_BASE, action, SESSION_ID_KEY, [Util getSession]];
+    
+    // info's dictionary entry stores url param as value=>key to handle multiple param with same key
+    for(NSString *value in info) {
+        if (value) {
+            NSString *key = [info objectForKey:value];
+            [urlStr appendFormat:@"&%@=%@", key, value];
+        }
+    }
+    
+    NSURL *url = [NSURL URLWithString:urlStr];
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:API_TIMEOUT];
+    Debug(@"url: %@", urlStr);
+    
+    [req setHTTPMethod:HTTP_GET];
+    
+    sessionValidatingHandler = ^(NSURLResponse * response, NSData * data, NSError * err) {
+        [UIAppDelegate decrNetworkActivities];
+        
+        NSInteger response_status;
+        NSDictionary *json = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        
+        if(response_status == RESPONSE_FALURE) {
+            NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
+            if ([INVALID_SESSION isEqualToString:errCode]) {
+                NSMutableDictionary *signInInfo = [NSMutableDictionary dictionary];
+                [signInInfo setObject:ORG_ID forKey:[Util getSelectedOrgId]];
+                [signInInfo setObject:USERNAME forKey:[Util getUsername]];
+                [signInInfo setObject:PASSWORD forKey:[Util getPassword]];
+                
+                [APIHandler asyncCallWithAction:LOGIN_API Info:signInInfo AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+                    NSInteger status;
+                    NSDictionary *responseData = [APIHandler getResponse:response data:data error:&err status:&status];
+                    
+                    if (status == RESPONSE_SUCCESS) {
+                        // set cookie for session id
+                        NSString *sessionId = [responseData objectForKey:SESSION_ID_KEY];
+                        [Util setSession:sessionId];
+                        NSString *usersId = [responseData objectForKey:USER_ID];
+                        [Util setUserId:usersId];
+                        
+                        [APIHandler asyncCallWithAction:action Info:info AndHandler:handler];
+                    } else {
+//                        [UIHelper showInfo:@"Session timed out! Please sign in again." withStatus:kInfo];
+                        [[RootMenuViewController sharedInstance] performSegueWithIdentifier:MENU_LOGOUT sender:self];
+                    }
+                }];
+                
+                return;
+            }
+        }
+        
+        handler(response, data, err);
+    };
+    
+    [NSURLConnection sendAsynchronousRequest:req queue:[[NSOperationQueue alloc] init] completionHandler:sessionValidatingHandler];
+}
+
+
 + (void) asyncCallWithAction:(NSString*)action Info:(NSDictionary*)info AndHandler:(Handler)handler {
     [UIAppDelegate incrNetworkActivities];
     
@@ -25,7 +88,7 @@ static Handler sessionValidatingHandler = nil;
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:API_TIMEOUT];
     Debug(@"url: %@", urlStr);
     
-    [req setHTTPMethod:@"POST"];
+    [req setHTTPMethod:HTTP_POST];
     
     NSMutableString *params = [NSMutableString string];
     [params appendFormat:@"%@=%@", APP_KEY, APP_KEY_VALUE];
@@ -66,10 +129,12 @@ static Handler sessionValidatingHandler = nil;
                         // set cookie for session id
                         NSString *sessionId = [responseData objectForKey:SESSION_ID_KEY];
                         [Util setSession:sessionId];
+                        NSString *usersId = [responseData objectForKey:USER_ID];
+                        [Util setUserId:usersId];
                         
                         [APIHandler asyncCallWithAction:action Info:info AndHandler:handler];
                     } else {
-                        [UIHelper showInfo:@"Session timed out! Please sign in again." withStatus:kInfo];
+//                        [UIHelper showInfo:@"Session timed out! Please sign in again." withStatus:kInfo];
                         [[RootMenuViewController sharedInstance] performSegueWithIdentifier:MENU_LOGOUT sender:self];
                     }
                 }];
@@ -97,6 +162,7 @@ static Handler sessionValidatingHandler = nil;
         } else if (data == nil) {
             *status = RESPONSE_FALURE;
         } else {
+            *status = RESPONSE_FALURE;
             NSError *error;
             NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
             result = [json objectForKey:RESPONSE_DATA_KEY];

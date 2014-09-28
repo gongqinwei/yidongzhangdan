@@ -114,7 +114,7 @@
                 
                 [[Organization getSelectedOrg] getOrgFeatures];
             } else {
-                Error(@"Splash View Controller: Failed to login! %d, %@", status, err);
+                Error(@"Splash View Controller: Failed to login! %ld, %@", (long)status, err);
                 [self backToLogin];
             }
         }];

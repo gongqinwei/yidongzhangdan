@@ -117,8 +117,8 @@ static NSString *const iOSAppStoreURLFormat = @"http://itunes.apple.com/app/id%d
     UINavigationController *initialController = (UINavigationController *)[mainstoryboard instantiateInitialViewController];
     SplashViewController *splashScreen = initialController.childViewControllers[0];
     
-    NSString *userName = [Util getUsername];
-    NSString *password = [Util getPassword];
+    NSString *userName = [Util URLEncode:[Util getUsername]];
+    NSString *password = [Util URLEncode:[Util getPassword]];
     
     if (!userName || userName.length == 0 || !password || password.length == 0) {
         self.window.rootViewController = initialController;
@@ -174,8 +174,10 @@ static NSString *const iOSAppStoreURLFormat = @"http://itunes.apple.com/app/id%d
                 }
             } else {
                 self.window.rootViewController = initialController;
-                [self.window makeKeyAndVisible];
-                [splashScreen performSegueWithIdentifier:@"PresentLogin" sender:nil];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.window makeKeyAndVisible];
+                    [splashScreen performSegueWithIdentifier:@"PresentLogin" sender:nil];
+                });
             }
         }];
     }

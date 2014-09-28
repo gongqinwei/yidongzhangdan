@@ -73,11 +73,60 @@
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
     NSMutableDictionary *cookieProperties = [NSMutableDictionary dictionary];
     [cookieProperties setObject:sessionId forKey:SESSION_ID_KEY];
-    [cookieProperties setObject:sessionId forKey:@"sessionId"];
     [cookieProperties setObject:[[NSDate date] dateByAddingTimeInterval:3600 * 24 * 365] forKey:NSHTTPCookieExpires];
     NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:sessionId forKey:SESSION_ID_KEY];
+    [defaults synchronize];
 }
+
++ (NSString *)getSession {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:SESSION_ID_KEY];
+}
+
++ (void)setUserId:(NSString *)userId {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:userId forKey:USER_ID];
+    [defaults synchronize];
+}
+
++ (NSString *)getUserId {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:USER_ID];
+}
+
++ (void)setUserProfile:(NSString *)profileId Fname:(NSString *)fname Lname:(NSString *)lname Email:(NSString *)email {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:profileId forKey:USER_PROFILE_ID];
+    [defaults setObject:fname forKey:USER_FNAME];
+    [defaults setObject:lname forKey:USER_LNAME];
+    [defaults setObject:email forKey:USER_EMAIL];
+    [defaults synchronize];
+}
+
++ (NSString *)getUserEmail {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:USER_EMAIL];
+}
+
++ (NSString *)getUserFirstName {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:USER_FNAME];
+}
+
++ (NSString *)getUserLastName {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:USER_LNAME];
+}
+
++ (NSString *)getUserProfileId {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:USER_PROFILE_ID];
+}
+
 
 + (BOOL)isSameDay:(NSDate *)date1 otherDay:(NSDate *)date2 {
     NSCalendar *calendar = [NSCalendar currentCalendar];

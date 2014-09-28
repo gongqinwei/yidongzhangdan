@@ -13,6 +13,7 @@
 #import "Util.h"
 #import "Customer.h"
 #import "Item.h"
+#import "User.h"
 #import "UIHelper.h"
 #import "BDCAppDelegate.h"
 #import "RateAppManager.h"
@@ -26,6 +27,8 @@
                                         \"max\" : 999, \
                                         \"filters\" : [{\"field\" : \"isActive\", \"op\" : \"=\", \"value\" : \"2\"}, {\"field\" : \"paymentStatus\", \"op\" : \"!=\", \"value\" : \"0\"}] \
                                       }"
+
+#define SEND_INVOICE_DATA           @"{ \"id\" : \"%@\", \"invoiceId\" : \"%@\", \"headers\" : { \"fromUserId\" : \"%@\" }, \"content\" : { }}"
 
 
 @implementation Invoice
@@ -80,8 +83,8 @@ static NSMutableArray *inactiveInvoices = nil;
 @synthesize detailsDelegate;
 
 - (void)sendInvoice {
-    NSString *action = [INVOICE_SEND_API stringByAppendingFormat:@"?%@=%@", ID, self.objectId]; // [NSString stringWithFormat:@"%@?Vendor=%@&type=bill", APPROVER_LIST_API, vendorId];
-    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
+    NSString *action = [INVOICE_SEND_API stringByAppendingFormat:@"?%@=%@", ID, self.objectId];
+    NSString *objStr = [NSString stringWithFormat:SEND_INVOICE_DATA, self.objectId, self.objectId, [Util getUserId]];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {        
@@ -194,10 +197,10 @@ static NSMutableArray *inactiveInvoices = nil;
             
             if ([theAction isEqualToString:UPDATE]) {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to update invoice %@: %@", self.objectId, [err localizedDescription]] withStatus:kFailure];
-                Debug(@"Failed to update invoice %@: %@", self.objectId, [err localizedDescription]);
+                Error(@"Failed to update invoice %@: %@", self.objectId, [err localizedDescription]);
             } else {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to create invoice: %@", [err localizedDescription]] withStatus:kFailure];
-                Debug(@"Failed to create invoice: %@", [err localizedDescription]);
+                Error(@"Failed to create invoice: %@", [err localizedDescription]);
             }
         }
     }];
@@ -231,7 +234,7 @@ static NSMutableArray *inactiveInvoices = nil;
             [ListDelegate didDeleteObject];
         } else {
             [UIHelper showInfo:[NSString stringWithFormat:@"Failed to %@ invoice %@: %@", act, self.objectId, [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to %@ invoice %@: %@", act, self.objectId, [err localizedDescription]);
+            Error(@"Failed to %@ invoice %@: %@", act, self.objectId, [err localizedDescription]);
         }
     }];
 }
@@ -307,11 +310,13 @@ static NSMutableArray *inactiveInvoices = nil;
 
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
-        NSArray *jsonInvs = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
 
         [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
+            [[User GetLoginUser] markProfileFor:kInvoicesChecked checked:YES];
+            
             NSMutableArray *invArr;
             if (isActive) {
                 if (invoices) {
@@ -331,6 +336,8 @@ static NSMutableArray *inactiveInvoices = nil;
                 invArr = inactiveInvoices;
             }
             
+            NSArray *jsonInvs = (NSArray *)json;
+            
             for (id item in jsonInvs) {
                 NSDictionary *dict = (NSDictionary*)item;
                 Invoice *inv = [[Invoice alloc] init];
@@ -346,11 +353,18 @@ static NSMutableArray *inactiveInvoices = nil;
         } else if (response_status == RESPONSE_TIMEOUT) {
             [ListDelegate failedToGetInvoices];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            Debug(@"Time out when retrieving list of invoice for %@!", isActive ? @"active" : @"inactive");
+            Error(@"Time out when retrieving list of invoice for %@!", isActive ? @"active" : @"inactive");
         } else {
             [ListDelegate failedToGetInvoices];
-            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of invoice for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to retrieve list of invoice for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
+            
+            NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
+            if ([INVALID_PERMISSION isEqualToString:errCode]) {
+                [[User GetLoginUser] markProfileFor:kInvoicesChecked checked:NO];
+                [UIHelper showInfo:@"You don't have permission to retrieve invoices." withStatus:kWarning];
+            } else {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of invoice for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]] withStatus:kFailure];
+                Error(@"Failed to retrieve list of invoice for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
+            }
         }
     }];
 }

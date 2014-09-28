@@ -12,6 +12,7 @@
 #import "Constants.h"
 #import "APIHandler.h"
 #import "Util.h"
+#import "User.h"
 #import "Uploader.h"
 #import "UIHelper.h"
 #import "BDCAppDelegate.h"
@@ -28,6 +29,7 @@
                                     }"
 
 #define LIST_TO_APPROVE_FILTER      @"{ \"type\" : \"Bill\" }"
+#define LIST_APPROVALS_FILTER       @"{ \"usersId\" :  \"%@\", \"entity\" : \"Bill\", \"approvalType\" : \"0\", \"marker\" : \"\", \"max\" : 999 }"
 
 #define APPROVAL_DATA               @"{ \"objectId\" : \"%@\", \"comment\" : \"%@\" , \"entity\" : \"Bill\" }"
 
@@ -344,12 +346,13 @@ static NSMutableSet *billsToApproveSet;
     
     [APIHandler asyncCallWithAction:LIST_TO_APPROVE_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
-        NSDictionary *pair = [APIHandler getResponse:response data:data error:&err status:&response_status];
-        NSArray *jsonBills = [pair objectForKey:@"Bill"];
+        id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
+            [[User GetLoginUser] markProfileFor:kToApproveChecked checked:YES];
+            
             if (billsToApprove) {
                 [billsToApprove removeAllObjects];
                 [billsToApproveSet removeAllObjects];
@@ -357,6 +360,8 @@ static NSMutableSet *billsToApproveSet;
                 billsToApprove = [NSMutableArray array];
                 billsToApproveSet = [NSMutableSet set];
             }
+            
+            NSArray *jsonBills = [json objectForKey:@"Bill"];
             
             for (id item in jsonBills) {
                 NSDictionary *dict = (NSDictionary*)item;
@@ -384,11 +389,18 @@ static NSMutableSet *billsToApproveSet;
                 completionHandler(UIBackgroundFetchResultFailed);
             }
         } else {
-            [ListForApprovalDelegate failedToGetBills];
-            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of bill to approve! %@", [err localizedDescription]] withStatus:kFailure];
-            Error(@"Failed to retrieve list of bill to approve! %@", [err localizedDescription]);
-            if (completionHandler) {
-                completionHandler(UIBackgroundFetchResultFailed);
+            [ListForApprovalDelegate failedToGetBillsToApprove];
+            
+            NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
+            if ([INVALID_PERMISSION isEqualToString:errCode]) {
+                [[User GetLoginUser] markProfileFor:kToApproveChecked checked:NO];
+                [UIHelper showInfo:@"You don't have permission to retrieve approvals" withStatus:kWarning];
+            } else {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of bill to approve! %@", [err localizedDescription]] withStatus:kFailure];
+                Error(@"Failed to retrieve list of bill to approve! %@", [err localizedDescription]);
+                if (completionHandler) {
+                    completionHandler(UIBackgroundFetchResultFailed);
+                }
             }
         }
     }];
@@ -403,11 +415,13 @@ static NSMutableSet *billsToApproveSet;
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
-        NSArray *jsonBills = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
+            [[User GetLoginUser] markProfileFor:kBillsChecked checked:YES];
+            
             NSMutableArray *billArr;
             if (isActive) {
                 if (bills) {
@@ -427,6 +441,8 @@ static NSMutableSet *billsToApproveSet;
                 billArr = inactiveBills;
             }
             
+            NSArray *jsonBills = (NSArray *)json;
+            
             for (id item in jsonBills) {
                 NSDictionary *dict = (NSDictionary*)item;
                 Bill *bill = [[Bill alloc] init];
@@ -442,11 +458,18 @@ static NSMutableSet *billsToApproveSet;
         } else if (response_status == RESPONSE_TIMEOUT) {
             [ListDelegate failedToGetBills];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            Debug(@"Time out when retrieving list of bill for %@!", isActive ? @"active" : @"inactive");
+            Error(@"Time out when retrieving list of bill for %@!", isActive ? @"active" : @"inactive");
         } else {
             [ListDelegate failedToGetBills];
-            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of bill for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to retrieve list of bill for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
+            
+            NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
+            if ([INVALID_PERMISSION isEqualToString:errCode]) {
+                [[User GetLoginUser] markProfileFor:kBillsChecked checked:NO];
+                [UIHelper showInfo:@"You don't have permission to retrieve bills." withStatus:kWarning];
+            } else {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of bill for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]] withStatus:kFailure];
+                Error(@"Failed to retrieve list of bill for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
+            }
         }
     }];
 }

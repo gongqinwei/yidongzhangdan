@@ -21,6 +21,7 @@
 #import "ChartOfAccount.h"
 #import "Document.h"
 #import "BankAccount.h"
+#import "User.h"
 #import "Util.h"
 #import "UIHelper.h"
 #import "TutorialControl.h"
@@ -36,7 +37,7 @@
 #define CELL_DISCLOSURE_TAG                 7
 
 
-@interface RootMenuViewController () <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate>
+@interface RootMenuViewController () <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate, BillListDelegate, UserDelegate>
 
 @property (nonatomic, strong) Organization *currentOrg;
 @property (nonatomic, strong) NSMutableArray *rootMenu;
@@ -108,6 +109,8 @@ static RootMenuViewController * _sharedInstance = nil;
 {
     [super viewDidLoad];
     
+    [User setUserDelegate:self];
+    
     self.currentOrg = [Organization getSelectedOrg];
     
     self.rootMenu = [NSMutableArray array];
@@ -164,6 +167,10 @@ static RootMenuViewController * _sharedInstance = nil;
     [CustomerContact resetList];
     [ChartOfAccount resetList];
     [BankAccount resetList];
+    
+    
+//    [Bill setListForApprovalDelegate:self];
+    
     
     if (self.currentOrg.enableAP) {
         [Bill retrieveListForActive:YES reload:YES];
@@ -287,10 +294,22 @@ static RootMenuViewController * _sharedInstance = nil;
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
     
+    cell.textLabel.textColor = [UIColor whiteColor];
+    cell.detailTextLabel.text = nil;
+    cell.detailTextLabel.textColor = [UIColor lightGrayColor];
+    
     if (indexPath.section == kRootProfile) {
         if (indexPath.row == kProfileUser) {    // temporarily same as profile org. will change to user name/email once BDC API implemented
             cell.textLabel.text = self.currentOrg.name;
-            cell.textLabel.font = [UIFont boldSystemFontOfSize:20.0];
+            cell.textLabel.font = [UIFont boldSystemFontOfSize:19.0];
+            
+            NSString *fname = [Util getUserFirstName];
+            NSString *lname = [Util getUserLastName];
+            if (fname && lname) {
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", fname, lname];
+            }
+            
+            cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:14.0];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             
             if ([Organization count] > 1) {
@@ -501,6 +520,15 @@ static RootMenuViewController * _sharedInstance = nil;
     // Remove the mail view
     [self dismissViewControllerAnimated:YES completion:^{
     }];
+}
+
+#pragma mark - User delegate
+
+- (void)didGetUserInfo {
+    NSIndexPath *path = [NSIndexPath indexPathForRow:kProfileUser inSection:kRootProfile];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.menuTableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
+    });
 }
 
 @end

@@ -179,7 +179,7 @@ static NSMutableDictionary *inactiveAccounts = nil;
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
-        NSArray *jsonAccounts = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         [UIAppDelegate decrNetworkActivities];
         
@@ -202,6 +202,8 @@ static NSMutableDictionary *inactiveAccounts = nil;
 
                 accountDict = inactiveAccounts;
             }
+            
+            NSArray *jsonAccounts = (NSArray *)json;
             
             for (id account in jsonAccounts) {
                 NSDictionary *dict = (NSDictionary*)account;
@@ -236,8 +238,14 @@ static NSMutableDictionary *inactiveAccounts = nil;
             Debug(@"Time out when retrieving list of accounts!");
         } else {
             [ListDelegate failedToGetAccounts];
-            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of accounts for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to retrieve list of accounts for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
+            
+            NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
+            if ([INVALID_PERMISSION isEqualToString:errCode]) {
+                [UIHelper showInfo:@"You don't have permission to retrieve accounts." withStatus:kWarning];
+            } else {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of accounts for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]] withStatus:kFailure];
+                Error(@"Failed to retrieve list of accounts for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
+            }
         }
     }];
 }
