@@ -1,0 +1,2 @@
+pod 'Mixpanel'
+pod 'Branch'
