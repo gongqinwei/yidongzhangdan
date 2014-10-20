@@ -28,8 +28,7 @@
                                         \"filters\" : [{\"field\" : \"isActive\", \"op\" : \"=\", \"value\" : \"2\"}, {\"field\" : \"paymentStatus\", \"op\" : \"!=\", \"value\" : \"0\"}] \
                                     }"
 
-#define LIST_TO_APPROVE_FILTER      @"{ \"type\" : \"Bill\" }"
-#define LIST_APPROVALS_FILTER       @"{ \"usersId\" :  \"%@\", \"entity\" : \"Bill\", \"approvalType\" : \"0\", \"marker\" : \"\", \"max\" : 999 }"
+#define LIST_APPROVALS_FILTER       @"{ \"type\" : \"Bill\", \"usersId\" :  \"%@\", \"entity\" : \"Bill\", \"approvalType\" : \"0\", \"marker\" : \"\", \"max\" : 999 }"
 
 #define APPROVAL_DATA               @"{ \"objectId\" : \"%@\", \"comment\" : \"%@\" , \"entity\" : \"Bill\" }"
 
@@ -108,14 +107,14 @@ static NSMutableSet *billsToApproveSet;
     }];
 }
 
-+ (void)updateNumToApprove:(int)count {
++ (void)updateNumToApprove:(NSInteger)count {
     dispatch_async(dispatch_get_main_queue(), ^{
         [UIApplication sharedApplication].applicationIconBadgeNumber = count;    //update badge
         
         if (count == 0) {
             [RootMenuViewController sharedInstance].numBillsToApproveLabel.hidden = YES;
         } else {
-            [RootMenuViewController sharedInstance].numBillsToApproveLabel.text = [NSString stringWithFormat:@"(%d)", count];
+            [RootMenuViewController sharedInstance].numBillsToApproveLabel.text = [NSString stringWithFormat:@"(%ld)", (long)count];
             [RootMenuViewController sharedInstance].numBillsToApproveLabel.hidden = NO;
         }
     });
@@ -193,7 +192,7 @@ static NSMutableSet *billsToApproveSet;
     [objStr appendFormat:@"\"%@\" : \"%@\", ", BILL_DATE, [Util formatDate:self.invoiceDate format:@"yyyy-MM-dd"]];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", BILL_DUE_DATE, [Util formatDate:self.dueDate format:@"yyyy-MM-dd"]];
     [objStr appendFormat:@"\"%@\" : [", BILL_LINE_ITEMS];
-    int total = [self.lineItems count];
+    NSInteger total = [self.lineItems count];
     int i = 0;
     for (APLineItem *lineItem in self.lineItems) {
         [objStr appendString:@"{"];
@@ -342,7 +341,7 @@ static NSMutableSet *billsToApproveSet;
 + (void)retrieveListForApproval:(void (^)(UIBackgroundFetchResult))completionHandler {
     [UIAppDelegate incrNetworkActivities];
     
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, LIST_TO_APPROVE_FILTER, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, [NSString stringWithFormat:LIST_APPROVALS_FILTER, [Util getUserId]], nil];
     
     [APIHandler asyncCallWithAction:LIST_TO_APPROVE_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;

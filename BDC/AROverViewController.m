@@ -94,10 +94,10 @@
             weakSelf.totalInvoiceAmount = [weakSelf.totalInvoiceAmount decimalNumberByAdding:inv.amount];
         }
         
-        weakSelf.overDueInvCount.text = [NSString stringWithFormat:@"%u", [weakSelf.overDueInvoices count]];
-        weakSelf.dueIn7InvCount.text = [NSString stringWithFormat:@"%u", [weakSelf.dueIn7DaysInvoices count]];
-        weakSelf.dueOver7InvCount.text = [NSString stringWithFormat:@"%u", [weakSelf.dueOver7DaysInvoices count]];
-        weakSelf.totalInvCount.text = [NSString stringWithFormat:@"%u", [weakSelf.totalInvoices count]];
+        weakSelf.overDueInvCount.text = [NSString stringWithFormat:@"%lu", (unsigned long)[weakSelf.overDueInvoices count]];
+        weakSelf.dueIn7InvCount.text = [NSString stringWithFormat:@"%lu", (unsigned long)[weakSelf.dueIn7DaysInvoices count]];
+        weakSelf.dueOver7InvCount.text = [NSString stringWithFormat:@"%lu", (unsigned long)[weakSelf.dueOver7DaysInvoices count]];
+        weakSelf.totalInvCount.text = [NSString stringWithFormat:@"%lu", (unsigned long)[weakSelf.totalInvoices count]];
         
         weakSelf.overDueInvAmount.text = [Util formatCurrency:weakSelf.overDueInvoiceAmount];
         weakSelf.dueIn7InvAmount.text = [Util formatCurrency:weakSelf.dueIn7DaysInvoiceAmount];
@@ -106,8 +106,8 @@
         
 //        weakSelf.navigationItem.title = [@"Receivables for " stringByAppendingString:[Organization getSelectedOrg].name];
         
-        int invCnt = [weakSelf.totalInvoices count];
-        [[[weakSelf.tabBarController.viewControllers objectAtIndex:kARTab] tabBarItem] setBadgeValue: [NSString stringWithFormat:@"%u", invCnt]];
+        NSInteger invCnt = [weakSelf.totalInvoices count];
+        [[[weakSelf.tabBarController.viewControllers objectAtIndex:kARTab] tabBarItem] setBadgeValue: [NSString stringWithFormat:@"%ld", (long)invCnt]];
     });
 }
 

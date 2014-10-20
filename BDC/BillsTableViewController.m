@@ -140,7 +140,19 @@
 
 - (void)navigateAttach {
     [super navigateAttach];
-    [self attachDocumentForObject:self.bills[self.lastSelected.row]];
+    
+    Bill *bill;
+    if ([self.sortAttribute isEqualToString:BILL_VENDOR_NAME]) {
+        bill = [[self.vendorBills objectAtIndex:self.lastSelected.section] objectAtIndex:self.lastSelected.row];
+    } else if ([self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
+        bill = [[self.dueDateBills objectAtIndex:self.lastSelected.section] objectAtIndex:self.lastSelected.row];
+    } else if ([self.sortAttribute isEqualToString:BILL_APPROVAL_STATUS]) {
+        bill = [[self.approvalBills objectAtIndex:self.lastSelected.section] objectAtIndex:self.lastSelected.row];
+    } else {
+        bill = [self.bills objectAtIndex:self.lastSelected.row];
+    }
+    
+    [self attachDocumentForObject:bill];
 }
 
 - (void)refreshView {
@@ -471,7 +483,7 @@
                 
                 UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
                 [UIHelper initializeHeaderLabel:qtyAndAmountLabel];
-                NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %d / ", ((NSArray *)[self.billListsCopy objectAtIndex:section]).count];
+                NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %lu / ", (unsigned long)((NSArray *)[self.billListsCopy objectAtIndex:section]).count];
                 [qtyAndAmount appendString:[Util formatCurrency:[self.vendorTotalBillAmounts objectAtIndex:section]]];
                 
                 qtyAndAmountLabel.text = qtyAndAmount;
@@ -494,7 +506,7 @@
                 
                 UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
                 [UIHelper initializeHeaderLabel:qtyAndAmountLabel];
-                NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %d / ", ((NSArray *)[self.billListsCopy objectAtIndex:section]).count];
+                NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %lu / ", (unsigned long)((NSArray *)[self.billListsCopy objectAtIndex:section]).count];
                 if (amt) {
                     [qtyAndAmount appendString:[Util formatCurrency:amt]];
                 }
@@ -513,7 +525,7 @@
                 
                 UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
                 [UIHelper initializeHeaderLabel:qtyAndAmountLabel];
-                NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %d / ", ((NSArray *)[self.billListsCopy objectAtIndex:section]).count];
+                NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %lu / ", (unsigned long)((NSArray *)[self.billListsCopy objectAtIndex:section]).count];
                 if (amt) {
                     [qtyAndAmount appendString:[Util formatCurrency:amt]];
                 }
@@ -538,7 +550,7 @@
             
             UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
             [UIHelper initializeHeaderLabel:qtyAndAmountLabel];
-            NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %d / ", self.bills.count];
+            NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %lu / ", (unsigned long)self.bills.count];
             //            if (self.totalBillAmount) {
             [qtyAndAmount appendString:[Util formatCurrency:self.totalBillAmount]];
             //            }

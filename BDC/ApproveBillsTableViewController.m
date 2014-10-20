@@ -12,6 +12,8 @@
 #import "Vendor.h"
 #import "BDCAppDelegate.h"
 
+#import <LocalAuthentication/LocalAuthentication.h>
+
 
 #define APPROVER_DETAILS_CELL_ID        @"ApproverItem"
 #define APPROVE_BILL_SEGUE              @"ApproveBill"
@@ -19,11 +21,15 @@
 
 @interface ApproveBillsTableViewController () <BillListDelegate>
 
+@property (nonatomic, strong) NSIndexPath *approveIndexPath;
+
 @end
+
 
 @implementation ApproveBillsTableViewController
 
 @synthesize billsToApprove;
+@synthesize approveIndexPath;
 
 //- (void)setApproverList:(NSMutableArray *)approvers {
 //    _approverLists = [self sortAlphabeticallyForList:approvers];
@@ -172,12 +178,43 @@
 #ifdef LITE_VERSION
         [UIAppDelegate presentUpgrade];
 #else
-        Bill *bill = [self.billsToApprove objectAtIndex:indexPath.row];
-        [self.billsToApprove removeObjectAtIndex:indexPath.row];
-        [bill approve];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        self.approveIndexPath = indexPath;
+        
+        // Use TouchID
+        LAContext *context = [[LAContext alloc] init];
+        if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:nil]) {
+            [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
+                    localizedReason:@"Fingerprint needed for Approval"
+                              reply:^(BOOL success, NSError *authenticationError){
+                                  if (success) {
+                                      dispatch_async(dispatch_get_main_queue(), ^{
+                                          [self approveBill];
+                                      });
+                                  } else {
+                                      if (authenticationError.code == LAErrorUserFallback) {
+                                          UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Security Check" message:@"Enter your Bill.com password:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+                                          alertView.alertViewStyle = UIAlertViewStyleSecureTextInput;
+                                          
+                                          dispatch_async(dispatch_get_main_queue(), ^{
+                                              [alertView show];
+                                          });
+                                      }
+                                      
+                                      Debug(@"Fingerprint validation failed: %@.", authenticationError.localizedDescription);
+                                  }
+                              }];
+        } else {
+            [self approveBill];
+        }
 #endif
     }
+}
+
+- (void)approveBill {
+    Bill *bill = [self.billsToApprove objectAtIndex:self.approveIndexPath.row];
+    [self.billsToApprove removeObjectAtIndex:self.approveIndexPath.row];
+    [bill approve];
+    [self.tableView deleteRowsAtIndexPaths:@[self.approveIndexPath] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -202,6 +239,19 @@
 {
     Bill *bill = self.billsToApprove[indexPath.row];
     [self performSegueWithIdentifier:APPROVE_BILL_SEGUE sender:bill];
+}
+
+#pragma mark - Alert delegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
+        if ([[alertView textFieldAtIndex:0].text isEqualToString:[Util getPassword]]) {
+            [self approveBill];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Password" message:@"Action can't be performed!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+        }
+    }
 }
 
 

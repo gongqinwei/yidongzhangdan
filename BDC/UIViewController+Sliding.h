@@ -29,7 +29,7 @@
 #define ACTION_APPROVE              @"Approve"
 #define ACTION_DENY                 @"Deny"
 #define ACTION_SKIP                 @"Skip"
-#define ACTION_IMPORT               @"Import from Address Book"
+#define ACTION_IMPORT               @"Import Address Book..."
 #define ACTION_VENDOR_INVITE        @"Invite for ePayment"
 
 #define SWIPE_RIGHT_TUTORIAL_RECT       CGRectMake((SCREEN_WIDTH - 136) / 2, 80, 136, 65)

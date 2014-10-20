@@ -168,7 +168,6 @@ static id <ApproverListDelegate> ListDelegate = nil;
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, objStr, nil];
     
     [APIHandler asyncCallWithAction:APPROVERS_GET_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
-//    [APIHandler asyncCallWithAction:LIST_APPROVER_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
         NSArray *jsonApprovers = [APIHandler getResponse:response data:data error:&err status:&response_status];
         

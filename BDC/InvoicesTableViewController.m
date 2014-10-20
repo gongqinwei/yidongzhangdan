@@ -118,7 +118,17 @@
 
 - (void)navigateAttach {
     [super navigateAttach];
-    [self attachDocumentForObject:self.invoices[self.lastSelected.row]];
+    
+    Invoice *inv;
+    if ([self.sortAttribute isEqualToString:INV_CUSTOMER_NAME]) {
+        inv = [[self.customerInvoices objectAtIndex:self.lastSelected.section] objectAtIndex:self.lastSelected.row];
+    } else if ([self.sortAttribute isEqualToString:INV_DUE_DATE]) {
+        inv = [[self.dueDateInvoices objectAtIndex:self.lastSelected.section] objectAtIndex:self.lastSelected.row];
+    } else {
+        inv = [self.invoices objectAtIndex:self.lastSelected.row];
+    }
+    
+    [self attachDocumentForObject:inv];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -371,7 +381,7 @@
                 
                 UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
                 [UIHelper initializeHeaderLabel:qtyAndAmountLabel];
-                NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %d / ", ((NSArray *)[self.invoiceListsCopy objectAtIndex:section]).count];
+                NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %lu / ", (unsigned long)((NSArray *)[self.invoiceListsCopy objectAtIndex:section]).count];
                 [qtyAndAmount appendString:[Util formatCurrency:[self.customerTotalInvoiceAmounts objectAtIndex:section]]];
                 
                 qtyAndAmountLabel.text = qtyAndAmount;
@@ -394,7 +404,7 @@
                             
                 UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
                 [UIHelper initializeHeaderLabel:qtyAndAmountLabel];
-                NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %d / ", ((NSArray *)[self.invoiceListsCopy objectAtIndex:section]).count];
+                NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %lu / ", (unsigned long)((NSArray *)[self.invoiceListsCopy objectAtIndex:section]).count];
                 if (amt) {
                     [qtyAndAmount appendString:[Util formatCurrency:amt]];
                 }
@@ -419,7 +429,7 @@
             
             UILabel *qtyAndAmountLabel = [[UILabel alloc] initWithFrame:SECTION_HEADER_QTY_AMT_RECT];
             [UIHelper initializeHeaderLabel:qtyAndAmountLabel];
-            NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %d / ", self.invoices.count];
+            NSMutableString *qtyAndAmount = [NSMutableString stringWithFormat:@"Total: %lu / ", (unsigned long)self.invoices.count];
 //            if (self.totalInvoiceAmount) {
                 [qtyAndAmount appendString:[Util formatCurrency:self.totalInvoiceAmount]];
 //            }

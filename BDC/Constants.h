@@ -139,7 +139,6 @@
 #define BANK_ACCOUNT_API    @"BankAccount.json"
 #define APPROVER_LIST_API   @"ui/ApproverList.json"
 #define APPROVERS_GET_API   @"GetApprovers.json"
-#define LIST_APPROVER_API   @"ListApprovers.json"       // obsolete
 #define APPROVERS_SET_API   @"SetApprovers.json"
 #define APPROVER_CREATE_API @"ui/CreateBillApprover.json"
 #define LIST_TO_APPROVE_API @"ListToApprove.json"       // to be obsolete

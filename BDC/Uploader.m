@@ -49,7 +49,7 @@
     
     // set body with request.
     [request setHTTPBody:body];
-    [request addValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
+    [request addValue:[NSString stringWithFormat:@"%lu", (unsigned long)[body length]] forHTTPHeaderField:@"Content-Length"];
 //    [request addValue:APP_KEY_VALUE forHTTPHeaderField:APP_KEY];
     
     // send request async

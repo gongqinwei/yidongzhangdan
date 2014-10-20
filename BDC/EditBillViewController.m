@@ -33,6 +33,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import <MessageUI/MessageUI.h>
 #import <QuickLook/QuickLook.h>
+#import <LocalAuthentication/LocalAuthentication.h>
+
 
 enum BillSections {
     kBillInfo,
@@ -79,6 +81,7 @@ typedef enum {
 
 #define DELETE_BILL_ALERT_TAG           1
 #define REMOVE_ATTACHMENT_ALERT_TAG     2
+#define ACTION_AUTH_ALERT_TAG           3
 
 #define VENDOR_PICKER_TAG               1
 #define ACCOUNT_PICKER_TAG              2
@@ -159,6 +162,8 @@ typedef enum {
 @property (nonatomic, strong) NSMutableArray *modifiedApprovers;
 @property (nonatomic, strong) NSMutableSet *approverSet;
 
+@property (nonatomic, strong) NSString *userAction;
+
 @end
 
 
@@ -230,6 +235,8 @@ typedef enum {
 
 @synthesize itemAccountTextFields;
 @synthesize itemAmountTextFields;
+
+@synthesize userAction;
 
 
 - (Class)busObjClass {
@@ -1795,6 +1802,17 @@ typedef enum {
                     self.currAttachment = nil;
                 }
             }
+            break;
+        case ACTION_AUTH_ALERT_TAG:
+            if (buttonIndex == 1) {
+                if ([[alertView textFieldAtIndex:0].text isEqualToString:[Util getPassword]]) {
+                    [self performAction];
+                } else {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Password" message:@"Action can't be performed!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                    [alert show];
+                }
+            }
+            break;
         default:
             [super alertView:alertView clickedButtonAtIndex:buttonIndex];
             break;
@@ -1937,18 +1955,50 @@ typedef enum {
 #ifdef LITE_VERSION
         [UIAppDelegate presentUpgrade];
 #else
-        if ([action isEqualToString:ACTION_PAY]) {
-            if ([((NSArray *)[BankAccount list]) count]) {
-                [self performSegueWithIdentifier:BILL_PAY_BILL_SEGUE sender:self];
-            }
-        } else if ([action isEqualToString:ACTION_APPROVE]) {
-            [self processApproval:kApproverApproved];
-        } else if ([action isEqualToString:ACTION_DENY]) {
-            [self processApproval:kApproverDenied];
-        } else if ([action isEqualToString:ACTION_SKIP]) {
-            [self processApproval:kApproverRerouted];
+        self.userAction = action;
+        
+        // Use TouchID
+        LAContext *context = [[LAContext alloc] init];
+        if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:nil]) {
+            [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
+                    localizedReason:[NSString stringWithFormat:@"Fingerprint needed for %@", action]
+                              reply:^(BOOL success, NSError *authenticationError){
+                if (success) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self performAction];
+                    });
+                } else {
+                    if (authenticationError.code == LAErrorUserFallback) {
+                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Security Check" message:@"Enter your Bill.com password:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+                        alertView.alertViewStyle = UIAlertViewStyleSecureTextInput;
+                        alertView.tag = ACTION_AUTH_ALERT_TAG;
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [alertView show];
+                        });
+                    }
+                    
+                    Debug(@"Fingerprint validation failed: %@.", authenticationError.localizedDescription);
+                }
+            }];
+        } else {
+            [self performAction];
         }
 #endif
+    }
+}
+
+- (void)performAction {
+    if ([self.userAction isEqualToString:ACTION_PAY]) {
+        if ([((NSArray *)[BankAccount list]) count]) {
+            [self performSegueWithIdentifier:BILL_PAY_BILL_SEGUE sender:self];
+        }
+    } else if ([self.userAction isEqualToString:ACTION_APPROVE]) {
+        [self processApproval:kApproverApproved];
+    } else if ([self.userAction isEqualToString:ACTION_DENY]) {
+        [self processApproval:kApproverDenied];
+    } else if ([self.userAction isEqualToString:ACTION_SKIP]) {
+        [self processApproval:kApproverRerouted];
     }
 }
 

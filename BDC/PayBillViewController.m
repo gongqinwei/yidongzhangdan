@@ -68,7 +68,7 @@
 //            [self.payBillDelegate billPaid];
         } else {
             [UIHelper showInfo:[NSString stringWithFormat:@"Failed to pay bill %@: %@", self.bill.name, [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to pay bill %@: %@", self.bill.name, [err localizedDescription]);
+            Error(@"Failed to pay bill %@: %@", self.bill.name, [err localizedDescription]);
         }
     }];
 }
@@ -113,10 +113,10 @@
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     [gregorian setFirstWeekday:2]; // Sunday == 1, Saturday == 7
     NSUInteger weekday = [gregorian ordinalityOfUnit:NSWeekdayCalendarUnit inUnit:NSWeekCalendarUnit forDate:now];
-    
+
     NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
     
-    int dayDiff = hour < 18 ? 1 : 2;
+    int dayDiff = hour < 18 ? 2 : 3;
     
     if (weekday >= 5) {
         [offsetComponents setDay:(7 - weekday + dayDiff)];

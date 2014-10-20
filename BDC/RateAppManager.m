@@ -14,7 +14,7 @@
 #define RATE_DECISION               @"RateDecision"
 #define DECISION_VERSION            @"DecisionVersion"
 #define LAST_PROMPT_DATE            @"LastPromptForRateDate"
-#define RATE_REMINDER_THRESHOLD     3
+#define RATE_REMINDER_THRESHOLD     2
 #define REMINDER_WAIT_COUNT         @"RateReminderWaitCount"
 #define APP_STORE_REVIEW_URL        [NSString stringWithFormat:@"%@%d", @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=", FULL_VERSION_ID]
 
@@ -44,16 +44,16 @@ static RateAppManager *_sharedInstance = nil;
         BOOL rated = [userDefaults boolForKey:RATE_DECISION];
         
         if (rated) {
-            [self promptAux:RATE_REMINDER_THRESHOLD * 3];
-        } else {
             [self promptAux:RATE_REMINDER_THRESHOLD * 2];
+        } else {
+            [self promptAux:RATE_REMINDER_THRESHOLD * 1];
         }
     }
 }
 
 - (void)promptAux:(int)threshold {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    int waitCount = [userDefaults integerForKey:REMINDER_WAIT_COUNT];
+    NSInteger waitCount = [userDefaults integerForKey:REMINDER_WAIT_COUNT];
     if (waitCount >= threshold) {
         [self presentToRate];
     } else {

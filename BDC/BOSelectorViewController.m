@@ -125,7 +125,7 @@
 }
 
 - (void)performNewSegueForCell:(UIButton *)button {
-    int i = button.tag / 10;
+    NSInteger i = button.tag / 10;
     int j = button.tag % 10;
     NSString *segueId = AttachToNewSegues[i][j];
     [self performSegueWithIdentifier:segueId sender:self];

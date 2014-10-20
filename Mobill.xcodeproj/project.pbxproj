@@ -144,6 +144,7 @@
 		7E7D742818455716009B114C /* ImportAddressBookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E7D742718455716009B114C /* ImportAddressBookViewController.m */; };
 		7E7D742B184561DA009B114C /* ABPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E7D742A184561DA009B114C /* ABPerson.m */; };
 		7E7D742F1846D663009B114C /* ImportABPersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E7D742E1846D663009B114C /* ImportABPersonViewController.m */; };
+		7E8AB35D19D9157F004900D4 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E8AB35C19D9157F004900D4 /* LocalAuthentication.framework */; };
 		7E91E3F015927C15005104AF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E91E3EF15927C15005104AF /* UIKit.framework */; };
 		7E91E3F215927C15005104AF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E91E3F115927C15005104AF /* Foundation.framework */; };
 		7E91E3F415927C15005104AF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E91E3F315927C15005104AF /* CoreGraphics.framework */; };
@@ -390,6 +391,7 @@
 		7E7D742A184561DA009B114C /* ABPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABPerson.m; sourceTree = "<group>"; };
 		7E7D742D1846D663009B114C /* ImportABPersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImportABPersonViewController.h; sourceTree = "<group>"; };
 		7E7D742E1846D663009B114C /* ImportABPersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImportABPersonViewController.m; sourceTree = "<group>"; };
+		7E8AB35C19D9157F004900D4 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		7E91E3EB15927C15005104AF /* Mobill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mobill.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E91E3EF15927C15005104AF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7E91E3F115927C15005104AF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -459,6 +461,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E8AB35D19D9157F004900D4 /* LocalAuthentication.framework in Frameworks */,
 				0E8EADAB189D7D64004FA2DF /* StoreKit.framework in Frameworks */,
 				7E1DF190184E94B70009F0C3 /* AVFoundation.framework in Frameworks */,
 				7E7D742418455597009B114C /* AddressBook.framework in Frameworks */,
@@ -916,6 +919,7 @@
 		7E91E3EE15927C15005104AF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7E8AB35C19D9157F004900D4 /* LocalAuthentication.framework */,
 				0E8EADAA189D7D64004FA2DF /* StoreKit.framework */,
 				7E1DF18F184E94B70009F0C3 /* AVFoundation.framework */,
 				7E7D742218455597009B114C /* AddressBook.framework */,
