@@ -192,7 +192,7 @@ static NSLock *DocumentsLock = nil;
             
             for (NSDictionary *dict in jsonDocs) {
                 Document *doc = [[Document alloc] init];
-                doc.objectId = [dict objectForKey:ID];
+                doc.objectId = [dict objectForKey:_ID];
                 doc.name = [dict objectForKey:FILE_NAME];
                 doc.fileUrl = [dict objectForKey:FILE_URL];
                 doc.createdDate = [Util getDate:[dict objectForKey:FILE_CREATED_DATE] format:@"MM/dd/yy hh:mm a"];

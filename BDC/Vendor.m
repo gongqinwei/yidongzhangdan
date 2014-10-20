@@ -46,7 +46,7 @@ static NSMutableDictionary * inactiveVendors = nil;
     NSArray *vendorArr = [vendorList allValues];
     
     NSSortDescriptor *firstOrder = [[NSSortDescriptor alloc] initWithKey:VENDOR_NAME ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
-//    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:ID ascending:NO];
+//    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:_ID ascending:NO];
     vendorArr = [vendorArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, nil]];
     
     return [NSMutableArray arrayWithArray:vendorArr];
@@ -77,7 +77,7 @@ static NSMutableDictionary * inactiveVendors = nil;
 }
 
 - (void)populateObjectWithInfo:(NSDictionary *)dict {
-    self.objectId = [dict objectForKey:ID];
+    self.objectId = [dict objectForKey:_ID];
     self.name = [dict objectForKey:VENDOR_NAME];
     
     NSString *addr1 = [dict objectForKey:VENDOR_ADDR1];
@@ -227,7 +227,7 @@ static NSMutableDictionary * inactiveVendors = nil;
     [objStr appendString:@": {"];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", ENTITY, VENDOR];
     if ([theAction isEqualToString:UPDATE]) {
-        [objStr appendFormat:@"\"%@\" : \"%@\", ", ID, self.objectId];
+        [objStr appendFormat:@"\"%@\" : \"%@\", ", _ID, self.objectId];
     }
     [objStr appendFormat:@"\"%@\" : \"%@\", ", VENDOR_NAME, self.name];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", VENDOR_ADDR1, self.addr1 == nil ? @"" : self.addr1];
@@ -268,7 +268,7 @@ static NSMutableDictionary * inactiveVendors = nil;
         NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         if(response_status == RESPONSE_SUCCESS) {
-            NSString *vendorId = [info objectForKey:ID];
+            NSString *vendorId = [info objectForKey:_ID];
             self.objectId = vendorId;
             
             if ([theAction isEqualToString:CREATE]) {
@@ -326,7 +326,7 @@ static NSMutableDictionary * inactiveVendors = nil;
 - (void)toggleActive:(Boolean)isActive {
     NSString *act = isActive ? UNDELETE : DELETE;
     NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, act, VENDOR_API];
-    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", _ID, self.objectId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
     __weak Vendor *weakSelf = self;

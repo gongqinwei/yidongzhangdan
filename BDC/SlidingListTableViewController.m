@@ -209,7 +209,7 @@
 
 - (void)attachDocumentForObject:(BDCBusinessObjectWithAttachments *)obj {
     if (self.document.objectId) {
-        NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"name\" : \"%@\", \"objId\" : \"%@\"}", ID, self.document.objectId, self.document.name, obj.objectId];
+        NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"name\" : \"%@\", \"objId\" : \"%@\"}", _ID, self.document.objectId, self.document.name, obj.objectId];
         NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
         
         [APIHandler asyncCallWithAction:ASSIGN_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {

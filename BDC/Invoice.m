@@ -83,7 +83,7 @@ static NSMutableArray *inactiveInvoices = nil;
 @synthesize detailsDelegate;
 
 - (void)sendInvoice {
-    NSString *action = [INVOICE_SEND_API stringByAppendingFormat:@"?%@=%@", ID, self.objectId];
+    NSString *action = [INVOICE_SEND_API stringByAppendingFormat:@"?%@=%@", _ID, self.objectId];
     NSString *objStr = [NSString stringWithFormat:SEND_INVOICE_DATA, self.objectId, self.objectId, [Util getUserId]];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
@@ -139,7 +139,7 @@ static NSMutableArray *inactiveInvoices = nil;
     [objStr appendString:@": {"];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", ENTITY, INVOICE];
     if ([theAction isEqualToString:UPDATE]) {
-        [objStr appendFormat:@"\"%@\" : \"%@\", ", ID, self.objectId];
+        [objStr appendFormat:@"\"%@\" : \"%@\", ", _ID, self.objectId];
     }
     [objStr appendFormat:@"\"%@\" : \"%@\", ", INV_CUSTOMER_ID, self.customerId];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", INV_NUMBER, self.invoiceNumber];
@@ -173,7 +173,7 @@ static NSMutableArray *inactiveInvoices = nil;
         NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         if(response_status == RESPONSE_SUCCESS) {
-            NSString *invId = [info objectForKey:ID];
+            NSString *invId = [info objectForKey:_ID];
             self.objectId = invId;
             
             if ([theAction isEqualToString:CREATE]) {
@@ -209,7 +209,7 @@ static NSMutableArray *inactiveInvoices = nil;
 - (void)toggleActive:(Boolean)isActive {
     NSString *act = isActive ? UNDELETE : DELETE;
     NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, act, INVOICE_API];
-    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", _ID, self.objectId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
     __weak Invoice *weakSelf = self;
@@ -278,7 +278,7 @@ static NSMutableArray *inactiveInvoices = nil;
 }
 
 - (void)populateObjectWithInfo:(NSDictionary *)dict {
-    self.objectId = [dict objectForKey:ID];
+    self.objectId = [dict objectForKey:_ID];
     self.invoiceNumber = [dict objectForKey:INV_NUMBER];
     self.paymentStatus = [dict objectForKey:INV_PAYMENT_STATUS];
     self.amount = [Util id2Decimal:[dict objectForKey:INV_AMOUNT]];

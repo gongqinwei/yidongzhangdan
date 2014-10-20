@@ -54,7 +54,7 @@ static NSMutableDictionary *inactiveAccounts = nil;
     [objStr appendString:@": {"];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", ENTITY, ChartAccount];
     if ([theAction isEqualToString:UPDATE]) {
-        [objStr appendFormat:@"\"%@\" : \"%@\", ", ID, self.objectId];
+        [objStr appendFormat:@"\"%@\" : \"%@\", ", _ID, self.objectId];
     }
     [objStr appendFormat:@"\"%@\" : \"%@\", ", ACCOUNT_NAME, self.name];
     if (self.number) {
@@ -74,7 +74,7 @@ static NSMutableDictionary *inactiveAccounts = nil;
         NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         if(response_status == RESPONSE_SUCCESS) {
-            NSString *accountId = [info objectForKey:ID];
+            NSString *accountId = [info objectForKey:_ID];
             self.objectId = accountId;
             
             if ([theAction isEqualToString:CREATE]) {
@@ -208,7 +208,7 @@ static NSMutableDictionary *inactiveAccounts = nil;
             for (id account in jsonAccounts) {
                 NSDictionary *dict = (NSDictionary*)account;
                 ChartOfAccount *account = [[ChartOfAccount alloc] init];
-                account.objectId = [dict objectForKey:ID];
+                account.objectId = [dict objectForKey:_ID];
                 account.name = [dict objectForKey:ACCOUNT_NAME];
                 NSString *number = [dict objectForKey:ACCOUNT_NUMBER];
                 if (number == (id)[NSNull null]) {

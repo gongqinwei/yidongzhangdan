@@ -49,7 +49,7 @@ static NSMutableDictionary * inactiveCustomers = nil;
     NSArray *customerArr = [custList allValues];
     
     NSSortDescriptor *firstOrder = [[NSSortDescriptor alloc] initWithKey:CUSTOMER_NAME ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
-//    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:ID ascending:NO];
+//    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:_ID ascending:NO];
     customerArr = [customerArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, nil]];
     
     return [NSMutableArray arrayWithArray:customerArr];
@@ -80,7 +80,7 @@ static NSMutableDictionary * inactiveCustomers = nil;
 }
 
 - (void)populateObjectWithInfo:(NSDictionary *)dict {
-    self.objectId = [dict objectForKey:ID];
+    self.objectId = [dict objectForKey:_ID];
     self.name = [dict objectForKey:CUSTOMER_NAME];
     
     NSString *addr1 = [dict objectForKey:CUSTOMER_ADDR1];
@@ -198,7 +198,7 @@ static NSMutableDictionary * inactiveCustomers = nil;
     [objStr appendString:@": {"];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", ENTITY, CUSTOMER];
     if ([theAction isEqualToString:UPDATE]) {
-        [objStr appendFormat:@"\"%@\" : \"%@\", ", ID, self.objectId];
+        [objStr appendFormat:@"\"%@\" : \"%@\", ", _ID, self.objectId];
     }
     [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_NAME, self.name];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", CUSTOMER_ADDR1, self.addr1 == nil ? @"" : self.addr1];
@@ -239,7 +239,7 @@ static NSMutableDictionary * inactiveCustomers = nil;
         NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         if(response_status == RESPONSE_SUCCESS) {
-            NSString *customerId = [info objectForKey:ID];
+            NSString *customerId = [info objectForKey:_ID];
             self.objectId = customerId;
             
             if ([theAction isEqualToString:CREATE]) {
@@ -275,7 +275,7 @@ static NSMutableDictionary * inactiveCustomers = nil;
 - (void)toggleActive:(Boolean)isActive {
     NSString *act = isActive ? UNDELETE : DELETE;
     NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, act, CUSTOMER_API];
-    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", _ID, self.objectId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
     __weak Customer *weakSelf = self;

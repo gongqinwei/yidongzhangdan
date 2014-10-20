@@ -441,7 +441,7 @@ static double animatedDistance = 0;
 }
 
 - (void)retrieveDocAttachments {
-    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"%@\" : \"%@\", \"start\" : 0, \"max\" : 999}", ID, self.busObj.objectId, OBJ_ID, self.busObj.objectId];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"%@\" : \"%@\", \"start\" : 0, \"max\" : 999}", _ID, self.busObj.objectId, OBJ_ID, self.busObj.objectId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
     [APIHandler asyncCallWithAction:RETRIEVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
@@ -470,7 +470,7 @@ static double animatedDistance = 0;
                 
                 int i = 0;
                 for (NSDictionary *dict in jsonDocs) {
-                    NSString *docId = [dict objectForKey:ID];
+                    NSString *docId = [dict objectForKey:_ID];
                     
                     Document *doc;
                     if (![self.attachmentDict objectForKey:docId]) {
@@ -940,7 +940,7 @@ static double animatedDistance = 0;
             // 2. remove deleted attachments
             for (NSString *docId in toBeDeleted) {
                 Document *doc = [self.busObj.attachmentDict objectForKey:docId];
-                NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"objId\" : \"%@\"}", ID, docId, self.busObj.objectId];
+                NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"objId\" : \"%@\"}", _ID, docId, self.busObj.objectId];
                 NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
                 
                 [APIHandler asyncCallWithAction:([doc getDocType] == kDocument) ? DEL_DOC_API : DEL_ATTACHMENT_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
@@ -971,7 +971,7 @@ static double animatedDistance = 0;
             
             // 3. attach documents
             for (Document *doc in toBeAttached) {
-                NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"name\" : \"%@\", \"objId\" : \"%@\"}", ID, doc.objectId, doc.name, self.shaddowBusObj.objectId];
+                NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"name\" : \"%@\", \"objId\" : \"%@\"}", _ID, doc.objectId, doc.name, self.shaddowBusObj.objectId];
                 NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
                 
                 [APIHandler asyncCallWithAction:ASSIGN_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {

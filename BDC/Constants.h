@@ -26,6 +26,7 @@
 #define DOMAIN_URL          @"http://10.0.0.14"
 //#define DOMAIN_URL          @"http://192.168.1.12"
 #define APP_KEY             @"devKey"
+#define BNC_APP_KEY         @"49281301563311005"
 #define DEBUG_MODE
 #endif
 
@@ -34,6 +35,7 @@
 #define ERR_DOMAIN          @"App Test"
 #define DOMAIN_URL          @"https://app-test.cashview.com"
 #define APP_KEY             @"devKey"
+#define BNC_APP_KEY         @"49281301563311005"
 #define DEBUG_MODE
 #endif
 
@@ -42,6 +44,7 @@
 #define ERR_DOMAIN          @"App Stage"
 #define DOMAIN_URL          @"https://app-stage.bill.com"
 #define APP_KEY             @"devKey"
+#define BNC_APP_KEY         @"49281301563311005"
 #define DEBUG_MODE
 #endif
 
@@ -50,7 +53,11 @@
 #define ERR_DOMAIN          @"PROD"
 #define DOMAIN_URL          @"https://app.bill.com"
 #define APP_KEY             @"devKey"
+#define BNC_APP_KEY         @"45988591431582341"
 #endif
+
+#define MP_TOKEN            @"7813b39597fc0555eed85e7d1ca90259"
+#define TRACKING_EVENT_KEYS @[@"UserId", @"UserName", @"UserEmail", @"OrgId", @"OrgName"]
 
 #ifdef DEBUG_MODE
 #define Debug( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
@@ -186,7 +193,7 @@
 #define RESPONSE_STATUS_KEY @"response_status"
 #define RESPONSE_ERROR_CODE @"error_code"
 #define RESPONSE_ERROR_MSG  @"error_message"
-#define ID                  @"id"
+#define _ID                 @"id"
 #define OBJ_ID              @"objectId"
 #define IS_ACTIVE           @"isActive"
 #define SESSION_ID_KEY      @"sessionId"

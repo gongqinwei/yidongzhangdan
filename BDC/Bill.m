@@ -151,7 +151,7 @@ static NSMutableSet *billsToApproveSet;
 }
 
 - (void)populateObjectWithInfo:(NSDictionary *)dict {
-    self.objectId = [dict objectForKey:ID];
+    self.objectId = [dict objectForKey:_ID];
     self.invoiceNumber = [dict objectForKey:BILL_NUMBER];
     self.amount = [Util id2Decimal:[dict objectForKey:BILL_AMOUNT]];
     self.paidAmount = [Util id2Decimal:[dict objectForKey:BILL_AMOUNT_PAID]];
@@ -166,7 +166,7 @@ static NSMutableSet *billsToApproveSet;
     NSArray *jsonItems = [dict objectForKey:BILL_LINE_ITEMS];
     for (id lineItem in jsonItems) {
         APLineItem *item = [[APLineItem alloc] init];
-        item.objectId = [lineItem objectForKey:ID];
+        item.objectId = [lineItem objectForKey:_ID];
         item.account = [ChartOfAccount objectForKey:[lineItem objectForKey:LINE_ITEM_ACCOUNT]];        
         item.amount = [Util id2Decimal:[lineItem objectForKey:LINE_ITEM_AMOUNT]];
         [self.lineItems addObject:item];
@@ -185,7 +185,7 @@ static NSMutableSet *billsToApproveSet;
     [objStr appendString:@": {"];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", ENTITY, BILL];
     if ([theAction isEqualToString:UPDATE]) {
-        [objStr appendFormat:@"\"%@\" : \"%@\", ", ID, self.objectId];
+        [objStr appendFormat:@"\"%@\" : \"%@\", ", _ID, self.objectId];
     }
     [objStr appendFormat:@"\"%@\" : \"%@\", ", BILL_VENDOR_ID, self.vendorId];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", BILL_NUMBER, self.invoiceNumber];
@@ -198,7 +198,7 @@ static NSMutableSet *billsToApproveSet;
         [objStr appendString:@"{"];
         [objStr appendFormat:@"\"%@\" : \"%@\", ", ENTITY, BILL_LINE_ITEM];
         if ([theAction isEqualToString:UPDATE] && lineItem.objectId) {
-            [objStr appendFormat:@"\"%@\" : \"%@\", ", ID, lineItem.objectId];
+            [objStr appendFormat:@"\"%@\" : \"%@\", ", _ID, lineItem.objectId];
         }
         if (lineItem.account.objectId) {
             [objStr appendFormat:@"\"%@\" : \"%@\", ", BILL_LINE_ITEM_ACCOUNT, lineItem.account.objectId];
@@ -223,7 +223,7 @@ static NSMutableSet *billsToApproveSet;
         NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         if(response_status == RESPONSE_SUCCESS) {
-            NSString *billId = [info objectForKey:ID];
+            NSString *billId = [info objectForKey:_ID];
             self.objectId = billId;
             
             if ([theAction isEqualToString:CREATE]) {
@@ -261,7 +261,7 @@ static NSMutableSet *billsToApproveSet;
 - (void)toggleActive:(Boolean)isActive {
     NSString *act = isActive ? UNDELETE : DELETE;
     NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, act, BILL_API];
-    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", _ID, self.objectId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
     __weak Bill *weakSelf = self;
@@ -547,7 +547,7 @@ static NSMutableSet *billsToApproveSet;
 //        NSInteger response_status;
 //        NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
 //        if(response_status == RESPONSE_SUCCESS) {
-//            NSString *bId = [info objectForKey:ID];
+//            NSString *bId = [info objectForKey:_ID];
 //            self.objectId = bId;
 //            // TODO: need to change server code to return DocumentPg id instead of Document id here
 //            // assotiate documents(photos) to this newly created bill object
@@ -570,7 +570,7 @@ static NSMutableSet *billsToApproveSet;
 ////    [info setObject:self.billId forKey:BILL_ID];
 ////    [info setObject:[[self.docs allObjects] componentsJoinedByString:@","] forKey:DOC_PG_IDS];
 //
-//    [info setObject:ID forKey:self.objectId];
+//    [info setObject:_ID forKey:self.objectId];
 //
 //    for (NSString *doc in self.docs) {
 //        [info setObject:DOC_PG_ID forKey:doc];

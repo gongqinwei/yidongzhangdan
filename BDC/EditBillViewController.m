@@ -268,7 +268,7 @@ typedef enum {
 }
 
 - (NSString *)getDocIDParam {
-    return ID;
+    return _ID;
 }
 
 - (void)handleRemovalForDocument:(Document *)doc {
@@ -380,7 +380,7 @@ typedef enum {
     [super retrieveDocAttachments];     // retrieve attachment;
     
     // retrieve documents
-    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"%@\" : \"%@\", \"start\" : 0, \"max\" : 999}", ID, self.busObj.objectId, OBJ_ID, self.busObj.objectId];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"%@\" : \"%@\", \"start\" : 0, \"max\" : 999}", _ID, self.busObj.objectId, OBJ_ID, self.busObj.objectId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
     [APIHandler asyncCallWithAction:GET_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
@@ -410,7 +410,7 @@ typedef enum {
                 
                 int i = 0;
                 for (NSDictionary *dict in jsonDocs) {
-                    NSString *docId = [dict objectForKey:ID];
+                    NSString *docId = [dict objectForKey:_ID];
                     
                     Document *doc;
                     if (![self.attachmentDict objectForKey:docId]) {

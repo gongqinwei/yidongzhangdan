@@ -51,7 +51,7 @@ static NSMutableDictionary *inactiveItems = nil;
     [objStr appendString:@": {"];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", ENTITY, ITEM];
     if ([theAction isEqualToString:UPDATE]) {
-        [objStr appendFormat:@"\"%@\" : \"%@\", ", ID, self.objectId];
+        [objStr appendFormat:@"\"%@\" : \"%@\", ", _ID, self.objectId];
     }
     [objStr appendFormat:@"\"%@\" : \"%@\", ", ITEM_NAME, self.name];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", ITEM_DESC, self.desc == nil ? @"" : self.desc];
@@ -69,7 +69,7 @@ static NSMutableDictionary *inactiveItems = nil;
         NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         if(response_status == RESPONSE_SUCCESS) {
-            NSString *itemId = [info objectForKey:ID];
+            NSString *itemId = [info objectForKey:_ID];
             self.objectId = itemId;
             
             if ([theAction isEqualToString:CREATE]) {
@@ -105,7 +105,7 @@ static NSMutableDictionary *inactiveItems = nil;
 - (void)toggleActive:(Boolean)isActive {
     NSString *act = isActive ? UNDELETE : DELETE;
     NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, act, ITEM_API];
-    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", _ID, self.objectId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
     __weak Item *weakSelf = self;
@@ -141,7 +141,7 @@ static NSMutableDictionary *inactiveItems = nil;
     NSArray *itemArr = [itemList allValues];
     
     NSSortDescriptor *firstOrder = [[NSSortDescriptor alloc] initWithKey:ITEM_NAME ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
-//    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:ID ascending:NO];
+//    NSSortDescriptor *secondOrder = [[NSSortDescriptor alloc] initWithKey:_ID ascending:NO];
     itemArr = [itemArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:firstOrder, nil]];
     
     for (Item *item in itemArr) {
@@ -184,7 +184,7 @@ static NSMutableDictionary *inactiveItems = nil;
 }
 
 - (void)populateObjectWithInfo:(NSDictionary *)dict {
-    self.objectId = [dict objectForKey:ID];
+    self.objectId = [dict objectForKey:_ID];
     self.name = [dict objectForKey:ITEM_NAME];
     self.type = [ItemTypes indexOfObject:[NSNumber numberWithInt: [[dict objectForKey:ITEM_TYPE] intValue]]];
     self.price = [Util id2Decimal:[dict objectForKey:ITEM_PRICE]];

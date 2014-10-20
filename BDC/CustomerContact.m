@@ -61,7 +61,7 @@ static id <ContactListDelegate> ListDelegate = nil;
 }
 
 - (void)populateObjectWithInfo:(NSDictionary *)dict {
-    self.objectId = [dict objectForKey:ID];
+    self.objectId = [dict objectForKey:_ID];
     
     self.customerId = [dict objectForKey:CONTACT_CUSTOMER];
     NSString *fnameStr = [dict objectForKey:CONTACT_FNAME];
@@ -194,7 +194,7 @@ static id <ContactListDelegate> ListDelegate = nil;
     [objStr appendString:@": {"];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", ENTITY, CONTACT];
     if ([theAction isEqualToString:UPDATE]) {
-        [objStr appendFormat:@"\"%@\" : \"%@\", ", ID, self.objectId];
+        [objStr appendFormat:@"\"%@\" : \"%@\", ", _ID, self.objectId];
     }
     [objStr appendFormat:@"\"%@\" : \"%@\", ", CONTACT_CUSTOMER, self.customerId];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", CONTACT_FNAME, self.fname == nil ? @"" : self.fname];
@@ -216,7 +216,7 @@ static id <ContactListDelegate> ListDelegate = nil;
         NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         if(response_status == RESPONSE_SUCCESS) {
-            NSString *contactId = [info objectForKey:ID];
+            NSString *contactId = [info objectForKey:_ID];
             self.objectId = contactId;
             
             [CustomerContact retrieveListForCustomer:self.customerId];
@@ -255,7 +255,7 @@ static id <ContactListDelegate> ListDelegate = nil;
 - (void)toggleActive:(Boolean)isActive {
     NSString *act = DELETE; //isActive ? UNDELETE : DELETE;
     NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, act, CONTACT_API];
-    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", _ID, self.objectId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
     __weak CustomerContact *weakSelf = self;

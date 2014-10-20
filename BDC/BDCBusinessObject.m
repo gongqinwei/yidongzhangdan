@@ -49,7 +49,7 @@
 - (void)read {
     NSString *objAPI = [NSString stringWithFormat:@"%@.json", [self class]];
     NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, READ, objAPI];
-    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, self.objectId];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", _ID, self.objectId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
         
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {

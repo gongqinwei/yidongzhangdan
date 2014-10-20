@@ -50,7 +50,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
 }
 
 - (void)populateObjectWithInfo:(NSDictionary *)dict {
-    self.objectId = [dict objectForKey:ID];
+    self.objectId = [dict objectForKey:_ID];
     self.name = [dict objectForKey:APPROVER_NAME];
     self.profilePicUrl = [dict objectForKey:APPROVER_PIC_URL];
     self.smartDataEntry = [[dict objectForKey:APPROVER_SMART_DATA] intValue];

@@ -158,7 +158,7 @@ static id<UserDelegate> UserDelegate = nil;
     [UIAppDelegate incrNetworkActivities];
     
     NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, READ, USER_API];
-    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", ID, userId];
+    NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", _ID, userId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
@@ -330,7 +330,7 @@ static id<UserDelegate> UserDelegate = nil;
 //                
 //                for (id item in jsonProfiles) {
 //                    NSDictionary *dict = (NSDictionary*)item;
-//                    NSString *profileId = [dict objectForKey:ID];
+//                    NSString *profileId = [dict objectForKey:_ID];
 //                    NSString *profileName = [dict objectForKey:@"name"];
 //                    [profileDict setObject:profileName forKey:profileId];
 //                }
@@ -394,7 +394,7 @@ static id<UserDelegate> UserDelegate = nil;
 //                NSString *userEmail = [dict objectForKey:@"email"];
 //                
 //                if ([userEmail isEqualToString:lowercaseEmail]) {
-//                    //                    NSString *userId = [dict objectForKey:ID];
+//                    //                    NSString *userId = [dict objectForKey:_ID];
 //                    NSString *profileId = [dict objectForKey:@"profileId"];
 //                    NSString *fName = [dict objectForKey:@"firstName"];
 //                    NSString *lName = [dict objectForKey:@"lastName"];

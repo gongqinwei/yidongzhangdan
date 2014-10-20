@@ -61,7 +61,7 @@ static NSArray *bankAccounts = nil;
                 BOOL primaryAP = [[dict objectForKey:BANK_ACCOUNT_PRIMARY_AP] boolValue];
                 if (primaryAP) {
                     BankAccount *account = [[BankAccount alloc] init];
-                    account.objectId = [dict objectForKey:ID];
+                    account.objectId = [dict objectForKey:_ID];
                     account.bankName = [dict objectForKey:BANK_ACCOUNT_BANK_NAME];
                     account.accountNumber = [dict objectForKey:BANK_ACCOUNT_NUMBER];
                     account.name = [account.bankName stringByAppendingFormat:@" %@", account.accountNumber];
