@@ -31,6 +31,7 @@
 + (NSString *)getUserEmail;
 + (NSString *)getUserFirstName;
 + (NSString *)getUserLastName;
++ (NSString *)getUserFullName;
 + (NSString *)getUserProfileId;
 
 

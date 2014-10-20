@@ -32,6 +32,19 @@
 	<string>1.2.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.mobill.mobill</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>mobill</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1.2.1</string>
 	<key>LSRequiresIPhoneOS</key>

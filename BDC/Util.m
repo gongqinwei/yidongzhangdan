@@ -9,6 +9,7 @@
 #import "Util.h"
 #import "Constants.h"
 #import "KeychainItemWrapper.h"
+#import "Branch.h"
 #import <Security/Security.h>
 
 #define STAY_LOGGED_IN      @"StayLoggedIn"
@@ -19,6 +20,10 @@
     KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:KEYCHAIN_ID accessGroup:nil];
     [Util setSession:@""];
     [keychainItem setObject:@"" forKey:(__bridge id)(kSecValueData)];
+    
+    // Branch Metrics
+    Branch *branch = [Branch getInstance];
+    [branch clearUser];
 }
 
 + (void)setUsername:(NSString *)username andPassword:(NSString *)password {
@@ -120,6 +125,11 @@
 + (NSString *)getUserLastName {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [defaults objectForKey:USER_LNAME];
+}
+
++ (NSString *)getUserFullName {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [NSString stringWithFormat:@"%@ %@", [defaults objectForKey:USER_FNAME], [defaults objectForKey:USER_LNAME]];
 }
 
 + (NSString *)getUserProfileId {

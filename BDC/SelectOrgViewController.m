@@ -13,17 +13,20 @@
 #import "Util.h"
 #import "APIHandler.h"
 #import "UIHelper.h"
+#import "Branch.h"
+#import "Mixpanel.h"
 
 #define LOG_OUT_FROM_SELECT_ORGS_SEGUE      @"LogOutFromOrgSelect"
 
 
-@interface SelectOrgViewController () <OrgDelegate>
+@interface SelectOrgViewController () <OrgDelegate, ProfileDelegate>
 
 @property (nonatomic, strong) NSArray *filteredOrgs;
 @property Organization *selectedOrg;
 @property NSString *sessionId;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) NSIndexPath *lastSelected;
+@property (nonatomic, assign) BOOL orgChanged;
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope;
 
@@ -39,6 +42,7 @@
 @synthesize sessionId;
 @synthesize activityIndicator;
 @synthesize lastSelected;
+@synthesize orgChanged;
 
 
 - (void)cancelSelect:(UIBarButtonItem *)sender {
@@ -235,7 +239,15 @@
         if (status == RESPONSE_SUCCESS) {
             self.sessionId = [responseData objectForKey:SESSION_ID_KEY];
             NSString *userId = [responseData objectForKey:USER_ID];
-            [Util setUserId:userId];
+            
+            self.orgChanged = NO;
+            if (![Util getUserId] || ![[Util getUserId] isEqualToString:userId]) {
+                self.orgChanged = YES;
+                [Util setUserId:userId];
+            }
+            
+            [User GetLoginUser].profileDelegate = self;
+            
             [User GetUserInfo:userId];
             
             [self.selectedOrg getOrgFeatures];
@@ -304,5 +316,26 @@
 //    [User useProfileToGetOrgFeatures];
 }
 
+#pragma mark - Profile delegate method
+- (void)didFinishProfileCheckList {
+    [self tracking];
+}
+
+- (void)tracking {
+    if (self.orgChanged) {
+        // Branch Metrics
+        Branch *branch = [Branch getInstance:BNC_APP_KEY];
+        [branch identifyUser:[Util getUserId]];
+        
+        NSDictionary *properties = [NSDictionary dictionaryWithObjects:@[[Util getUserId], [Util getUserFullName], [Util getUserEmail], self.selectedOrg.objectId, self.selectedOrg.name] forKeys:TRACKING_EVENT_KEYS];
+        [branch userCompletedAction:@"Login" withState:properties];
+        
+        // Mixpanel
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel identify:[Util getUserId]];
+        [mixpanel registerSuperProperties:properties];
+        [mixpanel track:@"Login"];
+    }
+}
 
 @end

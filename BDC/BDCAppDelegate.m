@@ -21,6 +21,8 @@
 #import "SplashViewController.h"
 #import "InboxViewController.h"
 #import "APIHandler.h"
+#import "Mixpanel.h"
+#import "Branch.h"
 
 
 @interface BDCAppDelegate () <UIAlertViewDelegate>
@@ -36,6 +38,13 @@ static NSString *const iOSAppStoreURLFormat = @"http://itunes.apple.com/app/id%d
 @synthesize window = _window;
 @synthesize numNetworkActivities = _numNetworkActivities;
 @synthesize isFirstLaunch;
+@synthesize globalMailer;
+
+
+- (void)cycleTheGlobalMailComposer {
+    self.globalMailer = nil;
+    self.globalMailer = [[MFMailComposeViewController alloc] init];
+}
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
@@ -87,6 +96,32 @@ static NSString *const iOSAppStoreURLFormat = @"http://itunes.apple.com/app/id%d
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
         [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     }
+    
+    // Branch Metrics
+    Branch *branch = [Branch getInstance:BNC_APP_KEY];
+    [branch initUserSessionWithCallback:^(NSDictionary *params) {
+        NSLog(@"deep link data: %@", [params description]);
+        
+        // params are the deep linked params associated with the link that the user clicked before showing up
+        // params will be empty if no data found
+        
+        // here is the data from the example below if a new user clicked on Joe's link and installed the app
+        NSString *invId = [params objectForKey:@"invoice_id"];
+        NSString *invNum = [params objectForKey:@"invoice_number"];
+        NSString *invImg = [params objectForKey:@"invoice_image"];
+        
+        Debug(@"inv id: %@", invId);
+        Debug(@"inv num: %@", invNum);
+        Debug(@"inv logo: %@", invImg);
+        
+        // route to a profile page in the app for Joe
+        // show a customer welcome
+    } withLaunchOptions:launchOptions];
+    
+    // Mixpanel
+    [Mixpanel sharedInstanceWithToken:MP_TOKEN];
+    
+    [self cycleTheGlobalMailComposer];
     
     return YES;
 }
@@ -141,6 +176,8 @@ static NSString *const iOSAppStoreURLFormat = @"http://itunes.apple.com/app/id%d
                 // set cookie for session id
                 NSString *sessionId = [responseData objectForKey:SESSION_ID_KEY];
                 [Util setSession:sessionId];
+                NSString *userId = [responseData objectForKey:USER_ID];
+                [Util setUserId:userId];
                 
                 Organization *currentOrg = [Organization getSelectedOrg];
                 
@@ -206,6 +243,17 @@ static NSString *const iOSAppStoreURLFormat = @"http://itunes.apple.com/app/id%d
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
 //    [InboxViewController freeMem];
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    Debug(@"URL: %@", url);
+    Debug(@"Source app: %@", sourceApplication);
+    
+    if (![[Branch getInstance] handleDeepLink:url]) {
+        Error(@"Branch handle deep link returns false.");
+    }
+    
+    return YES;
 }
 
 // increment numNetworkActivities

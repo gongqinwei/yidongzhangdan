@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
 
 #define UIAppDelegate       ((BDCAppDelegate *)[UIApplication sharedApplication].delegate)
 
@@ -15,6 +16,9 @@
 @property (strong, nonatomic) UIWindow *window;
 
 @property (nonatomic, assign) int numNetworkActivities;
+@property (nonatomic, strong) MFMailComposeViewController *globalMailer;
+
+- (void)cycleTheGlobalMailComposer;
 
 - (void)incrNetworkActivities;
 - (void)decrNetworkActivities;

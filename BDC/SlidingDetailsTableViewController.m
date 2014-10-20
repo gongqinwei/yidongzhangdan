@@ -15,9 +15,13 @@
 #import "Uploader.h"
 #import "TutorialControl.h"
 #import <QuartzCore/QuartzCore.h>
+#import <MessageUI/MessageUI.h>
 #ifndef LITE_VERSION
 #import "RateAppManager.h"
 #endif
+
+#import "Branch.h"
+#import "BDCAppDelegate.h"
 
 
 #define IMG_PADDING                     10
@@ -35,7 +39,7 @@ static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
 static double animatedDistance = 0;
 
 
-@interface SlidingDetailsTableViewController()
+@interface SlidingDetailsTableViewController() <MFMailComposeViewControllerDelegate>
 
 @property (nonatomic, strong) TutorialControl *detailsVCTutorialOverlay;
 
@@ -168,8 +172,8 @@ static double animatedDistance = 0;
         self.isActive = self.busObj.isActive;
         
         if ((self.isAP && [Organization getSelectedOrg].enableAP) || (self.isAR && [Organization getSelectedOrg].enableAR)) {
-            self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
-            self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
+            self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, ACTION_BNC_SHARE, nil];
+            self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, ACTION_BNC_SHARE, nil];
             if (self.isActive) {
                 self.actionMenuVC.crudActions = self.crudActions;
             } else {
@@ -842,7 +846,63 @@ static double animatedDistance = 0;
         [alert show];
     } else if ([action isEqualToString:ACTION_UNDELETE]) {
         [self toggleActiveness];        
+    } else if ([action isEqualToString:ACTION_BNC_SHARE]) {
+        Branch * branch = [Branch getInstance:BNC_APP_KEY];
+        [branch getShortURLWithParams:[NSDictionary dictionaryWithObject:self.busObj.objectId forKey:@"objId"] andCallback:^(NSString *url) {
+            Debug(@"=== url: %@", url);
+            [self sendBNCShareEmail:url];
+        }];
     }
+}
+
+- (void)sendBNCShareEmail:(NSString *)url {
+    if ([MFMailComposeViewController canSendMail]) {
+        UIAppDelegate.globalMailer.mailComposeDelegate = self;
+        
+        [UIAppDelegate.globalMailer setSubject:[NSString stringWithFormat:@"%@ wants to share a Bill.com %@ with you", [Util getUserFullName], self.busObjClass]];
+        
+        NSArray *toRecipients = [NSArray arrayWithObjects:@"gongqinwei@gmail.com", nil];
+        [UIAppDelegate.globalMailer setToRecipients:toRecipients];
+        
+        NSString *emailBody = url;
+        [UIAppDelegate.globalMailer setMessageBody:emailBody isHTML:YES];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self presentViewController:UIAppDelegate.globalMailer animated:YES completion:nil];
+        });
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure"
+                                                        message:@"Your device doesn't support the composer sheet"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles: nil];
+        [alert show];
+    }
+}
+
+#pragma mark - MailComposer delegate
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+    switch (result){
+        case MFMailComposeResultSent:
+            [UIHelper showInfo: EMAIL_SENT withStatus:kSuccess];
+            break;
+        case MFMailComposeResultCancelled:
+            break;
+        case MFMailComposeResultSaved:
+            break;
+        case MFMailComposeResultFailed:
+            [UIHelper showInfo: EMAIL_FAILED withStatus:kFailure];
+            break;
+        default:
+            [UIHelper showInfo: EMAIL_FAILED withStatus:kError];
+            break;
+    }
+    
+    // Remove the mail view
+    [self dismissViewControllerAnimated:YES completion:^{
+        [UIAppDelegate cycleTheGlobalMailComposer];
+    }];
 }
 
 #pragma mark - Model Delegate methods
