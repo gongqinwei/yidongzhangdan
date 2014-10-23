@@ -159,11 +159,11 @@ static NSMutableDictionary *inactiveItems = nil;
     return [NSMutableArray arrayWithArray:[inactiveItems allValues]];
 }
 
-+ (int)count {
++ (NSUInteger)count {
     return items.count;
 }
 
-+ (int)countInactive {
++ (NSUInteger)countInactive {
     return inactiveItems.count;
 }
 
@@ -193,7 +193,7 @@ static NSMutableDictionary *inactiveItems = nil;
 }
 
 + (void)retrieveListForActive:(BOOL)isActive {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSString *filter = isActive ? LIST_ACTIVE_FILTER : LIST_INACTIVE_FILTER;
     NSString *action = [LIST_API stringByAppendingString: ITEM_API];
@@ -203,7 +203,7 @@ static NSMutableDictionary *inactiveItems = nil;
         NSInteger response_status;
         id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
             NSMutableDictionary *itemDict;

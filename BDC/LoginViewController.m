@@ -15,7 +15,6 @@
 #import "SelectOrgViewController.h"
 #import "BDCAppDelegate.h"
 #import "UIHelper.h"
-#import "Branch.h"
 #import "Mixpanel.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -23,7 +22,7 @@
 #define FAIL_LIST_ORGS              @"Failed to retrieve Org list!"
 
 
-@interface LoginViewController () <OrgDelegate, ProfileDelegate>
+@interface LoginViewController () <OrgDelegate>
 
 @property (nonatomic, strong) Organization *firstOrg;
 
@@ -191,8 +190,6 @@
                 } else {
                     [Organization selectOrg:self.firstOrg];
                     
-                    [User GetLoginUser].profileDelegate = self;
-                    
                     [User GetUserInfo:userId];
                     
 //                    [User RetrieveProfiles];      // only admin can list profiles
@@ -234,22 +231,6 @@
 #pragma mark - Profile delegate method
 - (void)didFinishProfileCheckList {
     [self transitToLogin];
-    [self tracking];    //TODO: not called!
-}
-
-- (void)tracking {
-    // Branch Metrics
-    Branch *branch = [Branch getInstance:BNC_APP_KEY];
-    [branch identifyUser:[Util getUserId]];
-    
-    NSDictionary *properties = [NSDictionary dictionaryWithObjects:@[[Util getUserId], [Util getUserFullName], [Util getUserEmail], self.firstOrg.objectId, self.firstOrg.name] forKeys:TRACKING_EVENT_KEYS];
-    [branch userCompletedAction:@"Login" withState:properties];
-    
-    // Mixpanel
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel identify:[Util getUserId]];
-    [mixpanel registerSuperProperties:properties];
-    [mixpanel track:@"Login"];
 }
 
 @end

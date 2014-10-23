@@ -35,7 +35,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
     approvers = [NSMutableDictionary dictionary];
 }
 
-+ (int)count {
++ (NSUInteger)count {
     return approvers.count;
 }
 
@@ -64,13 +64,13 @@ static id <ApproverListDelegate> ListDelegate = nil;
 }
 
 + (void)retrieveList {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
 
     [APIHandler asyncGetCallWithAction:APPROVER_LIST_API Info:nil AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
         id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
 
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
             NSArray *jsonApprovers = (NSArray *)json;
@@ -102,7 +102,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
 }
 
 + (void)retrieveListForVendor:(NSString *)vendorId andSmartData:(BOOL)smartData {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSString *action = [NSString stringWithFormat:@"%@?Vendor=%@&type=bill", APPROVER_LIST_API, vendorId];
     
@@ -110,7 +110,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
         NSInteger response_status;
         id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
             if (approvers) {
@@ -162,7 +162,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
 }
 
 + (void)retrieveListForObject:(NSString *)objId {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"entity\" : \"Bill\"}", OBJ_ID, objId];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, objStr, nil];
@@ -171,7 +171,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
         NSInteger response_status;
         NSArray *jsonApprovers = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
             NSMutableArray *approverArr = [NSMutableArray array];
@@ -207,7 +207,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
 }
 
 + (void)setList:(NSArray *)approvers forObject:(NSString *)objId {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSMutableString *approverList = [NSMutableString string];
     for (int i = 0; i < approvers.count; i++) {
@@ -226,7 +226,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
         NSInteger response_status;
         [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
             // update approver list mainly to update "Sent" status

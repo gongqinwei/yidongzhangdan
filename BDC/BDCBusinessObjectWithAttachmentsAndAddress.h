@@ -17,7 +17,7 @@
 @property (nonatomic, strong) NSString *addr4;
 @property (nonatomic, strong) NSString *city;
 @property (nonatomic, strong) id state;
-@property (nonatomic, assign) int country;
+@property (nonatomic, assign) NSUInteger country;
 @property (nonatomic, strong) NSString *zip;
 @property (nonatomic, assign) double latitude;
 @property (nonatomic, assign) double longitude;

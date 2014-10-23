@@ -74,7 +74,7 @@ static NSMutableSet *billsToApproveSet;
 }
 
 - (void)makeApprovalDecision:(NSString *)action withComment:(NSString *)comment {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSString *filter = [NSString stringWithFormat:APPROVAL_DATA, self.objectId, comment];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, filter, nil];
@@ -83,7 +83,7 @@ static NSMutableSet *billsToApproveSet;
         NSInteger response_status;
         [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
             [billsToApprove removeObject:self];
@@ -322,11 +322,11 @@ static NSMutableSet *billsToApproveSet;
     return inactiveBills;
 }
 
-+ (int)count {
++ (NSUInteger)count {
     return bills.count;
 }
 
-+ (int)countInactive {
++ (NSUInteger)countInactive {
     return inactiveBills.count;
 }
 
@@ -339,7 +339,7 @@ static NSMutableSet *billsToApproveSet;
 }
 
 + (void)retrieveListForApproval:(void (^)(UIBackgroundFetchResult))completionHandler {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, [NSString stringWithFormat:LIST_APPROVALS_FILTER, [Util getUserId]], nil];
     
@@ -347,7 +347,7 @@ static NSMutableSet *billsToApproveSet;
         NSInteger response_status;
         id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
             [[User GetLoginUser] markProfileFor:kToApproveChecked checked:YES];
@@ -406,7 +406,7 @@ static NSMutableSet *billsToApproveSet;
 }
 
 + (void)retrieveListForActive:(BOOL)isActive reload:(BOOL)needReload {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSString *filter = isActive ? LIST_ACTIVE_BILL_FILTER : LIST_INACTIVE_BILL_FILTER;
     NSString *action = [LIST_API stringByAppendingString: BILL_API];
@@ -416,7 +416,7 @@ static NSMutableSet *billsToApproveSet;
         NSInteger response_status;
         id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
             [[User GetLoginUser] markProfileFor:kBillsChecked checked:YES];

@@ -10,6 +10,7 @@
 #import "Constants.h"
 #import "KeychainItemWrapper.h"
 #import "Branch.h"
+#import "Mixpanel.h"
 #import <Security/Security.h>
 
 #define STAY_LOGGED_IN      @"StayLoggedIn"
@@ -24,6 +25,10 @@
     // Branch Metrics
     Branch *branch = [Branch getInstance];
     [branch clearUser];
+    
+    // Mixpanel
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Logout"];
 }
 
 + (void)setUsername:(NSString *)username andPassword:(NSString *)password {

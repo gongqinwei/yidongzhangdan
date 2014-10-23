@@ -17,6 +17,9 @@
 #import "Document.h"
 #import "Bill.h"
 
+#import "Branch.h"
+#import "Mixpanel.h"
+
 
 #define LIST_ACTIVE_USER_FILTER     @"{ \"start\" : 0, \
                                         \"max\" : 999, \
@@ -154,8 +157,24 @@ static id<UserDelegate> UserDelegate = nil;
     UserDelegate = delegate;
 }
 
+
++ (void)tracking {
+    // Branch Metrics
+    Branch *branch = [Branch getInstance:BNC_APP_KEY];
+    [branch identifyUser:[Util getUserId]];
+    
+    NSDictionary *properties = [NSDictionary dictionaryWithObjects:@[[Util getUserId], [Util getUserFullName], [Util getUserEmail], [Organization getSelectedOrg].objectId, [Organization getSelectedOrg].name] forKeys:TRACKING_EVENT_KEYS];
+    [branch userCompletedAction:@"Login" withState:properties];
+    
+    // Mixpanel
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel identify:[Util getUserId]];
+    [mixpanel registerSuperProperties:properties];
+    [mixpanel track:@"Login"];
+}
+
 + (void)GetUserInfo:(NSString *)userId {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, READ, USER_API];
     NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", _ID, userId];
@@ -165,7 +184,7 @@ static id<UserDelegate> UserDelegate = nil;
         NSInteger response_status;
         NSArray *jsonUser = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
             NSDictionary *dict = (NSDictionary*)jsonUser;
@@ -177,6 +196,9 @@ static id<UserDelegate> UserDelegate = nil;
             [Util setUserProfile:profileId Fname:fName Lname:lName Email:userEmail];
             
             [UserDelegate didGetUserInfo];
+            
+            // tracking
+            [User tracking];
             
 //            [User GetOrgFeaturesForProfile:profileId];
             
@@ -191,7 +213,7 @@ static id<UserDelegate> UserDelegate = nil;
 }
 
 + (void)RetrieveProfiles {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSString *filter = LIST_PROFILE_FILTER;
     NSString *action = [LIST_API stringByAppendingString: PROFILE_API];
@@ -201,7 +223,7 @@ static id<UserDelegate> UserDelegate = nil;
         NSInteger response_status;
         [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
             // only administrator role can successfully retrieve profiles

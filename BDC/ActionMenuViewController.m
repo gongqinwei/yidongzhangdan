@@ -579,7 +579,7 @@ static ActionMenuViewController * _sharedInstance = nil;
 }
 
 - (void)toggleSearchResultsSection:(UIButton *)sender {
-    int section = sender.tag;
+    NSUInteger section = sender.tag;
     NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:section];
     
     if ([self.searchDisplayController.searchResultsTableView numberOfRowsInSection:section] > 0) {

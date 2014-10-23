@@ -1669,7 +1669,7 @@ typedef enum {
         [self getBillNumberFromTextField:textField];
     } else {
         if (textField.tag % 2) {
-            int idx = (textField.tag - [BillInfo count] * TAG_BASE) / 2;
+            NSUInteger idx = (textField.tag - [BillInfo count] * TAG_BASE) / 2;
             APLineItem * item = [((Bill *)self.shaddowBusObj).lineItems objectAtIndex:idx];
             
             if (self.mode == kAttachMode) {
@@ -1696,7 +1696,7 @@ typedef enum {
         if (textField.objectTag) {
             if (textField.tag % 2 == 0) {
                 APLineItem *item = textField.objectTag;
-                int row;
+                NSUInteger row;
                 
                 if (item.account.objectId) {
                     row = [self.chartOfAccounts indexOfObject:item.account] + 1;
@@ -1858,7 +1858,7 @@ typedef enum {
             [Approver retrieveListForVendor:vendor.objectId andSmartData:YES];
         }
     } else {
-        int idx = (self.currentField.tag - [BillInfo count] * TAG_BASE) / 2;
+        NSUInteger idx = (self.currentField.tag - [BillInfo count] * TAG_BASE) / 2;
         APLineItem * item = [((Bill *)self.shaddowBusObj).lineItems objectAtIndex:idx];
         
         if (row == 0) {

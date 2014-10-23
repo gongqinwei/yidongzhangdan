@@ -76,7 +76,7 @@ static NSLock *DocumentsLock = nil;
 - (void)setData:(NSData *)data {
     if (data) {
         if ([self isImageOrPDF]) {
-            int size = data.length;
+            NSUInteger size = data.length;
             if (size > COMPRESSION_THRESHOLD) {
                 UIImage *img = [UIImage imageWithData:data];
                 data = UIImageJPEGRepresentation(img, COMPRESSION_THRESHOLD / size);
@@ -160,7 +160,7 @@ static NSLock *DocumentsLock = nil;
 }
 
 + (void)retrieveListForCategory:(NSString *)category {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSString *str = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", FILE_CATEGORY, category];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, str, nil];
@@ -169,7 +169,7 @@ static NSLock *DocumentsLock = nil;
         NSInteger response_status;
         id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
             [[User GetLoginUser] markProfileFor:kInboxChecked checked:YES];

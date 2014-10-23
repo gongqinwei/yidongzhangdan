@@ -378,7 +378,7 @@ static double animatedDistance = 0;
         UIImageView *imageView = (UIImageView *)gestureRecognizer.view;
         [self selectAttachment:imageView];
         
-        int idx = imageView.tag;
+        NSUInteger idx = imageView.tag;
         if (idx < self.shaddowBusObj.attachments.count) {       // safety check
             Document *doc = self.shaddowBusObj.attachments[idx];
             
@@ -400,7 +400,7 @@ static double animatedDistance = 0;
         [self selectAttachment:(UIImageView *)gestureRecognizer.view];
         
         if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-            int idx = self.currAttachment.tag;
+            NSUInteger idx = self.currAttachment.tag;
             
             if (idx < self.shaddowBusObj.attachments.count) {       // safety check
                 Document *doc = [self.shaddowBusObj.attachments objectAtIndex:idx];
@@ -857,18 +857,19 @@ static double animatedDistance = 0;
 
 - (void)sendBNCShareEmail:(NSString *)url {
     if ([MFMailComposeViewController canSendMail]) {
-        UIAppDelegate.globalMailer.mailComposeDelegate = self;
+        MFMailComposeViewController *mailer = [UIAppDelegate getMailer];
+        mailer.mailComposeDelegate = self;
         
-        [UIAppDelegate.globalMailer setSubject:[NSString stringWithFormat:@"%@ wants to share a Bill.com %@ with you", [Util getUserFullName], self.busObjClass]];
+        [mailer setSubject:[NSString stringWithFormat:@"%@ wants to share a Bill.com %@ with you", [Util getUserFullName], self.busObjClass]];
         
         NSArray *toRecipients = [NSArray arrayWithObjects:@"gongqinwei@gmail.com", nil];
-        [UIAppDelegate.globalMailer setToRecipients:toRecipients];
+        [mailer setToRecipients:toRecipients];
         
         NSString *emailBody = url;
-        [UIAppDelegate.globalMailer setMessageBody:emailBody isHTML:YES];
+        [mailer setMessageBody:emailBody isHTML:YES];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self presentViewController:UIAppDelegate.globalMailer animated:YES completion:nil];
+            [self presentViewController:mailer animated:YES completion:nil];
         });
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure"
@@ -901,7 +902,7 @@ static double animatedDistance = 0;
     
     // Remove the mail view
     [self dismissViewControllerAnimated:YES completion:^{
-        [UIAppDelegate cycleTheGlobalMailComposer];
+//        [UIAppDelegate cycleTheGlobalMailComposer];
     }];
 }
 

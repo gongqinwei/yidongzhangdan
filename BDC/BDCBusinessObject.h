@@ -53,7 +53,7 @@
 + (id)listInactive;
 + (id)listOrderBy:(NSString *)attribue ascending:(Boolean)isAscending active:(Boolean)isActive;
 + (void)clone:(BDCBusinessObject *)source to:(BDCBusinessObject *)target;
-+ (int)count;
-+ (int)countInactive;
++ (NSUInteger)count;
++ (NSUInteger)countInactive;
 
 @end

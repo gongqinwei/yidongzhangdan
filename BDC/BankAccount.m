@@ -34,12 +34,12 @@ static NSArray *bankAccounts = nil;
     return bankAccounts;
 }
 
-+ (int)count {
++ (NSUInteger)count {
     return bankAccounts.count;
 }
 
 + (void)retrieveList {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSString *filter = LIST_BANK_ACCOUNT_FILTER;
     NSString *action = [LIST_API stringByAppendingString: BANK_ACCOUNT_API];
@@ -49,7 +49,7 @@ static NSArray *bankAccounts = nil;
         NSInteger response_status;
         id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
 
         if(response_status == RESPONSE_SUCCESS) {
             NSMutableArray *accounts = [NSMutableArray array];

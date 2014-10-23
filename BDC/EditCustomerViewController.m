@@ -862,7 +862,7 @@ enum CustomerInfoType {
             shaddowCustomer.state = [NSNumber numberWithInt:INVALID_OPTION];
         } else {
             self.customerStateTextField.text = [US_STATES objectAtIndex: row - 1];
-            shaddowCustomer.state = [NSNumber numberWithInt: row - 1];
+            shaddowCustomer.state = [NSNumber numberWithUnsignedInteger: row - 1];
         }
     } else if (pickerView.tag == (kCountry + CUSTOMER_ADDR_TAG_OFFSET) * PICKER_TAG_BASE) {
         if (row == 0) {
@@ -923,7 +923,7 @@ enum CustomerInfoType {
         [invsVC.actionMenuVC.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 1)] withRowAnimation:UITableViewRowAnimationAutomatic];
         
         if ([invsVC.customerSectionLabels containsObject:self.busObj.name]) {
-            int section = [invsVC.customerSectionLabels indexOfObject:self.busObj.name];
+            NSUInteger section = [invsVC.customerSectionLabels indexOfObject:self.busObj.name];
             [invsVC.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:section] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         } else {
             [UIHelper showInfo:[NSString stringWithFormat:@"There's no unpaid invoices for %@", self.busObj.name] withStatus:kInfo];

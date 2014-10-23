@@ -826,7 +826,7 @@ enum VendorInfoType {
             shaddowVendor.state = [NSNumber numberWithInt:INVALID_OPTION];
         } else {
             self.vendorStateTextField.text = [US_STATES objectAtIndex: row - 1];
-            shaddowVendor.state = [NSNumber numberWithInt: row - 1];
+            shaddowVendor.state = [NSNumber numberWithUnsignedInteger: row - 1];
         }
     } else if (pickerView.tag == (kCountry + VENDOR_ADDR_TAG_OFFSET) * PICKER_TAG_BASE) {
         if (row == 0) {
@@ -890,7 +890,7 @@ enum VendorInfoType {
         [billsVC.actionMenuVC.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 1)] withRowAnimation:UITableViewRowAnimationAutomatic];
         
         if ([billsVC.vendorSectionLabels containsObject:self.busObj.name]) {
-            int section = [billsVC.vendorSectionLabels indexOfObject:self.busObj.name];
+            NSUInteger section = [billsVC.vendorSectionLabels indexOfObject:self.busObj.name];
             [billsVC.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:section] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         } else {
             [UIHelper showInfo:[NSString stringWithFormat:@"There's no unpaid bills for %@", self.busObj.name] withStatus:kInfo];

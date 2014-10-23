@@ -167,7 +167,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
         
         cell.detailTextLabel.text = item.name;
-        cell.textLabel.text = [[Util formatCurrency:item.price] stringByAppendingFormat:@"  x  %d", item.qty];
+        cell.textLabel.text = [[Util formatCurrency:item.price] stringByAppendingFormat:@"  x  %lu", (unsigned long)item.qty];
         cell.textLabel.textColor = AMOUNT_COLOR;
         cell.detailTextLabel.font = [UIFont systemFontOfSize:14.0];
     } else {
@@ -286,7 +286,7 @@
 
 - (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
     if ([self tryTap]) {
-        [self performSegueWithIdentifier:ITEM_MODIFY_ITEM_SEGUE sender:[NSNumber numberWithInt:indexPath.row]];
+        [self performSegueWithIdentifier:ITEM_MODIFY_ITEM_SEGUE sender:[NSNumber numberWithUnsignedInteger:indexPath.row]];
     }
 }
 

@@ -143,7 +143,7 @@ static NSMutableDictionary *inactiveAccounts = nil;
             [sortedArray removeObject:account];
             ChartOfAccount *parent = [ChartOfAccount objectForKey:account.parent];
             if ([sortedArray containsObject:parent]) {
-                int parentIndex = [sortedArray indexOfObject:parent];
+                NSUInteger parentIndex = [sortedArray indexOfObject:parent];
                 [sortedArray insertObject:account atIndex:parentIndex + 1];
                 
                 [ChartOfAccount indentNameForAccount:account];
@@ -171,7 +171,7 @@ static NSMutableDictionary *inactiveAccounts = nil;
 }
 
 + (void)retrieveListForActive:(BOOL)isActive {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSString *filter = isActive ? LIST_ACTIVE_FILTER : LIST_INACTIVE_FILTER;
     NSString *action = [LIST_API stringByAppendingString: ACCOUNT_API];
@@ -181,7 +181,7 @@ static NSMutableDictionary *inactiveAccounts = nil;
         NSInteger response_status;
         id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
             NSMutableDictionary *accountDict;

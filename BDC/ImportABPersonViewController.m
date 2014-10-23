@@ -33,7 +33,7 @@ enum ABPersonDetailsType {
 @property (nonatomic, strong) NSArray *personEmailsArr;
 @property (nonatomic, strong) UITextField *companyField;
 @property (nonatomic, strong) MFMailComposeViewController *mailer;
-@property (nonatomic, assign) int emailRow;
+@property (nonatomic, assign) long emailRow;
 
 @end
 
@@ -178,7 +178,7 @@ enum ABPersonDetailsType {
 - (void)importAB:(UIButton *)sender {
     if ([self tryTap]) {
         BDCBusinessObjectWithAttachmentsAndAddress *obj = [[self.importingClass alloc] init];
-        int nameRow = -1;
+        long nameRow = -1;
         self.emailRow = self.person.emails.count == 1 ? 0 : -1;
         
         NSArray *selectedIndexPaths = [self.tableView indexPathsForSelectedRows];

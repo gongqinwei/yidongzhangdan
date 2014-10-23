@@ -302,7 +302,7 @@ enum ItemInfoType {
             {
                 if (self.mode == kModifyMode) {
                     if (self.shaddowBusObj != nil) {
-                        self.itemQtyTextField.text = [NSString stringWithFormat:@"%d", shaddowItem.qty];
+                        self.itemQtyTextField.text = [NSString stringWithFormat:@"%lu", (unsigned long)shaddowItem.qty];
                     }
                     self.itemQtyTextField.backgroundColor = cell.backgroundColor;
                     

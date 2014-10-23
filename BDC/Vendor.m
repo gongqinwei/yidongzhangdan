@@ -60,11 +60,11 @@ static NSMutableDictionary * inactiveVendors = nil;
     return [NSMutableArray arrayWithArray:[inactiveVendors allValues]];
 }
 
-+ (int)count {
++ (NSUInteger)count {
     return vendors.count;
 }
 
-+ (int)countInactive {
++ (NSUInteger)countInactive {
     return inactiveVendors.count;
 }
 
@@ -106,7 +106,7 @@ static NSMutableDictionary * inactiveVendors = nil;
         }
     } else {
         if (self.country == 0 || self.country == US_FULL_INDEX) {  //USA
-            self.state = [NSNumber numberWithInt: [US_STATE_CODES indexOfObject:state]];
+            self.state = [NSNumber numberWithUnsignedInteger: [US_STATE_CODES indexOfObject:state]];
         } else {
             self.state = [NSString stringWithString: state];
         }
@@ -122,7 +122,7 @@ static NSMutableDictionary * inactiveVendors = nil;
 }
 
 + (void)retrieveListForActive:(BOOL)isActive {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSString *filter = isActive ? LIST_ACTIVE_FILTER : LIST_INACTIVE_FILTER;
     NSString *action = [LIST_API stringByAppendingString: VENDOR_API];
@@ -132,7 +132,7 @@ static NSMutableDictionary * inactiveVendors = nil;
         NSInteger response_status;
         id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
 
         if(response_status == RESPONSE_SUCCESS) {
             NSMutableDictionary *vendorDict;

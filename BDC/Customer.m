@@ -63,11 +63,11 @@ static NSMutableDictionary * inactiveCustomers = nil;
     return [NSMutableArray arrayWithArray:[inactiveCustomers allValues]];
 }
 
-+ (int)count {
++ (NSUInteger)count {
     return customers.count;
 }
 
-+ (int)countInactive {
++ (NSUInteger)countInactive {
     return inactiveCustomers.count;
 }
 
@@ -108,7 +108,7 @@ static NSMutableDictionary * inactiveCustomers = nil;
         }
     } else {
         if (self.country == 0 || self.country == US_FULL_INDEX) {  //USA
-            self.state = [NSNumber numberWithInt: [US_STATE_CODES indexOfObject:state]];
+            self.state = [NSNumber numberWithUnsignedInteger: [US_STATE_CODES indexOfObject:state]];
         } else {
             self.state = [NSString stringWithString: state];
         }
@@ -123,7 +123,7 @@ static NSMutableDictionary * inactiveCustomers = nil;
 }
 
 + (void)retrieveListForActive:(BOOL)isActive {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSString *filter = isActive ? LIST_ACTIVE_FILTER : LIST_INACTIVE_FILTER;
     NSString *action = [LIST_API stringByAppendingString: CUSTOMER_API];
@@ -133,7 +133,7 @@ static NSMutableDictionary * inactiveCustomers = nil;
         NSInteger response_status;
         id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
             NSMutableDictionary *customerDict;

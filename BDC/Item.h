@@ -45,9 +45,9 @@ typedef enum {
 
 @interface Item : BDCBusinessObjectWithAttachments
 
-@property (nonatomic, assign) int type;
+@property (nonatomic, assign) NSUInteger type;
 @property (nonatomic, strong) NSDecimalNumber *price;
-@property (nonatomic, assign) int qty;
+@property (nonatomic, assign) NSUInteger qty;
 @property (nonatomic, strong) NSString *desc;
 
 + (void)setListDelegate:(id<ItemListDelegate>)listDelegate;

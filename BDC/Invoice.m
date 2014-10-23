@@ -146,13 +146,13 @@ static NSMutableArray *inactiveInvoices = nil;
     [objStr appendFormat:@"\"%@\" : \"%@\", ", INV_DATE, [Util formatDate:self.invoiceDate format:@"yyyy-MM-dd"]];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", INV_DUE_DATE, [Util formatDate:self.dueDate format:@"yyyy-MM-dd"]];
     [objStr appendFormat:@"\"%@\" : [", INV_LINE_ITEMS];
-    int total = [self.lineItems count];
+    NSUInteger total = [self.lineItems count];
     int i = 0;
     for (Item* item in self.lineItems) {
         [objStr appendString:@"{"];
         [objStr appendFormat:@"\"%@\" : \"%@\", ", ENTITY, INV_LINE_ITEM];
         [objStr appendFormat:@"\"%@\" : \"%@\", ", INV_ITEM_ID, item.objectId];
-        [objStr appendFormat:@"\"%@\" : %d, ", INV_ITEM_QUANTITY, item.qty];
+        [objStr appendFormat:@"\"%@\" : %lu, ", INV_ITEM_QUANTITY, (unsigned long)item.qty];
         [objStr appendFormat:@"\"%@\" : %@", INV_ITEM_PRICE, item.price];
         [objStr appendString:@"}"];
         if (i < total - 1) {
@@ -269,11 +269,11 @@ static NSMutableArray *inactiveInvoices = nil;
     return inactiveInvoices;
 }
 
-+ (int)count {
++ (NSUInteger)count {
     return invoices.count;
 }
 
-+ (int)countInactive {
++ (NSUInteger)countInactive {
     return inactiveInvoices.count;
 }
 
@@ -302,7 +302,7 @@ static NSMutableArray *inactiveInvoices = nil;
 }
 
 + (void)retrieveListForActive:(BOOL)isActive reload:(BOOL)needReload {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSString *filter = isActive ? LIST_ACTIVE_INV_FILTER : LIST_INACTIVE_INV_FILTER;
     NSString *action = [LIST_API stringByAppendingString: INVOICE_API];
@@ -312,7 +312,7 @@ static NSMutableArray *inactiveInvoices = nil;
         NSInteger response_status;
         id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
 
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
             [[User GetLoginUser] markProfileFor:kInvoicesChecked checked:YES];

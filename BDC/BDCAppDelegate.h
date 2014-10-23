@@ -16,13 +16,12 @@
 @property (strong, nonatomic) UIWindow *window;
 
 @property (nonatomic, assign) int numNetworkActivities;
-@property (nonatomic, strong) MFMailComposeViewController *globalMailer;
-
-- (void)cycleTheGlobalMailComposer;
 
 - (void)incrNetworkActivities;
 - (void)decrNetworkActivities;
 
 - (void)presentUpgrade;
+
+- (MFMailComposeViewController *)getMailer;
 
 @end

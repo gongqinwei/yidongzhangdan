@@ -32,18 +32,20 @@
 @end
 
 static NSString *const iOSAppStoreURLFormat = @"http://itunes.apple.com/app/id%d?at=10l6dK";
+static MFMailComposeViewController *globalMailer;
 
 @implementation BDCAppDelegate
 
 @synthesize window = _window;
 @synthesize numNetworkActivities = _numNetworkActivities;
 @synthesize isFirstLaunch;
-@synthesize globalMailer;
 
 
-- (void)cycleTheGlobalMailComposer {
-    self.globalMailer = nil;
-    self.globalMailer = [[MFMailComposeViewController alloc] init];
+- (MFMailComposeViewController *)getMailer {
+    globalMailer = nil;
+    globalMailer = [[MFMailComposeViewController alloc] init];
+    
+    return globalMailer;
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -90,6 +92,8 @@ static NSString *const iOSAppStoreURLFormat = @"http://itunes.apple.com/app/id%d
 {
     [self setupNavigationBarForiOS7];
     
+    [self getMailer];
+    
     self.isFirstLaunch = YES;
     self.numNetworkActivities = 0;
     
@@ -106,13 +110,9 @@ static NSString *const iOSAppStoreURLFormat = @"http://itunes.apple.com/app/id%d
         // params will be empty if no data found
         
         // here is the data from the example below if a new user clicked on Joe's link and installed the app
-        NSString *invId = [params objectForKey:@"invoice_id"];
-        NSString *invNum = [params objectForKey:@"invoice_number"];
-        NSString *invImg = [params objectForKey:@"invoice_image"];
-        
-        Debug(@"inv id: %@", invId);
-        Debug(@"inv num: %@", invNum);
-        Debug(@"inv logo: %@", invImg);
+        Debug(@"inv id: %@", [params objectForKey:@"invoice_id"]);
+        Debug(@"inv num: %@", [params objectForKey:@"invoice_number"]);
+        Debug(@"inv logo: %@", [params objectForKey:@"invoice_image"]);
         
         // route to a profile page in the app for Joe
         // show a customer welcome
@@ -121,7 +121,9 @@ static NSString *const iOSAppStoreURLFormat = @"http://itunes.apple.com/app/id%d
     // Mixpanel
     [Mixpanel sharedInstanceWithToken:MP_TOKEN];
     
-    [self cycleTheGlobalMailComposer];
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel identify:[Util getUserId]];
+    [mixpanel track:@"Launch App"];
     
     return YES;
 }

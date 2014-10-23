@@ -645,7 +645,7 @@ typedef enum {
 //                qty = [quantity integerValue];
 //            }
 
-            NSDecimalNumber *amount = [item.price decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithDecimal:[[NSNumber numberWithInt:item.qty] decimalValue]]];
+            NSDecimalNumber *amount = [item.price decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithDecimal:[[NSNumber numberWithUnsignedInteger:item.qty] decimalValue]]];
             cell.textLabel.text = item.name;
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             
@@ -666,7 +666,7 @@ typedef enum {
 //                        [view removeFromSuperview];
 //                    }
 //                }
-                cell.detailTextLabel.text = [[Util formatCurrency:amount] stringByAppendingFormat:@"  (%d pcs)", item.qty];
+                cell.detailTextLabel.text = [[Util formatCurrency:amount] stringByAppendingFormat:@"  (%lu pcs)", (unsigned long)item.qty];
             } else {
                 UITextField *itemAmountTextField = [[UITextField alloc] initWithFrame:INV_ITEM_AMOUNT_RECT];
                 itemAmountTextField.text = [Util formatCurrency:amount];
@@ -942,7 +942,7 @@ typedef enum {
             case kInvoiceLineItems:
             {
 //                item.editInvoiceDelegate = self;
-                [self performSegueWithIdentifier:INV_MODIFY_ITEM_DETAILS_SEGUE sender:[NSNumber numberWithInt:indexPath.row]];
+                [self performSegueWithIdentifier:INV_MODIFY_ITEM_DETAILS_SEGUE sender:[NSNumber numberWithUnsignedInteger:indexPath.row]];
             }
                 break;
             default:
@@ -1057,7 +1057,7 @@ typedef enum {
                 if (self.pdfReady) {
                     [view performSelector:@selector(setEnabled:) withObject:[NSNumber numberWithBool:YES]];
                 } else {
-                    [view performSelector:@selector(setEnabled:) withObject:NO];
+                    [view performSelector:@selector(setEnabled:) withObject:[NSNumber numberWithBool:NO]];
                 }
             }
         }

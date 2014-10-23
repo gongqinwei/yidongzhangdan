@@ -85,7 +85,7 @@ static id <ContactListDelegate> ListDelegate = nil;
 }
 
 + (void)retrieveListForCustomer:(NSString *)customerId {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSString *filter = [NSString stringWithFormat:LIST_ACTIVE_FOR_CUSTOMER_FILTER, customerId];
     NSString *action = [LIST_API stringByAppendingString: CONTACT_API];
@@ -95,7 +95,7 @@ static id <ContactListDelegate> ListDelegate = nil;
         NSInteger response_status;
         id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
             NSMutableArray *subContacts;
@@ -137,7 +137,7 @@ static id <ContactListDelegate> ListDelegate = nil;
 }
 
 + (void)retrieveListForActive:(BOOL)isActive {
-    [UIAppDelegate incrNetworkActivities];
+//    [UIAppDelegate incrNetworkActivities];
     
     NSString *filter = LIST_ACTIVE_FILTER;
     NSString *action = [LIST_API stringByAppendingString: CONTACT_API];
@@ -147,7 +147,7 @@ static id <ContactListDelegate> ListDelegate = nil;
         NSInteger response_status;
         NSArray *jsonContacts = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        [UIAppDelegate decrNetworkActivities];
+//        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
             if (contacts) {
