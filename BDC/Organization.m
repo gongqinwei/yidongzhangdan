@@ -119,7 +119,7 @@ static Organization *selectedOrg = nil;
     return orgs;
 }
 
-+ (int)count {
++ (NSUInteger)count {
     return (int)orgs.count;
 }
 

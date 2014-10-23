@@ -107,8 +107,8 @@
     target.objectId = source.objectId;
     target.isActive = source.isActive;
 }
-+ (int)count { return 0; }
-+ (int)countInactive { return 0; }
++ (NSUInteger)count { return 0; }
++ (NSUInteger)countInactive { return 0; }
 
 
 @end
