@@ -11,7 +11,7 @@
 
 #import "Labels.h"
 
-//#define LITE_VERSION
+#define LITE_VERSION
 #define FULL_VERSION_ID     696521463
 
 //#define LOCAL
@@ -311,7 +311,7 @@ Hi %@,<br> \
 <br> \
 As you know, we are using Bill.com to manage our bills and invoices. It's awesome.<br><br> \
 We just want to share something even more awesome: there is a native iPhone app called \"Mobill\" for Bill.com now!<br><br> \
-It's sleek, simple and convenient to use, yet pretty powerful! A perfect mobile app for Bill.com, and we highly recommend it. Check it out!<br> \
+It's sleek, simple and convenient to use, yet pretty useful! A perfect mobile app for Bill.com, and we highly recommend it. Check it out!<br> \
 %@<br><br> \
 And if you want to try it out first before paying for it, you can download its free edition.<br> \
 %@<br><br> \
@@ -320,6 +320,39 @@ Best regards,<br> \
 <br> \
 %@<br> \
 <br>"
+
+#define BNC_SHARE_OBJ_EMAIL_TEMPLATE    @"\
+Hi,<br> \
+<br> \
+I have this %@, \"%@,\" in my Bill.com account, and I am reviewing it via my Mobill iPhone app.<br> \
+I'd like to share it with you. Please take a look.<br> \
+<br> \
+%@<br> \
+<br> \
+Best regards,<br> \
+<br> \
+%@<br>"
+
+#define BNC_SHARE_OBJ_SMS_TEMPLATE    @"\
+I am reviewing my Bill.com %@, \"%@\", via my Mobill iPhone app: %@ \n \
+I'd like to share it with you. Please take a look.\n  -- %@"
+
+#define BNC_SHARE_MOBILL_EMAIL_TEMPLATE    @"\
+Hi,<br> \
+<br> \
+I'd like to share something cool with you: I am using a native iPhone app, \"Mobill\", to manage my Bill.com account now!<br><br> \
+It's sleek, simple and convenient to use, yet pretty useful! A perfect mobile app for Bill.com, and I highly recommend it. Check it out!<br> \
+<br> \
+%@<br> \
+<br> \
+Best,<br> \
+<br> \
+%@<br>"
+
+#define BNC_SHARE_MOBILL_SMS_TEMPLATE    @"\
+FYI, I am using a native iPhone app, \"Mobill\", to manage my Bill.com account now!\n \
+It's sleek, simple and convenient to use, yet pretty useful! I highly recommend it. Check it out! %@\n \
+  -- %@"
 
 #define MOBILL_APP_STORE_LINK       @"http://itunes.apple.com/us/app/id696521463?mt=8"
 #define MOBILL_LITE_APP_STORE_LINK  @"http://itunes.apple.com/us/app/id765927170?mt=8"
@@ -354,6 +387,8 @@ typedef enum {
 #define EMAIL_SENT              @"Email sent successfully"
 #define EMAIL_FAILED            @"Failed to send email! Please try again."
 
+#define SMS_SENT                @"SMS sent successfully"
+#define SMS_FAILED              @"Failed to send SMS! Please try again."
 
 typedef enum {
     kARTab, kAPTab, kScanTab, kInboxTab, kProfileTab, kCustomerTab, kVendorTab,

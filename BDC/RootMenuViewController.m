@@ -25,6 +25,8 @@
 #import "Util.h"
 #import "UIHelper.h"
 #import "TutorialControl.h"
+#import "BDCAppDelegate.h"
+#import "Branch.h"
 #import <MessageUI/MessageUI.h>
 
 #define ROOT_MENU_SECTION_HEADER_HEIGHT     22
@@ -36,14 +38,20 @@
 #define SWIPE_UP_ARROW_RECT                 CGRectMake((SCREEN_WIDTH - 23) / 2, SWIPE_UP_ARROW_Y, 23, 50)
 #define CELL_DISCLOSURE_TAG                 7
 
+typedef enum {
+    kEmailShare, kMessageShare, kLinkedInShare, kFacebookShare, kTwitterShare
+} ShareOption;
 
-@interface RootMenuViewController () <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate, BillListDelegate, UserDelegate>
+@interface RootMenuViewController () <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate, BillListDelegate, UserDelegate>
 
 @property (nonatomic, strong) Organization *currentOrg;
 @property (nonatomic, strong) NSMutableArray *rootMenu;
 @property (nonatomic, strong) TutorialControl *rootMenuTutorialOverlay;
 
 @property (nonatomic, assign) BOOL isInit;  // no slided vc edge on root menu: show build-in disclosure indicator
+@property (nonatomic, strong) NSIndexPath *lastSelected;
+@property (nonatomic, assign) BOOL showShareOptions;
+@property (nonatomic, assign) ShareOption shareOption;
 
 @end
 
@@ -58,6 +66,9 @@
 @synthesize rootMenuTutorialOverlay;
 @synthesize isInit;
 @synthesize numBillsToApproveLabel;
+@synthesize lastSelected;
+@synthesize showShareOptions;
+@synthesize shareOption;
 
 
 static RootMenuViewController * _sharedInstance = nil;
@@ -135,8 +146,7 @@ static RootMenuViewController * _sharedInstance = nil;
         }
     }
     
-    [self.rootMenu addObject:[ROOT_MENU objectAtIndex:kRootMore]];      // always + More section
-    
+    [self.rootMenu addObject:[ROOT_MENU objectAtIndex:kRootMore]];          // always + More section
     
     self.menuTableView.dataSource = self;
     self.menuTableView.delegate = self;
@@ -231,6 +241,7 @@ static RootMenuViewController * _sharedInstance = nil;
     }
     
     self.isInit = YES;
+    self.showShareOptions = NO;
     
     self.numBillsToApproveLabel = [[UILabel alloc] initWithFrame:CGRectMake(140, 13, 50, 20)];
     self.numBillsToApproveLabel.backgroundColor = [UIColor clearColor];
@@ -283,11 +294,7 @@ static RootMenuViewController * _sharedInstance = nil;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = ROOT_MENU_CELL_ID;
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     
     cell.backgroundColor = [UIColor clearColor];
     if (!self.isInit) {
@@ -301,7 +308,7 @@ static RootMenuViewController * _sharedInstance = nil;
     if (indexPath.section == kRootProfile) {
         if (indexPath.row == kProfileUser) {    // temporarily same as profile org. will change to user name/email once BDC API implemented
             cell.textLabel.text = self.currentOrg.name;
-            cell.textLabel.font = [UIFont boldSystemFontOfSize:19.0];
+            cell.textLabel.font = [UIFont boldSystemFontOfSize:18.0];
             
             NSString *fname = [Util getUserFirstName];
             NSString *lname = [Util getUserLastName];
@@ -309,7 +316,7 @@ static RootMenuViewController * _sharedInstance = nil;
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", fname, lname];
             }
             
-            cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:14.0];
+//            cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:14.0];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             
             if ([Organization count] > 1) {
@@ -371,40 +378,252 @@ static RootMenuViewController * _sharedInstance = nil;
                     });
                 }
             });
-        } 
-    } else {
-        cell.textLabel.text = [[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+        }
+    } else if (indexPath.section == kRootMore - 1) {        //kRootMore - 1 is for skipping ARRootReadOnly
         NSString *menuName = [[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
         menuName = [menuName stringByReplacingOccurrencesOfString:@" " withString:@""];
         NSString *imageName = [menuName stringByAppendingString:@"Icon.png"];
         cell.imageView.image = [UIImage imageNamed:imageName];
-        cell.textLabel.font = [UIFont systemFontOfSize:17.0];
-        cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        if (self.isInit) {
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        } else {
-            [self addDisclosureIndicatorToCell:cell highlight:NO];
-        }
-        cell.userInteractionEnabled = YES;
-        
+
         UIView *bgColorView = [[UIView alloc] init];
         [bgColorView setBackgroundColor:[UIColor colorWithRed:100/255.f green:100/255.f blue:100/255.f alpha:0.75]];
         cell.selectedBackgroundView = bgColorView;
         
-        if (indexPath.section == kRootAP && indexPath.row == kAPApprove) {
-            [cell addSubview:self.numBillsToApproveLabel];
+        switch (indexPath.row) {
+            case kMoreLogout:
+            case kMoreLegal:
+                cell.textLabel.text = [[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+                cell.textLabel.font = [UIFont systemFontOfSize:16.0];
+                cell.userInteractionEnabled = YES;
+                cell.selectionStyle = UITableViewCellSelectionStyleGray;
+                
+                if (self.isInit) {
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                } else {
+                    [self addDisclosureIndicatorToCell:cell highlight:NO];
+                }
+                
+                break;
+            case kMoreShare:
+            {
+                if (!showShareOptions) {
+                    cell.textLabel.text = [[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+                    cell.textLabel.font = [UIFont systemFontOfSize:16.0];
+                    showShareOptions = YES;
+                } else {
+                    cell.textLabel.text = nil;
+                    
+                    UIButton *emailShare = [[UIButton alloc] initWithFrame:CGRectMake(55.0, cell.frame.size.height/2 - 15.0, 30.0, 30.0)];
+                    [emailShare setImage:[UIImage imageNamed:@"ImailShare.png"] forState:UIControlStateNormal];
+                    [emailShare addTarget:self action:@selector(genBNCLink:) forControlEvents:UIControlEventTouchUpInside];
+                    emailShare.tag = kEmailShare;
+                    [cell addSubview:emailShare];
+                    
+                    UIButton *messageShare = [[UIButton alloc] initWithFrame:CGRectMake(95.0, cell.frame.size.height/2 - 15.0, 30.0, 30.0)];
+                    [messageShare setImage:[UIImage imageNamed:@"MessageShare.png"] forState:UIControlStateNormal];
+                    [messageShare addTarget:self action:@selector(genBNCLink:) forControlEvents:UIControlEventTouchUpInside];
+                    messageShare.tag = kMessageShare;
+                    [cell addSubview:messageShare];
+                    
+                    UIButton *linkedInShare = [[UIButton alloc] initWithFrame:CGRectMake(135.0, cell.frame.size.height/2 - 15.0, 30.0, 30.0)];
+                    [linkedInShare setImage:[UIImage imageNamed:@"LinkedInShare.png"] forState:UIControlStateNormal];
+                    [linkedInShare addTarget:self action:@selector(genBNCLink:) forControlEvents:UIControlEventTouchUpInside];
+                    linkedInShare.tag = kLinkedInShare;
+                    [cell addSubview:linkedInShare];
+                    
+                    UIButton *facebookShare = [[UIButton alloc] initWithFrame:CGRectMake(175.0, cell.frame.size.height/2 - 15.0, 30.0, 30.0)];
+                    [facebookShare setImage:[UIImage imageNamed:@"FacebookShare.png"] forState:UIControlStateNormal];
+                    [facebookShare addTarget:self action:@selector(genBNCLink:) forControlEvents:UIControlEventTouchUpInside];
+                    facebookShare.tag = kFacebookShare;
+                    [cell addSubview:facebookShare];
+                    
+                    UIButton *twitterShare = [[UIButton alloc] initWithFrame:CGRectMake(215.0, cell.frame.size.height/2 - 15.0, 30.0, 30.0)];
+                    [twitterShare setImage:[UIImage imageNamed:@"TwitterShare.png"] forState:UIControlStateNormal];
+                    [twitterShare addTarget:self action:@selector(genBNCLink:) forControlEvents:UIControlEventTouchUpInside];
+                    twitterShare.tag = kTwitterShare;
+                    [cell addSubview:twitterShare];
+                    
+                    showShareOptions = NO;
+                }
+                
+                cell.userInteractionEnabled = YES;
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            }
+                break;
+            case kMoreFeedback:
+                cell.textLabel.text = [[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+                cell.textLabel.font = [UIFont systemFontOfSize:16.0];
+                cell.userInteractionEnabled = YES;
+                cell.selectionStyle = UITableViewCellSelectionStyleGray;
+                
+                if (self.isInit) {
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                } else {
+                    [self addDisclosureIndicatorToCell:cell highlight:NO];
+                }
+                
+                break;
+            case kMoreVersion:
+            {
+                NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
+                NSString* version = [infoDict objectForKey:@"CFBundleVersion"];
+                UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(70, cell.frame.size.height/2 - 15.0, 200.0, 30.0)];
+                label.text = [NSString stringWithFormat:self.rootMenu[indexPath.section][indexPath.row], version];
+                label.textColor = [UIColor lightGrayColor];
+                label.font = [UIFont systemFontOfSize:11.0];
+                [cell addSubview:label];
+                cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.userInteractionEnabled = NO;
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            }
+                break;
+#ifdef LITE_VERSION
+            case kMoreUpgrade:
+                cell.textLabel.text = [[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+                cell.textLabel.font = [UIFont systemFontOfSize:15.0];
+                cell.userInteractionEnabled = YES;
+                cell.selectionStyle = UITableViewCellSelectionStyleGray;
+                break;
+#endif
+            default:
+                cell.userInteractionEnabled = NO;
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                break;
         }
+    } else {
+        if (indexPath.section != kRootMore - 1 || indexPath.row != kMoreVersion) {
+            cell.textLabel.text = [[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+            cell.textLabel.font = [UIFont systemFontOfSize:16.0];
+            cell.selectionStyle = UITableViewCellSelectionStyleGray;
+            
+            NSString *menuName = [[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+            menuName = [menuName stringByReplacingOccurrencesOfString:@" " withString:@""];
+            NSString *imageName = [menuName stringByAppendingString:@"Icon.png"];
+            cell.imageView.image = [UIImage imageNamed:imageName];
+        
+            if (self.isInit) {
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            } else {
+                [self addDisclosureIndicatorToCell:cell highlight:NO];
+            }
+            cell.userInteractionEnabled = YES;
+            
+            if (indexPath.section == kRootAP && indexPath.row == kAPApprove) {
+                [cell addSubview:self.numBillsToApproveLabel];
+            }
+        }
+        
+        UIView *bgColorView = [[UIView alloc] init];
+        [bgColorView setBackgroundColor:[UIColor colorWithRed:100/255.f green:100/255.f blue:100/255.f alpha:0.75]];
+        cell.selectedBackgroundView = bgColorView;
     }
     
     return cell;
 }
 
+- (void)reloadShareRow {
+    NSIndexPath *sharedRowIndexpath = [NSIndexPath indexPathForRow:kMoreShare inSection:kRootMore - 1];
+    [self.menuTableView reloadRowsAtIndexPaths:@[sharedRowIndexpath] withRowAnimation:UITableViewRowAnimationLeft];
+}
+
+- (void)genBNCLink:(UIButton *)sender {
+    __block RootMenuViewController *blockSafeSelf = self;
+    
+    Branch * branch = [Branch getInstance];
+    [branch getShortURLWithParams:[NSDictionary dictionaryWithObject:[Util getUserFullName]forKey:@"referrer"] andChannel:nil andFeature:nil andCallback:^(NSString *url) {
+        switch (sender.tag) {
+            case kEmailShare:
+                [blockSafeSelf shareViaEmail:url];
+                break;
+            case kMessageShare:
+                [blockSafeSelf shareViaMessage:url];
+                break;
+            case kLinkedInShare:
+                [blockSafeSelf shareViaLinkedIn:url];
+                break;
+            case kFacebookShare:
+                [blockSafeSelf shareViaFacebook:url];
+                break;
+            case kTwitterShare:
+                [blockSafeSelf shareViaTwitter:url];
+                break;
+            default:
+                break;
+        }
+    }];
+}
+
+- (void)shareViaEmail:(NSString *)url {
+    if ([MFMailComposeViewController canSendMail]) {
+        MFMailComposeViewController *mailer = [UIAppDelegate getMailer];
+        mailer.mailComposeDelegate = self;
+        [mailer setSubject:[NSString stringWithFormat:@"%@ invites you to use Mobill iPhone app", [Util getUserFullName]]];
+
+        NSString *emailBody = [NSString stringWithFormat:BNC_SHARE_MOBILL_EMAIL_TEMPLATE, url, [Util getUserFirstName]];
+        [mailer setMessageBody:emailBody isHTML:YES];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self presentViewController:mailer animated:YES completion:nil];
+        });
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure"
+                                                        message:@"Your device doesn't support the composer sheet"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles: nil];
+        [alert show];
+    }
+    
+    [self reloadShareRow];
+}
+
+- (void)shareViaMessage:(NSString *)url {
+    if ([MFMessageComposeViewController canSendText]) {
+        MFMessageComposeViewController *sms = [[MFMessageComposeViewController alloc] init];
+        sms.messageComposeDelegate = self;
+        sms.body = [NSString stringWithFormat:BNC_SHARE_MOBILL_SMS_TEMPLATE, url, [Util getUserFirstName]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self presentViewController:sms animated:YES completion:nil];
+        });
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure"
+                                                        message:@"Your device doesn't support the SMS"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles: nil];
+        [alert show];
+    }
+    
+    [self reloadShareRow];
+}
+
+- (void)shareViaLinkedIn:(NSString *)url {
+    NSLog(@"=== share via linkedin");
+    [self reloadShareRow];
+}
+
+- (void)shareViaFacebook:(NSString *)url {
+    NSLog(@"=== share via facebook");
+    [self reloadShareRow];
+}
+
+- (void)shareViaTwitter:(NSString *)url {
+    NSLog(@"=== share via twitter");
+    [self reloadShareRow];
+}
+
 - (void)addDisclosureIndicatorToCell:(UITableViewCell *)cell highlight:(BOOL)selected {
+    UIView *oldIndicator;
+    while((oldIndicator = [cell viewWithTag:CELL_DISCLOSURE_TAG]) != nil) {
+        [oldIndicator removeFromSuperview];
+    }
+    
     NSString *imageName;
     if (selected) {
-        imageName = @"disclosure_grey.png";
-    } else {
         imageName = @"disclosure_white.png";
+    } else {
+        imageName = @"disclosure_grey.png";
     }
     UIImageView *disclosure = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
     disclosure.frame = CGRectMake(SLIDING_DISTANCE - 30, (cell.frame.size.height - 16) / 2, 16, 16);
@@ -427,21 +646,44 @@ static RootMenuViewController * _sharedInstance = nil;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    BOOL needRefreshDisclosureIndicator = YES;
+    
     if (indexPath.section == kRootProfile && indexPath.row == kProfileUser && [Organization count] > 1) {
         [self performSegueWithIdentifier:[[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row + 1] sender:self];  // temp hack
     } else if ((indexPath.section == kRootProfile && indexPath.row == kProfileOrg) || (indexPath.section == self.rootMenu.count - 1 && indexPath.row == kMoreLogout)) {
         [self performSegueWithIdentifier:[[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] sender:self];
-    } else if (indexPath.section == self.rootMenu.count - 1 && indexPath.row == kMoreFeedback) {
-        SlidingViewController *currentVC = (SlidingViewController*)[RootMenuViewController sharedInstance].currVC;
-        [currentVC slideOutOnly];
-        [self sendFeedbackEmail];
+    } else if (indexPath.section == self.rootMenu.count - 1 && indexPath.row != kMoreLegal) {
+//        SlidingViewController *currentVC = (SlidingViewController*)[RootMenuViewController sharedInstance].currVC;
+//        [currentVC slideOutOnly];
+        
+        if (indexPath.row == kMoreShare) {
+            [self.menuTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+            needRefreshDisclosureIndicator = NO;
+        } else if (indexPath.row == kMoreFeedback) {
+            [self sendFeedbackEmail];
+#ifdef LITE_VERSION
+        } else if (indexPath.row == kMoreUpgrade) {
+            [UIAppDelegate nagivateToAppStore];
+            needRefreshDisclosureIndicator = NO;
+#endif
+        }
     } else {
         [self showView:[[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
-        
+    }
+    
+    if (needRefreshDisclosureIndicator) {
+        UITableViewCell *cell;
         if (self.isInit) {
             self.isInit = NO;
             [self.menuTableView reloadData];
+        } else {
+            cell = [self.menuTableView cellForRowAtIndexPath:self.lastSelected];
+            [self addDisclosureIndicatorToCell:cell highlight:NO];
         }
+        
+        cell = [self.menuTableView cellForRowAtIndexPath:indexPath];
+        [self addDisclosureIndicatorToCell:cell highlight:YES];
+        self.lastSelected = indexPath;
     }
 }
 
@@ -520,6 +762,25 @@ static RootMenuViewController * _sharedInstance = nil;
     // Remove the mail view
     [self dismissViewControllerAnimated:YES completion:^{
     }];
+}
+
+#pragma mark - MessageComposer delegate
+
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult) result
+{
+    switch (result) {
+        case MessageComposeResultSent:
+            [UIHelper showInfo:SMS_SENT withStatus:kSuccess];
+            break;
+        case MessageComposeResultCancelled:
+            break;
+        case MessageComposeResultFailed:
+        default:
+            [UIHelper showInfo:SMS_FAILED withStatus:kFailure];
+            break;
+    }
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - User delegate

@@ -32,6 +32,10 @@
 #define DETAILS_VC_EDIT_TUTORIAL        @"DETAILS_VC_EDIT_TUTORIAL"
 #define DELETE_DOC_TUTORIAL_RECT        CGRectMake((SCREEN_WIDTH - 220) / 2, 320, 220, 65)
 
+enum ShareObjViaType {
+    kShareObjViaEmail,
+    kShareObjViaSMS
+};
 
 static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
 static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
@@ -39,9 +43,10 @@ static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
 static double animatedDistance = 0;
 
 
-@interface SlidingDetailsTableViewController() <MFMailComposeViewControllerDelegate>
+@interface SlidingDetailsTableViewController() <UIActionSheetDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
 
 @property (nonatomic, strong) TutorialControl *detailsVCTutorialOverlay;
+@property (nonatomic, strong) NSString *bncShortURL;
 
 - (void)doneSaveObject;
 
@@ -73,6 +78,7 @@ static double animatedDistance = 0;
 @synthesize attachmentImageDownloadingIndicator;
 
 @synthesize detailsVCTutorialOverlay;
+@synthesize bncShortURL;
 
 
 - (void)setBusObj:(BDCBusinessObjectWithAttachments *)busObj {
@@ -847,25 +853,34 @@ static double animatedDistance = 0;
     } else if ([action isEqualToString:ACTION_UNDELETE]) {
         [self toggleActiveness];        
     } else if ([action isEqualToString:ACTION_BNC_SHARE]) {
-        Branch * branch = [Branch getInstance:BNC_APP_KEY];
+        Branch * branch = [Branch getInstance];
         [branch getShortURLWithParams:[NSDictionary dictionaryWithObject:self.busObj.objectId forKey:@"objId"] andCallback:^(NSString *url) {
-            Debug(@"=== url: %@", url);
-            [self sendBNCShareEmail:url];
+            self.bncShortURL = nil;
+            self.bncShortURL = url;
+            
+            UIActionSheet *shareActions = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:@"Share %@", self.busObj.name] delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"via Email", @"via Message", nil];
+            UIWindow* window = [[UIApplication sharedApplication] keyWindow];
+            if ([window.subviews containsObject:self.view]) {
+                [shareActions showInView:self.view];
+            } else {
+                [shareActions showInView:window];
+            }
         }];
     }
 }
 
-- (void)sendBNCShareEmail:(NSString *)url {
+- (void)sendBNCShareEmail {
     if ([MFMailComposeViewController canSendMail]) {
         MFMailComposeViewController *mailer = [UIAppDelegate getMailer];
         mailer.mailComposeDelegate = self;
         
         [mailer setSubject:[NSString stringWithFormat:@"%@ wants to share a Bill.com %@ with you", [Util getUserFullName], self.busObjClass]];
         
-        NSArray *toRecipients = [NSArray arrayWithObjects:@"gongqinwei@gmail.com", nil];
-        [mailer setToRecipients:toRecipients];
+//        NSArray *toRecipients = [NSArray arrayWithObjects:@"gongqinwei@gmail.com", nil];
+//        [mailer setToRecipients:toRecipients];
         
-        NSString *emailBody = url;
+//        NSString *emailBody = url;
+        NSString *emailBody = [NSString stringWithFormat:BNC_SHARE_OBJ_EMAIL_TEMPLATE, self.busObjClass, self.busObj.name, self.bncShortURL, [Util getUserFirstName]];
         [mailer setMessageBody:emailBody isHTML:YES];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -881,6 +896,39 @@ static double animatedDistance = 0;
     }
 }
 
+- (void)sendBNCShareSMS {
+    if ([MFMessageComposeViewController canSendText]) {
+        MFMessageComposeViewController *sms = [[MFMessageComposeViewController alloc] init];
+        sms.messageComposeDelegate = self;
+        sms.body = [NSString stringWithFormat:BNC_SHARE_OBJ_SMS_TEMPLATE, self.busObjClass, self.busObj.name, self.bncShortURL, [Util getUserFirstName]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self presentViewController:sms animated:YES completion:nil];
+        });
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure"
+                                                        message:@"Your device doesn't support the SMS"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles: nil];
+        [alert show];
+    }
+}
+
+#pragma mark - Action sheet delegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    switch (buttonIndex) {
+        case kShareObjViaEmail:
+            [self sendBNCShareEmail];
+            break;
+        case kShareObjViaSMS:
+            [self sendBNCShareSMS];
+            break;
+        default:
+            break;
+    }
+}
+
 #pragma mark - MailComposer delegate
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
@@ -893,8 +941,6 @@ static double animatedDistance = 0;
         case MFMailComposeResultSaved:
             break;
         case MFMailComposeResultFailed:
-            [UIHelper showInfo: EMAIL_FAILED withStatus:kFailure];
-            break;
         default:
             [UIHelper showInfo: EMAIL_FAILED withStatus:kError];
             break;
@@ -904,6 +950,25 @@ static double animatedDistance = 0;
     [self dismissViewControllerAnimated:YES completion:^{
 //        [UIAppDelegate cycleTheGlobalMailComposer];
     }];
+}
+
+#pragma mark - MessageComposer delegate
+
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult) result
+{
+    switch (result) {
+        case MessageComposeResultSent:
+            [UIHelper showInfo:SMS_SENT withStatus:kSuccess];
+            break;
+        case MessageComposeResultCancelled:
+            break;
+        case MessageComposeResultFailed:
+        default:
+            [UIHelper showInfo:SMS_FAILED withStatus:kFailure];
+            break;
+    }
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Model Delegate methods

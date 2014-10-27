@@ -29,18 +29,32 @@
 #define MENU_ITEMS          @"Items"
 
 #define CATEGORY_MORE       @"More"
+#define MENU_SHARE          @"Share"
 #define MENU_FEEDBACK       @"Feedback"
 #define MENU_LEGAL          @"Term of Service"
 #define MENU_LOGOUT         @"Log Out"
+#define MENU_UPGRADE        @"Upgrade to Mobill Unlimited"
+#define MENU_VERSION        @"© 2012-2014 Mobill %@"
 
+#ifdef LITE_VERSION
 #define ROOT_MENU       [NSArray arrayWithObjects: \
-                            [NSArray arrayWithObjects:MENU_USER, MENU_ORG,                                  CATEGORY_PROFILE, nil], \
-                            [NSArray arrayWithObjects:MENU_SCANNER, MENU_INBOX,                             CATEGORY_TOOL, nil], \
-                            [NSArray arrayWithObjects:MENU_BILLS, MENU_VENDORS, MENU_APPROVE,               CATEGORY_AP, nil], \
-                            [NSArray arrayWithObjects:MENU_INVOICES, MENU_CUSTOMERS, MENU_ITEMS,            CATEGORY_AR, nil], \
-                            [NSArray arrayWithObjects:MENU_INVOICES, MENU_CUSTOMERS,                        CATEGORY_AR_READONLY, nil], \
-                            [NSArray arrayWithObjects:MENU_FEEDBACK, MENU_LEGAL, MENU_LOGOUT,               CATEGORY_MORE, nil], \
+                            [NSArray arrayWithObjects:MENU_USER, MENU_ORG,                                              CATEGORY_PROFILE, nil], \
+                            [NSArray arrayWithObjects:MENU_SCANNER, MENU_INBOX,                                         CATEGORY_TOOL, nil], \
+                            [NSArray arrayWithObjects:MENU_BILLS, MENU_VENDORS, MENU_APPROVE,                           CATEGORY_AP, nil], \
+                            [NSArray arrayWithObjects:MENU_INVOICES, MENU_CUSTOMERS, MENU_ITEMS,                        CATEGORY_AR, nil], \
+                            [NSArray arrayWithObjects:MENU_INVOICES, MENU_CUSTOMERS,                                    CATEGORY_AR_READONLY, nil], \
+                            [NSArray arrayWithObjects:MENU_UPGRADE, MENU_SHARE, MENU_FEEDBACK, MENU_LEGAL, MENU_LOGOUT, MENU_VERSION,  CATEGORY_MORE, nil], \
                         nil]
+#else
+#define ROOT_MENU       [NSArray arrayWithObjects: \
+                            [NSArray arrayWithObjects:MENU_USER, MENU_ORG,                                              CATEGORY_PROFILE, nil], \
+                            [NSArray arrayWithObjects:MENU_SCANNER, MENU_INBOX,                                         CATEGORY_TOOL, nil], \
+                            [NSArray arrayWithObjects:MENU_BILLS, MENU_VENDORS, MENU_APPROVE,                           CATEGORY_AP, nil], \
+                            [NSArray arrayWithObjects:MENU_INVOICES, MENU_CUSTOMERS, MENU_ITEMS,                        CATEGORY_AR, nil], \
+                            [NSArray arrayWithObjects:MENU_INVOICES, MENU_CUSTOMERS,                                    CATEGORY_AR_READONLY, nil], \
+                            [NSArray arrayWithObjects:MENU_SHARE, MENU_FEEDBACK, MENU_LEGAL, MENU_LOGOUT, MENU_VERSION, CATEGORY_MORE, nil], \
+                        nil]
+#endif
 
 enum RootMenuSections {
     kRootProfile,
@@ -74,9 +88,14 @@ enum RootARItems {
 };
 
 enum RootMoreItems {
+#ifdef LITE_VERSION
+    kMoreUpgrade,
+#endif
+    kMoreShare,
     kMoreFeedback,
     kMoreLegal,
-    kMoreLogout
+    kMoreLogout,
+    kMoreVersion
 };
 
 @interface RootMenuViewController : UIViewController <SlideDelegate>

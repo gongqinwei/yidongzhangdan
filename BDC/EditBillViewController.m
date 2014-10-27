@@ -548,15 +548,15 @@ typedef enum {
         self.crudActions = nil;
         
         if (self.forApproval) {
-            self.crudActions = [NSArray arrayWithObjects:ACTION_APPROVE, ACTION_DENY, nil];
+            self.crudActions = [NSArray arrayWithObjects:ACTION_APPROVE, ACTION_DENY, ACTION_BNC_SHARE, nil];
         } else {
             if (((Bill *)self.shaddowBusObj).paymentStatus && ![((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]) {
-                self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, nil];
+                self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_BNC_SHARE, nil];
             } else {
                 if (self.isActive) {
-                    self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
+                    self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, ACTION_BNC_SHARE, nil];
                 } else {
-                    self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
+                    self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, ACTION_BNC_SHARE, nil];
                 }
             }
             

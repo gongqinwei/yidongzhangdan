@@ -50,13 +50,17 @@ static MFMailComposeViewController *globalMailer;
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat: iOSAppStoreURLFormat, FULL_VERSION_ID]]];
+        [self nagivateToAppStore];
     }
+}
+
+- (void)nagivateToAppStore {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat: iOSAppStoreURLFormat, FULL_VERSION_ID]]];
 }
 
 - (void)presentUpgrade {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade"
-                                                    message:@"You need Mobill full version to use this advanced feature"
+                                                    message:@"You need Mobill unlimited edition to use this advanced feature"
                                                    delegate:self
                                           cancelButtonTitle:@"Cancel"
                                           otherButtonTitles:@"Upgrade", nil];

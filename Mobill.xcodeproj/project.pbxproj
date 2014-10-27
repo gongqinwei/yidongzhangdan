@@ -138,6 +138,8 @@
 		7E7979C3184CE209003FE1E4 /* Map.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7979C2184CE209003FE1E4 /* Map.png */; };
 		7E7979C6184DAFF8003FE1E4 /* UIButton7.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E7979C5184DAFF8003FE1E4 /* UIButton7.m */; };
 		7E7979C8184E8BB2003FE1E4 /* Invite.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7979C7184E8BB2003FE1E4 /* Invite.png */; };
+		7E7B2E3A19FB78590032712E /* Share.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7B2E3919FB78590032712E /* Share.png */; };
+		7E7B2E3E19FB87700032712E /* ShareIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7B2E3D19FB87700032712E /* ShareIcon.png */; };
 		7E7D741E1840820A009B114C /* ApprovalCommentiOS6ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E7D741D1840820A009B114C /* ApprovalCommentiOS6ViewController.m */; };
 		7E7D742418455597009B114C /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E7D742218455597009B114C /* AddressBook.framework */; };
 		7E7D742518455597009B114C /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E7D742318455597009B114C /* AddressBookUI.framework */; };
@@ -184,6 +186,12 @@
 		7EE3920A17DD2184007B1126 /* directionsIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EE3920917DD2184007B1126 /* directionsIcon.png */; };
 		7EE9F93D190F80D2004FFBB5 /* disclosure_grey.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EE9F93C190F80D2004FFBB5 /* disclosure_grey.png */; };
 		7EE9F93F190F8140004FFBB5 /* disclosure_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EE9F93E190F8140004FFBB5 /* disclosure_white.png */; };
+		7EEDE3D419FDCB150015D525 /* ImailShare.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EEDE3D319FDCB150015D525 /* ImailShare.png */; };
+		7EEDE3D619FDCB1D0015D525 /* LinkedInShare.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EEDE3D519FDCB1D0015D525 /* LinkedInShare.png */; };
+		7EEDE3D819FDCB240015D525 /* MessageShare.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EEDE3D719FDCB240015D525 /* MessageShare.png */; };
+		7EEDE3DA19FDCB2B0015D525 /* TwitterShare.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EEDE3D919FDCB2B0015D525 /* TwitterShare.png */; };
+		7EEDE3DC19FDCC6F0015D525 /* FacebookShare.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EEDE3DB19FDCC6F0015D525 /* FacebookShare.png */; };
+		7EEDE3E419FDE0DA0015D525 /* UpgradetoMobillUnlimitedIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EEDE3E319FDE0DA0015D525 /* UpgradetoMobillUnlimitedIcon.png */; };
 		7EF87EB317F403D300FCE2C8 /* RecorderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF87EB217F403D300FCE2C8 /* RecorderViewController.m */; };
 		7EFA900E1818D9C2001F81E6 /* Background_linen.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7EFA900D1818D9C2001F81E6 /* Background_linen.jpg */; };
 		7EFA901A1834AF24001F81E6 /* iOS7NavBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EFA90191834AF24001F81E6 /* iOS7NavBarBackground.png */; };
@@ -382,6 +390,8 @@
 		7E7979C4184DAFF8003FE1E4 /* UIButton7.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIButton7.h; sourceTree = "<group>"; };
 		7E7979C5184DAFF8003FE1E4 /* UIButton7.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIButton7.m; sourceTree = "<group>"; };
 		7E7979C7184E8BB2003FE1E4 /* Invite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Invite.png; sourceTree = "<group>"; };
+		7E7B2E3919FB78590032712E /* Share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Share.png; sourceTree = "<group>"; };
+		7E7B2E3D19FB87700032712E /* ShareIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ShareIcon.png; sourceTree = "<group>"; };
 		7E7D741C1840820A009B114C /* ApprovalCommentiOS6ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApprovalCommentiOS6ViewController.h; sourceTree = "<group>"; };
 		7E7D741D1840820A009B114C /* ApprovalCommentiOS6ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApprovalCommentiOS6ViewController.m; sourceTree = "<group>"; };
 		7E7D742218455597009B114C /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
@@ -451,6 +461,12 @@
 		7EE3920917DD2184007B1126 /* directionsIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = directionsIcon.png; sourceTree = "<group>"; };
 		7EE9F93C190F80D2004FFBB5 /* disclosure_grey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = disclosure_grey.png; sourceTree = "<group>"; };
 		7EE9F93E190F8140004FFBB5 /* disclosure_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = disclosure_white.png; sourceTree = "<group>"; };
+		7EEDE3D319FDCB150015D525 /* ImailShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ImailShare.png; sourceTree = "<group>"; };
+		7EEDE3D519FDCB1D0015D525 /* LinkedInShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LinkedInShare.png; sourceTree = "<group>"; };
+		7EEDE3D719FDCB240015D525 /* MessageShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MessageShare.png; sourceTree = "<group>"; };
+		7EEDE3D919FDCB2B0015D525 /* TwitterShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TwitterShare.png; sourceTree = "<group>"; };
+		7EEDE3DB19FDCC6F0015D525 /* FacebookShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FacebookShare.png; sourceTree = "<group>"; };
+		7EEDE3E319FDE0DA0015D525 /* UpgradetoMobillUnlimitedIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UpgradetoMobillUnlimitedIcon.png; sourceTree = "<group>"; };
 		7EF87EB117F403D300FCE2C8 /* RecorderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecorderViewController.h; sourceTree = "<group>"; };
 		7EF87EB217F403D300FCE2C8 /* RecorderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecorderViewController.m; sourceTree = "<group>"; };
 		7EFA900D1818D9C2001F81E6 /* Background_linen.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Background_linen.jpg; sourceTree = "<group>"; };
@@ -524,7 +540,9 @@
 				0E5F513517782A95001095C9 /* MyCompaniesIcon.png */,
 				0E5F513B1778329C001095C9 /* FeedbackIcon.png */,
 				0E3552D11778BE81007D1CB2 /* TermofServiceIcon.png */,
+				7E7B2E3D19FB87700032712E /* ShareIcon.png */,
 				0E5F513D1778329C001095C9 /* LogOutIcon.png */,
+				7EEDE3E319FDE0DA0015D525 /* UpgradetoMobillUnlimitedIcon.png */,
 			);
 			name = TabBarImages;
 			sourceTree = "<group>";
@@ -780,6 +798,7 @@
 				0EAA1CAD183ED62F00DEE589 /* List.png */,
 				7E7979C2184CE209003FE1E4 /* Map.png */,
 				0EAA1C9F183ECDD700DEE589 /* Pay.png */,
+				7E7B2E3919FB78590032712E /* Share.png */,
 				0E927155183EC70900DE0AE6 /* Undelete.png */,
 			);
 			name = Actions;
@@ -991,6 +1010,7 @@
 				0E092B331817A57000BC6E92 /* Background */,
 				0EB2190917472E1A00382C44 /* FileIcons */,
 				0E2C0AAC15EC419A0059C739 /* TabBarImages */,
+				7EEDE3B819FCC01E0015D525 /* Share */,
 				7E579F6415A80C8F009D1455 /* BDClogo.png */,
 				7E3C4E85190793DD0032F869 /* arrow_up.png */,
 				7EC5EB5B18E941230085B9E2 /* arrow_left.png */,
@@ -1032,6 +1052,18 @@
 			name = Approver;
 			sourceTree = "<group>";
 		};
+		7EEDE3B819FCC01E0015D525 /* Share */ = {
+			isa = PBXGroup;
+			children = (
+				7EEDE3DB19FDCC6F0015D525 /* FacebookShare.png */,
+				7EEDE3D319FDCB150015D525 /* ImailShare.png */,
+				7EEDE3D519FDCB1D0015D525 /* LinkedInShare.png */,
+				7EEDE3D719FDCB240015D525 /* MessageShare.png */,
+				7EEDE3D919FDCB2B0015D525 /* TwitterShare.png */,
+			);
+			name = Share;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1061,7 +1093,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = Mobill;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Mobill Inc.";
 				TargetAttributes = {
 					7E91E3EA15927C15005104AF = {
@@ -1111,12 +1143,14 @@
 				0EE9B10C160A6D83002A5950 /* Default-568h@2x.png in Resources */,
 				0E927154183EC5D800DE0AE6 /* Email.png in Resources */,
 				0EE2C12E162CEB9100BB00DA /* InboxIcon.png in Resources */,
+				7EEDE3D619FDCB1D0015D525 /* LinkedInShare.png in Resources */,
 				7EC4EE8F180098CC00DD18E0 /* Left.png in Resources */,
 				0E01C34F172214FF00184702 /* .gitignore in Resources */,
 				0E3A157B1744563C007F2DC6 /* txt_icon.png in Resources */,
 				0E927146183EBEA500DE0AE6 /* Edit.png in Resources */,
 				7EC4EE9918009DF000DD18E0 /* PlusIcon.png in Resources */,
 				0EB2192917472EE600382C44 /* csv_icon.png in Resources */,
+				7EEDE3DC19FDCC6F0015D525 /* FacebookShare.png in Resources */,
 				7EFA900E1818D9C2001F81E6 /* Background_linen.jpg in Resources */,
 				0ECF42B3175BC22A00BA7C7B /* doc_icon.png in Resources */,
 				0E927134183EB32C00DE0AE6 /* Create.png in Resources */,
@@ -1126,6 +1160,7 @@
 				0ECF42B9175BC29500BA7C7B /* gif_icon.png in Resources */,
 				0ECF42BB175BC2C100BA7C7B /* jpg_icon.png in Resources */,
 				0ECF42BD175BC2D600BA7C7B /* jpeg_icon.png in Resources */,
+				7EEDE3DA19FDCB2B0015D525 /* TwitterShare.png in Resources */,
 				7E95223617F8FCBE009823CE /* ActionMenu.png in Resources */,
 				0ECF42BF175BC35B00BA7C7B /* mov_icon.png in Resources */,
 				0ECF42C1175BC37500BA7C7B /* mp3_icon.png in Resources */,
@@ -1135,7 +1170,9 @@
 				0ECF42C7175BC3D100BA7C7B /* ppt_icon.png in Resources */,
 				0ECF42C9175BC3E800BA7C7B /* pptx_icon.png in Resources */,
 				7EE9F93D190F80D2004FFBB5 /* disclosure_grey.png in Resources */,
+				7E7B2E3A19FB78590032712E /* Share.png in Resources */,
 				0ECF42CB175BC40A00BA7C7B /* rar_icon.png in Resources */,
+				7E7B2E3E19FB87700032712E /* ShareIcon.png in Resources */,
 				7E7979C8184E8BB2003FE1E4 /* Invite.png in Resources */,
 				7E3C4E86190793DD0032F869 /* arrow_up.png in Resources */,
 				0ECF42CD175BC41F00BA7C7B /* tiff_icon.png in Resources */,
@@ -1165,6 +1202,7 @@
 				0E5F51441778332F001095C9 /* ScannerIcon.png in Resources */,
 				0E3552CC1778B7F9007D1CB2 /* VendorsIcon.png in Resources */,
 				0E3552D21778BE81007D1CB2 /* TermofServiceIcon.png in Resources */,
+				7EEDE3D419FDCB150015D525 /* ImailShare.png in Resources */,
 				7EC4EEAD1800A60700DD18E0 /* CheckMarkIcon.png in Resources */,
 				0E6B083F177A5CC200681E9D /* CompanyIcon.png in Resources */,
 				0EAA1CA8183ED2B700DEE589 /* Associate.png in Resources */,
@@ -1172,7 +1210,9 @@
 				0EC49AFB17B9F6950043B37A /* arrow_down_gray.png in Resources */,
 				0EC49AFC17B9F6950043B37A /* arrow_down_blue.png in Resources */,
 				0EC49B0217C5E49F0043B37A /* Mobill_logo57.png in Resources */,
+				7EEDE3E419FDE0DA0015D525 /* UpgradetoMobillUnlimitedIcon.png in Resources */,
 				0EC49B0417C5E4AF0043B37A /* Mobill_logo114.png in Resources */,
+				7EEDE3D819FDCB240015D525 /* MessageShare.png in Resources */,
 				0E927138183EB4D900DE0AE6 /* Approve.png in Resources */,
 				7EA5BF3217C98DCE0075EEF3 /* Mobill_logo29.png in Resources */,
 				7EA5BF4A17CC7CCF0075EEF3 /* Mobill50.png in Resources */,
@@ -1347,9 +1387,11 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1384,10 +1426,12 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Qinwei Gong (DQ29659ZU2)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Qinwei Gong (DQ29659ZU2)";
 				COPY_PHASE_STRIP = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

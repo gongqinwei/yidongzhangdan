@@ -160,7 +160,7 @@ static id<UserDelegate> UserDelegate = nil;
 
 + (void)tracking {
     // Branch Metrics
-    Branch *branch = [Branch getInstance:BNC_APP_KEY];
+    Branch *branch = [Branch getInstance];
     [branch identifyUser:[Util getUserId]];
     
     NSDictionary *properties = [NSDictionary dictionaryWithObjects:@[[Util getUserId], [Util getUserFullName], [Util getUserEmail], [Organization getSelectedOrg].objectId, [Organization getSelectedOrg].name] forKeys:TRACKING_EVENT_KEYS];

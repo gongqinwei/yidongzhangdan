@@ -139,12 +139,12 @@ typedef enum {
         self.crudActions = nil;
 
         if (self.isActive) {
-            self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, nil];
+            self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, ACTION_BNC_SHARE, nil];
             if (self.pdfReady) {
                 self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];
             }
         } else {
-            self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, nil];
+            self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, ACTION_BNC_SHARE, nil];
         }
     }
 }
@@ -520,7 +520,7 @@ typedef enum {
             cell.textLabel.text = [InvoiceInfo objectAtIndex:indexPath.row];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             
-            if (NO && self.mode == kAttachMode) {               // not in use
+            if (/* DISABLES CODE */ (NO) && self.mode == kAttachMode) {               // not in use
                 cell.backgroundColor = [UIColor clearColor];
                 cell.textLabel.textColor = [UIColor yellowColor];
                 cell.detailTextLabel.textColor = [UIColor yellowColor];
@@ -649,7 +649,7 @@ typedef enum {
             cell.textLabel.text = item.name;
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             
-            if (NO && self.mode == kAttachMode) {               // not in use
+            if (/* DISABLES CODE */ (NO) && self.mode == kAttachMode) {               // not in use
                 cell.backgroundColor = [UIColor clearColor];
                 cell.textLabel.textColor = [UIColor yellowColor];
                 cell.detailTextLabel.textColor = [UIColor yellowColor];
@@ -670,7 +670,7 @@ typedef enum {
             } else {
                 UITextField *itemAmountTextField = [[UITextField alloc] initWithFrame:INV_ITEM_AMOUNT_RECT];
                 itemAmountTextField.text = [Util formatCurrency:amount];
-                if (NO && self.mode == kAttachMode) {           // not in use
+                if (/* DISABLES CODE */ (NO) && self.mode == kAttachMode) {           // not in use
                     itemAmountTextField.font = [UIFont fontWithName:APP_BOLD_FONT size:INV_LABEL_FONT_SIZE + 2];
                     itemAmountTextField.textColor = [UIColor yellowColor];
                 } else {
@@ -864,7 +864,7 @@ typedef enum {
         label.text = @"Amount";
         label.font = [UIFont fontWithName:APP_BOLD_FONT size:14];
         label.backgroundColor = [UIColor clearColor];
-        if (NO && self.mode == kAttachMode) {           // not in use
+        if (/* DISABLES CODE */ (NO) && self.mode == kAttachMode) {           // not in use
             label.textColor = [UIColor yellowColor];
         } else {
             label.textColor = APP_LABEL_BLUE_COLOR;
@@ -877,7 +877,7 @@ typedef enum {
         amount.textAlignment = NSTextAlignmentRight;
         amount.font = [UIFont fontWithName:APP_FONT size:15];
         amount.backgroundColor = [UIColor clearColor];
-        if (NO && self.mode == kAttachMode) {           // not in use
+        if (/* DISABLES CODE */ (NO) && self.mode == kAttachMode) {           // not in use
             amount.textColor = [UIColor yellowColor];
         }
         

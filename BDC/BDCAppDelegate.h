@@ -21,6 +21,7 @@
 - (void)decrNetworkActivities;
 
 - (void)presentUpgrade;
+- (void)nagivateToAppStore;
 
 - (MFMailComposeViewController *)getMailer;
 
