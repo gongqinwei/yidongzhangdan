@@ -28,6 +28,7 @@
 #import "BDCAppDelegate.h"
 #import "Branch.h"
 #import <MessageUI/MessageUI.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 #define ROOT_MENU_SECTION_HEADER_HEIGHT     22
 #define ROOT_MENU_CELL_ID                   @"RootMenuItem"
@@ -119,6 +120,11 @@ static RootMenuViewController * _sharedInstance = nil;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //fb test code
+//    FBLoginView *loginView = [[FBLoginView alloc] init];
+//    loginView.center = self.view.center;
+//    [self.view addSubview:loginView];
     
     [User setUserDelegate:self];
     
@@ -604,7 +610,60 @@ static RootMenuViewController * _sharedInstance = nil;
 }
 
 - (void)shareViaFacebook:(NSString *)url {
-    NSLog(@"=== share via facebook");
+    FBLinkShareParams *params = [[FBLinkShareParams alloc] init];
+    params.link = [NSURL URLWithString:url];
+    params.name = @"Mobill - mobile app for Bill.com";
+    params.caption = @"Mobill - mobile app for Bill.com";
+    params.picture = [NSURL URLWithString:@"https://www.dropbox.com/s/wv8l5g2cojq7fst/Mobill_logo120.png?dl=1"];
+    
+    if ([FBDialogs canPresentShareDialogWithParams:params]) {
+//        [FBDialogs presentShareDialogWithParams:params clientState:nil
+        [FBDialogs presentShareDialogWithLink:params.link name:params.name caption:params.caption description:BNC_SHARE_SOCIAL_DESCRIPTION picture:params.picture clientState:nil
+                                      handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
+                                          if(error) {
+                                              Error(@"FB error publishing story: %@", error.description);
+                                          } else {
+                                              Debug(@"FB result %@", results);
+                                          }
+                                      }];
+    } else {
+        NSMutableDictionary *param = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                           @"Mobill - mobile app for Bill.com", @"name",
+                                           @"Mobill - mobile app for Bill.com.", @"caption",
+                                           BNC_SHARE_SOCIAL_DESCRIPTION, @"description",
+                                           url, @"link",
+                                           @"https://www.dropbox.com/s/wv8l5g2cojq7fst/Mobill_logo120.png?dl=1", @"picture",
+                                           nil];
+        
+        [FBWebDialogs presentFeedDialogModallyWithSession:nil
+                                               parameters:param
+                                                  handler:^(FBWebDialogResult result, NSURL *resultURL, NSError *error) {
+                                                      if (error) {
+                                                          // An error occurred, we need to handle the error
+                                                          // See: https://developers.facebook.com/docs/ios/errors
+                                                          Error(@"Error publishing story: %@", error.description);
+                                                      } else {
+                                                          if (result == FBWebDialogResultDialogNotCompleted) {
+                                                              // User cancelled.
+                                                              Debug(@"User cancelled.");
+                                                          } else {
+//                                                              // Handle the publish feed callback
+//                                                              NSDictionary *urlParams = [self parseURLParams:[resultURL query]];
+//                                                              
+//                                                              if (![urlParams valueForKey:@"post_id"]) {
+//                                                                  // User cancelled.
+//                                                                  NSLog(@"User cancelled.");
+//                                                                  
+//                                                              } else {
+//                                                                  // User clicked the Share button
+//                                                                  NSString *result = [NSString stringWithFormat: @"Posted story, id: %@", [urlParams valueForKey:@"post_id"]];
+//                                                                  NSLog(@"result %@", result);
+//                                                              }
+                                                          }
+                                                      }
+                                                  }];
+    }
+    
     [self reloadShareRow];
 }
 

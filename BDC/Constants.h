@@ -54,6 +54,7 @@
 #define DOMAIN_URL          @"https://app.bill.com"
 #define APP_KEY             @"devKey"
 #define BNC_APP_KEY         @"45988591431582341"
+#define DEBUG_MODE  //temp
 #endif
 
 #define MP_TOKEN            @"7813b39597fc0555eed85e7d1ca90259"
@@ -354,8 +355,14 @@ FYI, I am using a native iPhone app, \"Mobill\", to manage my Bill.com account n
 It's sleek, simple and convenient to use, yet pretty useful! I highly recommend it. Check it out! %@\n \
   -- %@"
 
-#define MOBILL_APP_STORE_LINK       @"http://itunes.apple.com/us/app/id696521463?mt=8"
-#define MOBILL_LITE_APP_STORE_LINK  @"http://itunes.apple.com/us/app/id765927170?mt=8"
+#define BNC_SHARE_SOCIAL_DESCRIPTION    @"\
+Bill.com easily managed in your palm!\n \
+Mobill can be used to pay or approve bills, issue invoices to customers, and even better - \
+you can use Mobill to scan documents into your Bill.com account! Go mobile. Go Mobill.\
+"
+
+#define MOBILL_APP_STORE_LINK       @"http://itunes.apple.com/us/app/id696521463"
+#define MOBILL_LITE_APP_STORE_LINK  @"http://itunes.apple.com/us/app/id765927170"
 
 
 // Approval Status

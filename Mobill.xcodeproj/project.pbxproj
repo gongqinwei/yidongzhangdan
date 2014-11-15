@@ -192,6 +192,7 @@
 		7EEDE3DA19FDCB2B0015D525 /* TwitterShare.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EEDE3D919FDCB2B0015D525 /* TwitterShare.png */; };
 		7EEDE3DC19FDCC6F0015D525 /* FacebookShare.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EEDE3DB19FDCC6F0015D525 /* FacebookShare.png */; };
 		7EEDE3E419FDE0DA0015D525 /* UpgradetoMobillUnlimitedIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EEDE3E319FDE0DA0015D525 /* UpgradetoMobillUnlimitedIcon.png */; };
+		7EEDE3E71A072E7E0015D525 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EEDE3E61A072E7E0015D525 /* FacebookSDK.framework */; };
 		7EF87EB317F403D300FCE2C8 /* RecorderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF87EB217F403D300FCE2C8 /* RecorderViewController.m */; };
 		7EFA900E1818D9C2001F81E6 /* Background_linen.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7EFA900D1818D9C2001F81E6 /* Background_linen.jpg */; };
 		7EFA901A1834AF24001F81E6 /* iOS7NavBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EFA90191834AF24001F81E6 /* iOS7NavBarBackground.png */; };
@@ -467,6 +468,7 @@
 		7EEDE3D919FDCB2B0015D525 /* TwitterShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TwitterShare.png; sourceTree = "<group>"; };
 		7EEDE3DB19FDCC6F0015D525 /* FacebookShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FacebookShare.png; sourceTree = "<group>"; };
 		7EEDE3E319FDE0DA0015D525 /* UpgradetoMobillUnlimitedIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UpgradetoMobillUnlimitedIcon.png; sourceTree = "<group>"; };
+		7EEDE3E61A072E7E0015D525 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../../Documents/FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		7EF87EB117F403D300FCE2C8 /* RecorderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecorderViewController.h; sourceTree = "<group>"; };
 		7EF87EB217F403D300FCE2C8 /* RecorderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecorderViewController.m; sourceTree = "<group>"; };
 		7EFA900D1818D9C2001F81E6 /* Background_linen.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Background_linen.jpg; sourceTree = "<group>"; };
@@ -489,6 +491,7 @@
 				7E98A9A317DC5C3100698ED4 /* MapKit.framework in Frameworks */,
 				7E98A9A117DC5C1200698ED4 /* CoreLocation.framework in Frameworks */,
 				0E3A157D17455CA0007F2DC6 /* QuickLook.framework in Frameworks */,
+				7EEDE3E71A072E7E0015D525 /* FacebookSDK.framework in Frameworks */,
 				0E7DCABB16030BD700D0B35E /* Security.framework in Frameworks */,
 				0E56F3F51600047B0066B355 /* MessageUI.framework in Frameworks */,
 				7E91E449159D2E1E005104AF /* QuartzCore.framework in Frameworks */,
@@ -923,18 +926,11 @@
 		7E91E3E015927C15005104AF = {
 			isa = PBXGroup;
 			children = (
-				7E98A9A217DC5C2A00698ED4 /* MapKit.framework */,
-				7E98A9A017DC5C0C00698ED4 /* CoreLocation.framework */,
 				0EC49B0317C5E4AF0043B37A /* Mobill_logo114.png */,
 				0EC49B0117C5E49E0043B37A /* Mobill_logo57.png */,
 				7E370EB917E196B2005B3538 /* Mobill_logo120.png */,
-				0E3A157C17455CA0007F2DC6 /* QuickLook.framework */,
 				0E01C34E172214FF00184702 /* .gitignore */,
 				0EE9B10B160A6D83002A5950 /* Default-568h@2x.png */,
-				0E7DCABA16030BD700D0B35E /* Security.framework */,
-				0E56F3F41600047B0066B355 /* MessageUI.framework */,
-				7E91E448159D2E1E005104AF /* QuartzCore.framework */,
-				7E91E4221593FA34005104AF /* MobileCoreServices.framework */,
 				7E91E3F515927C15005104AF /* BDC */,
 				7E91E3EE15927C15005104AF /* Frameworks */,
 				7E91E3EC15927C15005104AF /* Products */,
@@ -953,6 +949,14 @@
 		7E91E3EE15927C15005104AF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7EEDE3E61A072E7E0015D525 /* FacebookSDK.framework */,
+				7E98A9A217DC5C2A00698ED4 /* MapKit.framework */,
+				7E98A9A017DC5C0C00698ED4 /* CoreLocation.framework */,
+				0E3A157C17455CA0007F2DC6 /* QuickLook.framework */,
+				0E7DCABA16030BD700D0B35E /* Security.framework */,
+				0E56F3F41600047B0066B355 /* MessageUI.framework */,
+				7E91E448159D2E1E005104AF /* QuartzCore.framework */,
+				7E91E4221593FA34005104AF /* MobileCoreServices.framework */,
 				7E8AB35C19D9157F004900D4 /* LocalAuthentication.framework */,
 				0E8EADAA189D7D64004FA2DF /* StoreKit.framework */,
 				7E1DF18F184E94B70009F0C3 /* AVFoundation.framework */,
@@ -1457,6 +1461,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/qinwei/Documents/FacebookSDK,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BDC/BDC-Prefix.pch";
 				INFOPLIST_FILE = "BDC/BDC-Info.plist";
@@ -1477,6 +1485,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Qinwei Gong (DQ29659ZU2)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Qinwei Gong (DQ29659ZU2)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/qinwei/Documents/FacebookSDK,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BDC/BDC-Prefix.pch";
 				INFOPLIST_FILE = "BDC/BDC-Info.plist";

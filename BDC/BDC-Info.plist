@@ -44,9 +44,21 @@
 				<string>mobill</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb325896714261524</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1.2.1</string>
+	<key>FacebookAppID</key>
+	<string>325896714261524</string>
+	<key>FacebookDisplayName</key>
+	<string>Mobill</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIBackgroundModes</key>

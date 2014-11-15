@@ -23,6 +23,7 @@
 #import "APIHandler.h"
 #import "Mixpanel.h"
 #import "Branch.h"
+#import <FacebookSDK/FacebookSDK.h>
 
 
 @interface BDCAppDelegate () <UIAlertViewDelegate>
@@ -240,6 +241,9 @@ static MFMailComposeViewController *globalMailer;
     } else {        
         
     }
+    
+    // Logs 'install' and 'app activate' App Events.
+    [FBAppEvents activateApp];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -256,7 +260,7 @@ static MFMailComposeViewController *globalMailer;
     Debug(@"Source app: %@", sourceApplication);
     
     if (![[Branch getInstance] handleDeepLink:url]) {
-        Error(@"Branch handle deep link returns false.");
+        return [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
     }
     
     return YES;
