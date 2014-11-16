@@ -28,6 +28,7 @@
 #import "BDCAppDelegate.h"
 #import "Branch.h"
 #import <MessageUI/MessageUI.h>
+#import <Social/Social.h>
 #import <FacebookSDK/FacebookSDK.h>
 
 #define ROOT_MENU_SECTION_HEADER_HEIGHT     22
@@ -420,31 +421,31 @@ static RootMenuViewController * _sharedInstance = nil;
                     cell.textLabel.text = nil;
                     
                     UIButton *emailShare = [[UIButton alloc] initWithFrame:CGRectMake(55.0, cell.frame.size.height/2 - 15.0, 30.0, 30.0)];
-                    [emailShare setImage:[UIImage imageNamed:@"ImailShare.png"] forState:UIControlStateNormal];
+                    [emailShare setImage:[UIImage imageNamed:@"EmailShare.png"] forState:UIControlStateNormal];
                     [emailShare addTarget:self action:@selector(genBNCLink:) forControlEvents:UIControlEventTouchUpInside];
                     emailShare.tag = kEmailShare;
                     [cell addSubview:emailShare];
                     
                     UIButton *messageShare = [[UIButton alloc] initWithFrame:CGRectMake(95.0, cell.frame.size.height/2 - 15.0, 30.0, 30.0)];
-                    [messageShare setImage:[UIImage imageNamed:@"MessageShare.png"] forState:UIControlStateNormal];
+                    [messageShare setImage:[UIImage imageNamed:@"SMS.png"] forState:UIControlStateNormal];
                     [messageShare addTarget:self action:@selector(genBNCLink:) forControlEvents:UIControlEventTouchUpInside];
                     messageShare.tag = kMessageShare;
                     [cell addSubview:messageShare];
                     
                     UIButton *linkedInShare = [[UIButton alloc] initWithFrame:CGRectMake(135.0, cell.frame.size.height/2 - 15.0, 30.0, 30.0)];
-                    [linkedInShare setImage:[UIImage imageNamed:@"LinkedInShare.png"] forState:UIControlStateNormal];
+                    [linkedInShare setImage:[UIImage imageNamed:@"LinkedIn.png"] forState:UIControlStateNormal];
                     [linkedInShare addTarget:self action:@selector(genBNCLink:) forControlEvents:UIControlEventTouchUpInside];
                     linkedInShare.tag = kLinkedInShare;
                     [cell addSubview:linkedInShare];
                     
                     UIButton *facebookShare = [[UIButton alloc] initWithFrame:CGRectMake(175.0, cell.frame.size.height/2 - 15.0, 30.0, 30.0)];
-                    [facebookShare setImage:[UIImage imageNamed:@"FacebookShare.png"] forState:UIControlStateNormal];
+                    [facebookShare setImage:[UIImage imageNamed:@"Facebook.png"] forState:UIControlStateNormal];
                     [facebookShare addTarget:self action:@selector(genBNCLink:) forControlEvents:UIControlEventTouchUpInside];
                     facebookShare.tag = kFacebookShare;
                     [cell addSubview:facebookShare];
                     
                     UIButton *twitterShare = [[UIButton alloc] initWithFrame:CGRectMake(215.0, cell.frame.size.height/2 - 15.0, 30.0, 30.0)];
-                    [twitterShare setImage:[UIImage imageNamed:@"TwitterShare.png"] forState:UIControlStateNormal];
+                    [twitterShare setImage:[UIImage imageNamed:@"Twitter.png"] forState:UIControlStateNormal];
                     [twitterShare addTarget:self action:@selector(genBNCLink:) forControlEvents:UIControlEventTouchUpInside];
                     twitterShare.tag = kTwitterShare;
                     [cell addSubview:twitterShare];
@@ -612,27 +613,31 @@ static RootMenuViewController * _sharedInstance = nil;
 - (void)shareViaFacebook:(NSString *)url {
     FBLinkShareParams *params = [[FBLinkShareParams alloc] init];
     params.link = [NSURL URLWithString:url];
-    params.name = @"Mobill - mobile app for Bill.com";
-    params.caption = @"Mobill - mobile app for Bill.com";
-    params.picture = [NSURL URLWithString:@"https://www.dropbox.com/s/wv8l5g2cojq7fst/Mobill_logo120.png?dl=1"];
+    params.name = BNC_SHARE_SOCIAL_NAME;
+    params.caption = BNC_SHARE_SOCIAL_CAPTION;
+    params.picture = [NSURL URLWithString:BNC_SHARE_SOCIAL_IMAGE_URL];
     
     if ([FBDialogs canPresentShareDialogWithParams:params]) {
-//        [FBDialogs presentShareDialogWithParams:params clientState:nil
-        [FBDialogs presentShareDialogWithLink:params.link name:params.name caption:params.caption description:BNC_SHARE_SOCIAL_DESCRIPTION picture:params.picture clientState:nil
+        [FBDialogs presentShareDialogWithLink:params.link name:params.name
+                                      caption:params.caption
+                                  description:[NSString stringWithFormat:@"%@ %@", BNC_SHARE_SOCIAL_CAPTION, BNC_SHARE_SOCIAL_DESCRIPTION]
+                                      picture:params.picture clientState:nil
                                       handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
                                           if(error) {
                                               Error(@"FB error publishing story: %@", error.description);
                                           } else {
                                               Debug(@"FB result %@", results);
+                                              [UIHelper showInfo:@"Shared to Facebook successfully.\n\nThanks a lot!" withStatus:kSuccess];
+                                              [[Branch getInstance] userCompletedAction:@"share_facebook_success"];
                                           }
                                       }];
     } else {
         NSMutableDictionary *param = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                           @"Mobill - mobile app for Bill.com", @"name",
-                                           @"Mobill - mobile app for Bill.com.", @"caption",
+                                           BNC_SHARE_SOCIAL_NAME, @"name",
+                                           BNC_SHARE_SOCIAL_CAPTION, @"caption",
                                            BNC_SHARE_SOCIAL_DESCRIPTION, @"description",
                                            url, @"link",
-                                           @"https://www.dropbox.com/s/wv8l5g2cojq7fst/Mobill_logo120.png?dl=1", @"picture",
+                                           BNC_SHARE_SOCIAL_IMAGE_URL, @"picture",
                                            nil];
         
         [FBWebDialogs presentFeedDialogModallyWithSession:nil
@@ -647,18 +652,18 @@ static RootMenuViewController * _sharedInstance = nil;
                                                               // User cancelled.
                                                               Debug(@"User cancelled.");
                                                           } else {
-//                                                              // Handle the publish feed callback
-//                                                              NSDictionary *urlParams = [self parseURLParams:[resultURL query]];
-//                                                              
-//                                                              if (![urlParams valueForKey:@"post_id"]) {
-//                                                                  // User cancelled.
-//                                                                  NSLog(@"User cancelled.");
-//                                                                  
-//                                                              } else {
-//                                                                  // User clicked the Share button
-//                                                                  NSString *result = [NSString stringWithFormat: @"Posted story, id: %@", [urlParams valueForKey:@"post_id"]];
-//                                                                  NSLog(@"result %@", result);
-//                                                              }
+                                                              // Handle the publish feed callback
+                                                              NSDictionary *urlParams = [self parseURLParams:[resultURL query]];
+                                                              
+                                                              if (![urlParams valueForKey:@"post_id"]) {
+                                                                  // User cancelled.
+                                                                  Debug(@"User cancelled.");
+                                                                  
+                                                              } else {
+                                                                  // User clicked the Share button
+                                                                  [UIHelper showInfo:@"Shared to Facebook successfully.\n\nThanks a lot!" withStatus:kSuccess];
+                                                                  [[Branch getInstance] userCompletedAction:@"share_facebook_success"];
+                                                              }
                                                           }
                                                       }
                                                   }];
@@ -667,8 +672,45 @@ static RootMenuViewController * _sharedInstance = nil;
     [self reloadShareRow];
 }
 
+// A function for parsing URL parameters returned by Facebook Feed Dialog.
+- (NSDictionary*)parseURLParams:(NSString *)query {
+    NSArray *pairs = [query componentsSeparatedByString:@"&"];
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    for (NSString *pair in pairs) {
+        NSArray *kv = [pair componentsSeparatedByString:@"="];
+        NSString *val =
+        [kv[1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        params[kv[0]] = val;
+    }
+    return params;
+}
+
 - (void)shareViaTwitter:(NSString *)url {
-    NSLog(@"=== share via twitter");
+    SLComposeViewController *twitterController = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
+    
+    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
+        SLComposeViewControllerCompletionHandler completionHandler = ^(SLComposeViewControllerResult result) {
+            [twitterController dismissViewControllerAnimated:YES completion:nil];
+            switch(result){
+                case SLComposeViewControllerResultDone:
+                    [[Branch getInstance] userCompletedAction:@"share_twitter_success"];
+                    break;
+                case SLComposeViewControllerResultCancelled:
+                default:
+                    break;
+            }
+        };
+        
+        [twitterController setInitialText:BNC_SHARE_SOCIAL_NAME];
+        [twitterController addURL:[NSURL URLWithString:url]];
+        [twitterController setCompletionHandler:completionHandler];
+        [self presentViewController:twitterController animated:YES completion:nil];
+    } else {
+        UIAlertView *alert_Dialog = [[UIAlertView alloc] initWithTitle:@"No Twitter Account" message:@"You do not seem to have Twitter app on this device" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert_Dialog show];
+        alert_Dialog = nil;
+    }
+    
     [self reloadShareRow];
 }
 
@@ -806,6 +848,7 @@ static RootMenuViewController * _sharedInstance = nil;
     switch (result){
         case MFMailComposeResultSent:
             [UIHelper showInfo: EMAIL_SENT withStatus:kSuccess];
+            [[Branch getInstance] userCompletedAction:@"share_email_success"];
             break;
         case MFMailComposeResultCancelled:
             break;
@@ -830,6 +873,7 @@ static RootMenuViewController * _sharedInstance = nil;
     switch (result) {
         case MessageComposeResultSent:
             [UIHelper showInfo:SMS_SENT withStatus:kSuccess];
+            [[Branch getInstance] userCompletedAction:@"share_sms_success"];
             break;
         case MessageComposeResultCancelled:
             break;

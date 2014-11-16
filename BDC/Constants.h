@@ -355,11 +355,15 @@ FYI, I am using a native iPhone app, \"Mobill\", to manage my Bill.com account n
 It's sleek, simple and convenient to use, yet pretty useful! I highly recommend it. Check it out! %@\n \
   -- %@"
 
+#define BNC_SHARE_SOCIAL_NAME           @"Mobill - mobile app for Bill.com"
+
+#define BNC_SHARE_SOCIAL_IMAGE_URL      @"https://www.dropbox.com/s/wv8l5g2cojq7fst/Mobill_logo120.png?dl=1"
+
+#define BNC_SHARE_SOCIAL_CAPTION        @"Bill.com easily managed in your palm!"
+
 #define BNC_SHARE_SOCIAL_DESCRIPTION    @"\
-Bill.com easily managed in your palm!\n \
-Mobill can be used to pay or approve bills, issue invoices to customers, and even better - \
-you can use Mobill to scan documents into your Bill.com account! Go mobile. Go Mobill.\
-"
+Mobill can be used to pay or approve bills, or send invoices to customers, and even better - \
+you can use Mobill to scan documents into your Bill.com account! Go mobile. Go Mobill."
 
 #define MOBILL_APP_STORE_LINK       @"http://itunes.apple.com/us/app/id696521463"
 #define MOBILL_LITE_APP_STORE_LINK  @"http://itunes.apple.com/us/app/id765927170"
