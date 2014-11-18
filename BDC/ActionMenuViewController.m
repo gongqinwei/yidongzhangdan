@@ -32,6 +32,10 @@
 #define ACTION_MENU_TOGGLE_ARROW_CENTER         CGPointMake(85, 15)
 #define ACTION_MENU_SECTION_HEADER_RECT         CGRectMake(0, 0, SLIDING_DISTANCE, ACTION_MENU_SECTION_HEADER_HEIGHT)
 
+typedef enum {
+    kEmailShare, kMessageShare
+} ShareOption;
+
 
 @interface ActionMenuViewController () <UISearchBarDelegate, UISearchDisplayDelegate>
 
@@ -43,6 +47,9 @@
 @property (nonatomic, strong) UIImageView *orderSectionToggleImage;
 @property (nonatomic, strong) UIButton *orderSectionToggleButton;
 @property (nonatomic, assign) BOOL orderSectionCollapsed;
+@property (nonatomic, assign) BOOL showShareOptions;
+@property (nonatomic, strong) UIButton *emailShare;
+@property (nonatomic, strong) UIButton *messageShare;
 
 @end
 
@@ -64,6 +71,9 @@
 @synthesize orderSectionToggleImage;
 @synthesize orderSectionToggleButton;
 @synthesize orderSectionCollapsed;
+@synthesize showShareOptions;
+@synthesize emailShare;
+@synthesize messageShare;
 
 
 static ActionMenuViewController * _sharedInstance = nil;
@@ -181,7 +191,29 @@ static ActionMenuViewController * _sharedInstance = nil;
     
     _sharedInstance = self;
     
+    self.showShareOptions = NO;
+    self.emailShare = [[UIButton alloc] initWithFrame:CGRectMake(90.0, 4.0, 32.0, 32.0)];
+    [self.emailShare setImage:[UIImage imageNamed:@"EmailShare.png"] forState:UIControlStateNormal];
+    [self.emailShare addTarget:self action:@selector(shareButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    self.emailShare.tag = kEmailShare;
+    
+    self.messageShare = [[UIButton alloc] initWithFrame:CGRectMake(150.0, 4.0, 32.0, 32.0)];
+    [self.messageShare setImage:[UIImage imageNamed:@"SMS.png"] forState:UIControlStateNormal];
+    [self.messageShare addTarget:self action:@selector(shareButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    self.messageShare.tag = kMessageShare;
+    
 //    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"Background_linen.jpg"]];
+}
+
+- (void)shareButtonClicked:(UIButton *)button {
+    [self.targetViewController toggleMenu:self];
+    NSString *action;
+    if (button.tag == kEmailShare) {
+        action = ACTION_BNC_SHARE_EMAIL;
+    } else {
+        action = ACTION_BNC_SHARE_SMS;
+    }
+    [self.actionDelegate didSelectCrudAction:action];
 }
 
 - (void)viewDidUnload {
@@ -336,47 +368,67 @@ static ActionMenuViewController * _sharedInstance = nil;
             }
         } else {
             NSString *action = [self.crudActions objectAtIndex:indexPath.row];
-            cell.textLabel.text = action;
-            cell.imageView.image = [self getIconForAction:action];
-            cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
-            if ([action isEqualToString:ACTION_BDC_PROCESSING] || [action isEqualToString:ACTION_BDC_PROCESSING2]) {
-                cell.textLabel.numberOfLines = 3;
-                cell.textLabel.font = [UIFont systemFontOfSize:14];
-            } else {
-                cell.textLabel.numberOfLines = 2;
-                cell.textLabel.adjustsFontSizeToFitWidth = YES;
-                cell.textLabel.minimumScaleFactor = 10;
-            }
             
-            [self addSelectedBackGroundForCell:cell];
-            
-            if ([action isEqualToString:ACTION_PAY]) {
-                [self.payAmountLabel removeFromSuperview];
-                self.payAmountLabel = nil;
-                self.payAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 5, 185, cell.viewForBaselineLayout.bounds.size.height - 12)];
-                self.payAmountLabel.textAlignment = NSTextAlignmentRight;
+            if ([action isEqualToString:ACTION_BNC_SHARE]) {
+                cell.imageView.image = [self getIconForAction:action];
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 
-                if ([((NSArray *)[BankAccount list]) count]) {
-                    Bill *bill = (Bill *)((EditBillViewController *)self.targetViewController).busObj;
-                    NSDecimalNumber *payAmount = [bill.amount decimalNumberBySubtracting:bill.paidAmount];
-                    self.payAmountLabel.text = [Util formatCurrency:payAmount];
-                    self.payAmountLabel.textColor = [UIColor whiteColor];
-                    self.payAmountLabel.font = [UIFont fontWithName:APP_FONT size:16];
+                if (!self.showShareOptions) {
+                    [self.emailShare removeFromSuperview];
+                    [self.messageShare removeFromSuperview];
                     
-                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.textLabel.text = action;
+                    [self addSelectedBackGroundForCell:cell];
+//                    self.showShareOptions = YES;
                 } else {
-                    self.payAmountLabel.text = @"No bank account for Payables";
-                    self.payAmountLabel.font = [UIFont systemFontOfSize:13.0f];
-                    self.payAmountLabel.textColor = [UIColor orangeColor];
-                    
-                    cell.textLabel.textColor = [UIColor lightGrayColor];
+                    cell.textLabel.text = nil;
+                    [cell addSubview:self.emailShare];
+                    [cell addSubview:self.messageShare];
+//                    self.showShareOptions = NO;
+                }
+            } else {
+                cell.textLabel.text = action;
+                cell.imageView.image = [self getIconForAction:action];
+                cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
+                if ([action isEqualToString:ACTION_BDC_PROCESSING] || [action isEqualToString:ACTION_BDC_PROCESSING2]) {
+                    cell.textLabel.numberOfLines = 3;
+                    cell.textLabel.font = [UIFont systemFontOfSize:14];
+                } else {
+                    cell.textLabel.numberOfLines = 2;
+                    cell.textLabel.adjustsFontSizeToFitWidth = YES;
+                    cell.textLabel.minimumScaleFactor = 10;
                 }
                 
-                self.payAmountLabel.backgroundColor = [UIColor clearColor];
+                [self addSelectedBackGroundForCell:cell];
                 
-                [cell addSubview:self.payAmountLabel];
-            } else if ([action isEqualToString:ACTION_APPROVE] || [action isEqualToString:ACTION_DENY]) {
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                if ([action isEqualToString:ACTION_PAY]) {
+                    [self.payAmountLabel removeFromSuperview];
+                    self.payAmountLabel = nil;
+                    self.payAmountLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 5, 185, cell.viewForBaselineLayout.bounds.size.height - 12)];
+                    self.payAmountLabel.textAlignment = NSTextAlignmentRight;
+                    
+                    if ([((NSArray *)[BankAccount list]) count]) {
+                        Bill *bill = (Bill *)((EditBillViewController *)self.targetViewController).busObj;
+                        NSDecimalNumber *payAmount = [bill.amount decimalNumberBySubtracting:bill.paidAmount];
+                        self.payAmountLabel.text = [Util formatCurrency:payAmount];
+                        self.payAmountLabel.textColor = [UIColor whiteColor];
+                        self.payAmountLabel.font = [UIFont fontWithName:APP_FONT size:16];
+                        
+                        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    } else {
+                        self.payAmountLabel.text = @"No bank account for Payables";
+                        self.payAmountLabel.font = [UIFont systemFontOfSize:13.0f];
+                        self.payAmountLabel.textColor = [UIColor orangeColor];
+                        
+                        cell.textLabel.textColor = [UIColor lightGrayColor];
+                    }
+                    
+                    self.payAmountLabel.backgroundColor = [UIColor clearColor];
+                    
+                    [cell addSubview:self.payAmountLabel];
+                } else if ([action isEqualToString:ACTION_APPROVE] || [action isEqualToString:ACTION_DENY]) {
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                }
             }
         }
     }
@@ -487,29 +539,35 @@ static ActionMenuViewController * _sharedInstance = nil;
 //            [[ActionMenuViewController slideInListViewIdentifier:MENU_VENDORS] performSegueWithIdentifier:@"ViewVendor" sender:(Vendor *)obj];
 //        }
     } else {
-        [self.targetViewController toggleMenu:self];
-        
-        if (self.targetViewController.sortAttributes) {
-            if (indexPath.section == 1) {
-                if (self.targetViewController.sortAttributes.count > 0) {
-                    if (!self.orderSectionCollapsed) {
-                        [self.tableView cellForRowAtIndexPath:self.lastSortAttribute].accessoryType = UITableViewCellAccessoryNone;
-                        self.lastSortAttribute = indexPath;
-                        [self.tableView cellForRowAtIndexPath:self.lastSortAttribute].accessoryType = UITableViewCellAccessoryCheckmark;
-                        
-                        [self.actionDelegate didSelectSortAttribute:[self.targetViewController.sortAttributes objectAtIndex:self.lastSortAttribute.row]
-                                                          ascending:self.ascSwitch.on
-                                                             active:!self.activenessSwitch.selectedSegmentIndex];
+        NSString *action = [self.crudActions objectAtIndex:indexPath.row];
+        if ([action isEqualToString:ACTION_BNC_SHARE]) {
+            self.showShareOptions = !self.showShareOptions;
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
+        } else {
+            [self.targetViewController toggleMenu:self];
+            
+            if (self.targetViewController.sortAttributes) {
+                if (indexPath.section == 1) {
+                    if (self.targetViewController.sortAttributes.count > 0) {
+                        if (!self.orderSectionCollapsed) {
+                            [self.tableView cellForRowAtIndexPath:self.lastSortAttribute].accessoryType = UITableViewCellAccessoryNone;
+                            self.lastSortAttribute = indexPath;
+                            [self.tableView cellForRowAtIndexPath:self.lastSortAttribute].accessoryType = UITableViewCellAccessoryCheckmark;
+                            
+                            [self.actionDelegate didSelectSortAttribute:[self.targetViewController.sortAttributes objectAtIndex:self.lastSortAttribute.row]
+                                                              ascending:self.ascSwitch.on
+                                                                 active:!self.activenessSwitch.selectedSegmentIndex];
+                        }
+                    } else {
+                        [self.actionDelegate didSelectCrudAction:[self.crudActions objectAtIndex:indexPath.row]];
                     }
-                } else {
+                } else if (indexPath.section == 2) {
                     [self.actionDelegate didSelectCrudAction:[self.crudActions objectAtIndex:indexPath.row]];
                 }
-            } else if (indexPath.section == 2) {
-                [self.actionDelegate didSelectCrudAction:[self.crudActions objectAtIndex:indexPath.row]];
+            } else {
+                [self.actionDelegate didSelectCrudAction:action];
             }
-        } else {            
-            [self.actionDelegate didSelectCrudAction:[self.crudActions objectAtIndex:indexPath.row]];
-        } 
+        }
     }
 }
 

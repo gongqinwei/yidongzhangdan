@@ -185,6 +185,8 @@
 		7ED34DD71A18802200EC1C24 /* EmailShare.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ED34DD61A18802200EC1C24 /* EmailShare.png */; };
 		7ED34DD91A18817F00EC1C24 /* Facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ED34DD81A18817F00EC1C24 /* Facebook.png */; };
 		7ED34DDF1A1887E900EC1C24 /* ShareIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ED34DDE1A1887E900EC1C24 /* ShareIcon.png */; };
+		7ED34DE31A189C8000EC1C24 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ED34DE21A189C8000EC1C24 /* Accounts.framework */; };
+		7ED34DE51A189CE000EC1C24 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ED34DE41A189CE000EC1C24 /* Social.framework */; };
 		7ED50F721807C092002064C4 /* Approver.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED50F711807C092002064C4 /* Approver.m */; };
 		7ED50F751807CE13002064C4 /* ApproversTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED50F741807CE13002064C4 /* ApproversTableViewController.m */; };
 		7ED50F791807CE66002064C4 /* EditApproverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED50F781807CE66002064C4 /* EditApproverViewController.m */; };
@@ -458,6 +460,9 @@
 		7ED34DD61A18802200EC1C24 /* EmailShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EmailShare.png; sourceTree = "<group>"; };
 		7ED34DD81A18817F00EC1C24 /* Facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Facebook.png; sourceTree = "<group>"; };
 		7ED34DDE1A1887E900EC1C24 /* ShareIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ShareIcon.png; sourceTree = "<group>"; };
+		7ED34DE01A189C6500EC1C24 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
+		7ED34DE21A189C8000EC1C24 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		7ED34DE41A189CE000EC1C24 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		7ED50F701807C092002064C4 /* Approver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Approver.h; sourceTree = "<group>"; };
 		7ED50F711807C092002064C4 /* Approver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Approver.m; sourceTree = "<group>"; };
 		7ED50F731807CE13002064C4 /* ApproversTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApproversTableViewController.h; sourceTree = "<group>"; };
@@ -483,6 +488,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7ED34DE51A189CE000EC1C24 /* Social.framework in Frameworks */,
+				7ED34DE31A189C8000EC1C24 /* Accounts.framework in Frameworks */,
 				7E8AB35D19D9157F004900D4 /* LocalAuthentication.framework in Frameworks */,
 				0E8EADAB189D7D64004FA2DF /* StoreKit.framework in Frameworks */,
 				7E1DF190184E94B70009F0C3 /* AVFoundation.framework in Frameworks */,
@@ -949,6 +956,9 @@
 		7E91E3EE15927C15005104AF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7ED34DE41A189CE000EC1C24 /* Social.framework */,
+				7ED34DE21A189C8000EC1C24 /* Accounts.framework */,
+				7ED34DE01A189C6500EC1C24 /* Twitter.framework */,
 				7EEDE3E61A072E7E0015D525 /* FacebookSDK.framework */,
 				7E98A9A217DC5C2A00698ED4 /* MapKit.framework */,
 				7E98A9A017DC5C0C00698ED4 /* CoreLocation.framework */,

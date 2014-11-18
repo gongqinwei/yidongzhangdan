@@ -32,6 +32,8 @@
 #define ACTION_IMPORT               @"Import Address Book..."
 #define ACTION_VENDOR_INVITE        @"Invite for ePayment"
 #define ACTION_BNC_SHARE            @"Share ..."
+#define ACTION_BNC_SHARE_EMAIL      @"ShareEmail"
+#define ACTION_BNC_SHARE_SMS        @"ShareSMS"
 
 #define SWIPE_RIGHT_TUTORIAL_RECT       CGRectMake((SCREEN_WIDTH - 136) / 2, 80, 136, 65)
 #define SWIPE_RIGHT_ARROW_RECT          CGRectMake((SCREEN_WIDTH + 136) / 2 + 10, 100, 50, 25)

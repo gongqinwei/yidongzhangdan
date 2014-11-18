@@ -11,7 +11,7 @@
 
 #import "Labels.h"
 
-#define LITE_VERSION
+//#define LITE_VERSION
 #define FULL_VERSION_ID     696521463
 
 //#define LOCAL
@@ -358,6 +358,7 @@ It's sleek, simple and convenient to use, yet pretty useful! I highly recommend 
 #define BNC_SHARE_SOCIAL_NAME           @"Mobill - mobile app for Bill.com"
 
 #define BNC_SHARE_SOCIAL_IMAGE_URL      @"https://www.dropbox.com/s/wv8l5g2cojq7fst/Mobill_logo120.png?dl=1"
+#define BNC_SHARE_SOCIAL_FULL_IMG_URL   @"https://www.dropbox.com/s/gxk9vogaucrg9py/Mobill200.png?dl=1"
 
 #define BNC_SHARE_SOCIAL_CAPTION        @"Bill.com easily managed in your palm!"
 

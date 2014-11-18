@@ -401,7 +401,7 @@ typedef enum {
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                self.pdfReady = YES;                               
                                self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];
-                               Debug(@"Succeeded! Received %d bytes of data for PDF", [self.invoicePDFData length]);
+                               Debug(@"Succeeded! Received %lu bytes of data for PDF", (unsigned long)[self.invoicePDFData length]);
                            }];
 }
 
@@ -1103,7 +1103,7 @@ typedef enum {
     self.pdfReady = YES;
     self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];
     
-    Debug(@"Succeeded! Received %d bytes of data for PDF", [self.invoicePDFData length]);
+    Debug(@"Succeeded! Received %lu bytes of data for PDF", (unsigned long)[self.invoicePDFData length]);
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {

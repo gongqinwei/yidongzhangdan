@@ -43,7 +43,7 @@ static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
 static double animatedDistance = 0;
 
 
-@interface SlidingDetailsTableViewController() <UIActionSheetDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
+@interface SlidingDetailsTableViewController() <MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
 
 @property (nonatomic, strong) TutorialControl *detailsVCTutorialOverlay;
 @property (nonatomic, strong) NSString *bncShortURL;
@@ -852,19 +852,25 @@ static double animatedDistance = 0;
         [alert show];
     } else if ([action isEqualToString:ACTION_UNDELETE]) {
         [self toggleActiveness];        
-    } else if ([action isEqualToString:ACTION_BNC_SHARE]) {
+    } else if ([action isEqualToString:ACTION_BNC_SHARE_EMAIL] || [action isEqualToString:ACTION_BNC_SHARE_SMS]) {
         Branch * branch = [Branch getInstance];
         [branch getShortURLWithParams:[NSDictionary dictionaryWithObject:self.busObj.objectId forKey:@"objId"] andCallback:^(NSString *url) {
             self.bncShortURL = nil;
             self.bncShortURL = url;
             
-            UIActionSheet *shareActions = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:@"Share %@", self.busObj.name] delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"via Email", @"via Message", nil];
-            UIWindow* window = [[UIApplication sharedApplication] keyWindow];
-            if ([window.subviews containsObject:self.view]) {
-                [shareActions showInView:self.view];
+            if ([action isEqualToString:ACTION_BNC_SHARE_EMAIL]) {
+                [self sendBNCShareEmail];
             } else {
-                [shareActions showInView:window];
+                [self sendBNCShareSMS];
             }
+            
+//            UIActionSheet *shareActions = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:@"Share %@", self.busObj.name] delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"via Email", @"via Message", nil];
+//            UIWindow* window = [[UIApplication sharedApplication] keyWindow];
+//            if ([window.subviews containsObject:self.view]) {
+//                [shareActions showInView:self.view];
+//            } else {
+//                [shareActions showInView:window];
+//            }
         }];
     }
 }
@@ -914,20 +920,20 @@ static double animatedDistance = 0;
     }
 }
 
-#pragma mark - Action sheet delegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    switch (buttonIndex) {
-        case kShareObjViaEmail:
-            [self sendBNCShareEmail];
-            break;
-        case kShareObjViaSMS:
-            [self sendBNCShareSMS];
-            break;
-        default:
-            break;
-    }
-}
+//#pragma mark - Action sheet delegate
+//
+//- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+//    switch (buttonIndex) {
+//        case kShareObjViaEmail:
+//            [self sendBNCShareEmail];
+//            break;
+//        case kShareObjViaSMS:
+//            [self sendBNCShareSMS];
+//            break;
+//        default:
+//            break;
+//    }
+//}
 
 #pragma mark - MailComposer delegate
 

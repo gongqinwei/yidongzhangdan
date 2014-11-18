@@ -29,6 +29,7 @@
 #import "Branch.h"
 #import <MessageUI/MessageUI.h>
 #import <Social/Social.h>
+#import <Accounts/Accounts.h>
 #import <FacebookSDK/FacebookSDK.h>
 
 #define ROOT_MENU_SECTION_HEADER_HEIGHT     22
@@ -55,6 +56,8 @@ typedef enum {
 @property (nonatomic, assign) BOOL showShareOptions;
 @property (nonatomic, assign) ShareOption shareOption;
 
+@property (nonatomic, strong) UIActivityIndicatorView *retrieveImageActivityIndicator;
+
 @end
 
 
@@ -71,6 +74,7 @@ typedef enum {
 @synthesize lastSelected;
 @synthesize showShareOptions;
 @synthesize shareOption;
+@synthesize retrieveImageActivityIndicator;
 
 
 static RootMenuViewController * _sharedInstance = nil;
@@ -416,41 +420,38 @@ static RootMenuViewController * _sharedInstance = nil;
                 if (!showShareOptions) {
                     cell.textLabel.text = [[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
                     cell.textLabel.font = [UIFont systemFontOfSize:16.0];
-                    showShareOptions = YES;
                 } else {
                     cell.textLabel.text = nil;
                     
-                    UIButton *emailShare = [[UIButton alloc] initWithFrame:CGRectMake(55.0, cell.frame.size.height/2 - 15.0, 30.0, 30.0)];
+                    UIButton *emailShare = [[UIButton alloc] initWithFrame:CGRectMake(55.0, cell.frame.size.height/2 - 16.0, 32.0, 32.0)];
                     [emailShare setImage:[UIImage imageNamed:@"EmailShare.png"] forState:UIControlStateNormal];
                     [emailShare addTarget:self action:@selector(genBNCLink:) forControlEvents:UIControlEventTouchUpInside];
                     emailShare.tag = kEmailShare;
                     [cell addSubview:emailShare];
                     
-                    UIButton *messageShare = [[UIButton alloc] initWithFrame:CGRectMake(95.0, cell.frame.size.height/2 - 15.0, 30.0, 30.0)];
+                    UIButton *messageShare = [[UIButton alloc] initWithFrame:CGRectMake(105.0, cell.frame.size.height/2 - 16.0, 32.0, 32.0)];
                     [messageShare setImage:[UIImage imageNamed:@"SMS.png"] forState:UIControlStateNormal];
                     [messageShare addTarget:self action:@selector(genBNCLink:) forControlEvents:UIControlEventTouchUpInside];
                     messageShare.tag = kMessageShare;
                     [cell addSubview:messageShare];
                     
-                    UIButton *linkedInShare = [[UIButton alloc] initWithFrame:CGRectMake(135.0, cell.frame.size.height/2 - 15.0, 30.0, 30.0)];
-                    [linkedInShare setImage:[UIImage imageNamed:@"LinkedIn.png"] forState:UIControlStateNormal];
-                    [linkedInShare addTarget:self action:@selector(genBNCLink:) forControlEvents:UIControlEventTouchUpInside];
-                    linkedInShare.tag = kLinkedInShare;
-                    [cell addSubview:linkedInShare];
+//                    UIButton *linkedInShare = [[UIButton alloc] initWithFrame:CGRectMake(135.0, cell.frame.size.height/2 - 15.0, 30.0, 30.0)];
+//                    [linkedInShare setImage:[UIImage imageNamed:@"LinkedIn.png"] forState:UIControlStateNormal];
+//                    [linkedInShare addTarget:self action:@selector(genBNCLink:) forControlEvents:UIControlEventTouchUpInside];
+//                    linkedInShare.tag = kLinkedInShare;
+//                    [cell addSubview:linkedInShare];
                     
-                    UIButton *facebookShare = [[UIButton alloc] initWithFrame:CGRectMake(175.0, cell.frame.size.height/2 - 15.0, 30.0, 30.0)];
+                    UIButton *facebookShare = [[UIButton alloc] initWithFrame:CGRectMake(155.0, cell.frame.size.height/2 - 16.0, 32.0, 32.0)];
                     [facebookShare setImage:[UIImage imageNamed:@"Facebook.png"] forState:UIControlStateNormal];
                     [facebookShare addTarget:self action:@selector(genBNCLink:) forControlEvents:UIControlEventTouchUpInside];
                     facebookShare.tag = kFacebookShare;
                     [cell addSubview:facebookShare];
                     
-                    UIButton *twitterShare = [[UIButton alloc] initWithFrame:CGRectMake(215.0, cell.frame.size.height/2 - 15.0, 30.0, 30.0)];
+                    UIButton *twitterShare = [[UIButton alloc] initWithFrame:CGRectMake(205.0, cell.frame.size.height/2 - 16.0, 32.0, 32.0)];
                     [twitterShare setImage:[UIImage imageNamed:@"Twitter.png"] forState:UIControlStateNormal];
                     [twitterShare addTarget:self action:@selector(genBNCLink:) forControlEvents:UIControlEventTouchUpInside];
                     twitterShare.tag = kTwitterShare;
                     [cell addSubview:twitterShare];
-                    
-                    showShareOptions = NO;
                 }
                 
                 cell.userInteractionEnabled = YES;
@@ -581,7 +582,7 @@ static RootMenuViewController * _sharedInstance = nil;
         [alert show];
     }
     
-    [self reloadShareRow];
+//    [self reloadShareRow];
 }
 
 - (void)shareViaMessage:(NSString *)url {
@@ -602,7 +603,7 @@ static RootMenuViewController * _sharedInstance = nil;
         [alert show];
     }
     
-    [self reloadShareRow];
+//    [self reloadShareRow];
 }
 
 - (void)shareViaLinkedIn:(NSString *)url {
@@ -669,7 +670,7 @@ static RootMenuViewController * _sharedInstance = nil;
                                                   }];
     }
     
-    [self reloadShareRow];
+//    [self reloadShareRow];
 }
 
 // A function for parsing URL parameters returned by Facebook Feed Dialog.
@@ -685,6 +686,15 @@ static RootMenuViewController * _sharedInstance = nil;
     return params;
 }
 
+- (void)initializeActivityIndicator {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        self.retrieveImageActivityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        self.retrieveImageActivityIndicator.frame = CGRectMake((SCREEN_WIDTH - 32) / 2, (SCREEN_HEIGHT - 32) / 2, 32, 32);
+        self.retrieveImageActivityIndicator.hidesWhenStopped = YES;
+    });
+}
+
 - (void)shareViaTwitter:(NSString *)url {
     SLComposeViewController *twitterController = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
     
@@ -693,6 +703,7 @@ static RootMenuViewController * _sharedInstance = nil;
             [twitterController dismissViewControllerAnimated:YES completion:nil];
             switch(result){
                 case SLComposeViewControllerResultDone:
+                    [UIHelper showInfo:@"Shared to Twitter successfully.\n\nThanks a lot!" withStatus:kSuccess];
                     [[Branch getInstance] userCompletedAction:@"share_twitter_success"];
                     break;
                 case SLComposeViewControllerResultCancelled:
@@ -701,17 +712,37 @@ static RootMenuViewController * _sharedInstance = nil;
             }
         };
         
-        [twitterController setInitialText:BNC_SHARE_SOCIAL_NAME];
-        [twitterController addURL:[NSURL URLWithString:url]];
-        [twitterController setCompletionHandler:completionHandler];
-        [self presentViewController:twitterController animated:YES completion:nil];
+        [self initializeActivityIndicator];
+        [self.view addSubview:retrieveImageActivityIndicator];
+        [self.retrieveImageActivityIndicator startAnimating];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString:BNC_SHARE_SOCIAL_FULL_IMG_URL]];
+            if (data != nil) {
+                UIImage *logo = [UIImage imageWithData: data];
+                if (logo) {
+                    [twitterController addImage:logo];
+                }
+            }
+            
+            [twitterController setInitialText:[NSString stringWithFormat:@"Mobill - native iPhone app to manage your Bill.com account\nGo mobile! Go Mobill~"]];
+            [twitterController addURL:[NSURL URLWithString:url]];
+            [twitterController setCompletionHandler:completionHandler];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.retrieveImageActivityIndicator stopAnimating];
+                [self presentViewController:twitterController animated:YES completion:nil];
+            });
+        });
     } else {
-        UIAlertView *alert_Dialog = [[UIAlertView alloc] initWithTitle:@"No Twitter Account" message:@"You do not seem to have Twitter app on this device" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *alert_Dialog = [[UIAlertView alloc] initWithTitle:@"No Twitter Account"
+                                                               message:@"Please install and login to Twitter app on this device."
+                                                              delegate:nil cancelButtonTitle:@"OK"
+                                                     otherButtonTitles:nil];
         [alert_Dialog show];
         alert_Dialog = nil;
     }
     
-    [self reloadShareRow];
+//    [self reloadShareRow];
 }
 
 - (void)addDisclosureIndicatorToCell:(UITableViewCell *)cell highlight:(BOOL)selected {
@@ -758,6 +789,7 @@ static RootMenuViewController * _sharedInstance = nil;
 //        [currentVC slideOutOnly];
         
         if (indexPath.row == kMoreShare) {
+            self.showShareOptions = !self.showShareOptions;
             [self.menuTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
             needRefreshDisclosureIndicator = NO;
         } else if (indexPath.row == kMoreFeedback) {
@@ -847,7 +879,7 @@ static RootMenuViewController * _sharedInstance = nil;
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
     switch (result){
         case MFMailComposeResultSent:
-            [UIHelper showInfo: EMAIL_SENT withStatus:kSuccess];
+            [UIHelper showInfo:@"Email sent successfully.\n\nThanks a lot!" withStatus:kSuccess];
             [[Branch getInstance] userCompletedAction:@"share_email_success"];
             break;
         case MFMailComposeResultCancelled:
@@ -872,7 +904,7 @@ static RootMenuViewController * _sharedInstance = nil;
 {
     switch (result) {
         case MessageComposeResultSent:
-            [UIHelper showInfo:SMS_SENT withStatus:kSuccess];
+            [UIHelper showInfo:@"Message sent successfully.\n\nThanks a lot!" withStatus:kSuccess];
             [[Branch getInstance] userCompletedAction:@"share_sms_success"];
             break;
         case MessageComposeResultCancelled:
