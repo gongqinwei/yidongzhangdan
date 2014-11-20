@@ -15,9 +15,9 @@
 #define FULL_VERSION_ID     696521463
 
 //#define LOCAL
-//#define APPTEST
+#define APPTEST
 //#define APPSTAGE
-#define PROD
+//#define PROD
 
 
 #ifdef LOCAL
@@ -146,10 +146,10 @@
 #define ACCOUNT_API         @"ChartOfAccount.json"
 #define BANK_ACCOUNT_API    @"BankAccount.json"
 #define APPROVER_LIST_API   @"ui/ApproverList.json"
-#define APPROVERS_GET_API   @"GetApprovers.json"
+//#define APPROVERS_GET_API   @"GetApprovers.json"
+#define APPROVERS_GET_API   @"ListApprovers.json"
 #define APPROVERS_SET_API   @"SetApprovers.json"
 #define APPROVER_CREATE_API @"ui/CreateBillApprover.json"
-#define LIST_TO_APPROVE_API @"ListToApprove.json"       // to be obsolete
 #define LIST_APPROVALS_API  @"ListUserApprovals.json"
 #define APPROVE_API         @"Approve.json"
 #define DENY_API            @"Deny.json"
@@ -157,7 +157,6 @@
 #define INVOICE_SEND_API    @"SendInvoice.json"
 #define VENDOR_INVITE_API   @"SendVendorInvite.json"
 #define ENUM_API            @"Enum.json"
-#define ORG_PAY_NEED_APPROVAL_API   @"OrgBillPayNeedApproval.json"  // not used any more
 
 #define ENTITY              @"entity"
 

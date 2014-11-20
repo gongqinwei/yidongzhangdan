@@ -297,7 +297,6 @@ typedef enum {
     [super refreshView];
     
     Organization *org = [Organization getSelectedOrg];
-//    [org retrieveNeedApprovalToPayBill];
     [org getOrgPrefs];
 }
 
@@ -1384,19 +1383,19 @@ typedef enum {
             }
             
             CGRect statusRect;
-            if (approver.status == kApproverNew || approver.status == kApproverStale) {
+//            if (approver.status == kApproverNew || approver.status == kApproverStale) {
                 statusRect = CGRectMake(statusLabelX, 1, 70, CELL_HEIGHT - 2);
-            } else {
-                statusRect = CGRectMake(statusLabelX, 2, 70, CELL_HEIGHT / 2);
-                
-                UILabel *approverStatusDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(statusDateLabelX, CELL_HEIGHT / 2 + 2, 120, CELL_HEIGHT / 2 - 2)];
-                approverStatusDateLabel.text = approver.statusDate;
-                approverStatusDateLabel.textAlignment = NSTextAlignmentRight;
-                approverStatusDateLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE - 1];
-                approverStatusDateLabel.textColor = [UIColor grayColor];
-                approverStatusDateLabel.backgroundColor = [UIColor clearColor];
-                [cell addSubview:approverStatusDateLabel];
-            }
+//            } else {
+//                statusRect = CGRectMake(statusLabelX, 2, 70, CELL_HEIGHT / 2);
+//                
+//                UILabel *approverStatusDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(statusDateLabelX, CELL_HEIGHT / 2 + 2, 120, CELL_HEIGHT / 2 - 2)];
+//                approverStatusDateLabel.text = approver.statusDate;
+//                approverStatusDateLabel.textAlignment = NSTextAlignmentRight;
+//                approverStatusDateLabel.font = [UIFont fontWithName:APP_FONT size:BILL_LABEL_FONT_SIZE - 1];
+//                approverStatusDateLabel.textColor = [UIColor grayColor];
+//                approverStatusDateLabel.backgroundColor = [UIColor clearColor];
+//                [cell addSubview:approverStatusDateLabel];
+//            }
             
             UILabel *approverStatusLabel = [[UILabel alloc] initWithFrame:statusRect];
             approverStatusLabel.text = approver.statusName;

@@ -2405,23 +2405,16 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E4c-rC-8La">
-                                                    <rect key="frame" x="20" y="32" width="275" height="21"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="275" id="IBI-mz-3ri"/>
-                                                        <constraint firstAttribute="height" constant="21" id="UK7-hM-zQv"/>
-                                                    </constraints>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="C64-8k-1ev">
+                                                    <rect key="frame" x="20" y="30" width="280" height="30"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </label>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <constraints>
                                             <constraint firstItem="Wso-3A-gTu" firstAttribute="leading" secondItem="iqF-gV-r66" secondAttribute="leading" constant="20" id="809-Jy-cGY"/>
                                             <constraint firstItem="Wso-3A-gTu" firstAttribute="top" secondItem="iqF-gV-r66" secondAttribute="top" constant="9" id="Eb0-Si-02O"/>
-                                            <constraint firstAttribute="bottom" secondItem="E4c-rC-8La" secondAttribute="bottom" constant="13" id="eBG-g3-7CS"/>
-                                            <constraint firstItem="E4c-rC-8La" firstAttribute="leading" secondItem="iqF-gV-r66" secondAttribute="leading" constant="20" id="wEI-Qy-57B"/>
                                         </constraints>
                                     </tableViewCell>
                                 </cells>
@@ -2434,7 +2427,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Pay Bill" id="ooa-OF-G8p"/>
                     <connections>
-                        <outlet property="bankAccountLabel" destination="E4c-rC-8La" id="XIx-jJ-3AF"/>
+                        <outlet property="bankAccountTextField" destination="C64-8k-1ev" id="VXb-r8-wgD"/>
                         <outlet property="billAmountLabel" destination="cb8-K0-DYs" id="OZm-AS-VC9"/>
                         <outlet property="dueDateLabel" destination="lmv-1l-rdh" id="xxM-uu-FPD"/>
                         <outlet property="invalidPayAmountLabel" destination="fcx-ak-P2L" id="txx-Si-bRQ"/>
@@ -2446,7 +2439,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5M6-cV-DcP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-873" y="1757"/>
+            <point key="canvasLocation" x="-873" y="1754"/>
         </scene>
         <!--Select Approvers-->
         <scene sceneID="oL9-fm-Xoq">

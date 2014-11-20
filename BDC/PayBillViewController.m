@@ -12,9 +12,11 @@
 #import "APIHandler.h"
 #import "UIHelper.h"
 
-@interface PayBillViewController ()
+@interface PayBillViewController () <UIPickerViewDelegate, UIPickerViewDataSource>
 
 @property (nonatomic, strong) UIDatePicker *processDatePicker;
+@property (nonatomic, strong) UIPickerView *bankAccountPickerView;
+@property (nonatomic, strong) NSArray *bankAccounts;
 
 @end
 
@@ -24,13 +26,15 @@
 @synthesize billAmountLabel;
 @synthesize paidAmountLabel;
 @synthesize dueDateLabel;
-@synthesize bankAccountLabel;
+@synthesize bankAccountTextField;
 @synthesize invalidPayAmountLabel;
 @synthesize payAmountTextField;
 @synthesize processDateTextField;
 @synthesize processDatePicker;
 @synthesize navBar;
 @synthesize payBillDelegate;
+@synthesize bankAccountPickerView;
+@synthesize bankAccounts;
 
 
 - (IBAction)payBill:(id)sender {
@@ -130,8 +134,19 @@
     self.processDatePicker.minimumDate = processDate;
     self.processDateTextField.inputView = self.processDatePicker;
     
-    BankAccount *bankAccount = [((NSArray *)[BankAccount list]) objectAtIndex:0];
-    self.bankAccountLabel.text = bankAccount.name;
+    int primaryAPAccount = [BankAccount primaryAPAccountIndex];
+    if (primaryAPAccount >= 0) {
+        self.bankAccountPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, 320, 70)];
+        self.bankAccountPickerView.delegate = self;
+        self.bankAccountPickerView.dataSource = self;
+        self.bankAccountPickerView.showsSelectionIndicator = YES;
+        [self.bankAccountPickerView selectRow:primaryAPAccount inComponent:0 animated:NO];
+                                               
+        self.bankAccounts = (NSArray *)[BankAccount list];
+        BankAccount *bankAccount = self.bankAccounts[primaryAPAccount];
+        self.bankAccountTextField.text = bankAccount.name;
+        self.bankAccountTextField.inputView = self.bankAccountPickerView;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -140,24 +155,11 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
-}
-
 - (void)viewDidUnload {
     [self setBillAmountLabel:nil];
     [self setPaidAmountLabel:nil];
     [self setDueDateLabel:nil];
-    [self setBankAccountLabel:nil];
+    [self setBankAccountTextField:nil];
     [self setPayAmountTextField:nil];
     [self setProcessDateTextField:nil];
     [self setInvalidPayAmountLabel:nil];
@@ -169,6 +171,28 @@
 
 - (void)selectProcessDateFromPicker:(UIDatePicker *)sender {
     self.processDateTextField.text = [Util formatDate:sender.date format:nil];
+}
+
+#pragma mark - UIPickerView Datascource
+
+- (NSInteger) numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    return 1;
+}
+
+- (NSInteger) pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    return [self.bankAccounts count];
+}
+
+- (NSString*) pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    BankAccount *bankAccount = self.bankAccounts[row];
+    return bankAccount.name;
+}
+
+#pragma mark - UIPickerView Delegate
+
+- (void) pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    BankAccount *bankAccount = self.bankAccounts[row];
+    self.bankAccountTextField.text = bankAccount.name;
 }
 
 @end

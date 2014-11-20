@@ -12,12 +12,18 @@
 #import "APIHandler.h"
 #import "UIHelper.h"
 
+//#define LIST_BANK_ACCOUNT_FILTER    @"{ \"start\" : 0, \
+//                                        \"max\" : 999, \
+//                                        \"filters\" : [{\"field\" : \"isActive\", \"op\" : \"=\", \"value\" : \"1\"}, {\"field\" : \"status\", \"op\" : \"=\", \"value\" : \"1\"}] \
+//                                      }"
+
 #define LIST_BANK_ACCOUNT_FILTER    @"{ \"start\" : 0, \
                                         \"max\" : 999, \
-                                        \"filters\" : [{\"field\" : \"isActive\", \"op\" : \"=\", \"value\" : \"1\"}, {\"field\" : \"status\", \"op\" : \"=\", \"value\" : \"1\"}] \
-                                      }"
+                                        \"filters\" : [] \
+                                        }"
 
 static NSArray *bankAccounts = nil;
+static int primaryAP = -1;
 
 @implementation BankAccount
 
@@ -53,23 +59,23 @@ static NSArray *bankAccounts = nil;
 
         if(response_status == RESPONSE_SUCCESS) {
             NSMutableArray *accounts = [NSMutableArray array];
-            
             NSArray *jsonItems = (NSArray *)json;
-            
+            int i = 0;
             for (id item in jsonItems) {
                 NSDictionary *dict = (NSDictionary*)item;
-                BOOL primaryAP = [[dict objectForKey:BANK_ACCOUNT_PRIMARY_AP] boolValue];
-                if (primaryAP) {
-                    BankAccount *account = [[BankAccount alloc] init];
-                    account.objectId = [dict objectForKey:_ID];
-                    account.bankName = [dict objectForKey:BANK_ACCOUNT_BANK_NAME];
-                    account.accountNumber = [dict objectForKey:BANK_ACCOUNT_NUMBER];
-                    account.name = [account.bankName stringByAppendingFormat:@" %@", account.accountNumber];
-                    account.primaryAP = primaryAP;
-                    account.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
-                    
-                    [accounts addObject:account];
+                BankAccount *account = [[BankAccount alloc] init];
+                account.objectId = [dict objectForKey:_ID];
+                account.bankName = [dict objectForKey:BANK_ACCOUNT_BANK_NAME];
+                account.accountNumber = [dict objectForKey:BANK_ACCOUNT_NUMBER];
+                account.name = [account.bankName stringByAppendingFormat:@" %@", account.accountNumber];
+                account.primaryAP = [[dict objectForKey:BANK_ACCOUNT_PRIMARY_AP] boolValue];
+                account.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
+                [accounts addObject:account];
+                
+                if (account.primaryAP) {
+                    primaryAP = 1;
                 }
+                i++;
             }
             
             bankAccounts = [NSArray arrayWithArray:accounts];
@@ -87,6 +93,10 @@ static NSArray *bankAccounts = nil;
             }
         }
     }];
+}
+
++ (int)primaryAPAccountIndex {
+    return primaryAP;
 }
 
 @end

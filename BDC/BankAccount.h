@@ -19,5 +19,6 @@
 @property (nonatomic, strong) NSString *accountNumber;
 @property (nonatomic, assign) BOOL primaryAP;
 + (void)resetList;
++ (int)primaryAPAccountIndex;
 
 @end

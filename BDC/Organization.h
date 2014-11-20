@@ -48,7 +48,6 @@
 @property (nonatomic, assign) BOOL hasInbox;
 
 
-- (void)retrieveNeedApprovalToPayBill;      //depricated: use getOrgPrefs instead
 - (void)getOrgFeatures;
 - (void)getOrgPrefs;
 

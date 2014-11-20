@@ -90,19 +90,6 @@ static Organization *selectedOrg = nil;
     }];
 }
 
-// depricated
-- (void)retrieveNeedApprovalToPayBill {
-    [APIHandler asyncCallWithAction:ORG_PAY_NEED_APPROVAL_API Info:nil AndHandler:^(NSURLResponse *response, NSData *data, NSError *err) {
-        NSInteger response_status;
-        
-        id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
-                
-        if(response_status == RESPONSE_SUCCESS) {
-            self.needApprovalToPayBill = [json boolValue];
-        }
-    }];
-}
-
 + (id<OrgDelegate>)getDelegate {
     return delegate;
 }
@@ -138,7 +125,6 @@ static Organization *selectedOrg = nil;
     [Util setSelectedOrgId:org.objectId];
     
     // retrieve org bill pay need approval info
-//    [org retrieveNeedApprovalToPayBill];
     [org getOrgPrefs];
 }
 

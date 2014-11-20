@@ -343,7 +343,7 @@ static NSMutableSet *billsToApproveSet;
     
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, [NSString stringWithFormat:LIST_APPROVALS_FILTER, [Util getUserId]], nil];
     
-    [APIHandler asyncCallWithAction:LIST_TO_APPROVE_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+    [APIHandler asyncCallWithAction:LIST_APPROVALS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
         id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
@@ -360,7 +360,7 @@ static NSMutableSet *billsToApproveSet;
                 billsToApproveSet = [NSMutableSet set];
             }
             
-            NSArray *jsonBills = [json objectForKey:@"Bill"];
+            NSArray *jsonBills = [json objectForKey:@"approvals"];
             
             for (id item in jsonBills) {
                 NSDictionary *dict = (NSDictionary*)item;

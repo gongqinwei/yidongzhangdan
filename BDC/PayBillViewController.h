@@ -21,7 +21,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *billAmountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *paidAmountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dueDateLabel;
-@property (weak, nonatomic) IBOutlet UILabel *bankAccountLabel;
+@property (weak, nonatomic) IBOutlet UITextField *bankAccountTextField;
 @property (weak, nonatomic) IBOutlet UILabel *invalidPayAmountLabel;
 @property (weak, nonatomic) IBOutlet UITextField *payAmountTextField;
 @property (weak, nonatomic) IBOutlet UITextField *processDateTextField;

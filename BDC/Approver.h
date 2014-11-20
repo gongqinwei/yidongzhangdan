@@ -10,7 +10,7 @@
 #import "SlidingListTableViewController.h"
 
 #define APPROVERS               @"approvers"
-#define APPROVER_USER_ID        @"userId"
+#define APPROVER_USER_ID        @"usersId"
 #define APPROVER_NAME           @"name"
 #define APPROVER_PIC_URL        @"profilePicUrl"
 #define APPROVER_SMART_DATA     @"smartDataEntry"
@@ -19,7 +19,7 @@
 #define APPROVER_STATUS_DATE    @"statusDate"
 #define STATUS_CHANGED_DATE     @"statusChangedDate"
 
-#define APPROVER_STATUSES       [NSArray arrayWithObjects:@"Sent", @"Viewed", @"Skipped", @"Denied", @"Approved", @"New", @"Stale", nil]
+#define APPROVER_STATUSES       [NSArray arrayWithObjects:@"Waiting", @"Viewed", @"Skipped", @"Denied", @"Approved", @"Upcoming", @"Stale", nil]
 
 typedef enum {
     kApproverSent,
