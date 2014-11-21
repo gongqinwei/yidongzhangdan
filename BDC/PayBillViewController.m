@@ -12,6 +12,9 @@
 #import "APIHandler.h"
 #import "UIHelper.h"
 
+#define PAY_BILL_PARAMS @"{\"vendorId\" : \"%@\", \"bankAccountId\" : \"%@\", \"processDate\" : \"%@\", \"billPays\" : [{\"billId\" : \"%@\", \"amount\" : %@}], \"billCredits\" : []}"
+
+
 @interface PayBillViewController () <UIPickerViewDelegate, UIPickerViewDataSource>
 
 @property (nonatomic, strong) UIDatePicker *processDatePicker;
@@ -37,25 +40,40 @@
 @synthesize bankAccounts;
 
 
-- (IBAction)payBill:(id)sender {
-    NSDecimalNumber *payAmount = [Util parseCurrency:self.payAmountTextField.text];    
-    
+- (IBAction)payBill:(UIBarButtonItem *)sender {
+    NSDecimalNumber *payAmount = [Util parseCurrency:self.payAmountTextField.text];
     if ([payAmount compare:[NSDecimalNumber zero]] == NSOrderedAscending || [payAmount compare:[NSDecimalNumber zero]] == NSOrderedSame) {
         [UIHelper showInfo:@"Invalid amount to pay!" withStatus:kError];
     } else if ([payAmount compare:[self.bill.amount decimalNumberBySubtracting:self.bill.paidAmount]] == NSOrderedDescending) {
         [UIHelper showInfo:@"You're too generous! Amount too big!" withStatus:kWarning];
     }
+
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    activityIndicator.hidesWhenStopped = YES;
+    [activityIndicator startAnimating];
+    self.navBar.rightBarButtonItem =  [[UIBarButtonItem alloc] initWithCustomView:activityIndicator];
     
-    NSString *objStr = [NSString stringWithFormat:@"{\"billId\" : \"%@\", \"amount\" : %@, \"processDate\" : \"%@\"}",
+    BankAccount *bankAccount;
+    if ([self.bankAccounts count] > 1) {
+        bankAccount = self.bankAccounts[[self.bankAccountPickerView selectedRowInComponent:0]];
+    } else {
+        bankAccount = self.bankAccounts[0];
+    }
+    
+    NSString *objStr = [NSString stringWithFormat:PAY_BILL_PARAMS,
+                        self.bill.vendorId,
+                        bankAccount.objectId,
+                        [Util formatDate:self.processDatePicker.date format:@"yyyy-MM-dd"],
                         self.bill.objectId,
-                        payAmount,
-                        [Util formatDate:self.processDatePicker.date format:@"yyyy-MM-dd"]];
+                        payAmount];
     
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
     
     __weak PayBillViewController *weakSelf = self;
     
     [APIHandler asyncCallWithAction:PAY_BILL_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        self.navBar.rightBarButtonItem = sender;
+        
         NSInteger response_status;
         [APIHandler getResponse:response data:data error:&err status:&response_status];
         
@@ -100,9 +118,10 @@
     self.processDatePicker.datePickerMode = UIDatePickerModeDate;
     [self.processDatePicker addTarget:self action:@selector(selectProcessDateFromPicker:) forControlEvents:UIControlEventValueChanged];
  
+    NSDecimalNumber *previousPayments = [self.bill.paidAmount decimalNumberByAdding:self.bill.scheduledAmount];
     self.billAmountLabel.text = [Util formatCurrency:self.bill.amount];
-    self.paidAmountLabel.text = [Util formatCurrency:self.bill.paidAmount];
-    self.payAmountTextField.text = [Util formatCurrency:[self.bill.amount decimalNumberBySubtracting:self.bill.paidAmount]];
+    self.paidAmountLabel.text = [Util formatCurrency:previousPayments];
+    self.payAmountTextField.text = [Util formatCurrency:[self.bill.amount decimalNumberBySubtracting:previousPayments]];
     self.payAmountTextField.keyboardType = UIKeyboardTypeDecimalPad;
     self.payAmountTextField.textColor = APP_LABEL_BLUE_COLOR;
     self.dueDateLabel.text = [Util formatDate:self.bill.dueDate format:nil];
@@ -134,18 +153,32 @@
     self.processDatePicker.minimumDate = processDate;
     self.processDateTextField.inputView = self.processDatePicker;
     
-    int primaryAPAccount = [BankAccount primaryAPAccountIndex];
-    if (primaryAPAccount >= 0) {
-        self.bankAccountPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, 320, 70)];
-        self.bankAccountPickerView.delegate = self;
-        self.bankAccountPickerView.dataSource = self;
-        self.bankAccountPickerView.showsSelectionIndicator = YES;
-        [self.bankAccountPickerView selectRow:primaryAPAccount inComponent:0 animated:NO];
-                                               
-        self.bankAccounts = (NSArray *)[BankAccount list];
-        BankAccount *bankAccount = self.bankAccounts[primaryAPAccount];
-        self.bankAccountTextField.text = bankAccount.name;
-        self.bankAccountTextField.inputView = self.bankAccountPickerView;
+    self.bankAccounts = (NSArray *)[BankAccount list];
+    if ([self.bankAccounts count] > 1) {
+        int primaryAPAccount = [BankAccount primaryAPAccountIndex];
+        if (primaryAPAccount >= 0) {
+            self.bankAccountPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, 320, 70)];
+            self.bankAccountPickerView.delegate = self;
+            self.bankAccountPickerView.dataSource = self;
+            self.bankAccountPickerView.showsSelectionIndicator = YES;
+            
+            BankAccount *bankAccount = self.bankAccounts[primaryAPAccount];
+            self.bankAccountTextField.text = bankAccount.name;
+            self.bankAccountTextField.inputView = self.bankAccountPickerView;
+        }
+    } else {
+        self.bankAccountTextField.text = ((BankAccount *)self.bankAccounts[0]).name;
+        self.bankAccountTextField.enabled = NO;
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    if ([self.bankAccounts count] > 1) {
+        int primaryAPAccount = [BankAccount primaryAPAccountIndex];
+        if (primaryAPAccount >= 0) {
+            [self.bankAccountPickerView selectRow:primaryAPAccount inComponent:0 animated:NO];
+        }
     }
 }
 

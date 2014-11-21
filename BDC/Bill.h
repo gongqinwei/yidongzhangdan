@@ -42,6 +42,7 @@
 #define BILL_DUE_DATE               @"dueDate"
 #define BILL_AMOUNT                 @"amount"
 #define BILL_AMOUNT_PAID            @"paidAmount"
+#define BILL_AMOUNT_SCHEDULED       @"scheduledAmount"
 #define BILL_APPROVAL_STATUS        @"approvalStatus"
 #define BILL_PAYMENT_STATUS         @"paymentStatus"
 #define BILL_LINE_ITEMS             @"billLineItems"
@@ -84,6 +85,7 @@
 @property (nonatomic, strong) NSDate *invoiceDate;
 @property (nonatomic, strong) NSDecimalNumber *amount;
 @property (nonatomic, strong) NSDecimalNumber *paidAmount;
+@property (nonatomic, strong) NSDecimalNumber *scheduledAmount;
 @property (nonatomic, strong) NSString *approvalStatus;
 @property (nonatomic, strong) NSString *paymentStatus;
 

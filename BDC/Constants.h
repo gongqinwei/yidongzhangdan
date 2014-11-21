@@ -137,7 +137,7 @@
 #define ORG_PREF_API        @"GetOrgPreferences.json"   // read-only
 #define ORG_FEATURE_API     @"GetOrgFeatures.json"      // read-only
 #define BILL_API            @"Bill.json"
-#define PAY_BILL_API        @"PayBill.json"
+#define PAY_BILL_API        @"PayBills.json"
 #define INVOICE_API         @"Invoice.json"
 #define CUSTOMER_API        @"Customer.json"
 #define CONTACT_API         @"CustomerContact.json"

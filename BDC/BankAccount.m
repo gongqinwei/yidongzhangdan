@@ -12,15 +12,10 @@
 #import "APIHandler.h"
 #import "UIHelper.h"
 
-//#define LIST_BANK_ACCOUNT_FILTER    @"{ \"start\" : 0, \
-//                                        \"max\" : 999, \
-//                                        \"filters\" : [{\"field\" : \"isActive\", \"op\" : \"=\", \"value\" : \"1\"}, {\"field\" : \"status\", \"op\" : \"=\", \"value\" : \"1\"}] \
-//                                      }"
-
 #define LIST_BANK_ACCOUNT_FILTER    @"{ \"start\" : 0, \
                                         \"max\" : 999, \
-                                        \"filters\" : [] \
-                                        }"
+                                        \"filters\" : [{\"field\" : \"isActive\", \"op\" : \"=\", \"value\" : \"1\"}, {\"field\" : \"status\", \"op\" : \"=\", \"value\" : \"1\"}] \
+                                      }"
 
 static NSArray *bankAccounts = nil;
 static int primaryAP = -1;
@@ -73,7 +68,7 @@ static int primaryAP = -1;
                 [accounts addObject:account];
                 
                 if (account.primaryAP) {
-                    primaryAP = 1;
+                    primaryAP = i;
                 }
                 i++;
             }
