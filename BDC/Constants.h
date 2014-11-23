@@ -176,7 +176,7 @@
 //                                \"sort\" : [{\"field\" : \"createdTime\", \"asc\" : \"false\"}, {\"field\" : \"id\", \"asc\" : \"true\"}] \
 //                              }"
 
-#define PAGE_BASE           @"p"
+#define PORTAL_BASE         @"p"
 #define MOBILE_PAGE_BASE    @"m"
 #define AP_PAGE             @"MyBills"              //deprecated
 #define AR_PAGE             @"ReceivablesOverview"  //deprecated
@@ -287,6 +287,26 @@ typedef void(^completionHandler)(BOOL);
 #define ALL_INACTIVE_INVS   @"All Deleted Invoices"
 
 #define INVOICE_EMAIL_TEMPLATE  @"\
+Hi %@,<br> \
+<br> \
+To pay your invoice online and view your account history, log in below:<br> \
+%@<br>\
+<br> \
+Please remit payment at your earliest convenience.<br> \
+<br> \
+Thank you for your business,<br> \
+%@<br> \
+<br>\
+----------------<br> \
+Invoice Summary:<br> \
+<br> \
+Invoice #: %@<br> \
+Amount Due: %@<br> \
+Due Date: %@<br> \
+<br> \
+A PDF version of this invoice is also attached for your records.<br>"
+
+#define INVOICE_BNC_EMAIL_TEMPLATE  @"\
 Hi %@,<br> \
 <br> \
 To pay your invoice online and view your account history, log in below:<br> \

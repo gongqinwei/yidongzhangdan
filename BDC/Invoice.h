@@ -44,6 +44,12 @@
 
 @end
 
+@protocol InvoiceMailDelegate <NSObject>
+
+- (void)didSendInvoice;
+
+@end
+
 
 @interface Invoice : BDCBusinessObjectWithAttachments
 
@@ -97,6 +103,7 @@
 //+ (void)clone:(Invoice *)source to:(Invoice *)target;
 
 @property (nonatomic, weak) id<BusObjectDelegate> detailsDelegate;
+@property (nonatomic, strong) id<InvoiceMailDelegate> mailDelegate;
 
 // delegates
 + (void)setARDelegate:(id<InvoiceListDelegate>)delegate;

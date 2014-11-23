@@ -11,6 +11,6 @@
 @interface RateAppManager : NSObject <UIAlertViewDelegate>
 
 + (RateAppManager *)sharedInstance;
-- (void)checkPromptForRate;
+- (BOOL)checkPromptForRate;
 
 @end

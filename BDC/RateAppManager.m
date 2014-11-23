@@ -29,7 +29,7 @@ static RateAppManager *_sharedInstance = nil;
     return _sharedInstance;
 }
 
-- (void)checkPromptForRate {
+- (BOOL)checkPromptForRate {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *decision_version = [userDefaults stringForKey:DECISION_VERSION];
     NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
@@ -38,28 +38,31 @@ static RateAppManager *_sharedInstance = nil;
     
     if (!decision_version){
         if (![Util isSameDay:lastPromptDate otherDay:[NSDate date]]) {
-            [self promptAux:RATE_REMINDER_THRESHOLD];
+            return [self promptAux:RATE_REMINDER_THRESHOLD];
         }
     } else if (![decision_version isEqualToString:currVersion]) {
         BOOL rated = [userDefaults boolForKey:RATE_DECISION];
         
         if (rated) {
-            [self promptAux:RATE_REMINDER_THRESHOLD * 2];
+            return [self promptAux:RATE_REMINDER_THRESHOLD * 2];
         } else {
-            [self promptAux:RATE_REMINDER_THRESHOLD * 1];
+            return [self promptAux:RATE_REMINDER_THRESHOLD * 1];
         }
     }
+    return NO;
 }
 
-- (void)promptAux:(int)threshold {
+- (BOOL)promptAux:(int)threshold {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSInteger waitCount = [userDefaults integerForKey:REMINDER_WAIT_COUNT];
     if (waitCount >= threshold) {
         [self presentToRate];
+        return YES;
     } else {
         waitCount++;
         [userDefaults setInteger:waitCount forKey:REMINDER_WAIT_COUNT];
         [userDefaults synchronize];
+        return NO;
     }
 }
 
@@ -69,7 +72,10 @@ static RateAppManager *_sharedInstance = nil;
                                                            delegate:self
                                                   cancelButtonTitle:@"Remind me later"
                                                   otherButtonTitles:@"Yes, rate it!", @"No, thanks.", nil];
-    [rateAppPrompt show];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [rateAppPrompt show];
+    });
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setObject:[NSDate date] forKey:LAST_PROMPT_DATE];

@@ -19,6 +19,7 @@
 #import "UIHelper.h"
 #import "Invoice.h"
 #import "Customer.h"
+#import "CustomerContact.h"
 #import "Organization.h"
 #import "Document.h"
 #import "BDCAppDelegate.h"
@@ -69,7 +70,7 @@ typedef enum {
 #define REMOVE_ATTACHMENT_ALERT_TAG     2
 
 
-@interface EditInvoiceViewController () <CustomerSelectDelegate, ItemSelectDelegate, LineItemDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate>
+@interface EditInvoiceViewController () <CustomerSelectDelegate, ItemSelectDelegate, LineItemDelegate, InvoiceMailDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate>
 
 
 @property (nonatomic, strong) NSDecimalNumber *totalAmount;
@@ -167,11 +168,17 @@ typedef enum {
         [self.mailer setSubject:[NSString stringWithFormat:@"You have an invoice from %@ due on %@", org.name, [Util formatDate:((Invoice *)self.busObj).dueDate format:nil]]];
         
         Customer *customer = [Customer objectForKey:((Invoice *)self.busObj).customerId];
-        NSArray *toRecipients = [NSArray arrayWithObjects:customer.email, nil];
+        
+        NSArray *contacts = [CustomerContact listContactsForCustomer:customer];
+        NSMutableArray *toRecipients = [NSMutableArray arrayWithObject:customer.email];
+        for (CustomerContact *contact in contacts) {
+            [toRecipients addObject:contact.email];
+        }
+        
         [self.mailer setToRecipients:toRecipients];
         
         NSString *encodedEmail = [Util URLEncode:customer.email];
-        NSString *linkUrl = [NSString stringWithFormat:@"%@/%@/%@?email=%@&id=%@", DOMAIN_URL, PAGE_BASE, org.objectId, encodedEmail, customer.objectId];
+        NSString *linkUrl = [NSString stringWithFormat:@"%@/%@/%@?email=%@&id=%@", DOMAIN_URL, PORTAL_BASE, org.objectId, encodedEmail, customer.objectId];
         NSString *invLink = [NSString stringWithFormat:@"<a href='%@'>%@</a>", linkUrl, linkUrl];
         
         NSString *emailBody = [NSString stringWithFormat:INVOICE_EMAIL_TEMPLATE, customer.name, invLink, org.name, ((Invoice *)self.busObj).invoiceNumber, [Util formatCurrency:((Invoice *)self.busObj).amountDue], [Util formatDate:((Invoice *)self.busObj).dueDate format:nil], nil];
@@ -1187,19 +1194,25 @@ typedef enum {
 #ifdef LITE_VERSION
         [UIAppDelegate presentUpgrade];
 #else
-        [((Invoice *)self.busObj) sendInvoice];
-        
-//        Customer *customer = [Customer objectForKey:((Invoice *)self.shaddowBusObj).customerId];
-//        if (customer.email) {
-//            [self sendInvoiceEmail];
-//        } else {
-//            [UIHelper showInfo:@"Fill in an email for this customer before you send them the invoice." withStatus:kInfo];
-//            [self performSegueWithIdentifier:INV_VIEW_CUSTOMER_DETAILS_SEGUE sender:customer];
-//        }
+        Invoice *inv = (Invoice *)self.busObj;
+        inv.mailDelegate = self;
+        [inv sendInvoice];
 #endif
     } else {
         [super didSelectCrudAction:action];
     }
+}
+
+#pragma mark - Invoice Mail delegate
+
+- (void)didSendInvoice {
+//    Customer *customer = [Customer objectForKey:((Invoice *)self.shaddowBusObj).customerId];
+//    if (customer.email) {
+//        [self sendInvoiceEmail];
+//    } else {
+//        [UIHelper showInfo:@"Fill in an email for this customer before you send them the invoice." withStatus:kInfo];
+//        [self performSegueWithIdentifier:INV_VIEW_CUSTOMER_DETAILS_SEGUE sender:customer];
+//    }
 }
 
 @end

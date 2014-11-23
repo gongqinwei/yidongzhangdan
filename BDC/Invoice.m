@@ -81,6 +81,7 @@ static NSMutableArray *inactiveInvoices = nil;
 //@synthesize expectedPayDate;
 @synthesize lineItems;
 @synthesize detailsDelegate;
+@synthesize mailDelegate;
 
 - (void)sendInvoice {
     NSString *action = [INVOICE_SEND_API stringByAppendingFormat:@"?%@=%@", _ID, self.objectId];
@@ -95,7 +96,9 @@ static NSMutableArray *inactiveInvoices = nil;
             [UIHelper showInfo: EMAIL_SENT withStatus:kSuccess];
             
             // prompt for Rate app
-            [[RateAppManager sharedInstance] checkPromptForRate];
+            if (![[RateAppManager sharedInstance] checkPromptForRate]) {
+                [self.mailDelegate didSendInvoice];
+            }
         } else {
             [UIHelper showInfo: EMAIL_FAILED withStatus:kFailure];
         }
