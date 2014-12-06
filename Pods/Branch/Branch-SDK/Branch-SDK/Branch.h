@@ -8,10 +8,10 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-typedef void (^callbackWithParams) (NSDictionary *params);
-typedef void (^callbackWithUrl) (NSString *url);
-typedef void (^callbackWithStatus) (BOOL changed);
-typedef void (^callbackWithList) (NSArray *list);
+typedef void (^callbackWithParams) (NSDictionary *params, NSError *error);
+typedef void (^callbackWithUrl) (NSString *url, NSError *error);
+typedef void (^callbackWithStatus) (BOOL changed, NSError *error);
+typedef void (^callbackWithList) (NSArray *list, NSError *error);
 
 static NSString *BRANCH_FEATURE_TAG_SHARE = @"share";
 static NSString *BRANCH_FEATURE_TAG_REFERRAL = @"referral";
@@ -29,24 +29,26 @@ typedef enum {
 + (Branch *)getInstance:(NSString *)key;
 + (Branch *)getInstance;
 
-- (void)initUserSession;
-- (void)initUserSessionWithLaunchOptions:(NSDictionary *)options;
-- (void)initUserSession:(BOOL)isReferrable;
-- (void)initUserSessionWithLaunchOptions:(NSDictionary *)options andIsReferrable:(BOOL)isReferrable;
-- (void)initUserSessionWithCallback:(callbackWithParams)callback;
-- (void)initUserSessionWithCallback:(callbackWithParams)callback withLaunchOptions:(NSDictionary *)options;
-- (void)initUserSessionWithCallback:(callbackWithParams)callback andIsReferrable:(BOOL)isReferrable;
-- (void)initUserSessionWithCallback:(callbackWithParams)callback andIsReferrable:(BOOL)isReferrable withLaunchOptions:(NSDictionary *)options;
-- (NSDictionary *)getInstallReferringParams;
-- (NSDictionary *)getReferringParams;
+- (void)setDebug;
+
+- (void)initSession;
+- (void)initSessionWithLaunchOptions:(NSDictionary *)options;
+- (void)initSession:(BOOL)isReferrable;
+- (void)initSessionWithLaunchOptions:(NSDictionary *)options isReferrable:(BOOL)isReferrable;
+- (void)initSessionAndRegisterDeepLinkHandler:(callbackWithParams)callback;
+- (void)initSessionWithLaunchOptions:(NSDictionary *)options andRegisterDeepLinkHandler:(callbackWithParams)callback;
+- (void)initSession:(BOOL)isReferrable andRegisterDeepLinkHandler:(callbackWithParams)callback;
+- (void)initSessionWithLaunchOptions:(NSDictionary *)options isReferrable:(BOOL)isReferrable andRegisterDeepLinkHandler:(callbackWithParams)callback;
+
+- (NSDictionary *)getFirstReferringParams;
+- (NSDictionary *)getLatestReferringParams;
 - (void)resetUserSession;
 
 - (BOOL)handleDeepLink:(NSURL *)url;
 
-- (BOOL)hasIdentity;
-- (void)identifyUser:(NSString *)userId;
-- (void)identifyUser:(NSString *)userId withCallback:(callbackWithParams)callback;
-- (void)clearUser;
+- (void)setIdentity:(NSString *)userId;
+- (void)setIdentity:(NSString *)userId withCallback:(callbackWithParams)callback;
+- (void)logout;
 
 - (void)loadRewardsWithCallback:(callbackWithStatus)callback;
 - (void)loadActionCountsWithCallback:(callbackWithStatus)callback;

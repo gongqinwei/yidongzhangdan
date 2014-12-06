@@ -56,4 +56,7 @@
 + (NSUInteger)count;
 + (NSUInteger)countInactive;
 
++ (NSPredicate *)getPredicate:(NSString *)objId;
++ (BDCBusinessObject *)loadWithId:(NSString *)objId;
+
 @end

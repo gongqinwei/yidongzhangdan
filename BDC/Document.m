@@ -14,6 +14,7 @@
 #import "Bill.h"
 #import "User.h"
 #import "APLineItem.h"
+#import "RootMenuViewController.h"
 
 #define COMPRESSION_THRESHOLD       500000
 #define DOCUMENT_PREFIX             @"00h"
@@ -256,7 +257,9 @@ static NSLock *DocumentsLock = nil;
             NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
             if ([INVALID_PERMISSION isEqualToString:errCode]) {
                 [[User GetLoginUser] markProfileFor:kInboxChecked checked:NO];
-                [UIHelper showInfo:@"You don't have permission to access Inbox." withStatus:kWarning];
+                if (DocumentListDelegate != [RootMenuViewController sharedInstance]) {
+                    [UIHelper showInfo:@"You don't have permission to access Inbox." withStatus:kWarning];
+                }
             } else {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of %@! %@", category, [err localizedDescription]] withStatus:kFailure];
                 Error(@"Failed to retrieve list of %@! %@", category, [err localizedDescription]);

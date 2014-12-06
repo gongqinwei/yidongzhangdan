@@ -94,18 +94,35 @@ static NSMutableSet *billsToApproveSet;
             [ListForApprovalDelegate didProcessApproval];
             
             [Bill updateNumToApprove:billsToApprove.count];
+            
+            [Util track:[NSString stringWithFormat:@"%@-ed_bill", action]];
         } else if (response_status == RESPONSE_TIMEOUT) {
             [self.approvalDelegate failedToProcessApproval];
             [ListForApprovalDelegate failedToProcessApproval];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            Debug(@"Time out when processing %@ for bill %@!", action, self.objectId);
+            Error(@"Time out when processing %@ for bill %@!", action, self.objectId);
         } else {
             [self.approvalDelegate failedToProcessApproval];
             [ListForApprovalDelegate failedToProcessApproval];
             [UIHelper showInfo:[NSString stringWithFormat:@"Failed to processing %@ for bill %@! %@", action, self.objectId, [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to processing %@ for bill %@! %@", action, self.objectId, [err localizedDescription]);
+            Error(@"Failed to processing %@ for bill %@! %@", action, self.objectId, [err localizedDescription]);
         }
     }];
+}
+
++ (Bill *)loadWithId:(NSString *)objId {
+    NSPredicate *predicate = [BDCBusinessObject getPredicate:objId];
+    NSArray *result = [bills filteredArrayUsingPredicate:predicate];
+    if ([result count] == 1) {
+        return result[0];
+    }
+    
+    result = [inactiveBills filteredArrayUsingPredicate:predicate];
+    if ([result count] == 1) {
+        return result[0];
+    }
+    
+    return nil;
 }
 
 + (void)updateNumToApprove:(NSInteger)count {
@@ -251,10 +268,10 @@ static NSMutableSet *billsToApproveSet;
             
             if ([theAction isEqualToString:UPDATE]) {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to update bill %@: %@", self.name, [err localizedDescription]] withStatus:kFailure];
-                Debug(@"Failed to update bill %@: %@", self.name, [err localizedDescription]);
+                Error(@"Failed to update bill %@: %@", self.name, [err localizedDescription]);
             } else {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to create bill: %@", [err localizedDescription]] withStatus:kFailure];
-                Debug(@"Failed to create bill: %@", [err localizedDescription]);
+                Error(@"Failed to create bill: %@", [err localizedDescription]);
             }
         }
     }];
@@ -288,7 +305,7 @@ static NSMutableSet *billsToApproveSet;
             [ListDelegate didDeleteObject];
         } else {
             [UIHelper showInfo:[NSString stringWithFormat:@"Failed to %@ bill %@: %@", act, self.objectId, [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to %@ bill %@: %@", act, self.objectId, [err localizedDescription]);
+            Error(@"Failed to %@ bill %@: %@", act, self.objectId, [err localizedDescription]);
         }
     }];
 }
@@ -395,7 +412,9 @@ static NSMutableSet *billsToApproveSet;
             NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
             if ([INVALID_PERMISSION isEqualToString:errCode]) {
                 [[User GetLoginUser] markProfileFor:kToApproveChecked checked:NO];
-                [UIHelper showInfo:@"You don't have permission to retrieve approvals" withStatus:kWarning];
+                if (ListForApprovalDelegate != [RootMenuViewController sharedInstance]) {
+                    [UIHelper showInfo:@"You don't have permission to retrieve approvals" withStatus:kWarning];
+                }
             } else {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of bill to approve! %@", [err localizedDescription]] withStatus:kFailure];
                 Error(@"Failed to retrieve list of bill to approve! %@", [err localizedDescription]);
@@ -453,7 +472,6 @@ static NSMutableSet *billsToApproveSet;
             }
                         
             if (needReload) {
-//                [APDelegate didGetInvoices:[NSArray arrayWithArray:invArr]];
                 [ListDelegate didGetBills:[NSArray arrayWithArray:billArr]];
             }
         } else if (response_status == RESPONSE_TIMEOUT) {
@@ -466,7 +484,9 @@ static NSMutableSet *billsToApproveSet;
             NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
             if ([INVALID_PERMISSION isEqualToString:errCode]) {
                 [[User GetLoginUser] markProfileFor:kBillsChecked checked:NO];
-                [UIHelper showInfo:@"You don't have permission to retrieve bills." withStatus:kWarning];
+                if (ListDelegate != [RootMenuViewController sharedInstance]) {
+                    [UIHelper showInfo:@"You don't have permission to retrieve bills." withStatus:kWarning];
+                }
             } else {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of bill for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]] withStatus:kFailure];
                 Error(@"Failed to retrieve list of bill for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);

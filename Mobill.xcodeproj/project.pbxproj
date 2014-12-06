@@ -179,6 +179,8 @@
 		7EC5EB5A18E941170085B9E2 /* arrow_right.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EC5EB5918E941170085B9E2 /* arrow_right.png */; };
 		7EC5EB5C18E941230085B9E2 /* arrow_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EC5EB5B18E941230085B9E2 /* arrow_left.png */; };
 		7EC5EB6418EBD7F20085B9E2 /* RateAppManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EC5EB6318EBD7F20085B9E2 /* RateAppManager.m */; };
+		7ECE96021A337F1300BF774E /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ECE96001A337F1300BF774E /* Crashlytics.framework */; };
+		7ECE96031A337F1300BF774E /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ECE96011A337F1300BF774E /* Fabric.framework */; };
 		7ED34DD11A187FEC00EC1C24 /* LinkedIn.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ED34DD01A187FEC00EC1C24 /* LinkedIn.png */; };
 		7ED34DD31A187FF700EC1C24 /* SMS.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ED34DD21A187FF700EC1C24 /* SMS.png */; };
 		7ED34DD51A187FFF00EC1C24 /* Twitter.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ED34DD41A187FFF00EC1C24 /* Twitter.png */; };
@@ -454,6 +456,8 @@
 		7EC5EB5B18E941230085B9E2 /* arrow_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_left.png; sourceTree = "<group>"; };
 		7EC5EB6218EBD7F20085B9E2 /* RateAppManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RateAppManager.h; sourceTree = "<group>"; };
 		7EC5EB6318EBD7F20085B9E2 /* RateAppManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RateAppManager.m; sourceTree = "<group>"; };
+		7ECE96001A337F1300BF774E /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		7ECE96011A337F1300BF774E /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		7ED34DD01A187FEC00EC1C24 /* LinkedIn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LinkedIn.png; sourceTree = "<group>"; };
 		7ED34DD21A187FF700EC1C24 /* SMS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SMS.png; sourceTree = "<group>"; };
 		7ED34DD41A187FFF00EC1C24 /* Twitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Twitter.png; sourceTree = "<group>"; };
@@ -494,6 +498,7 @@
 				0E8EADAB189D7D64004FA2DF /* StoreKit.framework in Frameworks */,
 				7E1DF190184E94B70009F0C3 /* AVFoundation.framework in Frameworks */,
 				7E7D742418455597009B114C /* AddressBook.framework in Frameworks */,
+				7ECE96021A337F1300BF774E /* Crashlytics.framework in Frameworks */,
 				7E7D742518455597009B114C /* AddressBookUI.framework in Frameworks */,
 				7E98A9A317DC5C3100698ED4 /* MapKit.framework in Frameworks */,
 				7E98A9A117DC5C1200698ED4 /* CoreLocation.framework in Frameworks */,
@@ -501,6 +506,7 @@
 				7EEDE3E71A072E7E0015D525 /* FacebookSDK.framework in Frameworks */,
 				0E7DCABB16030BD700D0B35E /* Security.framework in Frameworks */,
 				0E56F3F51600047B0066B355 /* MessageUI.framework in Frameworks */,
+				7ECE96031A337F1300BF774E /* Fabric.framework in Frameworks */,
 				7E91E449159D2E1E005104AF /* QuartzCore.framework in Frameworks */,
 				7E91E4231593FA34005104AF /* MobileCoreServices.framework in Frameworks */,
 				7E91E3F015927C15005104AF /* UIKit.framework in Frameworks */,
@@ -956,6 +962,8 @@
 		7E91E3EE15927C15005104AF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7ECE96001A337F1300BF774E /* Crashlytics.framework */,
+				7ECE96011A337F1300BF774E /* Fabric.framework */,
 				7ED34DE41A189CE000EC1C24 /* Social.framework */,
 				7ED34DE21A189C8000EC1C24 /* Accounts.framework */,
 				7ED34DE01A189C6500EC1C24 /* Twitter.framework */,
@@ -1090,6 +1098,7 @@
 				7E91E3E815927C15005104AF /* Frameworks */,
 				7E91E3E915927C15005104AF /* Resources */,
 				69FE32ACC7E41FAB6502B70E /* Copy Pods Resources */,
+				7ECE95FF1A337C7400BF774E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1257,6 +1266,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		7ECE95FF1A337C7400BF774E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run 6bb5ff83bed06c9746d672a302b399d48d4988e1 f2258b6dc7db831eb86666a66aa5222639a236df256eb48e4da59bcf7d9ba289";
 		};
 		7EF9E28D23ABE90C959E93D5 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1474,6 +1496,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/qinwei/Documents/FacebookSDK,
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BDC/BDC-Prefix.pch";
@@ -1498,6 +1521,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/qinwei/Documents/FacebookSDK,
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BDC/BDC-Prefix.pch";

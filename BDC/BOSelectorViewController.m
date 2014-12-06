@@ -24,6 +24,7 @@
 #import "UIHelper.h"
 #import "BDCAppDelegate.h"
 #import "RateAppManager.h"
+#import "Util.h"
 
 
 #define RESET_SCANNER_FROM_BO_SELECT_SEGUE          @"ResetScanner"
@@ -238,6 +239,8 @@
             segueId = AttachToNewSegues[indexPath.section][indexPath.row];
         }
         [self performSegueWithIdentifier:segueId sender:self];
+        
+        [Util track:segueId];
     } else if (indexPath.row == 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [UIHelper showInfo:@"Document upload in progress.\n\nIt'll show up in Inbox once uploaded." withStatus:kInfo];
@@ -258,6 +261,8 @@
 //        [RootMenuViewController sharedInstance].currVC = vc;
 //        [RootMenuViewController sharedInstance].currVC.navigation = navVC;
 //        [RootMenuViewController sharedInstance].currVC.navigationId = MENU_INBOX;
+        
+        [Util track:@"AttachToInbox"];
     }
 #endif
 }

@@ -110,5 +110,12 @@
 + (NSUInteger)count { return 0; }
 + (NSUInteger)countInactive { return 0; }
 
++ (NSPredicate *)getPredicate:(NSString *)objId {
+    return [NSPredicate predicateWithFormat:@"objectId MATCHES[CD] %@", objId];
+}
++ (BDCBusinessObject *)loadWithId:(NSString *)objId {
+    return nil;
+}
+
 
 @end

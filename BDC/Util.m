@@ -17,6 +17,11 @@
 
 @implementation Util
 
++ (void)track:(NSString *)message {
+    [[Branch getInstance] userCompletedAction:message];
+    [[Mixpanel sharedInstance] track:message];
+}
+
 + (void)logout {
     KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:KEYCHAIN_ID accessGroup:nil];
     [Util setSession:@""];
@@ -24,7 +29,7 @@
     
     // Branch Metrics
     Branch *branch = [Branch getInstance];
-    [branch clearUser];
+    [branch logout];
     
     // Mixpanel
     Mixpanel *mixpanel = [Mixpanel sharedInstance];

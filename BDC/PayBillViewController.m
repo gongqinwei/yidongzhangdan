@@ -88,6 +88,8 @@
             
 //            self.bill.paymentStatus = PAYMENT_SCHEDULED;
 //            [self.payBillDelegate billPaid];
+            
+            [Util track:@"paid_bill"];
         } else {
             [UIHelper showInfo:[NSString stringWithFormat:@"Failed to pay bill %@: %@", self.bill.name, [err localizedDescription]] withStatus:kFailure];
             Error(@"Failed to pay bill %@: %@", self.bill.name, [err localizedDescription]);

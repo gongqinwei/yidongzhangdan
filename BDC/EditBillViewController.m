@@ -1175,7 +1175,10 @@ typedef enum {
                         } else {
                             cell.detailTextLabel.text = nil;
                         }
-                        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                        
+                        if ([[Vendor list] count] > 0) {    //TODO: remove this check when BDC allows approvers to list/read vendors
+                            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                        }
                     } else {
                         if (shaddowBill.vendorId != nil) {
                             cell.detailTextLabel.text = [Vendor objectForKey:shaddowBill.vendorId].name;
@@ -1183,7 +1186,8 @@ typedef enum {
                             cell.detailTextLabel.text = SELECT_ONE;
                         }
                         
-                        if (!shaddowBill.paymentStatus || [shaddowBill.paymentStatus isEqualToString:PAYMENT_UNPAID]) {
+                        //TODO: need to check vendor count until BDC allows approver to retrieve vendor
+                        if ((!shaddowBill.paymentStatus || [shaddowBill.paymentStatus isEqualToString:PAYMENT_UNPAID]) && [[Vendor list] count] > 0) {
                             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                         }
                         
@@ -1619,9 +1623,11 @@ typedef enum {
                 switch (indexPath.row) {
                     case kBillVendor:
                     {
-                        Bill *shaddowBill = (Bill *)self.shaddowBusObj;
-                        if (!shaddowBill.paymentStatus || [shaddowBill.paymentStatus isEqualToString:PAYMENT_UNPAID]) {
-                            [self performSegueWithIdentifier:BILL_SELECT_VENDOR_SEGUE sender:self];
+                        if ([[Vendor list] count] > 0) {    //TODO: remove this check when BDC allows approvers to list/read vendors
+                            Bill *shaddowBill = (Bill *)self.shaddowBusObj;
+                            if (!shaddowBill.paymentStatus || [shaddowBill.paymentStatus isEqualToString:PAYMENT_UNPAID]) {
+                                [self performSegueWithIdentifier:BILL_SELECT_VENDOR_SEGUE sender:self];
+                            }
                         }
                         
                         break;
@@ -1639,9 +1645,11 @@ typedef enum {
                 switch (indexPath.row) {
                     case kBillVendor:
                     {
-                        Vendor *vendor = [Vendor objectForKey:((Bill *)self.shaddowBusObj).vendorId];
-                        vendor.editBillDelegate = self;
-                        [self performSegueWithIdentifier:BILL_VIEW_VENDOR_DETAILS_SEGUE sender:vendor];
+                        if ([[Vendor list] count] > 0) {    //TODO: remove this check when BDC allows approvers to list/read vendors
+                            Vendor *vendor = [Vendor objectForKey:((Bill *)self.shaddowBusObj).vendorId];
+                            vendor.editBillDelegate = self;
+                            [self performSegueWithIdentifier:BILL_VIEW_VENDOR_DETAILS_SEGUE sender:vendor];
+                        }
                     }
                         break;
                     case kBillApprovalStatus:

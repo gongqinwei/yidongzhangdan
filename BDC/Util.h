@@ -10,6 +10,7 @@
 
 @interface Util : NSObject
 
++ (void)track:(NSString *)message;
 + (void)logout;
 
 + (NSString *)getUsername;

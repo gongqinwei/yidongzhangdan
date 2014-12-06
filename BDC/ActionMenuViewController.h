@@ -26,7 +26,6 @@
 
 @property (nonatomic, strong) NSArray *crudActions;
 
-- (SlidingTableViewController *)slideInListViewIdentifier:(NSString *)identifier;
 - (void)performSegueForObject:(BDCBusinessObject *)obj;
 
 + (ActionMenuViewController *)sharedInstance;

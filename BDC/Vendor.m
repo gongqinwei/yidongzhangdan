@@ -13,6 +13,7 @@
 #import "Geo.h"
 #import "Util.h"
 #import "BDCAppDelegate.h"
+#import "RootMenuViewController.h"
 
 
 #define VENDOR_INVITE_DATA          @"{ \"vendorId\" : \"%@\", \"email\" : \"%@\"  }"
@@ -27,6 +28,20 @@ static NSMutableDictionary * inactiveVendors = nil;
 @synthesize payBy;
 @synthesize editBillDelegate;
 
++ (Vendor *)loadWithId:(NSString *)objId {
+    NSPredicate *predicate = [BDCBusinessObject getPredicate:objId];
+    NSArray *result = [[vendors allValues] filteredArrayUsingPredicate:predicate];
+    if ([result count] == 1) {
+        return result[0];
+    }
+    
+    result = [[inactiveVendors allValues] filteredArrayUsingPredicate:predicate];
+    if ([result count] == 1) {
+        return result[0];
+    }
+    
+    return nil;
+}
 
 + (void)resetList {
     vendors = [NSMutableDictionary dictionary];
@@ -168,13 +183,15 @@ static NSMutableDictionary * inactiveVendors = nil;
         } else if (response_status == RESPONSE_TIMEOUT) {
             [ListDelegate failedToGetVendors];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            Debug(@"Time out when retrieving list of vendors");
+            Error(@"Time out when retrieving list of vendors");
         } else {
             [ListDelegate failedToGetVendors];
             
             NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
             if ([INVALID_PERMISSION isEqualToString:errCode]) {
-                [UIHelper showInfo:@"You don't have permission to retrieve vendors." withStatus:kWarning];
+                if (ListDelegate != [RootMenuViewController sharedInstance]) {
+                    [UIHelper showInfo:@"You don't have permission to retrieve vendors." withStatus:kWarning];
+                }
             } else {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of vendors for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]] withStatus:kFailure];
                 Error(@"Failed to retrieve list of vendors for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
@@ -296,10 +313,10 @@ static NSMutableDictionary * inactiveVendors = nil;
             
             if ([theAction isEqualToString:UPDATE]) {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to update vendor %@: %@", self.objectId, [err localizedDescription]] withStatus:kFailure];
-                Debug(@"Failed to update vendor %@: %@", self.objectId, [err localizedDescription]);
+                Error(@"Failed to update vendor %@: %@", self.objectId, [err localizedDescription]);
             } else {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to create vendor: %@", [err localizedDescription]] withStatus:kFailure];
-                Debug(@"Failed to create vendor: %@", [err localizedDescription]);
+                Error(@"Failed to create vendor: %@", [err localizedDescription]);
             }
         }
     }];
@@ -352,7 +369,7 @@ static NSMutableDictionary * inactiveVendors = nil;
             [ListDelegate didDeleteObject];
         } else {
             [UIHelper showInfo:[NSString stringWithFormat:@"Failed to %@ vendor %@: %@", act, self.objectId, [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to %@ vendor %@: %@", act, self.objectId, [err localizedDescription]);
+            Error(@"Failed to %@ vendor %@: %@", act, self.objectId, [err localizedDescription]);
         }
     }];
 }

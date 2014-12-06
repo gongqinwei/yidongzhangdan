@@ -10,6 +10,7 @@
 #import "APIHandler.h"
 #import "UIHelper.h"
 #import "BDCAppDelegate.h"
+#import "RootMenuViewController.h"
 
 
 #define LIST_ACTIVE_FOR_CUSTOMER_FILTER     @"{ \"start\" : 0, \
@@ -36,6 +37,17 @@ static id <ContactListDelegate> ListDelegate = nil;
 @synthesize email;
 @synthesize phone;
 @synthesize editCustomerDelegate;
+
+
++ (CustomerContact *)loadWithId:(NSString *)objId {
+    NSPredicate *predicate = [BDCBusinessObject getPredicate:objId];
+    NSArray *result = [[contacts allValues] filteredArrayUsingPredicate:predicate];
+    if ([result count] == 1) {
+        return result[0];
+    }
+    
+    return nil;
+}
 
 + (void)resetList {
     contacts = [NSMutableDictionary dictionary];
@@ -127,7 +139,9 @@ static id <ContactListDelegate> ListDelegate = nil;
             
             NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
             if ([INVALID_PERMISSION isEqualToString:errCode]) {
-                [UIHelper showInfo:@"You don't have permission to retrieve accounts." withStatus:kWarning];
+                if (ListDelegate != [RootMenuViewController sharedInstance]) {
+                    [UIHelper showInfo:@"You don't have permission to retrieve accounts." withStatus:kWarning];
+                }
             } else {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve contacts for %@! %@", customerId, [err localizedDescription]] withStatus:kFailure];
                 Error(@"Failed to retrieve contacts for %@! %@", customerId, [err localizedDescription]);
@@ -145,7 +159,7 @@ static id <ContactListDelegate> ListDelegate = nil;
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
-        NSArray *jsonContacts = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
 //        [UIAppDelegate decrNetworkActivities];
         
@@ -155,6 +169,8 @@ static id <ContactListDelegate> ListDelegate = nil;
             } else {
                 contacts = [NSMutableDictionary dictionary];
             }                
+            
+            NSArray *jsonContacts = (NSArray *)json;
             
             for (id item in jsonContacts) {
                 NSDictionary *dict = (NSDictionary*)item;
@@ -174,10 +190,18 @@ static id <ContactListDelegate> ListDelegate = nil;
             
         } else if (response_status == RESPONSE_TIMEOUT) {
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            Debug(@"Time out when retrieving list of contacts");
+            Error(@"Time out when retrieving list of contacts");
         } else {
-            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of contacts! %@", [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to retrieve list of contacts! %@", [err localizedDescription]);
+            [ListDelegate failedToGetContacts];
+            
+            NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
+            if ([INVALID_PERMISSION isEqualToString:errCode]) {
+                if (ListDelegate != [RootMenuViewController sharedInstance]) {
+                    [UIHelper showInfo:@"You don't have permission to retrieve vendors." withStatus:kWarning];
+                }
+            } else {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of contacts! %@", [err localizedDescription]] withStatus:kFailure];
+                Error(@"Failed to retrieve list of contacts! %@", [err localizedDescription]);            }
         }
     }];
 }

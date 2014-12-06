@@ -854,23 +854,20 @@ static double animatedDistance = 0;
         [self toggleActiveness];        
     } else if ([action isEqualToString:ACTION_BNC_SHARE_EMAIL] || [action isEqualToString:ACTION_BNC_SHARE_SMS]) {
         Branch * branch = [Branch getInstance];
-        [branch getShortURLWithParams:[NSDictionary dictionaryWithObject:self.busObj.objectId forKey:@"objId"] andCallback:^(NSString *url) {
-            self.bncShortURL = nil;
-            self.bncShortURL = url;
-            
-            if ([action isEqualToString:ACTION_BNC_SHARE_EMAIL]) {
-                [self sendBNCShareEmail];
+        [branch getShortURLWithParams:[NSDictionary dictionaryWithObject:self.busObj.objectId forKey:OBJ_ID] andCallback:^(NSString *url, NSError *err) {
+            if (!err) {
+                self.bncShortURL = nil;
+                self.bncShortURL = url;
+                
+                if ([action isEqualToString:ACTION_BNC_SHARE_EMAIL]) {
+                    [self sendBNCShareEmail];
+                } else {
+                    [self sendBNCShareSMS];
+                }
             } else {
-                [self sendBNCShareSMS];
+                [UIHelper showInfo:err.localizedDescription withStatus:kError];
+                Error(@"%@", err.localizedDescription);
             }
-            
-//            UIActionSheet *shareActions = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:@"Share %@", self.busObj.name] delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"via Email", @"via Message", nil];
-//            UIWindow* window = [[UIApplication sharedApplication] keyWindow];
-//            if ([window.subviews containsObject:self.view]) {
-//                [shareActions showInView:self.view];
-//            } else {
-//                [shareActions showInView:window];
-//            }
         }];
     }
 }
@@ -941,6 +938,7 @@ static double animatedDistance = 0;
     switch (result){
         case MFMailComposeResultSent:
             [UIHelper showInfo: EMAIL_SENT withStatus:kSuccess];
+            [Util track:[NSString stringWithFormat:@"shared_%@_via_email", self.busObj.class]];
             break;
         case MFMailComposeResultCancelled:
             break;
@@ -965,6 +963,7 @@ static double animatedDistance = 0;
     switch (result) {
         case MessageComposeResultSent:
             [UIHelper showInfo:SMS_SENT withStatus:kSuccess];
+            [Util track:[NSString stringWithFormat:@"shared_%@_via_sms", self.busObj.class]];
             break;
         case MessageComposeResultCancelled:
             break;

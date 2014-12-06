@@ -7,6 +7,7 @@
 //
 
 #import "BDCAppDelegate.h"
+#import "RootMenuViewController.h"
 #import "Organization.h"
 #import "Invoice.h"
 #import "Customer.h"
@@ -24,6 +25,8 @@
 #import "Mixpanel.h"
 #import "Branch.h"
 #import <FacebookSDK/FacebookSDK.h>
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 
 @interface BDCAppDelegate () <UIAlertViewDelegate>
@@ -40,6 +43,7 @@ static MFMailComposeViewController *globalMailer;
 @synthesize window = _window;
 @synthesize numNetworkActivities = _numNetworkActivities;
 @synthesize isFirstLaunch;
+@synthesize bncDeeplinkObjId;
 
 
 - (MFMailComposeViewController *)getMailer {
@@ -106,22 +110,24 @@ static MFMailComposeViewController *globalMailer;
         [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     }
     
+//    [[Crashlytics sharedInstance] setDebugMode:YES];
+    [Fabric with:@[CrashlyticsKit]];
+    
     // Branch Metrics
     Branch *branch = [Branch getInstance:BNC_APP_KEY];
-    [branch initUserSessionWithCallback:^(NSDictionary *params) {
-        NSLog(@"deep link data: %@", [params description]);
-        
-        // params are the deep linked params associated with the link that the user clicked before showing up
-        // params will be empty if no data found
-        
-        // here is the data from the example below if a new user clicked on Joe's link and installed the app
-        Debug(@"inv id: %@", [params objectForKey:@"invoice_id"]);
-        Debug(@"inv num: %@", [params objectForKey:@"invoice_number"]);
-        Debug(@"inv logo: %@", [params objectForKey:@"invoice_image"]);
-        
-        // route to a profile page in the app for Joe
-        // show a customer welcome
-    } withLaunchOptions:launchOptions];
+    [branch initSessionWithLaunchOptions:launchOptions andRegisterDeepLinkHandler:^(NSDictionary *params, NSError *error) {
+        if (!error) {
+            Debug(@"deep link data: %@", [params description]);
+            if ([params objectForKey:OBJ_ID]) {
+                self.bncDeeplinkObjId = [params objectForKey:OBJ_ID];
+                [[RootMenuViewController sharedInstance] deeplinkRedirect];
+            } else {
+                self.bncDeeplinkObjId = nil;
+            }
+        } else {
+            self.bncDeeplinkObjId = nil;
+        }
+    }];
     
     // Mixpanel
     [Mixpanel sharedInstanceWithToken:MP_TOKEN];

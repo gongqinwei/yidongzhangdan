@@ -1,3 +1,24 @@
+## Callback changes since v0.3.0
+
+An NSError* is added to all callback signatures
+
+typedef void (^callbackWithParams) (NSDictionary *params, NSError *error);
+typedef void (^callbackWithUrl) (NSString *url, NSError *error);
+typedef void (^callbackWithStatus) (BOOL changed, NSError *error);
+typedef void (^callbackWithList) (NSArray *list, NSError *error);
+
+Please look up BNCError.h for the list of error code.
+
+## API renaming since v0.2.7
+
+Deprecated API | Renamed to
+-------------- | -------------
+all of initUserSession... | initSession...
+all of identifyUser... | setIdentity...
+clearUser | logout
+getInstallReferringParams | getFirstReferringParams
+getReferringParams | getLatestReferringParams
+
 ## Installation
 
 compiled SDK size: ~155kb
@@ -42,6 +63,15 @@ You can register your app to respond to direct deep links (yourapp:// in a mobil
 
 ![URL Scheme Demo](https://s3-us-west-1.amazonaws.com/branchhost/urlScheme.png)
 
+Alternatively, you can add the URI scheme in your project's Info page.
+
+1. In Xcode, click your project in the Navigator (on the left side).
+1. Select the "Info" tab.
+1. Expand the "URL Types" section at the bottom.
+1. Click the "+" sign to add a new URI Scheme, as below:
+
+![URL Scheme Demo](https://s3-us-west-1.amazonaws.com/branchhost/urlType.png)
+
 ### Initialize SDK And Register Deep Link Routing Function
 
 Called when app first initializes a session, ideally in the app delegate. If you created a custom link with your own custom dictionary data, you probably want to know when the user session init finishes, so you can check that data. Think of this callback as your "deep link router". If your app opens with some data, you want to route the user depending on the data you passed in. Otherwise, send them to a generic install flow.
@@ -55,26 +85,28 @@ This deep link routing callback is called 100% of the time on init, with your li
 
 	// sign up to get your key at http://branch.io
 	Branch *branch = [Branch getInstance:@"Your app key"];
-	[branch initUserSessionWithCallback:^(NSDictionary *params) {
-		// params are the deep linked params associated with the link that the user clicked before showing up
-		// params will be empty if no data found
+	[branch initSessionWithLaunchOptions:launchOptions andRegisterDeepLinkHandler:^(NSDictionary *params, NSError *error) {		// previously initUserSessionWithCallback:withLaunchOptions:
+        if (!error) {
+            // params are the deep linked params associated with the link that the user clicked before showing up
+            // params will be empty if no data found
 
 
-		// here is the data from the example below if a new user clicked on Joe's link and installed the app
-		NSString *name = [params objectForKey:@"user"]; // returns Joe
-		NSString *profileUrl = [params objectForKey:@"profile_pic"]; // returns https://s3-us-west-1.amazonaws.com/myapp/joes_pic.jpg
-		NSString *description = [params objectForKey:@"description"]; // returns Joe likes long walks on the beach...
+            // here is the data from the example below if a new user clicked on Joe's link and installed the app
+            NSString *name = [params objectForKey:@"user"]; // returns Joe
+            NSString *profileUrl = [params objectForKey:@"profile_pic"]; // returns https://s3-us-west-1.amazonaws.com/myapp/joes_pic.jpg
+            NSString *description = [params objectForKey:@"description"]; // returns Joe likes long walks on the beach...
 
-		// route to a profile page in the app for Joe
-		// show a customer welcome
-	} withLaunchOptions:launchOptions];
+            // route to a profile page in the app for Joe
+            // show a customer welcome
+        }
+	}];
 }
 ```
 
 ```objc
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
 	// pass the url to the handle deep link call
-	// if handleDeepLink returns YES, and you registered a callback in initUserSession, the callback will be called with the data associated with the deep link
+	// if handleDeepLink returns YES, and you registered a callback in initSessionAndRegisterDeepLinkHandler, the callback will be called with the data associated with the deep link
 	if (![[Branch getInstance] handleDeepLink:url]) {
 		// do other deep link routing for the Facebook SDK, Pinterest SDK, etc
 	}
@@ -86,14 +118,14 @@ This deep link routing callback is called 100% of the time on init, with your li
 
 These session parameters will be available at any point later on with this command. If no params, the dictionary will be empty. This refreshes with every new session (app installs AND app opens)
 ```objc
-NSDictionary *sessionParams = [[Branch getInstance] getReferringParams];
+NSDictionary *sessionParams = [[Branch getInstance] getLatestReferringParams]; // previously getReferringParams
 ```
 
 #### Retrieve install (install only) parameters
 
 If you ever want to access the original session params (the parameters passed in for the first install event only), you can use this line. This is useful if you only want to reward users who newly installed the app from a referral link or something.
 ```objc
-NSDictionary *installParams = [[Branch getInstance] getInstallReferringParams];
+NSDictionary *installParams = [[Branch getInstance] getFirstReferringParams]; // previously getInstallReferringParams
 ```
 
 ### Persistent identities
@@ -102,7 +134,7 @@ Often, you might have your own user IDs, or want referral and event data to pers
 
 To identify a user, just call:
 ```objc
-[[Branch getInstance] identifyUser:@"your user id"];
+[[Branch getInstance] setIdentity:@"your user id"];	// previously identifyUser:
 ```
 
 #### Logout
@@ -112,21 +144,21 @@ If you provide a logout function in your app, be sure to clear the user when the
 **Warning** this call will clear the referral credits and attribution on the device.
 
 ```objc
-[[Branch getInstance] clearUser];
+[[Branch getInstance] logout];	// previously clearUser
 ```
 
 ### Register custom events
 
 ```objc
 Branch *branch = [Branch getInstance];
-[branch userCompletedAction:@"your_custom_event"]; 
+[branch userCompletedAction:@"your_custom_event"];
 ```
 
 OR if you want to store some state with the event
 
 ```objc
 Branch *branch = [Branch getInstance];
-[branch userCompletedAction:@"your_custom_event" withState:(NSDictionary *)appState]; 
+[branch userCompletedAction:@"your_custom_event" withState:(NSDictionary *)appState];
 ```
 
 Some example events you might want to track:
@@ -166,7 +198,7 @@ Branch *branch = [Branch getInstance];
 
 There are other methods which exclude tag and data if you don't want to pass those. Explore Xcode's autocomplete functionality.
 
-**Note** 
+**Note**
 You can customize the Facebook OG tags of each URL if you want to dynamically share content by using the following optional keys in the params dictionary:
 ```objc
 @"$og_app_id"

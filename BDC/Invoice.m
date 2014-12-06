@@ -17,6 +17,7 @@
 #import "UIHelper.h"
 #import "BDCAppDelegate.h"
 #import "RateAppManager.h"
+#import "RootMenuViewController.h"
 
 #define LIST_ACTIVE_INV_FILTER      @"{ \"start\" : 0, \
                                         \"max\" : 999, \
@@ -99,10 +100,27 @@ static NSMutableArray *inactiveInvoices = nil;
             if (![[RateAppManager sharedInstance] checkPromptForRate]) {
                 [self.mailDelegate didSendInvoice];
             }
+            
+            [Util track:@"sent_invoice"];
         } else {
             [UIHelper showInfo: EMAIL_FAILED withStatus:kFailure];
         }
     }];
+}
+
++ (Invoice *)loadWithId:(NSString *)objId {
+    NSPredicate *predicate = [BDCBusinessObject getPredicate:objId];
+    NSArray *result = [invoices filteredArrayUsingPredicate:predicate];
+    if ([result count] == 1) {
+        return result[0];
+    }
+    
+    result = [inactiveInvoices filteredArrayUsingPredicate:predicate];
+    if ([result count] == 1) {
+        return result[0];
+    }
+    
+    return nil;
 }
 
 + (void)resetList {
@@ -363,7 +381,9 @@ static NSMutableArray *inactiveInvoices = nil;
             NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
             if ([INVALID_PERMISSION isEqualToString:errCode]) {
                 [[User GetLoginUser] markProfileFor:kInvoicesChecked checked:NO];
-                [UIHelper showInfo:@"You don't have permission to retrieve invoices." withStatus:kWarning];
+                if (ListDelegate != [RootMenuViewController sharedInstance]) {
+                    [UIHelper showInfo:@"You don't have permission to retrieve invoices." withStatus:kWarning];
+                }
             } else {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of invoice for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]] withStatus:kFailure];
                 Error(@"Failed to retrieve list of invoice for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);

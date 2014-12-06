@@ -14,8 +14,8 @@
 @interface BDCAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
 @property (nonatomic, assign) int numNetworkActivities;
+@property (nonatomic, strong) NSString *bncDeeplinkObjId;
 
 - (void)incrNetworkActivities;
 - (void)decrNetworkActivities;

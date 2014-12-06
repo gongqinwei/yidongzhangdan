@@ -453,24 +453,9 @@ static ActionMenuViewController * _sharedInstance = nil;
 
 #pragma mark - Table view delegate
 
-- (SlidingTableViewController *)slideInListViewIdentifier:(NSString *)identifier {
-    UINavigationController *navVC = [[RootMenuViewController sharedInstance].menuItems objectForKey:identifier];
-    SlidingTableViewController *vc = [navVC.childViewControllers objectAtIndex:0];
-    
-    [RootMenuViewController sharedInstance].currVC = vc;
-    [RootMenuViewController sharedInstance].currVC.navigation = navVC;    
-    [RootMenuViewController sharedInstance].currVC.navigationId = identifier;
-    
-    [vc.view removeGestureRecognizer:vc.tapRecognizer];
-    
-    [navVC popToRootViewControllerAnimated:NO];
-    
-    return vc;
-}
-
 - (void)performSegueForObject:(BDCBusinessObject *)obj {
     if ([obj isKindOfClass:[Invoice class]]) {
-        InvoicesTableViewController *listVC = (InvoicesTableViewController *)[self slideInListViewIdentifier:MENU_INVOICES];
+        InvoicesTableViewController *listVC = (InvoicesTableViewController *)[[RootMenuViewController sharedInstance] slideInListViewIdentifier:MENU_INVOICES];
         self.actionDelegate = listVC;
         
         [self.actionDelegate didSelectSortAttribute:[listVC.actionMenuVC.sortAttributes objectAtIndex:listVC.actionMenuVC.lastSortAttribute.row]
@@ -480,7 +465,7 @@ static ActionMenuViewController * _sharedInstance = nil;
         [listVC performSegueWithIdentifier:@"ViewInvoice" sender:(Invoice *)obj];
         [[RootMenuViewController sharedInstance].menuTableView selectRowAtIndexPath:[NSIndexPath indexPathForItem:kARInvoice inSection:kRootAR] animated:NO scrollPosition:UITableViewScrollPositionNone];
     } else if ([obj isKindOfClass:[Bill class]]) {
-        BillsTableViewController *listVC = (BillsTableViewController *)[self slideInListViewIdentifier:MENU_BILLS];
+        BillsTableViewController *listVC = (BillsTableViewController *)[[RootMenuViewController sharedInstance] slideInListViewIdentifier:MENU_BILLS];
         self.actionDelegate = listVC;
         
         [self.actionDelegate didSelectSortAttribute:[listVC.actionMenuVC.sortAttributes objectAtIndex:listVC.actionMenuVC.lastSortAttribute.row]
@@ -490,16 +475,16 @@ static ActionMenuViewController * _sharedInstance = nil;
         [listVC performSegueWithIdentifier:@"ViewBill" sender:(Bill *)obj];
         [[RootMenuViewController sharedInstance].menuTableView selectRowAtIndexPath:[NSIndexPath indexPathForItem:kAPBill inSection:kRootAP] animated:NO scrollPosition:UITableViewScrollPositionNone];
     } else if ([obj isKindOfClass:[Customer class]]) {
-        [[self slideInListViewIdentifier:MENU_CUSTOMERS] performSegueWithIdentifier:@"ViewCustomer" sender:(Customer *)obj];
+        [[[RootMenuViewController sharedInstance] slideInListViewIdentifier:MENU_CUSTOMERS] performSegueWithIdentifier:@"ViewCustomer" sender:(Customer *)obj];
         [[RootMenuViewController sharedInstance].menuTableView selectRowAtIndexPath:[NSIndexPath indexPathForItem:kARCustomer inSection:kRootAR] animated:NO scrollPosition:UITableViewScrollPositionNone];
     } else if ([obj isKindOfClass:[Item class]]) {
-        [[self slideInListViewIdentifier:MENU_ITEMS] performSegueWithIdentifier:@"ViewItem" sender:(Item *)obj];
+        [[[RootMenuViewController sharedInstance] slideInListViewIdentifier:MENU_ITEMS] performSegueWithIdentifier:@"ViewItem" sender:(Item *)obj];
         [[RootMenuViewController sharedInstance].menuTableView selectRowAtIndexPath:[NSIndexPath indexPathForItem:kARItem inSection:kRootAR] animated:NO scrollPosition:UITableViewScrollPositionNone];
     } else if ([obj isKindOfClass:[Vendor class]]) {
-        [[self slideInListViewIdentifier:MENU_VENDORS] performSegueWithIdentifier:@"ViewVendor" sender:(Vendor *)obj];
+        [[[RootMenuViewController sharedInstance] slideInListViewIdentifier:MENU_VENDORS] performSegueWithIdentifier:@"ViewVendor" sender:(Vendor *)obj];
         [[RootMenuViewController sharedInstance].menuTableView selectRowAtIndexPath:[NSIndexPath indexPathForItem:kAPVendor inSection:kRootAP] animated:NO scrollPosition:UITableViewScrollPositionNone];
     } else if ([obj isKindOfClass:[Document class]]) {
-        [self slideInListViewIdentifier:MENU_INBOX];
+        [[RootMenuViewController sharedInstance] slideInListViewIdentifier:MENU_INBOX];
         [[RootMenuViewController sharedInstance].menuTableView selectRowAtIndexPath:[NSIndexPath indexPathForItem:kToolInbox inSection:kRootTool] animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
 }
@@ -510,34 +495,7 @@ static ActionMenuViewController * _sharedInstance = nil;
         [self.targetViewController slideOut];
         
         BDCBusinessObject * obj = (BDCBusinessObject *)[[self.searchResults objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-        
         [self performSegueForObject:obj];
-        
-//        if ([obj isKindOfClass:[Invoice class]]) {            
-//            InvoicesTableViewController *listVC = (InvoicesTableViewController *)[ActionMenuViewController slideInListViewIdentifier:MENU_INVOICES];
-//            self.actionDelegate = listVC;
-//            
-//            [self.actionDelegate didSelectSortAttribute:[listVC.actionMenuVC.sortAttributes objectAtIndex:listVC.actionMenuVC.lastSortAttribute.row]
-//                                              ascending:(listVC.actionMenuVC) ? listVC.actionMenuVC.ascSwitch.on : YES
-//                                                 active:!listVC.actionMenuVC.activenessSwitch.selectedSegmentIndex];
-//            
-//            [listVC performSegueWithIdentifier:@"ViewInvoice" sender:(Invoice *)obj];
-//        } else if ([obj isKindOfClass:[Bill class]]) {
-//            BillsTableViewController *listVC = (BillsTableViewController *)[ActionMenuViewController slideInListViewIdentifier:MENU_BILLS];
-//            self.actionDelegate = listVC;
-//            
-//            [self.actionDelegate didSelectSortAttribute:[listVC.actionMenuVC.sortAttributes objectAtIndex:listVC.actionMenuVC.lastSortAttribute.row]
-//                                              ascending:(listVC.actionMenuVC) ? listVC.actionMenuVC.ascSwitch.on : YES
-//                                                 active:!listVC.actionMenuVC.activenessSwitch.selectedSegmentIndex];
-//            
-//            [listVC performSegueWithIdentifier:@"ViewBill" sender:(Bill *)obj];
-//        } else if ([obj isKindOfClass:[Customer class]]) {
-//            [[ActionMenuViewController slideInListViewIdentifier:MENU_CUSTOMERS] performSegueWithIdentifier:@"ViewCustomer" sender:(Customer *)obj];
-//        } else if ([obj isKindOfClass:[Item class]]) {
-//            [[ActionMenuViewController slideInListViewIdentifier:MENU_ITEMS] performSegueWithIdentifier:@"ViewItem" sender:(Item *)obj];
-//        } else if ([obj isKindOfClass:[Vendor class]]) {
-//            [[ActionMenuViewController slideInListViewIdentifier:MENU_VENDORS] performSegueWithIdentifier:@"ViewVendor" sender:(Vendor *)obj];
-//        }
     } else {
         NSString *action = [self.crudActions objectAtIndex:indexPath.row];
         if ([action isEqualToString:ACTION_BNC_SHARE]) {
@@ -568,6 +526,8 @@ static ActionMenuViewController * _sharedInstance = nil;
                 [self.actionDelegate didSelectCrudAction:action];
             }
         }
+        
+        [Util track:[NSString stringWithFormat:@"took_action_%@", action]];
     }
 }
 

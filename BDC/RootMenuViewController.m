@@ -11,17 +11,12 @@
 //#import "AROverViewController.h"
 #import "InvoicesTableViewController.h"
 #import "Organization.h"
-#import "Invoice.h"
-#import "Customer.h"
-#import "CustomerContact.h"
-#import "Item.h"
-#import "Bill.h"
-#import "Vendor.h"
+
 #import "Approver.h"
 #import "ChartOfAccount.h"
-#import "Document.h"
+
 #import "BankAccount.h"
-#import "User.h"
+
 #import "Util.h"
 #import "UIHelper.h"
 #import "TutorialControl.h"
@@ -45,7 +40,7 @@ typedef enum {
     kEmailShare, kMessageShare, kLinkedInShare, kFacebookShare, kTwitterShare
 } ShareOption;
 
-@interface RootMenuViewController () <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate, BillListDelegate, UserDelegate>
+@interface RootMenuViewController () <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
 
 @property (nonatomic, strong) Organization *currentOrg;
 @property (nonatomic, strong) NSMutableArray *rootMenu;
@@ -57,6 +52,13 @@ typedef enum {
 @property (nonatomic, assign) ShareOption shareOption;
 
 @property (nonatomic, strong) UIActivityIndicatorView *retrieveImageActivityIndicator;
+
+@property (nonatomic, assign) BOOL gotBills;
+@property (nonatomic, assign) BOOL gotInvoices;
+@property (nonatomic, assign) BOOL gotVendors;
+@property (nonatomic, assign) BOOL gotCustomers;
+@property (nonatomic, assign) BOOL gotItems;
+@property (nonatomic, assign) BOOL gotContacts;
 
 @end
 
@@ -75,6 +77,12 @@ typedef enum {
 @synthesize showShareOptions;
 @synthesize shareOption;
 @synthesize retrieveImageActivityIndicator;
+@synthesize gotBills;
+@synthesize gotInvoices;
+@synthesize gotVendors;
+@synthesize gotCustomers;
+@synthesize gotItems;
+@synthesize gotContacts;
 
 
 static RootMenuViewController * _sharedInstance = nil;
@@ -178,6 +186,14 @@ static RootMenuViewController * _sharedInstance = nil;
         }
     }
     
+    [Bill setListDelegate:self];
+    [Invoice setListDelegate:self];
+    [Vendor setListDelegate:self];
+    [Customer setListDelegate:self];
+    [Item setListDelegate:self];
+    [CustomerContact setListDelegate:self];
+    [Document setDocumentListDelegate:self];
+    [ChartOfAccount setListDelegate:self];
     
     [Bill resetList];
     [Invoice resetList];
@@ -189,9 +205,7 @@ static RootMenuViewController * _sharedInstance = nil;
     [ChartOfAccount resetList];
     [BankAccount resetList];
     
-    
 //    [Bill setListForApprovalDelegate:self];
-    
     
     if (self.currentOrg.enableAP) {
         [Bill retrieveListForActive:YES reload:YES];
@@ -258,6 +272,20 @@ static RootMenuViewController * _sharedInstance = nil;
     self.numBillsToApproveLabel.backgroundColor = [UIColor clearColor];
     self.numBillsToApproveLabel.textColor = [UIColor whiteColor];
     self.numBillsToApproveLabel.font = [UIFont fontWithName:APP_FONT size:15];
+}
+
+- (SlidingTableViewController *)slideInListViewIdentifier:(NSString *)identifier {
+    UINavigationController *navVC = [self.menuItems objectForKey:identifier];
+    SlidingTableViewController *vc = [navVC.childViewControllers objectAtIndex:0];
+    
+    self.currVC = vc;
+    self.currVC.navigation = navVC;
+    self.currVC.navigationId = identifier;
+    
+    [vc.view removeGestureRecognizer:vc.tapRecognizer];
+    [navVC popToRootViewControllerAnimated:NO];
+    
+    return vc;
 }
 
 - (void)didReceiveMemoryWarning
@@ -538,25 +566,30 @@ static RootMenuViewController * _sharedInstance = nil;
     __block RootMenuViewController *blockSafeSelf = self;
     
     Branch * branch = [Branch getInstance];
-    [branch getShortURLWithParams:[NSDictionary dictionaryWithObject:[Util getUserFullName]forKey:@"referrer"] andChannel:nil andFeature:nil andCallback:^(NSString *url) {
-        switch (sender.tag) {
-            case kEmailShare:
-                [blockSafeSelf shareViaEmail:url];
-                break;
-            case kMessageShare:
-                [blockSafeSelf shareViaMessage:url];
-                break;
-            case kLinkedInShare:
-                [blockSafeSelf shareViaLinkedIn:url];
-                break;
-            case kFacebookShare:
-                [blockSafeSelf shareViaFacebook:url];
-                break;
-            case kTwitterShare:
-                [blockSafeSelf shareViaTwitter:url];
-                break;
-            default:
-                break;
+    [branch getShortURLWithParams:[NSDictionary dictionaryWithObject:[Util getUserFullName]forKey:@"referrer"] andChannel:nil andFeature:nil andCallback:^(NSString *url, NSError *err) {
+        if (!err) {
+            switch (sender.tag) {
+                case kEmailShare:
+                    [blockSafeSelf shareViaEmail:url];
+                    break;
+                case kMessageShare:
+                    [blockSafeSelf shareViaMessage:url];
+                    break;
+                case kLinkedInShare:
+                    [blockSafeSelf shareViaLinkedIn:url];
+                    break;
+                case kFacebookShare:
+                    [blockSafeSelf shareViaFacebook:url];
+                    break;
+                case kTwitterShare:
+                    [blockSafeSelf shareViaTwitter:url];
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            [UIHelper showInfo:err.localizedDescription withStatus:kError];
+            Error(@"%@", err.localizedDescription);
         }
     }];
 }
@@ -629,7 +662,7 @@ static RootMenuViewController * _sharedInstance = nil;
                                           } else {
                                               Debug(@"FB result %@", results);
                                               [UIHelper showInfo:@"Shared to Facebook successfully.\n\nThanks a lot!" withStatus:kSuccess];
-                                              [[Branch getInstance] userCompletedAction:@"share_facebook_success"];
+                                              [Util track:@"shared_app_via_facebook"];
                                           }
                                       }];
     } else {
@@ -663,7 +696,7 @@ static RootMenuViewController * _sharedInstance = nil;
                                                               } else {
                                                                   // User clicked the Share button
                                                                   [UIHelper showInfo:@"Shared to Facebook successfully.\n\nThanks a lot!" withStatus:kSuccess];
-                                                                  [[Branch getInstance] userCompletedAction:@"share_facebook_success"];
+                                                                  [Util track:@"shared_app_via_facebook"];
                                                               }
                                                           }
                                                       }
@@ -704,7 +737,7 @@ static RootMenuViewController * _sharedInstance = nil;
             switch(result){
                 case SLComposeViewControllerResultDone:
                     [UIHelper showInfo:@"Shared to Twitter successfully.\n\nThanks a lot!" withStatus:kSuccess];
-                    [[Branch getInstance] userCompletedAction:@"share_twitter_success"];
+                    [Util track:@"shared_app_via_twitter"];
                     break;
                 case SLComposeViewControllerResultCancelled:
                 default:
@@ -880,7 +913,7 @@ static RootMenuViewController * _sharedInstance = nil;
     switch (result){
         case MFMailComposeResultSent:
             [UIHelper showInfo:@"Email sent successfully.\n\nThanks a lot!" withStatus:kSuccess];
-            [[Branch getInstance] userCompletedAction:@"share_email_success"];
+            [Util track:@"shared_app_via_email"];
             break;
         case MFMailComposeResultCancelled:
             break;
@@ -905,7 +938,7 @@ static RootMenuViewController * _sharedInstance = nil;
     switch (result) {
         case MessageComposeResultSent:
             [UIHelper showInfo:@"Message sent successfully.\n\nThanks a lot!" withStatus:kSuccess];
-            [[Branch getInstance] userCompletedAction:@"share_sms_success"];
+            [Util track:@"shared_app_via_sms"];
             break;
         case MessageComposeResultCancelled:
             break;
@@ -926,5 +959,131 @@ static RootMenuViewController * _sharedInstance = nil;
         [self.menuTableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
     });
 }
+
+#pragma mark - List delegates
+
+- (void)deeplinkRedirect {
+    if (UIAppDelegate.bncDeeplinkObjId && [UIAppDelegate.bncDeeplinkObjId length] > 3) {
+        NSString *prefix = [UIAppDelegate.bncDeeplinkObjId substringToIndex:3];
+        if ([@"00n" isEqualToString:prefix]) {
+            if (self.gotBills) {
+                [self didGetBills:nil]; //nil argument doesn't matter here
+            } else {
+                [Bill setListDelegate:self];
+            }
+        } else if ([@"00e" isEqualToString:prefix]) {
+            if (self.gotInvoices) {
+                [self didGetInvoices:nil];
+            } else {
+                [Invoice setListDelegate:self];
+            }
+        } else if ([@"009" isEqualToString:prefix]) {
+            if (self.gotVendors) {
+                [self didGetVendors];
+            } else {
+                [Vendor setListDelegate:self];
+            }
+        } else if ([@"0cu" isEqualToString:prefix]) {
+            if (self.gotCustomers) {
+                [self didGetCustomers];
+            } else {
+                [Customer setListDelegate:self];
+            }
+        } else if ([@"0ii" isEqualToString:prefix]) {
+            if (self.gotItems) {
+                [self didGetItems];
+            } else {
+                [Item setListDelegate:self];
+            }
+        } else if ([@"cpu" isEqualToString:prefix]) {
+            if (self.gotContacts) {
+                [self didGetContacts];
+            } else {
+                [CustomerContact setListDelegate:self];
+            }
+        }
+    }
+}
+
+- (void)didGetBills:(NSArray *)billList {
+    self.gotBills = YES;
+    BDCBusinessObject *busObj = [Bill loadWithId:UIAppDelegate.bncDeeplinkObjId];
+    if (busObj) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self showView:MENU_BILLS];
+            [[self slideInListViewIdentifier:MENU_BILLS] performSegueWithIdentifier:@"ViewBill" sender:(Bill *)busObj];
+        });
+    }
+}
+
+- (void)didGetInvoices:(NSArray *)invoiceList {
+    self.gotInvoices = YES;
+    BDCBusinessObject *busObj = [Invoice loadWithId:UIAppDelegate.bncDeeplinkObjId];
+    if (busObj) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self showView:MENU_INVOICES];
+            [[self slideInListViewIdentifier:MENU_INVOICES] performSegueWithIdentifier:@"ViewInvoice" sender:(Invoice *)busObj];
+        });
+    }
+}
+
+- (void)didGetVendors {
+    self.gotVendors = YES;
+    BDCBusinessObject *busObj = [Vendor loadWithId:UIAppDelegate.bncDeeplinkObjId];
+    if (busObj) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self showView:MENU_VENDORS];
+            [[self slideInListViewIdentifier:MENU_VENDORS] performSegueWithIdentifier:@"ViewVendor" sender:(Vendor *)busObj];
+        });
+    }
+}
+
+- (void)didGetCustomers {
+    self.gotCustomers = YES;
+    BDCBusinessObject *busObj = [Customer loadWithId:UIAppDelegate.bncDeeplinkObjId];
+    if (busObj) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self showView:MENU_CUSTOMERS];
+            [[self slideInListViewIdentifier:MENU_CUSTOMERS] performSegueWithIdentifier:@"ViewCustomer" sender:(Customer *)busObj];
+        });
+    }
+}
+
+- (void)didGetItems {
+    self.gotItems = YES;
+    BDCBusinessObject *busObj = [Item loadWithId:UIAppDelegate.bncDeeplinkObjId];
+    if (busObj) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+        //                [[self slideInListViewIdentifier:MENU_BILLS] performSegueWithIdentifier:@"ViewBill" sender:(Item *)busObj];
+        });
+    }
+}
+
+- (void)didGetContacts {
+    self.gotContacts = YES;
+    BDCBusinessObject *busObj = [CustomerContact loadWithId:UIAppDelegate.bncDeeplinkObjId];
+    if (busObj) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+        //                [[self slideInListViewIdentifier:MENU_BILLS] performSegueWithIdentifier:@"ViewBill" sender:(CustomerContact *)busObj];
+        });
+    }
+}
+
+- (void)didGetDocuments {
+    //TODO
+}
+
+- (void)didGetAccounts {}
+
+- (void)failedToGetBills {}
+- (void)didGetBillsToApprove:(NSMutableArray *)bills {}
+- (void)failedToGetBillsToApprove {}
+- (void)failedToGetVendors {}
+- (void)failedToGetAccounts {}
+- (void)failedToGetInvoices {}
+- (void)failedToGetCustomers {}
+- (void)failedToGetItems {}
+- (void)failedToGetContacts {}
+- (void)failedToGetDocuments {}
 
 @end

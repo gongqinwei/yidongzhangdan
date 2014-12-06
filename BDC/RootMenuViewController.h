@@ -8,6 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "UIViewController+Sliding.h"
+#import "Invoice.h"
+#import "Customer.h"
+#import "CustomerContact.h"
+#import "Bill.h"
+#import "Vendor.h"
+#import "Item.h"
+#import "Document.h"
+#import "ChartOfAccount.h"
+#import "User.h"
 
 #define CATEGORY_PROFILE    @""
 #define MENU_USER           @"User"
@@ -98,7 +107,7 @@ enum RootMoreItems {
     kMoreVersion
 };
 
-@interface RootMenuViewController : UIViewController <SlideDelegate>
+@interface RootMenuViewController : UIViewController <SlideDelegate, UserDelegate, BillListDelegate, InvoiceListDelegate, VendorListDelegate, CustomerListDelegate, ItemListDelegate, ContactListDelegate, DocumentListDelegate, AccountListDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *menuTableView;
 @property (nonatomic, strong) UIViewController *currVC;
@@ -108,5 +117,7 @@ enum RootMoreItems {
 + (RootMenuViewController *)sharedInstance;
 - (UINavigationController *)showView:(NSString *)identifier;
 - (void)switchFrom:(UIViewController *)orig To:(NSString *)identifier;
+- (SlidingTableViewController *)slideInListViewIdentifier:(NSString *)identifier;
+- (void)deeplinkRedirect;
 
 @end

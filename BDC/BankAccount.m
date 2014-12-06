@@ -81,7 +81,7 @@ static int primaryAP = -1;
         } else {
             NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
             if ([INVALID_PERMISSION isEqualToString:errCode]) {
-                [UIHelper showInfo:@"You don't have permission to retrieve accounts." withStatus:kWarning];
+//                [UIHelper showInfo:@"You don't have permission to retrieve accounts." withStatus:kWarning];
             } else {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of bank accounts! %@", [err localizedDescription]] withStatus:kFailure];
                 Error(@"Failed to retrieve list of bank accounts! %@", [err localizedDescription]);

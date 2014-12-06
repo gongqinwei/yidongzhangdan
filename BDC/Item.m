@@ -12,6 +12,7 @@
 #import "Util.h"
 #import "UIHelper.h"
 #import "BDCAppDelegate.h"
+#import "RootMenuViewController.h"
 
 
 @implementation Item
@@ -25,6 +26,20 @@ static NSMutableDictionary *inactiveItems = nil;
 @synthesize type;
 @synthesize desc;
 
++ (Item *)loadWithId:(NSString *)objId {
+    NSPredicate *predicate = [BDCBusinessObject getPredicate:objId];
+    NSArray *result = [[items allValues] filteredArrayUsingPredicate:predicate];
+    if ([result count] == 1) {
+        return result[0];
+    }
+    
+    result = [[inactiveItems allValues] filteredArrayUsingPredicate:predicate];
+    if ([result count] == 1) {
+        return result[0];
+    }
+    
+    return nil;
+}
 
 + (void)resetList {
     items = [NSMutableDictionary dictionary];
@@ -246,7 +261,9 @@ static NSMutableDictionary *inactiveItems = nil;
             
             NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
             if ([INVALID_PERMISSION isEqualToString:errCode]) {
-                [UIHelper showInfo:@"You don't have permission to retrieve accounts." withStatus:kWarning];
+                if (ListDelegate != [RootMenuViewController sharedInstance]) {
+                    [UIHelper showInfo:@"You don't have permission to retrieve accounts." withStatus:kWarning];
+                }
             } else {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of items for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]] withStatus:kFailure];
                 Error(@"Failed to retrieve list of items for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);

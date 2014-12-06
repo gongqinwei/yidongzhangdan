@@ -12,6 +12,7 @@
 #import "Util.h"
 #import "UIHelper.h"
 #import "BDCAppDelegate.h"
+#import "RootMenuViewController.h"
 
 @implementation ChartOfAccount
 
@@ -98,10 +99,10 @@ static NSMutableDictionary *inactiveAccounts = nil;
             
             if ([theAction isEqualToString:UPDATE]) {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to update account %@: %@", self.objectId, [err localizedDescription]] withStatus:kFailure];
-                Debug(@"Failed to update account %@: %@", self.objectId, [err localizedDescription]);
+                Error(@"Failed to update account %@: %@", self.objectId, [err localizedDescription]);
             } else {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to create account: %@", [err localizedDescription]] withStatus:kFailure];
-                Debug(@"Failed to create account: %@", [err localizedDescription]);
+                Error(@"Failed to create account: %@", [err localizedDescription]);
             }
         }
     }];
@@ -235,13 +236,15 @@ static NSMutableDictionary *inactiveAccounts = nil;
         } else if (response_status == RESPONSE_TIMEOUT) {
             [ListDelegate failedToGetAccounts];
             [UIHelper showInfo:SysTimeOut withStatus:kError];
-            Debug(@"Time out when retrieving list of accounts!");
+            Error(@"Time out when retrieving list of accounts!");
         } else {
             [ListDelegate failedToGetAccounts];
             
             NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
             if ([INVALID_PERMISSION isEqualToString:errCode]) {
-                [UIHelper showInfo:@"You don't have permission to retrieve accounts." withStatus:kWarning];
+                if (ListDelegate != [RootMenuViewController sharedInstance]) {
+                    [UIHelper showInfo:@"You don't have permission to retrieve accounts." withStatus:kWarning];
+                }
             } else {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of accounts for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]] withStatus:kFailure];
                 Error(@"Failed to retrieve list of accounts for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);

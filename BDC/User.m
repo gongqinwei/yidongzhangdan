@@ -161,7 +161,7 @@ static id<UserDelegate> UserDelegate = nil;
 + (void)tracking {
     // Branch Metrics
     Branch *branch = [Branch getInstance];
-    [branch identifyUser:[Util getUserId]];
+    [branch setIdentity:[Util getUserId]];
     
     NSDictionary *properties = [NSDictionary dictionaryWithObjects:@[[Util getUserId], [Util getUserFullName], [Util getUserEmail], [Organization getSelectedOrg].objectId, [Organization getSelectedOrg].name] forKeys:TRACKING_EVENT_KEYS];
     [branch userCompletedAction:@"Login" withState:properties];

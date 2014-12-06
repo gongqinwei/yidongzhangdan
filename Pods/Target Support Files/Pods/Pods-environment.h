@@ -9,8 +9,8 @@
 // Branch
 #define COCOAPODS_POD_AVAILABLE_Branch
 #define COCOAPODS_VERSION_MAJOR_Branch 0
-#define COCOAPODS_VERSION_MINOR_Branch 2
-#define COCOAPODS_VERSION_PATCH_Branch 2
+#define COCOAPODS_VERSION_MINOR_Branch 3
+#define COCOAPODS_VERSION_PATCH_Branch 0
 
 // Mixpanel
 #define COCOAPODS_POD_AVAILABLE_Mixpanel
