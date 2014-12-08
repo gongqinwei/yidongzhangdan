@@ -51,7 +51,6 @@
                             [NSArray arrayWithObjects:MENU_SCANNER, MENU_INBOX,                                         CATEGORY_TOOL, nil], \
                             [NSArray arrayWithObjects:MENU_BILLS, MENU_VENDORS, MENU_APPROVE,                           CATEGORY_AP, nil], \
                             [NSArray arrayWithObjects:MENU_INVOICES, MENU_CUSTOMERS, MENU_ITEMS,                        CATEGORY_AR, nil], \
-                            [NSArray arrayWithObjects:MENU_INVOICES, MENU_CUSTOMERS,                                    CATEGORY_AR_READONLY, nil], \
                             [NSArray arrayWithObjects:MENU_UPGRADE, MENU_SHARE, MENU_FEEDBACK, MENU_LEGAL, MENU_LOGOUT, MENU_VERSION,  CATEGORY_MORE, nil], \
                         nil]
 #else
@@ -60,7 +59,6 @@
                             [NSArray arrayWithObjects:MENU_SCANNER, MENU_INBOX,                                         CATEGORY_TOOL, nil], \
                             [NSArray arrayWithObjects:MENU_BILLS, MENU_VENDORS, MENU_APPROVE,                           CATEGORY_AP, nil], \
                             [NSArray arrayWithObjects:MENU_INVOICES, MENU_CUSTOMERS, MENU_ITEMS,                        CATEGORY_AR, nil], \
-                            [NSArray arrayWithObjects:MENU_INVOICES, MENU_CUSTOMERS,                                    CATEGORY_AR_READONLY, nil], \
                             [NSArray arrayWithObjects:MENU_SHARE, MENU_FEEDBACK, MENU_LEGAL, MENU_LOGOUT, MENU_VERSION, CATEGORY_MORE, nil], \
                         nil]
 #endif
@@ -70,7 +68,6 @@ enum RootMenuSections {
     kRootTool,
     kRootAP,
     kRootAR,
-    kRootARReadonly,
     kRootMore
 };
 

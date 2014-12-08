@@ -41,6 +41,7 @@
 - (void)didGetInvoices:(NSArray *)invoiceList;
 - (void)didReadAnInvoice;
 - (void)failedToGetInvoices;
+- (void)deniedPermissionForInvoices;
 
 @end
 

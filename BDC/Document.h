@@ -59,12 +59,14 @@ typedef enum {
 
 @class Document;
 
-@protocol DocumentListDelegate
+@protocol DocumentListDelegate <NSObject>
 
 @optional
 - (void)didGetDocuments;
 - (void)didAddDocument:(Document *)doc;
 - (void)failedToGetDocuments;
+- (void)deniedPermissionForInbox;
+- (void)deniedPermissionForAttachments;
 
 @end
 

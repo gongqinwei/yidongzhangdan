@@ -36,9 +36,10 @@ static Organization *selectedOrg = nil;
 - (void)getOrgFeatures {
     [APIHandler asyncCallWithAction:ORG_FEATURE_API Info:nil AndHandler:^(NSURLResponse *response, NSData *data, NSError *err) {
         NSInteger response_status;
-        NSDictionary *orgFeatures = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
         if(response_status == RESPONSE_SUCCESS) {
+            NSDictionary *orgFeatures = (NSDictionary *)json;
             self.showAR = [[orgFeatures objectForKey:SHOW_AR] boolValue];
             self.showAP = [[orgFeatures objectForKey:SHOW_AP] boolValue];
             
@@ -52,11 +53,21 @@ static Organization *selectedOrg = nil;
             
             [delegate didGetOrgFeatures];
         } else {
-            if ([[orgFeatures objectForKey:RESPONSE_ERROR_CODE] isEqualToString:ORG_LOCKED_OUT]) {
+            NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
+            if ([errCode isEqualToString:ORG_LOCKED_OUT]) {
                 [UIHelper showInfo:@"This account is past due and is locked out by Bill.com!" withStatus:kWarning];
                 [delegate failedToGetOrgFeatures];  //temp
+            } else if ([errCode isEqualToString:INVALID_PERMISSION]) {  // right now only approvers don't have this permission
+                self.showAR = NO;
+                self.showAP = YES;
+                self.enableAR = NO;
+                self.enableAP = NO;
+                self.canApprove = YES;
+                self.canPay = NO;
+                self.hasInbox = NO;
+                [delegate didGetOrgFeatures];
             } else {
-                Debug(@"Failed to get org features for %@!", self.objectId);
+                Error(@"Failed to get org features for %@!", self.objectId);
                 
                 // temp solution: if can't get org features, display everything regardless
                 // let subsequent api calls fail
@@ -69,8 +80,6 @@ static Organization *selectedOrg = nil;
                 self.hasInbox = YES;
                 [delegate didGetOrgFeatures];
             }
-            
-//            [delegate failedToGetOrgFeatures];
         }
     }];
 }

@@ -411,6 +411,10 @@ static NSMutableSet *billsToApproveSet;
             
             NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
             if ([INVALID_PERMISSION isEqualToString:errCode]) {
+                if ([ListForApprovalDelegate respondsToSelector:@selector(deniedPermissionForApproval)]) {
+                    [ListForApprovalDelegate deniedPermissionForApproval];
+                }
+                
                 [[User GetLoginUser] markProfileFor:kToApproveChecked checked:NO];
                 if (ListForApprovalDelegate != [RootMenuViewController sharedInstance]) {
                     [UIHelper showInfo:@"You don't have permission to retrieve approvals" withStatus:kWarning];
@@ -479,15 +483,21 @@ static NSMutableSet *billsToApproveSet;
             [UIHelper showInfo:SysTimeOut withStatus:kError];
             Error(@"Time out when retrieving list of bill for %@!", isActive ? @"active" : @"inactive");
         } else {
-            [ListDelegate failedToGetBills];
-            
             NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
             if ([INVALID_PERMISSION isEqualToString:errCode]) {
+                if (isActive && [ListDelegate respondsToSelector:@selector(deniedPermissionForBills)]) {
+                    [ListDelegate deniedPermissionForBills];
+                }
+                
                 [[User GetLoginUser] markProfileFor:kBillsChecked checked:NO];
                 if (ListDelegate != [RootMenuViewController sharedInstance]) {
                     [UIHelper showInfo:@"You don't have permission to retrieve bills." withStatus:kWarning];
                 }
             } else {
+                if ([ListDelegate respondsToSelector:@selector(failedToGetBills)]) {
+                    [ListDelegate failedToGetBills];
+                }
+                
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of bill for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]] withStatus:kFailure];
                 Error(@"Failed to retrieve list of bill for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
             }

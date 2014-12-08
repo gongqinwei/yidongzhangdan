@@ -15,9 +15,9 @@
 #define FULL_VERSION_ID     696521463
 
 //#define LOCAL
-//#define APPTEST
+#define APPTEST
 //#define APPSTAGE
-#define PROD
+//#define PROD
 
 
 #ifdef LOCAL

@@ -376,15 +376,21 @@ static NSMutableArray *inactiveInvoices = nil;
             [UIHelper showInfo:SysTimeOut withStatus:kError];
             Error(@"Time out when retrieving list of invoice for %@!", isActive ? @"active" : @"inactive");
         } else {
-            [ListDelegate failedToGetInvoices];
-            
             NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
             if ([INVALID_PERMISSION isEqualToString:errCode]) {
+                if (isActive && [ListDelegate respondsToSelector:@selector(deniedPermissionForInvoices)]) {
+                    [ListDelegate deniedPermissionForInvoices];
+                }
+                
                 [[User GetLoginUser] markProfileFor:kInvoicesChecked checked:NO];
                 if (ListDelegate != [RootMenuViewController sharedInstance]) {
                     [UIHelper showInfo:@"You don't have permission to retrieve invoices." withStatus:kWarning];
                 }
             } else {
+                if ([ListDelegate respondsToSelector:@selector(failedToGetInvoices)]) {
+                    [ListDelegate failedToGetInvoices];
+                }
+                
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of invoice for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]] withStatus:kFailure];
                 Error(@"Failed to retrieve list of invoice for %@! %@", isActive ? @"active" : @"inactive", [err localizedDescription]);
             }

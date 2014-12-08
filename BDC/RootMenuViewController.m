@@ -146,22 +146,26 @@ static RootMenuViewController * _sharedInstance = nil;
     self.rootMenu = [NSMutableArray array];
     [self.rootMenu addObject:[ROOT_MENU objectAtIndex:kRootProfile]];   // always + Profile/ChangeOrg section
         
-    if (!self.currentOrg.showAR && !self.currentOrg.enableAP) {
+    if (!self.currentOrg.showAR && !self.currentOrg.enableAP && !self.currentOrg.canApprove) {
         // Profile + More (theoretically should never happen - can't login)
         [UIHelper showInfo:@"This company has no AR and disabled AP!\n\nPlease enable them in Bill.com first." withStatus:kWarning];
     } else {
-        if (self.currentOrg.enableAP || self.currentOrg.enableAR) {
-            [self.rootMenu addObject:[ROOT_MENU objectAtIndex:kRootTool]];  // + Documents section
-        }
-        
-        if (self.currentOrg.enableAP) {
-            [self.rootMenu addObject:[ROOT_MENU objectAtIndex:kRootAP]];    // + AP section
-        }
-        
-        if (self.currentOrg.enableAR) {
-            [self.rootMenu addObject:[ROOT_MENU objectAtIndex:kRootAR]];    // + AR section
+        if (self.currentOrg.hasInbox || self.currentOrg.enableAP || self.currentOrg.enableAR) {
+            [self.rootMenu addObject:[NSMutableArray arrayWithArray:[ROOT_MENU objectAtIndex:kRootTool]]];  // + Documents section
         } else {
-            [self.rootMenu addObject:[ROOT_MENU objectAtIndex:kRootARReadonly]];    // + AR Readonly section
+            [self.rootMenu addObject:[NSMutableArray arrayWithObjects:[ROOT_MENU objectAtIndex:kRootTool][kToolScanner], [ROOT_MENU objectAtIndex:kRootTool][2], nil]];
+        }
+        
+        if (self.currentOrg.enableAP && self.currentOrg.canApprove) {
+            [self.rootMenu addObject:[NSMutableArray arrayWithArray:[ROOT_MENU objectAtIndex:kRootAP]]];    // + AP section
+        } else if (self.currentOrg.enableAP) {
+            [self.rootMenu addObject:[NSMutableArray arrayWithObjects:[ROOT_MENU objectAtIndex:kRootAP][kAPBill], [ROOT_MENU objectAtIndex:kRootAP][kAPVendor], [ROOT_MENU objectAtIndex:kRootAP][3], nil]];
+        } else if (self.currentOrg.canApprove) {
+            [self.rootMenu addObject:[NSMutableArray arrayWithObjects:[ROOT_MENU objectAtIndex:kRootAP][kAPApprove], [ROOT_MENU objectAtIndex:kRootAP][3], nil]];
+        }
+        
+        if (self.currentOrg.showAR) {
+            [self.rootMenu addObject:[NSMutableArray arrayWithArray:[ROOT_MENU objectAtIndex:kRootAR]]];    // + AR section
         }
     }
     
@@ -172,8 +176,8 @@ static RootMenuViewController * _sharedInstance = nil;
     
     self.menuItems = [NSMutableDictionary dictionary];
     
-    for (int i = 1; i < [ROOT_MENU count]; i++) {
-        for (int j = 0; j < [[ROOT_MENU objectAtIndex:i] count] - 1; j++) {
+    for (int i = 1; i < ROOT_MENU.count; i++) {
+        for (int j = 0; j < [ROOT_MENU[i] count] - 1; j++) {
             if (i != kRootMore || j == kMoreLegal) {
                 NSString *vcID = [[ROOT_MENU objectAtIndex:i] objectAtIndex:j];
                 vcID = [vcID stringByReplacingOccurrencesOfString:@" " withString:@""];
@@ -205,34 +209,33 @@ static RootMenuViewController * _sharedInstance = nil;
     [ChartOfAccount resetList];
     [BankAccount resetList];
     
-//    [Bill setListForApprovalDelegate:self];
     
-    if (self.currentOrg.enableAP) {
+    if (self.currentOrg.enableAP || self.currentOrg.canApprove) {
         [Bill retrieveListForActive:YES reload:YES];
+        [Bill retrieveListForApproval:nil];
         [Vendor retrieveListForActive:YES];
         [ChartOfAccount retrieveListForActive:YES];
         [Approver retrieveList];
-        [Bill retrieveListForApproval:nil];
         [self.currentOrg getOrgPrefs];
     }
 
-    [Invoice retrieveListForActive:YES reload:YES];
-    [Customer retrieveListForActive:YES];
-    
-    if (self.currentOrg.enableAP || self.currentOrg.enableAR) {
+    if (self.currentOrg.showAR) {
+        [Invoice retrieveListForActive:YES reload:YES];
+        [Customer retrieveListForActive:YES];
+        [CustomerContact retrieveListForActive:YES];
         [Item retrieveList];
     }
     
-    [CustomerContact retrieveListForActive:YES];
-    
-    if (self.currentOrg.enableAP || self.currentOrg.enableAR) {
+    if (self.currentOrg.hasInbox || self.currentOrg.enableAP || self.currentOrg.enableAR) {
         [Document retrieveListForCategory:FILE_CATEGORY_DOCUMENT];
     }
     
-    [Invoice retrieveListForActive:NO reload:NO];
-    [Customer retrieveListForActive:NO];
+    if (self.currentOrg.showAR) {
+        [Invoice retrieveListForActive:NO reload:NO];
+        [Customer retrieveListForActive:NO];
+    }
     
-    if (self.currentOrg.enableAP) {
+    if (self.currentOrg.enableAP || self.currentOrg.canApprove) {
         [BankAccount retrieveList];
         [Bill retrieveListForActive:NO reload:NO];
         [Vendor retrieveListForActive:NO];
@@ -418,7 +421,7 @@ static RootMenuViewController * _sharedInstance = nil;
                 }
             });
         }
-    } else if (indexPath.section == kRootMore - 1) {        //kRootMore - 1 is for skipping ARRootReadOnly
+    } else if (indexPath.section == self.rootMenu.count - 1) {
         NSString *menuName = [[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
         menuName = [menuName stringByReplacingOccurrencesOfString:@" " withString:@""];
         NSString *imageName = [menuName stringByAppendingString:@"Icon.png"];
@@ -527,7 +530,7 @@ static RootMenuViewController * _sharedInstance = nil;
                 break;
         }
     } else {
-        if (indexPath.section != kRootMore - 1 || indexPath.row != kMoreVersion) {
+//        if (indexPath.section != kRootMore - 1 || indexPath.row != kMoreVersion) {
             cell.textLabel.text = [[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
             cell.textLabel.font = [UIFont systemFontOfSize:16.0];
             cell.selectionStyle = UITableViewCellSelectionStyleGray;
@@ -544,10 +547,12 @@ static RootMenuViewController * _sharedInstance = nil;
             }
             cell.userInteractionEnabled = YES;
             
-            if (indexPath.section == kRootAP && indexPath.row == kAPApprove) {
-                [cell addSubview:self.numBillsToApproveLabel];
+            if ([[self.rootMenu[indexPath.section] lastObject] isEqualToString:CATEGORY_AP]) {
+                if ([self.rootMenu[kRootAP][indexPath.row] isEqualToString:MENU_APPROVE]) {
+                    [cell addSubview:self.numBillsToApproveLabel];
+                }
             }
-        }
+//        }
         
         UIView *bgColorView = [[UIView alloc] init];
         [bgColorView setBackgroundColor:[UIColor colorWithRed:100/255.f green:100/255.f blue:100/255.f alpha:0.75]];
@@ -558,7 +563,7 @@ static RootMenuViewController * _sharedInstance = nil;
 }
 
 - (void)reloadShareRow {
-    NSIndexPath *sharedRowIndexpath = [NSIndexPath indexPathForRow:kMoreShare inSection:kRootMore - 1];
+    NSIndexPath *sharedRowIndexpath = [NSIndexPath indexPathForRow:kMoreShare inSection:self.rootMenu.count - 1];
     [self.menuTableView reloadRowsAtIndexPaths:@[sharedRowIndexpath] withRowAnimation:UITableViewRowAnimationLeft];
 }
 
@@ -1085,5 +1090,62 @@ static RootMenuViewController * _sharedInstance = nil;
 - (void)failedToGetItems {}
 - (void)failedToGetContacts {}
 - (void)failedToGetDocuments {}
+
+- (void)deniedPermissionForBills {
+//    @synchronized(self.rootMenu) {
+//        self.currentOrg.showAP = NO;
+//        self.currentOrg.enableAP = NO;
+//        self.currentOrg.canPay = NO;
+//        [self.rootMenu[kRootAP] removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(kAPBill, 2)]];
+//        NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:kRootAP];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self.menuTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+//        });
+//    }
+}
+
+- (void)deniedPermissionForInvoices {
+//    @synchronized(self.rootMenu) {
+//        self.currentOrg.showAR = NO;
+//        self.currentOrg.enableAR = NO;
+//        [self.rootMenu[kRootAR] removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.currentOrg.enableAR ? 3 : 2)]];
+//        NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:kRootAR];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self.menuTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+//        });
+//    }
+}
+
+- (void)deniedPermissionForApproval {
+//    @synchronized(self.rootMenu) {
+//        self.currentOrg.canApprove = NO;
+//        NSUInteger idx;
+//        if ([self.rootMenu[kRootAR] count] > 1) {
+//            idx = kAPApprove;
+//        } else {
+//            idx = 0;
+//        }
+//        [self.rootMenu[kRootAP] removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(idx, 1)]];
+//        NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:kRootAP];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self.menuTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+//        });
+//    }
+}
+
+- (void)deniedPermissionForInbox {
+//    if ([self.rootMenu[kRootTool][kToolInbox] isEqualToString:MENU_INBOX]) {
+//        [self.rootMenu[kRootTool] removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(kToolInbox, 1)]];
+//        NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:kRootTool];
+//        
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self.menuTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+//        });
+//    }
+}
+
+- (void)deniedPermissionForAttachments {
+    
+}
 
 @end

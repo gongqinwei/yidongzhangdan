@@ -248,19 +248,29 @@ static NSLock *DocumentsLock = nil;
             [UIHelper showInfo:SysTimeOut withStatus:kError];
             Error(@"Time out when retrieving list of documents!");
         } else {
-            if ([category isEqualToString:FILE_CATEGORY_ATTACHMENT]) {
-                [AttachmentListDelegate failedToGetDocuments];
-            } else if ([category isEqualToString:FILE_CATEGORY_DOCUMENT]) {
-                [DocumentListDelegate failedToGetDocuments];
-            }
-            
             NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
             if ([INVALID_PERMISSION isEqualToString:errCode]) {
+                if ([category isEqualToString:FILE_CATEGORY_ATTACHMENT]) {
+                    if ([AttachmentListDelegate respondsToSelector:@selector(deniedPermissionForAttachments)]) {
+                        [AttachmentListDelegate deniedPermissionForAttachments];
+                    }
+                } else if ([category isEqualToString:FILE_CATEGORY_DOCUMENT]) {
+                    if ([DocumentListDelegate respondsToSelector:@selector(deniedPermissionForInbox)]) {
+                        [DocumentListDelegate deniedPermissionForInbox];
+                    }
+                }
+                
                 [[User GetLoginUser] markProfileFor:kInboxChecked checked:NO];
                 if (DocumentListDelegate != [RootMenuViewController sharedInstance]) {
                     [UIHelper showInfo:@"You don't have permission to access Inbox." withStatus:kWarning];
                 }
             } else {
+                if ([category isEqualToString:FILE_CATEGORY_ATTACHMENT]) {
+                    [AttachmentListDelegate failedToGetDocuments];
+                } else if ([category isEqualToString:FILE_CATEGORY_DOCUMENT]) {
+                    [DocumentListDelegate failedToGetDocuments];
+                }
+                
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of %@! %@", category, [err localizedDescription]] withStatus:kFailure];
                 Error(@"Failed to retrieve list of %@! %@", category, [err localizedDescription]);
             }

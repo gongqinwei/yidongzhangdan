@@ -69,6 +69,8 @@
 - (void)failedToGetBills;
 - (void)didGetBillsToApprove:(NSMutableArray *)bills;
 - (void)failedToGetBillsToApprove;
+- (void)deniedPermissionForBills;
+- (void)deniedPermissionForApproval;
 
 - (void)didProcessApproval;
 - (void)failedToProcessApproval;
