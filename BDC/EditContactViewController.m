@@ -90,7 +90,7 @@ enum ContactInfoType {
         self.busObj = [[CustomerContact alloc] initWithCustomer:self.customer];
         self.shaddowBusObj = [[CustomerContact alloc] initWithCustomer:self.customer];
     }
-        
+
     [super viewDidLoad];
     
     if (self.mode != kViewMode) {

@@ -8,9 +8,11 @@
 
 #import "SlidingListTableViewController.h"
 #import "Customer.h"
+#import "CustomerContact.h"
 
 @interface ContactsTableViewController : SlidingListTableViewController
 
 @property (nonatomic, strong) Customer *customer;
+@property (nonatomic, strong) CustomerContact *deepLinkContact;
 
 @end

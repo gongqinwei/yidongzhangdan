@@ -177,7 +177,7 @@ static double animatedDistance = 0;
     if (mode == kViewMode) {
         self.isActive = self.busObj.isActive;
         
-        if ((self.isAP && [Organization getSelectedOrg].enableAP) || (self.isAR && [Organization getSelectedOrg].enableAR)) {
+        if ((self.isAP && [Organization getSelectedOrg].enableAP) || (self.isAR && [Organization getSelectedOrg].showAR)) {
             self.crudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_DELETE, ACTION_BNC_SHARE, nil];
             self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UPDATE, ACTION_UNDELETE, ACTION_BNC_SHARE, nil];
             if (self.isActive) {
@@ -1171,7 +1171,9 @@ static double animatedDistance = 0;
 }
 
 - (void)failedToReadObject {
-    [self.refreshControl endRefreshing];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.refreshControl endRefreshing];
+    });
 }
 
 - (void)didUpdateObject {

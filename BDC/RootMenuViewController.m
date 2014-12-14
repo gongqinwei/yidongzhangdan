@@ -10,6 +10,8 @@
 #import "SelectOrgViewController.h"
 //#import "AROverViewController.h"
 #import "InvoicesTableViewController.h"
+#import "CustomersTableViewController.h"
+#import "EditCustomerViewController.h"
 #import "Organization.h"
 
 #import "Approver.h"
@@ -150,10 +152,10 @@ static RootMenuViewController * _sharedInstance = nil;
         // Profile + More (theoretically should never happen - can't login)
         [UIHelper showInfo:@"This company has no AR and disabled AP!\n\nPlease enable them in Bill.com first." withStatus:kWarning];
     } else {
-        if (self.currentOrg.hasInbox || self.currentOrg.enableAP || self.currentOrg.enableAR) {
+        if (self.currentOrg.enableAP || self.currentOrg.enableAR) {
             [self.rootMenu addObject:[NSMutableArray arrayWithArray:[ROOT_MENU objectAtIndex:kRootTool]]];  // + Documents section
         } else {
-            [self.rootMenu addObject:[NSMutableArray arrayWithObjects:[ROOT_MENU objectAtIndex:kRootTool][kToolScanner], [ROOT_MENU objectAtIndex:kRootTool][2], nil]];
+//            [self.rootMenu addObject:[NSMutableArray arrayWithObjects:[ROOT_MENU objectAtIndex:kRootTool][kToolScanner], [ROOT_MENU objectAtIndex:kRootTool][2], nil]];
         }
         
         if (self.currentOrg.enableAP && self.currentOrg.canApprove) {
@@ -548,7 +550,7 @@ static RootMenuViewController * _sharedInstance = nil;
             cell.userInteractionEnabled = YES;
             
             if ([[self.rootMenu[indexPath.section] lastObject] isEqualToString:CATEGORY_AP]) {
-                if ([self.rootMenu[kRootAP][indexPath.row] isEqualToString:MENU_APPROVE]) {
+                if ([self.rootMenu[indexPath.section][indexPath.row] isEqualToString:MENU_APPROVE]) {
                     [cell addSubview:self.numBillsToApproveLabel];
                 }
             }
@@ -832,6 +834,7 @@ static RootMenuViewController * _sharedInstance = nil;
             needRefreshDisclosureIndicator = NO;
         } else if (indexPath.row == kMoreFeedback) {
             [self sendFeedbackEmail];
+            needRefreshDisclosureIndicator = NO;
 #ifdef LITE_VERSION
         } else if (indexPath.row == kMoreUpgrade) {
             [UIAppDelegate nagivateToAppStore];
@@ -839,7 +842,16 @@ static RootMenuViewController * _sharedInstance = nil;
 #endif
         }
     } else {
-        [self showView:[[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+        if (self.currentOrg.hasInbox || ![self.rootMenu[indexPath.section][indexPath.row] isEqualToString:MENU_INBOX]) {
+            [self showView:[[self.rootMenu objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+        } else {
+            [UIHelper showInfo:@"You don't have permission to access Inbox." withStatus:kWarning];
+            needRefreshDisclosureIndicator = NO;
+            
+            [self.rootMenu[kRootTool] removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(kToolInbox, 1)]];
+            NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:kRootTool];
+            [self.menuTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+        }
     }
     
     if (needRefreshDisclosureIndicator) {
@@ -896,7 +908,13 @@ static RootMenuViewController * _sharedInstance = nil;
         mailer.mailComposeDelegate = self;
         
 //        Organization *org = [Organization getSelectedOrg];
-        [mailer setSubject:[NSString stringWithFormat:@"Feedback on Mobill app from %@", self.currentOrg.name]];
+        NSString *subject;
+#ifndef LITE_VERSION
+        subject = @"Feedback on Mobill from %@";
+#else
+        subject = @"Feedback on Mobill Lite from %@";
+#endif
+        [mailer setSubject:[NSString stringWithFormat:subject, self.currentOrg.name]];
         
         NSArray *toRecipients = [NSArray arrayWithObjects:@"customer.mobill@gmail.com", nil];
         [mailer setToRecipients:toRecipients];
@@ -1019,6 +1037,8 @@ static RootMenuViewController * _sharedInstance = nil;
             [[self slideInListViewIdentifier:MENU_BILLS] performSegueWithIdentifier:@"ViewBill" sender:(Bill *)busObj];
         });
     }
+    
+    UIAppDelegate.bncDeeplinkObjId = nil;
 }
 
 - (void)didGetInvoices:(NSArray *)invoiceList {
@@ -1030,6 +1050,8 @@ static RootMenuViewController * _sharedInstance = nil;
             [[self slideInListViewIdentifier:MENU_INVOICES] performSegueWithIdentifier:@"ViewInvoice" sender:(Invoice *)busObj];
         });
     }
+    
+    UIAppDelegate.bncDeeplinkObjId = nil;
 }
 
 - (void)didGetVendors {
@@ -1041,6 +1063,8 @@ static RootMenuViewController * _sharedInstance = nil;
             [[self slideInListViewIdentifier:MENU_VENDORS] performSegueWithIdentifier:@"ViewVendor" sender:(Vendor *)busObj];
         });
     }
+    
+    UIAppDelegate.bncDeeplinkObjId = nil;
 }
 
 - (void)didGetCustomers {
@@ -1052,6 +1076,8 @@ static RootMenuViewController * _sharedInstance = nil;
             [[self slideInListViewIdentifier:MENU_CUSTOMERS] performSegueWithIdentifier:@"ViewCustomer" sender:(Customer *)busObj];
         });
     }
+    
+    UIAppDelegate.bncDeeplinkObjId = nil;
 }
 
 - (void)didGetItems {
@@ -1059,19 +1085,27 @@ static RootMenuViewController * _sharedInstance = nil;
     BDCBusinessObject *busObj = [Item loadWithId:UIAppDelegate.bncDeeplinkObjId];
     if (busObj) {
         dispatch_async(dispatch_get_main_queue(), ^{
-        //                [[self slideInListViewIdentifier:MENU_BILLS] performSegueWithIdentifier:@"ViewBill" sender:(Item *)busObj];
+            [self showView:MENU_ITEMS];
+            [[self slideInListViewIdentifier:MENU_ITEMS] performSegueWithIdentifier:@"ViewItem" sender:(Item *)busObj];
         });
     }
+    
+    UIAppDelegate.bncDeeplinkObjId = nil;
 }
 
 - (void)didGetContacts {
     self.gotContacts = YES;
-    BDCBusinessObject *busObj = [CustomerContact loadWithId:UIAppDelegate.bncDeeplinkObjId];
-    if (busObj) {
+    CustomerContact *contact = (CustomerContact*)[CustomerContact loadWithId:UIAppDelegate.bncDeeplinkObjId];
+    if (contact) {
+        Customer *customer = (Customer *)[Customer loadWithId:contact.customerId];
         dispatch_async(dispatch_get_main_queue(), ^{
-        //                [[self slideInListViewIdentifier:MENU_BILLS] performSegueWithIdentifier:@"ViewBill" sender:(CustomerContact *)busObj];
+            [self showView:MENU_CUSTOMERS];
+            CustomersTableViewController *customerListVC = (CustomersTableViewController*)[self slideInListViewIdentifier:MENU_CUSTOMERS];
+            [customerListVC navigateToCustomer:customer contact:contact];
         });
     }
+    
+    UIAppDelegate.bncDeeplinkObjId = nil;
 }
 
 - (void)didGetDocuments {
@@ -1117,6 +1151,8 @@ static RootMenuViewController * _sharedInstance = nil;
 }
 
 - (void)deniedPermissionForApproval {
+    self.currentOrg.canApprove = NO;
+    
 //    @synchronized(self.rootMenu) {
 //        self.currentOrg.canApprove = NO;
 //        NSUInteger idx;
@@ -1134,6 +1170,8 @@ static RootMenuViewController * _sharedInstance = nil;
 }
 
 - (void)deniedPermissionForInbox {
+    self.currentOrg.hasInbox = NO;
+    
 //    if ([self.rootMenu[kRootTool][kToolInbox] isEqualToString:MENU_INBOX]) {
 //        [self.rootMenu[kRootTool] removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(kToolInbox, 1)]];
 //        NSIndexSet * indexSet = [NSIndexSet indexSetWithIndex:kRootTool];

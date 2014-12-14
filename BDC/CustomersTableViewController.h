@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "SlidingListTableViewController.h"
+#import "EditCustomerViewController.h"
+
+#define CUSTOMER_VIEW_CUSTOMER_SEGUE        @"ViewCustomer"
 
 @protocol CustomerSelectDelegate <NSObject>
 
@@ -21,5 +24,7 @@
 @property (nonatomic, strong) NSMutableArray *customers;
 
 @property (nonatomic, weak) id<CustomerSelectDelegate> selectDelegate;
+
+- (void)navigateToCustomer:(Customer *)customer contact:(CustomerContact *)contact;
 
 @end

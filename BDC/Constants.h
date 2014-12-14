@@ -15,9 +15,9 @@
 #define FULL_VERSION_ID     696521463
 
 //#define LOCAL
-#define APPTEST
+//#define APPTEST
 //#define APPSTAGE
-//#define PROD
+#define PROD
 
 
 #ifdef LOCAL
@@ -50,7 +50,6 @@
 #define ERR_DOMAIN          @"PROD"
 #define DOMAIN_URL          @"https://app.bill.com"
 #define APP_KEY             @"devKey"
-#define DEBUG_MODE  //temp
 #endif
 
 #define BNC_APP_KEY         @"45988591431582341"

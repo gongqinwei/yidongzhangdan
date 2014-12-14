@@ -54,16 +54,21 @@
         
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
-        NSDictionary *dict = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
-        if(response_status == RESPONSE_SUCCESS) {            
+        if(response_status == RESPONSE_SUCCESS) {
+            NSDictionary *dict = (NSDictionary *)json;
             [self populateObjectWithInfo:dict];
             [self.editDelegate didReadObject];
             [self updateParentList];
         } else {
             [self.editDelegate failedToReadObject];
-            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to read %@ %@: %@", [self class], self.objectId, [err localizedDescription]] withStatus:kFailure];
-            Debug(@"Failed to read %@ %@: %@", [self class], self.objectId, [err localizedDescription]);
+            
+            NSString *errCode = [json objectForKey:RESPONSE_ERROR_CODE];
+            if (![INVALID_PERMISSION isEqualToString:errCode]) {
+                [UIHelper showInfo:[NSString stringWithFormat:@"Failed to read %@ %@: %@", [self class], self.objectId, [err localizedDescription]] withStatus:kFailure];
+                Debug(@"Failed to read %@ %@: %@", [self class], self.objectId, [err localizedDescription]);
+            }
         }
     }];
 }

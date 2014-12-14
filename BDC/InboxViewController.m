@@ -238,7 +238,13 @@
 
 - (void)failedToGetDocuments {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [super endRefreshView];
+        [self.refreshControl endRefreshing];
+    });
+}
+
+- (void)deniedPermissionForInbox {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.refreshControl endRefreshing];
     });
 }
 

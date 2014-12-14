@@ -43,9 +43,9 @@ enum CustomerInfoType {
                                         nil]
 
 #define CUSTOMER_ADDR_TAG_OFFSET        3
+#define CUSTOMER_VIEW_CONTACTS_SEGUE    @"ViewContacts"
 #define CUSTOMER_SCAN_PHOTO_SEGUE       @"ScanMoreCustomerPhoto"
 #define CUSTOMER_VIEW_MAP_SEGUE         @"ViewCustomerMap"
-#define CUSTOMER_VIEW_CONTACTS_SEGUE    @"ViewContacts"
 #define CUSTOMER_CREATE_CONTACT_SEGUE   @"CustomerCreateContact"
 
 
@@ -85,6 +85,7 @@ enum CustomerInfoType {
 @synthesize customerPhoneTextField;
 @synthesize customerEmailTextField;
 @synthesize numOfLinesInAddr;
+@synthesize deepLinkContact;
 
 
 - (Class)busObjClass {
@@ -152,6 +153,14 @@ enum CustomerInfoType {
 }
 
 #pragma mark - Life Cycle methods
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    if (self.deepLinkContact) {
+        [self performSegueWithIdentifier:CUSTOMER_VIEW_CONTACTS_SEGUE sender:self];
+    }
+}
 
 - (void)viewDidLoad
 {
@@ -294,6 +303,11 @@ enum CustomerInfoType {
         [segue.destinationViewController setAnnotations:[NSMutableArray arrayWithArray:@[self.shaddowBusObj]]];
     } else if ([segue.identifier isEqualToString:CUSTOMER_VIEW_CONTACTS_SEGUE]) {
         [segue.destinationViewController setCustomer:(Customer *)self.shaddowBusObj];
+        
+        if (self.deepLinkContact) {
+            [segue.destinationViewController setDeepLinkContact:self.deepLinkContact];
+            self.deepLinkContact = nil;
+        }
     } else if ([segue.identifier isEqualToString:CUSTOMER_CREATE_CONTACT_SEGUE]) {
         [segue.destinationViewController setCustomer:(Customer *)self.shaddowBusObj];
         [segue.destinationViewController setMode:kCreateMode];

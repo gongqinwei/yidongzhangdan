@@ -91,6 +91,10 @@
             
             [Util track:@"paid_bill"];
         } else {
+            [Organization getSelectedOrg].canPay = NO;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [activityIndicator stopAnimating];
+            });
             [UIHelper showInfo:[NSString stringWithFormat:@"Failed to pay bill %@: %@", self.bill.name, [err localizedDescription]] withStatus:kFailure];
             Error(@"Failed to pay bill %@: %@", self.bill.name, [err localizedDescription]);
         }

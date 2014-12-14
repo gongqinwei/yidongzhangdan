@@ -7,15 +7,14 @@
 //
 
 #import "CustomersTableViewController.h"
-#import "EditCustomerViewController.h"
 #import "Customer.h"
+#import "CustomerContact.h"
 #import "MapViewController.h"
 #import "Util.h"
 #import "ImportAddressBookViewController.h"
 
 
 #define CUSTOMER_CELL_ID                    @"CustomerItem"
-#define CUSTOMER_VIEW_CUSTOMER_SEGUE        @"ViewCustomer"
 #define CUSTOMER_CREATE_CUSTOMER_SEGUE      @"CreateCustomer"
 #define CUSTOMER_LIST_MAP                   @"ViewCustomersMap"
 #define CUSTOMER_IMPORT_AB_SEGUE            @"ImportCustomers"
@@ -24,6 +23,8 @@
 
 @interface CustomersTableViewController () <CustomerListDelegate, ListViewDelegate, SelectObjectProtocol>
 
+@property (nonatomic, strong) CustomerContact *deepLinkContact;
+
 @end
 
 
@@ -31,6 +32,7 @@
 
 @synthesize customers = _customers;
 @synthesize selectDelegate;
+
 
 - (Class)busObjClass {
     return [Customer class];
@@ -42,6 +44,11 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
     });
+}
+
+- (void)navigateToCustomer:(Customer *)customer contact:(CustomerContact *)contact {
+    self.deepLinkContact = contact;
+    [self performSegueWithIdentifier:CUSTOMER_VIEW_CUSTOMER_SEGUE sender:customer];
 }
 
 - (void)restoreEditButton:(UIBarButtonItem *)sender {
@@ -119,12 +126,12 @@
     if (self.mode != kSelectMode && self.mode != kAttachMode) {
         self.sortAttributes = [NSArray array];
         
-        if (org.enableAR) {
+        if (org.showAR) {
             self.crudActions = [NSArray arrayWithObjects:ACTION_IMPORT, ACTION_CREATE, ACTION_DELETE, ACTION_MAP, nil];
             self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
         }
     } else {
-        if (org.enableAR) {
+        if (org.showAR) {
             self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
         }
     }
@@ -239,6 +246,8 @@
     if ([segue.identifier isEqualToString:CUSTOMER_VIEW_CUSTOMER_SEGUE]) {
         [segue.destinationViewController setBusObj:sender];
         [segue.destinationViewController setMode:kViewMode];
+        [segue.destinationViewController setDeepLinkContact:self.deepLinkContact];
+        self.deepLinkContact = nil;
     } else if ([segue.identifier isEqualToString:CUSTOMER_CREATE_CUSTOMER_SEGUE]) {
 //        [segue.destinationViewController setTitle:@"New Customer"];
         [segue.destinationViewController setMode:kCreateMode];

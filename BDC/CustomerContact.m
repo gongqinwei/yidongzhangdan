@@ -40,10 +40,12 @@ static id <ContactListDelegate> ListDelegate = nil;
 
 
 + (CustomerContact *)loadWithId:(NSString *)objId {
-    NSPredicate *predicate = [BDCBusinessObject getPredicate:objId];
-    NSArray *result = [[contacts allValues] filteredArrayUsingPredicate:predicate];
-    if ([result count] == 1) {
-        return result[0];
+    for (NSArray *subContacts in [contacts allValues]) {
+        NSPredicate *predicate = [BDCBusinessObject getPredicate:objId];
+        NSArray *result = [subContacts filteredArrayUsingPredicate:predicate];
+        if ([result count] == 1) {
+            return result[0];
+        }
     }
     
     return nil;
@@ -188,6 +190,7 @@ static id <ContactListDelegate> ListDelegate = nil;
                 [subContacts addObject:contact];
             }
             
+            [ListDelegate didGetContacts];
         } else if (response_status == RESPONSE_TIMEOUT) {
             [UIHelper showInfo:SysTimeOut withStatus:kError];
             Error(@"Time out when retrieving list of contacts");

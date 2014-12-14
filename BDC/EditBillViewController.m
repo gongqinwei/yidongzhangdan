@@ -543,7 +543,7 @@ typedef enum {
 }
 
 - (void)setActions {
-    if (self.mode == kViewMode && [Organization getSelectedOrg].enableAP) {
+    if (self.mode == kViewMode && ([Organization getSelectedOrg].enableAP || [Organization getSelectedOrg].canApprove)) {
         self.crudActions = nil;
         
         if (self.forApproval) {
@@ -562,7 +562,8 @@ typedef enum {
             if (self.isActive) {
                 Organization *org = [Organization getSelectedOrg];
                 
-                if ((!org.needApprovalToPayBill
+                if (org.canPay
+                    && (!org.needApprovalToPayBill
                      || [((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_UNASSIGNED]
                      || [((Bill *)self.shaddowBusObj).approvalStatus isEqualToString:APPROVAL_APPROVED])
                     && ([((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID]

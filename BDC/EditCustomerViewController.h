@@ -7,7 +7,10 @@
 //
 
 #import "SlidingDetailsTableViewController.h"
+#import "CustomerContact.h"
 
 @interface EditCustomerViewController : SlidingDetailsTableViewController
+
+@property (nonatomic, strong) CustomerContact *deepLinkContact;
 
 @end

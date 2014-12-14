@@ -26,6 +26,7 @@
 
 @synthesize customer;
 @synthesize contacts = _contacts;
+@synthesize deepLinkContact;
 
 
 - (Class)busObjClass {
@@ -88,6 +89,11 @@
     self.contacts = [CustomerContact listContactsForCustomer:self.customer];
     
     self.createNewSegue = CONTACTS_CREATE_CONTACT_SEGUE;
+    
+    if (self.deepLinkContact) {
+        [self performSegueWithIdentifier:CONTACTS_VIEW_CONTACT_SEGUE sender:self.deepLinkContact];
+        self.deepLinkContact = nil;
+    }
 }
 
 #pragma mark - Table view data source

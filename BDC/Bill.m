@@ -95,6 +95,16 @@ static NSMutableSet *billsToApproveSet;
             
             [Bill updateNumToApprove:billsToApprove.count];
             
+            NSString *did;
+            if ([action isEqualToString:APPROVE_API]) {
+                did = @"approved";
+            } else if ([action isEqualToString:DENY_API]) {
+                did = @"denied";
+            } else {
+                did = @"processed";
+            }
+            [UIHelper showInfo:[NSString stringWithFormat:@"Successfully %@ the bill!", did] withStatus:kSuccess];
+            
             [Util track:[NSString stringWithFormat:@"%@-ed_bill", action]];
         } else if (response_status == RESPONSE_TIMEOUT) {
             [self.approvalDelegate failedToProcessApproval];
@@ -416,9 +426,9 @@ static NSMutableSet *billsToApproveSet;
                 }
                 
                 [[User GetLoginUser] markProfileFor:kToApproveChecked checked:NO];
-                if (ListForApprovalDelegate != [RootMenuViewController sharedInstance]) {
-                    [UIHelper showInfo:@"You don't have permission to retrieve approvals" withStatus:kWarning];
-                }
+//                if (ListForApprovalDelegate != [RootMenuViewController sharedInstance]) {
+//                    [UIHelper showInfo:@"You don't have permission to retrieve approvals" withStatus:kWarning];
+//                }
             } else {
                 [UIHelper showInfo:[NSString stringWithFormat:@"Failed to retrieve list of bill to approve! %@", [err localizedDescription]] withStatus:kFailure];
                 Error(@"Failed to retrieve list of bill to approve! %@", [err localizedDescription]);

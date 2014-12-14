@@ -117,14 +117,14 @@
             [arr addObject:copy];
         }
         self.items = arr;
-        if (org.enableAR) {
+        if (org.showAR) {
             self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, nil];
         }
     } else if(self.mode != kAttachMode) {
         self.items = [Item listOrderBy:ITEM_NAME ascending:YES active:YES];
         
         self.sortAttributes = [NSArray array];
-        if (org.enableAR) {
+        if (org.showAR) {
             self.crudActions = [NSArray arrayWithObjects:ACTION_CREATE, ACTION_DELETE, nil];
             self.inactiveCrudActions = [NSArray arrayWithObjects:ACTION_UNDELETE, nil];
         }

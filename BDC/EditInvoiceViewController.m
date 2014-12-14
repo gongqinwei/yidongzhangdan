@@ -136,7 +136,7 @@ typedef enum {
 }
 
 - (void)setActions {
-    if (self.mode == kViewMode && [Organization getSelectedOrg].enableAR) {
+    if (self.mode == kViewMode && [Organization getSelectedOrg].showAR) {
         self.crudActions = nil;
 
         if (self.isActive) {
