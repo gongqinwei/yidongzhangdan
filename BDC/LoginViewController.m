@@ -89,9 +89,11 @@
     
     self.email.layer.borderColor = [[UIColor grayColor] CGColor];
     self.email.layer.borderWidth = 1.0f;
+    [self.email addTarget:self action:@selector(textFieldFinished:) forControlEvents:UIControlEventEditingDidEndOnExit];
     
     self.password.layer.borderColor = [[UIColor grayColor] CGColor];
     self.password.layer.borderWidth = 1.0f;
+    [self.password addTarget:self action:@selector(textFieldFinished:) forControlEvents:UIControlEventEditingDidEndOnExit];
     
     self.stayLoggedIn.on = [Util isStayLoggedIn];
     
@@ -226,6 +228,11 @@
             weakSelf.warning.hidden = NO;
         });
     }
+}
+
+- (IBAction)textFieldFinished:(id)sender
+{
+    // [sender resignFirstResponder];
 }
 
 #pragma mark - Profile delegate method
