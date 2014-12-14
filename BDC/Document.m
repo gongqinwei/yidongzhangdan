@@ -149,14 +149,18 @@ static NSLock *DocumentsLock = nil;
 + (void)addToInbox:(Document *)doc {
     [DocumentsLock lock];
     [documents insertObject:doc atIndex:0];
-    [DocumentListDelegate didAddDocument:doc];
+    if ([DocumentListDelegate respondsToSelector:@selector(didAddDocument:)]) {
+        [DocumentListDelegate didAddDocument:doc];
+    }
     [DocumentsLock unlock];
 }
 
 + (void)removeFromInbox:(Document *)doc {
     [DocumentsLock lock];
     [documents removeObject:doc];
-    [DocumentListDelegate didGetDocuments];
+    if ([DocumentListDelegate respondsToSelector:@selector(didGetDocuments)]) {
+        [DocumentListDelegate didGetDocuments];
+    }
     [DocumentsLock unlock];
 }
 

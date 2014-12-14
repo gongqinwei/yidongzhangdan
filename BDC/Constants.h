@@ -142,7 +142,6 @@
 #define ACCOUNT_API         @"ChartOfAccount.json"
 #define BANK_ACCOUNT_API    @"BankAccount.json"
 #define APPROVER_LIST_API   @"ui/ApproverList.json"
-//#define APPROVERS_GET_API   @"GetApprovers.json"
 #define APPROVERS_GET_API   @"ListApprovers.json"
 #define APPROVERS_SET_API   @"SetApprovers.json"
 #define APPROVER_CREATE_API @"ui/CreateBillApprover.json"
@@ -327,7 +326,7 @@ Hi %@,<br> \
 <br> \
 As you know, we are using Bill.com to manage our bills and invoices. It's awesome.<br><br> \
 We just want to share something even more awesome: there is a native iPhone app called \"Mobill\" for Bill.com now!<br><br> \
-It's sleek, simple and convenient to use, yet pretty useful! A perfect mobile app for Bill.com, and we highly recommend it. Check it out!<br> \
+It's sleek, easy to use, and pretty useful! A perfect mobile app for Bill.com, and we highly recommend it. Check it out!<br> \
 %@<br><br> \
 And if you want to try it out first before paying for it, you can download its free edition.<br> \
 %@<br><br> \
@@ -357,7 +356,7 @@ I'd like to share it with you. Please take a look.\n  -- %@"
 Hi,<br> \
 <br> \
 I'd like to share something cool with you: I am using a native iPhone app, \"Mobill\", to manage my Bill.com account now!<br><br> \
-It's sleek, simple and convenient to use, yet pretty useful! A perfect mobile app for Bill.com, and I highly recommend it. Check it out!<br> \
+It's sleek, easy to use, and pretty useful! A perfect mobile app for Bill.com, and I highly recommend it. Check it out!<br> \
 <br> \
 %@<br> \
 <br> \
@@ -366,8 +365,8 @@ Best,<br> \
 %@<br>"
 
 #define BNC_SHARE_MOBILL_SMS_TEMPLATE    @"\
-FYI, I am using a native iPhone app, \"Mobill\", to manage my Bill.com account now!\n \
-It's sleek, simple and convenient to use, yet pretty useful! I highly recommend it. Check it out! %@\n \
+Bravo! I am using a native iPhone app, \"Mobill\", to manage my Bill.com account now!\n \
+It's sleek, easy to use, and pretty useful! I highly recommend it. Check it out! %@\n \
   -- %@"
 
 #define BNC_SHARE_SOCIAL_NAME           @"Mobill - mobile app for Bill.com"

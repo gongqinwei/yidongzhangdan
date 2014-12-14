@@ -106,7 +106,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
     
     NSString *action = [NSString stringWithFormat:@"%@?Vendor=%@&type=bill", APPROVER_LIST_API, vendorId];
     
-    [APIHandler asyncCallWithAction:action Info:nil AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+    [APIHandler asyncGetCallWithAction:action Info:nil AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
         id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
         
@@ -242,13 +242,11 @@ static id <ApproverListDelegate> ListDelegate = nil;
 }
 
 - (void)createWithFirstName:(NSString *)fname lastName:(NSString *)lname andEmail:(NSString *)email {
-//    NSString *action = [NSString stringWithFormat:@"%@?fname=%@&lname=%@&email=%@", APPROVER_CREATE_API, fname, lname, email];
     NSString *action = APPROVER_CREATE_API;
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:@"fname", fname, @"lname", lname, @"email", email, nil];
     
     __weak Approver *weakSelf = self;
     
-//    [APIHandler asyncCallWithAction:action Info:nil AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
     [APIHandler asyncGetCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
         NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
