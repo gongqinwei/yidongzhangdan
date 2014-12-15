@@ -8,7 +8,7 @@
 
 #import "UIHelper.h"
 #import "Constants.h"
-
+#import "KGStatusBar.h"
 #import <QuartzCore/QuartzCore.h>
 
 #define INFO_VIEW_POSITION_Y     150
@@ -41,71 +41,75 @@
 
 + (void)showInfo:(NSString *)info withStatus:(NotificationStatus)status {
     dispatch_async(dispatch_get_main_queue(), ^{
-        CGRect window = [[UIScreen mainScreen] applicationFrame];
-        CGRect infoFrame = CGRectMake(window.size.width/2 - INFO_VIEW_WIDTH/2, INFO_VIEW_POSITION_Y, INFO_VIEW_WIDTH, INFO_VIEW_HEIGHT);
-        
-        UIImageView *infoIcon = [[UIImageView alloc] initWithFrame:CGRectMake(INFO_VIEW_MARGIN, INFO_VIEW_MARGIN, INFO_ICON_SIZE, INFO_ICON_SIZE)];
-        UIImage *image;
-        
-        switch (status) {
-            case kSuccess:
-            {
-                image = [UIImage imageNamed:@"success.png"];
+        if (status == kSuccess) {
+            [KGStatusBar showSuccessWithStatus:info];
+        } else {
+            CGRect window = [[UIScreen mainScreen] applicationFrame];
+            CGRect infoFrame = CGRectMake(window.size.width/2 - INFO_VIEW_WIDTH/2, INFO_VIEW_POSITION_Y, INFO_VIEW_WIDTH, INFO_VIEW_HEIGHT);
+            
+            UIImageView *infoIcon = [[UIImageView alloc] initWithFrame:CGRectMake(INFO_VIEW_MARGIN, INFO_VIEW_MARGIN, INFO_ICON_SIZE, INFO_ICON_SIZE)];
+            UIImage *image;
+            
+            switch (status) {
+                case kInfo:
+                {
+                    image = [UIImage imageNamed:@"success.png"]; //TODO: should be replaces
+                }
+                    break;
+                case kWarning:
+                {
+                    image = [UIImage imageNamed:@"warning.png"];
+                }
+                    break;
+                case kFailure:
+                {
+                    image = [UIImage imageNamed:@"warning.png"];  //TODO: should be replaced
+                }
+                    break;
+                case kError:
+                {
+                    image = [UIImage imageNamed:@"warning.png"];  //TODO: should be replaced
+                }
+                    break;
+                case kSuccess:
+                {
+                    image = [UIImage imageNamed:@"success.png"];
+                }
+                    break;
+                default:
+                    break;
             }
-                break;
-            case kInfo:
-            {
-                image = [UIImage imageNamed:@"success.png"]; //TODO: should be replaces
-            }
-                break;
-            case kWarning:
-            {
-                image = [UIImage imageNamed:@"warning.png"];
-            }
-                break;
-            case kFailure:
-            {
-                image = [UIImage imageNamed:@"warning.png"];  //TODO: should be replaced
-            }
-                break;
-            case kError:
-            {
-                image = [UIImage imageNamed:@"warning.png"];  //TODO: should be replaced
-            }
-                break;
-            default:
-                break;
+            
+            infoIcon.image = image;
+            
+            UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(INFO_VIEW_MARGIN + INFO_ICON_SIZE + INFO_VIEW_PADDING, INFO_VIEW_MARGIN, INFO_VIEW_WIDTH - INFO_VIEW_MARGIN * 2 - INFO_VIEW_PADDING - INFO_ICON_SIZE, INFO_VIEW_HEIGHT - INFO_VIEW_MARGIN * 2)];
+            infoLabel.text = info;
+            infoLabel.textColor = [UIColor whiteColor];
+            infoLabel.backgroundColor = [UIColor clearColor];
+            infoLabel.lineBreakMode = NSLineBreakByWordWrapping;
+            infoLabel.textAlignment=NSTextAlignmentLeft;
+            infoLabel.font=[UIFont fontWithName:APP_BOLD_FONT size:INFO_FONT_SIZE];
+            infoLabel.numberOfLines = 0;
+            [infoLabel sizeToFit];
+            
+            UIView *infoView = [[UIView alloc] initWithFrame:infoFrame];
+            infoView.backgroundColor = [UIColor darkGrayColor];
+            infoView.alpha = INFO_ALPHA;
+            infoView.layer.cornerRadius = INFO_CORNER_RADIUS;
+            infoView.layer.masksToBounds = YES;
+            
+            [infoView addSubview:infoIcon];
+            [infoView addSubview:infoLabel];
+            infoView.tag = status;
+            
+            [[[UIApplication sharedApplication] keyWindow] addSubview:infoView];
+            
+            [NSTimer scheduledTimerWithTimeInterval:INFO_SHOW_INTERVAL
+                                             target:[UIHelper class]
+                                           selector:@selector(fadeInfo:)
+                                           userInfo:infoView
+                                            repeats:NO];
         }
-        
-        infoIcon.image = image;
-        
-        UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(INFO_VIEW_MARGIN + INFO_ICON_SIZE + INFO_VIEW_PADDING, INFO_VIEW_MARGIN, INFO_VIEW_WIDTH - INFO_VIEW_MARGIN * 2 - INFO_VIEW_PADDING - INFO_ICON_SIZE, INFO_VIEW_HEIGHT - INFO_VIEW_MARGIN * 2)];
-        infoLabel.text = info;
-        infoLabel.textColor = [UIColor whiteColor];
-        infoLabel.backgroundColor = [UIColor clearColor];
-        infoLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        infoLabel.textAlignment=NSTextAlignmentLeft;
-        infoLabel.font=[UIFont fontWithName:APP_BOLD_FONT size:INFO_FONT_SIZE];
-        infoLabel.numberOfLines = 0;
-        [infoLabel sizeToFit];
-        
-        UIView *infoView = [[UIView alloc] initWithFrame:infoFrame];
-        infoView.backgroundColor = [UIColor darkGrayColor];
-        infoView.alpha = INFO_ALPHA;
-        infoView.layer.cornerRadius = INFO_CORNER_RADIUS;
-        infoView.layer.masksToBounds = YES;
-        
-        [infoView addSubview:infoIcon];
-        [infoView addSubview:infoLabel];
-        infoView.tag = status;
-        
-        [[[UIApplication sharedApplication] keyWindow] addSubview:infoView];
-        
-        [NSTimer scheduledTimerWithTimeInterval:INFO_SHOW_INTERVAL
-                                         target:[UIHelper class]
-                                       selector:@selector(fadeInfo:)
-                                       userInfo:infoView
-                                        repeats:NO];
     });
 }
 

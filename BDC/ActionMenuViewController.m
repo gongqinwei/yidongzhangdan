@@ -497,37 +497,36 @@ static ActionMenuViewController * _sharedInstance = nil;
         BDCBusinessObject * obj = (BDCBusinessObject *)[[self.searchResults objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
         [self performSegueForObject:obj];
     } else {
-        NSString *action = [self.crudActions objectAtIndex:indexPath.row];
-        if ([action isEqualToString:ACTION_BNC_SHARE]) {
-            self.showShareOptions = !self.showShareOptions;
-            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
-        } else {
-            [self.targetViewController toggleMenu:self];
-            
-            if (self.targetViewController.sortAttributes) {
-                if (indexPath.section == 1) {
-                    if (self.targetViewController.sortAttributes.count > 0) {
-                        if (!self.orderSectionCollapsed) {
-                            [self.tableView cellForRowAtIndexPath:self.lastSortAttribute].accessoryType = UITableViewCellAccessoryNone;
-                            self.lastSortAttribute = indexPath;
-                            [self.tableView cellForRowAtIndexPath:self.lastSortAttribute].accessoryType = UITableViewCellAccessoryCheckmark;
-                            
-                            [self.actionDelegate didSelectSortAttribute:[self.targetViewController.sortAttributes objectAtIndex:self.lastSortAttribute.row]
-                                                              ascending:self.ascSwitch.on
-                                                                 active:!self.activenessSwitch.selectedSegmentIndex];
-                        }
-                    } else {
-                        [self.actionDelegate didSelectCrudAction:[self.crudActions objectAtIndex:indexPath.row]];
+        [self.targetViewController toggleMenu:self];
+        
+        if (self.targetViewController.sortAttributes) {
+            if (indexPath.section == 1) {
+                if (self.targetViewController.sortAttributes.count > 0) {
+                    if (!self.orderSectionCollapsed) {
+                        [self.tableView cellForRowAtIndexPath:self.lastSortAttribute].accessoryType = UITableViewCellAccessoryNone;
+                        self.lastSortAttribute = indexPath;
+                        [self.tableView cellForRowAtIndexPath:self.lastSortAttribute].accessoryType = UITableViewCellAccessoryCheckmark;
+                        
+                        [self.actionDelegate didSelectSortAttribute:[self.targetViewController.sortAttributes objectAtIndex:self.lastSortAttribute.row]
+                                                          ascending:self.ascSwitch.on
+                                                             active:!self.activenessSwitch.selectedSegmentIndex];
                     }
-                } else if (indexPath.section == 2) {
+                } else {
                     [self.actionDelegate didSelectCrudAction:[self.crudActions objectAtIndex:indexPath.row]];
                 }
+            } else if (indexPath.section == 2) {
+                [self.actionDelegate didSelectCrudAction:[self.crudActions objectAtIndex:indexPath.row]];
+            }
+        } else {
+            NSString *action = [self.crudActions objectAtIndex:indexPath.row];
+            if ([action isEqualToString:ACTION_BNC_SHARE]) {
+                self.showShareOptions = !self.showShareOptions;
+                [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
             } else {
                 [self.actionDelegate didSelectCrudAction:action];
             }
+            [Util track:[NSString stringWithFormat:@"took_action_%@", action]];
         }
-        
-        [Util track:[NSString stringWithFormat:@"took_action_%@", action]];
     }
 }
 

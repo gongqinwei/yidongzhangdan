@@ -243,7 +243,7 @@
                 }
             }];
             
-            [UIHelper showInfo:@"Documents upload in progress.\n\nIt'll show up once uploaded." withStatus:kInfo];
+            [UIHelper showInfo:@"Upload in progress. It'll show up once uploaded." withStatus:kSuccess];
             [self.activityIndicator stopAnimating];
             
             dispatch_async(dispatch_get_main_queue(), ^{

@@ -1041,7 +1041,7 @@ static double animatedDistance = 0;
         
         // 1. upload new attachments
         if (toBeAdded.count > 0) {
-            [UIHelper showInfo:@"Documents upload in progress." withStatus:kInfo];
+            [UIHelper showInfo:@"Upload in progress" withStatus:kSuccess];
         }
         
         for (Document *doc in toBeAdded) {

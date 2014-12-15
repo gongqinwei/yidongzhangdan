@@ -573,7 +573,21 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.tableView.editing) {
-        return YES;
+        Bill *bill;
+        if ([self.sortAttribute isEqualToString:BILL_VENDOR_NAME]) {
+            bill = [[self.vendorBills objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+        } else if ([self.sortAttribute isEqualToString:BILL_DUE_DATE]) {
+            bill = [[self.dueDateBills objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+        } else if ([self.sortAttribute isEqualToString:BILL_APPROVAL_STATUS]) {
+            bill = [[self.approvalBills objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+        } else {
+            bill = [self.bills objectAtIndex:indexPath.row];
+        }
+        if ([bill.approvalStatus isEqual:APPROVAL_APPROVED] || [bill.approvalStatus isEqual:APPROVAL_DENIED]) {
+            return NO;
+        } else {
+            return YES;
+        }
     } else {
         return NO;
     }
@@ -614,6 +628,11 @@
                 bill = [[self.dueDateBills objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
                 
                 [[self.dueDateBills objectAtIndex:indexPath.section] removeObjectAtIndex:indexPath.row];
+                [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            } else if ([self.sortAttribute isEqualToString:BILL_APPROVAL_STATUS]) {
+                bill = [[self.approvalBills objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+                
+                [[self.approvalBills objectAtIndex:indexPath.section] removeObjectAtIndex:indexPath.row];
                 [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             } else {
                 bill = [self.bills objectAtIndex:indexPath.row];
