@@ -19,51 +19,6 @@
 //#define APPSTAGE
 #define PROD
 
-
-#ifdef LOCAL
-#define APP_KEY_VALUE       @"01MDUVHZTMMHTDOVCCV0"
-#define ERR_DOMAIN          @"Local"
-#define DOMAIN_URL          @"http://10.0.0.14"
-//#define DOMAIN_URL          @"http://192.168.1.12"
-#define APP_KEY             @"devKey"
-#define DEBUG_MODE
-#endif
-
-#ifdef APPTEST
-#define APP_KEY_VALUE       @"01AMCUQOJBJQDUXSFXB9"
-#define ERR_DOMAIN          @"App Test"
-#define DOMAIN_URL          @"https://app-test.cashview.com"
-#define APP_KEY             @"devKey"
-#define DEBUG_MODE
-#endif
-
-#ifdef APPSTAGE
-#define APP_KEY_VALUE       @"01AHJMDLVJQRYYRHWUV4"
-#define ERR_DOMAIN          @"App Stage"
-#define DOMAIN_URL          @"https://app-stage.bill.com"
-#define APP_KEY             @"devKey"
-#define DEBUG_MODE
-#endif
-
-#ifdef PROD
-#define APP_KEY_VALUE       @"01VWTMSCMXDIADIVY208"
-#define ERR_DOMAIN          @"PROD"
-#define DOMAIN_URL          @"https://app.bill.com"
-#define APP_KEY             @"devKey"
-#endif
-
-#define BNC_APP_KEY         @"45988591431582341"
-#define MP_TOKEN            @"7813b39597fc0555eed85e7d1ca90259"
-#define TRACKING_EVENT_KEYS @[@"UserId", @"UserName", @"UserEmail", @"OrgId", @"OrgName"]
-
-#ifdef DEBUG_MODE
-#define Debug( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
-#else
-#define Debug( s, ... )
-#endif
-
-#define Error( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
-
 #define KEYCHAIN_ID         @"BDCLogin"
 
 // Version
@@ -383,6 +338,49 @@ you can use Mobill to scan documents into your Bill.com account! Go mobile. Go M
 #define MOBILL_APP_STORE_LINK       @"http://itunes.apple.com/us/app/id696521463"
 #define MOBILL_LITE_APP_STORE_LINK  @"http://itunes.apple.com/us/app/id765927170"
 
+#ifdef LOCAL
+#define APP_KEY_VALUE       @"01MDUVHZTMMHTDOVCCV0"
+#define ERR_DOMAIN          @"Local"
+#define DOMAIN_URL          @"http://10.0.0.14"
+//#define DOMAIN_URL          @"http://192.168.1.12"
+#define APP_KEY             @"devKey"
+#define DEBUG_MODE
+#endif
+
+#ifdef APPTEST
+#define APP_KEY_VALUE       @"01AMCUQOJBJQDUXSFXB9"
+#define ERR_DOMAIN          @"App Test"
+#define DOMAIN_URL          @"https://app-test.cashview.com"
+#define APP_KEY             @"devKey"
+#define DEBUG_MODE
+#endif
+
+#ifdef APPSTAGE
+#define APP_KEY_VALUE       @"01AHJMDLVJQRYYRHWUV4"
+#define ERR_DOMAIN          @"App Stage"
+#define DOMAIN_URL          @"https://app-stage.bill.com"
+#define APP_KEY             @"devKey"
+#define DEBUG_MODE
+#endif
+
+#ifdef PROD
+#define APP_KEY_VALUE       @"01VWTMSCMXDIADIVY208"
+#define ERR_DOMAIN          @"PROD"
+#define DOMAIN_URL          @"https://app.bill.com"
+#define APP_KEY             @"devKey"
+#endif
+
+#define BNC_APP_KEY         @"45988591431582341"
+#define MP_TOKEN            @"7813b39597fc0555eed85e7d1ca90259"
+#define TRACKING_EVENT_KEYS @[@"UserId", @"UserName", @"UserEmail", @"OrgId", @"OrgName"]
+
+#ifdef DEBUG_MODE
+#define Debug( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
+#else
+#define Debug( s, ... )
+#endif
+
+#define Error( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
 
 // Approval Status
 #define APPROVAL_UNASSIGNED     @"0"
