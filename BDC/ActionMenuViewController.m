@@ -497,9 +497,9 @@ static ActionMenuViewController * _sharedInstance = nil;
         BDCBusinessObject * obj = (BDCBusinessObject *)[[self.searchResults objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
         [self performSegueForObject:obj];
     } else {
-        [self.targetViewController toggleMenu:self];
-        
         if (self.targetViewController.sortAttributes) {
+            [self.targetViewController toggleMenu:self];
+            
             if (indexPath.section == 1) {
                 if (self.targetViewController.sortAttributes.count > 0) {
                     if (!self.orderSectionCollapsed) {
@@ -523,6 +523,7 @@ static ActionMenuViewController * _sharedInstance = nil;
                 self.showShareOptions = !self.showShareOptions;
                 [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
             } else {
+                [self.targetViewController toggleMenu:self];
                 [self.actionDelegate didSelectCrudAction:action];
             }
             [Util track:[NSString stringWithFormat:@"took_action_%@", action]];

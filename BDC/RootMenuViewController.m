@@ -668,7 +668,7 @@ static RootMenuViewController * _sharedInstance = nil;
                                               Error(@"FB error publishing story: %@", error.description);
                                           } else {
                                               Debug(@"FB result %@", results);
-                                              [UIHelper showInfo:@"Shared to Facebook successfully.\n\nThanks a lot!" withStatus:kSuccess];
+                                              [UIHelper showInfo:@"Shared to Facebook successfully. Thanks a lot!" withStatus:kSuccess];
                                               [Util track:@"shared_app_via_facebook"];
                                           }
                                       }];
@@ -702,7 +702,7 @@ static RootMenuViewController * _sharedInstance = nil;
                                                                   
                                                               } else {
                                                                   // User clicked the Share button
-                                                                  [UIHelper showInfo:@"Shared to Facebook successfully.\n\nThanks a lot!" withStatus:kSuccess];
+                                                                  [UIHelper showInfo:@"Shared to Facebook successfully. Thanks a lot!" withStatus:kSuccess];
                                                                   [Util track:@"shared_app_via_facebook"];
                                                               }
                                                           }
@@ -743,7 +743,7 @@ static RootMenuViewController * _sharedInstance = nil;
             [twitterController dismissViewControllerAnimated:YES completion:nil];
             switch(result){
                 case SLComposeViewControllerResultDone:
-                    [UIHelper showInfo:@"Shared to Twitter successfully.\n\nThanks a lot!" withStatus:kSuccess];
+                    [UIHelper showInfo:@"Shared to Twitter successfully. Thanks a lot!" withStatus:kSuccess];
                     [Util track:@"shared_app_via_twitter"];
                     break;
                 case SLComposeViewControllerResultCancelled:
@@ -935,7 +935,7 @@ static RootMenuViewController * _sharedInstance = nil;
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
     switch (result){
         case MFMailComposeResultSent:
-            [UIHelper showInfo:@"Email sent successfully.\n\nThanks a lot!" withStatus:kSuccess];
+            [UIHelper showInfo:@"Email sent successfully. Thanks a lot!" withStatus:kSuccess];
             [Util track:@"shared_app_via_email"];
             break;
         case MFMailComposeResultCancelled:
@@ -960,7 +960,7 @@ static RootMenuViewController * _sharedInstance = nil;
 {
     switch (result) {
         case MessageComposeResultSent:
-            [UIHelper showInfo:@"Message sent successfully.\n\nThanks a lot!" withStatus:kSuccess];
+            [UIHelper showInfo:@"Message sent successfully. Thanks a lot!" withStatus:kSuccess];
             [Util track:@"shared_app_via_sms"];
             break;
         case MessageComposeResultCancelled:

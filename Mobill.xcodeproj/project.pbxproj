@@ -1492,7 +1492,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/qinwei/Documents/FacebookSDK,
@@ -1503,7 +1503,7 @@
 				INFOPLIST_FILE = "BDC/BDC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = Mobill;
-				PROVISIONING_PROFILE = "EEBDE548-CDF1-4B9E-AD00-0984AEFE3CF2";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=*]" = "64ff1cee-c1fe-4a52-8128-2c5529824840";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1517,7 +1517,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Qinwei Gong (DQ29659ZU2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Qinwei Gong (DQ29659ZU2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/qinwei/Documents/FacebookSDK,
@@ -1528,7 +1528,7 @@
 				INFOPLIST_FILE = "BDC/BDC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = Mobill;
-				PROVISIONING_PROFILE = "785c0d8b-909c-4eed-b7aa-35d044a10a00";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=*]" = "0a2e6d55-c5f5-4982-ab58-cec93bca15c6";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0a2e6d55-c5f5-4982-ab58-cec93bca15c6";
 				SKIP_INSTALL = NO;

@@ -371,6 +371,7 @@ you can use Mobill to scan documents into your Bill.com account! Go mobile. Go M
 #endif
 
 #define BNC_APP_KEY         @"45988591431582341"
+#define BNC_APP_KEY_LITE    @"73291356218327647"
 #define MP_TOKEN            @"7813b39597fc0555eed85e7d1ca90259"
 #define TRACKING_EVENT_KEYS @[@"UserId", @"UserName", @"UserEmail", @"OrgId", @"OrgName"]
 

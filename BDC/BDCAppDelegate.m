@@ -114,7 +114,11 @@ static MFMailComposeViewController *globalMailer;
     [Fabric with:@[CrashlyticsKit]];
     
     // Branch Metrics
+#ifdef LITE_VERSION
+    Branch *branch = [Branch getInstance:BNC_APP_KEY_LITE];
+#else
     Branch *branch = [Branch getInstance:BNC_APP_KEY];
+#endif
     [branch initSessionWithLaunchOptions:launchOptions andRegisterDeepLinkHandler:^(NSDictionary *params, NSError *error) {
         if (!error) {
             Debug(@"deep link data: %@", [params description]);
