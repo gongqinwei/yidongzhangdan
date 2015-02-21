@@ -67,7 +67,7 @@
                         self.bill.objectId,
                         payAmount];
     
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA_, objStr, nil];
     
     __weak PayBillViewController *weakSelf = self;
     

@@ -383,7 +383,7 @@ static RootMenuViewController * _sharedInstance = nil;
             cell.imageView.image = [UIImage imageNamed:imageName];
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100", DOMAIN_URL, ORG_LOGO_API]]];
+                NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/is/%@?w=100&h=100", DOMAIN_URL, ORG_LOGO_API]]];
                 
                 if (data != nil) {
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -410,7 +410,7 @@ static RootMenuViewController * _sharedInstance = nil;
             cell.imageView.image = [UIImage imageNamed:imageName];
 
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?w=100&h=100", DOMAIN_URL, ORG_LOGO_API]]];            
+                NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/is/%@?w=100&h=100", DOMAIN_URL, ORG_LOGO_API]]];            
                 
                 if (data != nil) {
                     dispatch_async(dispatch_get_main_queue(), ^{

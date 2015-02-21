@@ -50,7 +50,7 @@
     NSString *objAPI = [NSString stringWithFormat:@"%@.json", [self class]];
     NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, READ, objAPI];
     NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", _ID, self.objectId];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA_, objStr, nil];
         
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;

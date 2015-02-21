@@ -8,7 +8,7 @@
 
 #import "BNCServerRequestQueue.h"
 #import "BranchServerInterface.h"
-#import "BNCConfig.h"
+#import "BNCPreferenceHelper.h"
 
 #define STORAGE_KEY     @"BNCServerRequestQueue"
 
@@ -35,45 +35,54 @@
 }
 
 - (void)enqueue:(BNCServerRequest *)request {
-    if (request) {
-        [self.queue addObject:request];
-        [self persist];
+    @synchronized(self.queue) {
+        if (request) {
+            [self.queue addObject:request];
+            [self persist];
+        }
     }
 }
 
 - (void)insert:(BNCServerRequest *)request at:(unsigned int)index {
-    if (index > self.queue.count) {
-        Debug(@"Invalid queue operation: index out of bound!");
-        return;
-    }
-    
-    if (request) {
-        [self.queue insertObject:request atIndex:index];
-        [self persist];
+    @synchronized(self.queue) {
+        if (index > self.queue.count) {
+            [BNCPreferenceHelper log:FILE_NAME line:LINE_NUM message:@"Invalid queue operation: index out of bound!"];
+            return;
+        }
+        
+        if (request) {
+            [self.queue insertObject:request atIndex:index];
+            [self persist];
+        }
     }
 }
 
 - (BNCServerRequest *)dequeue {
     BNCServerRequest *request = nil;
     
-    if (self.queue.count > 0) {
-        request = [self.queue objectAtIndex:0];
-        [self.queue removeObjectAtIndex:0];
-        [self persist];
+    @synchronized(self.queue) {
+        if (self.queue.count > 0) {
+            request = [self.queue objectAtIndex:0];
+            [self.queue removeObjectAtIndex:0];
+            [self persist];
+        }
     }
     
     return request;
 }
 
 - (BNCServerRequest *)removeAt:(unsigned int)index {
-    if (index >= self.queue.count) {
-        Debug(@"Invalid queue operation: index out of bound!");
-        return nil;
+    BNCServerRequest *request = nil;
+    @synchronized(self.queue) {
+        if (index >= self.queue.count) {
+            [BNCPreferenceHelper log:FILE_NAME line:LINE_NUM message:@"Invalid queue operation: index out of bound!"];
+            return nil;
+        }
+        
+        request = [self.queue objectAtIndex:index];
+        [self.queue removeObjectAtIndex:index];
+        [self persist];
     }
-    
-    BNCServerRequest *request = [self.queue objectAtIndex:index];
-    [self.queue removeObjectAtIndex:index];
-    [self persist];
     
     return request;
 }
@@ -85,7 +94,7 @@
 
 - (BNCServerRequest *)peekAt:(unsigned int)index {
     if (index >= self.queue.count) {
-        Debug(@"Invalid queue operation: index out of bound!");
+        [BNCPreferenceHelper log:FILE_NAME line:LINE_NUM message:@"Invalid queue operation: index out of bound!"];
         return nil;
     }
     
@@ -106,7 +115,7 @@
 - (BOOL)containsInstallOrOpen {
     for (int i = 0; i < self.queue.count; i++) {
         BNCServerRequest *req = [self.queue objectAtIndex:i];
-        if ([req.tag isEqualToString:REQ_TAG_REGISTER_INSTALL] || [req.tag isEqualToString:REQ_TAG_REGISTER_OPEN]) {
+        if (req && ([req.tag isEqualToString:REQ_TAG_REGISTER_INSTALL] || [req.tag isEqualToString:REQ_TAG_REGISTER_OPEN])) {
             return YES;
         }
     }
@@ -147,11 +156,16 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     dispatch_async(self.asyncQueue, ^{
         @synchronized(self.queue) {
-            NSMutableArray *arr = [NSMutableArray array];
-            
+            NSMutableArray *arr = [[NSMutableArray alloc] init];
             for (BNCServerRequest *req in self.queue) {
-                NSData *encodedReq = [NSKeyedArchiver archivedDataWithRootObject:req];
-                [arr addObject:encodedReq];
+                if (req) {
+                    @try {
+                        NSData *encodedReq = [NSKeyedArchiver archivedDataWithRootObject:req];
+                        [arr addObject:encodedReq];
+                    }
+                    @catch (NSException* exception) {
+                    }
+                }
             }
             
             [defaults setObject:arr forKey:STORAGE_KEY];
@@ -161,7 +175,7 @@
 }
 
 + (NSMutableArray *)retrieve {
-    NSMutableArray *queue = [NSMutableArray array];
+    NSMutableArray *queue = [[NSMutableArray alloc] init];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     id data = [defaults objectForKey:STORAGE_KEY];
@@ -171,8 +185,16 @@
     
     NSArray *arr = (NSArray *)data;
     for (NSData *encodedRequest in arr) {
-        BNCServerRequest *request = [NSKeyedUnarchiver unarchiveObjectWithData:encodedRequest];
-        [queue addObject:request];
+        if (encodedRequest) {
+            @try {
+                BNCServerRequest *request = [NSKeyedUnarchiver unarchiveObjectWithData:encodedRequest];
+                if (![request.tag isEqualToString:REQ_TAG_REGISTER_CLOSE]) {
+                    [queue addObject:request];
+                }
+            }
+            @catch (NSException* exception) {
+            }
+        }
     }
     
     return queue;
@@ -187,7 +209,7 @@
     dispatch_once(&onceToken, ^{
         sharedQueue = [[BNCServerRequestQueue alloc] init];
         sharedQueue.queue = [BNCServerRequestQueue retrieve];
-        Debug(@"Retrieved from Persist: %@", sharedQueue);
+        [BNCPreferenceHelper log:FILE_NAME line:LINE_NUM message:@"Retrieved from Persist: %@", sharedQueue];
     });
     
     return sharedQueue;

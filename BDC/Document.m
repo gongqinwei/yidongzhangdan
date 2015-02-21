@@ -168,7 +168,7 @@ static NSLock *DocumentsLock = nil;
 //    [UIAppDelegate incrNetworkActivities];
     
     NSString *str = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", FILE_CATEGORY, category];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, str, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA_, str, nil];
     
     [APIHandler asyncCallWithAction:RETRIEVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;

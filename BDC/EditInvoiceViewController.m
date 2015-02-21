@@ -398,7 +398,7 @@ typedef enum {
     self.pdfReady = NO;
     self.invoicePDFData = [NSMutableData data];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@=%@&%@=%@", DOMAIN_URL, INV_2_PDF_API, Id, self.busObj.objectId, PRESENT_TYPE, PDF_TYPE]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@=%@&%@=%@&%@=%@", DOMAIN_URL, INV_2_PDF_API, Id, self.busObj.objectId, PRESENT_TYPE, PDF_TYPE, SESSION_ID_KEY, [Util getSession]]];
     NSURLRequest *req = [NSURLRequest  requestWithURL:url
                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
                                       timeoutInterval:API_TIMEOUT];
@@ -416,7 +416,7 @@ typedef enum {
     // retrieve PDF in view mode
     self.invoicePDFData = [NSMutableData data];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@=%@&%@=%@", DOMAIN_URL, INV_2_PDF_API, Id, self.busObj.objectId, PRESENT_TYPE, PDF_TYPE]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@=%@&%@=%@&%@=%@", DOMAIN_URL, INV_2_PDF_API, Id, self.busObj.objectId, PRESENT_TYPE, PDF_TYPE, SESSION_ID_KEY, [Util getSession]]];
     NSURLRequest *req = [NSURLRequest  requestWithURL:url
                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
                                       timeoutInterval:API_TIMEOUT];

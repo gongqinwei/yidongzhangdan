@@ -87,7 +87,7 @@ static NSMutableArray *inactiveInvoices = nil;
 - (void)sendInvoice {
     NSString *action = [INVOICE_SEND_API stringByAppendingFormat:@"?%@=%@", _ID, self.objectId];
     NSString *objStr = [NSString stringWithFormat:SEND_INVOICE_DATA, self.objectId, self.objectId, [Util getUserId]];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA_, objStr, nil];
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {        
         NSInteger response_status;
@@ -185,7 +185,7 @@ static NSMutableArray *inactiveInvoices = nil;
     [objStr appendString:@"}"];
     [objStr appendString:@"}"];
     
-    [params setObject:DATA forKey:objStr];
+    [params setObject:DATA_ forKey:objStr];
     
     __weak Invoice *weakSelf = self;
     
@@ -231,7 +231,7 @@ static NSMutableArray *inactiveInvoices = nil;
     NSString *act = isActive ? UNDELETE : DELETE;
     NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, act, INVOICE_API];
     NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", _ID, self.objectId];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA_, objStr, nil];
     
     __weak Invoice *weakSelf = self;
     
@@ -327,7 +327,7 @@ static NSMutableArray *inactiveInvoices = nil;
     
     NSString *filter = isActive ? LIST_ACTIVE_INV_FILTER : LIST_INACTIVE_INV_FILTER;
     NSString *action = [LIST_API stringByAppendingString: INVOICE_API];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, filter, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA_, filter, nil];
 
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;

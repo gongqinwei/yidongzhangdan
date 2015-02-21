@@ -75,7 +75,7 @@ static NSMutableDictionary *inactiveItems = nil;
     [objStr appendString:@"}"];
     [objStr appendString:@"}"];
     
-    [params setObject:DATA forKey:objStr];
+    [params setObject:DATA_ forKey:objStr];
     
     __weak Item *weakSelf = self;
     
@@ -121,7 +121,7 @@ static NSMutableDictionary *inactiveItems = nil;
     NSString *act = isActive ? UNDELETE : DELETE;
     NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, act, ITEM_API];
     NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", _ID, self.objectId];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA_, objStr, nil];
     
     __weak Item *weakSelf = self;
     
@@ -212,7 +212,7 @@ static NSMutableDictionary *inactiveItems = nil;
     
     NSString *filter = isActive ? LIST_ACTIVE_FILTER : LIST_INACTIVE_FILTER;
     NSString *action = [LIST_API stringByAppendingString: ITEM_API];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, filter, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA_, filter, nil];
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;

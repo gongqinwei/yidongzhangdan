@@ -50,6 +50,8 @@
         [self toggleInfoDisplay: !self.infoOverlay.hidden];
         
         [self.docCellDelegate didSelectCell:self];
+        
+        [Util track:[NSString stringWithFormat:@"View Inbox doc info"]];
     }
 }
 

@@ -78,7 +78,7 @@ static NSMutableSet *billsToApproveSet;
 //    [UIAppDelegate incrNetworkActivities];
     
     NSString *filter = [NSString stringWithFormat:APPROVAL_DATA, self.objectId, comment];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, filter, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA_, filter, nil];
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
@@ -243,7 +243,7 @@ static NSMutableSet *billsToApproveSet;
     [objStr appendString:@"}"];
     [objStr appendString:@"}"];
     
-    [params setObject:DATA forKey:objStr];
+    [params setObject:DATA_ forKey:objStr];
     
     __weak Bill *weakSelf = self;
     
@@ -291,7 +291,7 @@ static NSMutableSet *billsToApproveSet;
     NSString *act = isActive ? UNDELETE : DELETE;
     NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, act, BILL_API];
     NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", _ID, self.objectId];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA_, objStr, nil];
     
     __weak Bill *weakSelf = self;
     
@@ -370,7 +370,7 @@ static NSMutableSet *billsToApproveSet;
 + (void)retrieveListForApproval:(void (^)(UIBackgroundFetchResult))completionHandler {
 //    [UIAppDelegate incrNetworkActivities];
     
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, [NSString stringWithFormat:LIST_APPROVALS_FILTER, [Util getUserId]], nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA_, [NSString stringWithFormat:LIST_APPROVALS_FILTER, [Util getUserId]], nil];
     
     [APIHandler asyncCallWithAction:LIST_APPROVALS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
@@ -445,7 +445,7 @@ static NSMutableSet *billsToApproveSet;
     
     NSString *filter = isActive ? LIST_ACTIVE_BILL_FILTER : LIST_INACTIVE_BILL_FILTER;
     NSString *action = [LIST_API stringByAppendingString: BILL_API];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, filter, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA_, filter, nil];
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
@@ -585,7 +585,7 @@ static NSMutableSet *billsToApproveSet;
 //    [objStr appendString:@"]"];
 //    [objStr appendString:@"}"];
 //    [objStr appendString:@"}"];
-//    [info setObject:DATA forKey:objStr];
+//    [info setObject:DATA_ forKey:objStr];
 //    [APIHandler asyncCallWithAction:action Info:info AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
 //        NSInteger response_status;
 //        NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];

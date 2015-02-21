@@ -12,6 +12,7 @@
 #import "SlidingListTableViewController.h"
 
 typedef enum {
+    kUnknown = 0,
     kService = 1,
     kProduct = 3,
     kDiscount = 5,
@@ -26,9 +27,9 @@ typedef enum {
 #define ITEM_AMOUNT         @"amount"
 #define ITEM_DESC           @"description"
 
-#define ItemTypes       [NSArray arrayWithObjects:[NSNumber numberWithInt:kService], [NSNumber numberWithInt:kProduct], [NSNumber numberWithInt:kDiscount], [NSNumber numberWithInt:kSalesTax], nil]
+#define ItemTypes       [NSArray arrayWithObjects:[NSNumber numberWithInt:kService], [NSNumber numberWithInt:kProduct], [NSNumber numberWithInt:kDiscount], [NSNumber numberWithInt:kSalesTax], [NSNumber numberWithInt:kUnknown], nil]
 
-#define ItemTypeNames   [NSArray arrayWithObjects:@"Service", @"Product (Non-inventory)", @"Discount", @"Sales Tax", nil]
+#define ItemTypeNames   [NSArray arrayWithObjects:@"Service", @"Product (Non-inventory)", @"Discount", @"Sales Tax", @"Unknown", nil]
 
 
 @class Item;

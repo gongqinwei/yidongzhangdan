@@ -423,7 +423,7 @@ enum ItemInfoType {
 }
 
 - (NSInteger) pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    return [ItemTypes count] + 1;
+    return [ItemTypes count]; // exclude "Unknown"
 }
 
 - (NSString*) pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {

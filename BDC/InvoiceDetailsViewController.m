@@ -28,7 +28,8 @@
 #pragma mark - Private methods
 
 - (void)updateView {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@=%@&%@=%@", DOMAIN_URL, INV_2_PDF_API, Id, self.invoice.objectId, PRESENT_TYPE, HTML_TYPE]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@=%@&%@=%@&%@=%@", DOMAIN_URL, INV_2_PDF_API, Id, self.invoice.objectId, PRESENT_TYPE, HTML_TYPE, SESSION_ID_KEY, [Util getSession]]];
+    
     NSURLRequest *req = [NSURLRequest requestWithURL:url];
     [self.InvoicePDFView loadRequest:req];
 }

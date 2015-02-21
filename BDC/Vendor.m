@@ -141,7 +141,7 @@ static NSMutableDictionary * inactiveVendors = nil;
     
     NSString *filter = isActive ? LIST_ACTIVE_FILTER : LIST_INACTIVE_FILTER;
     NSString *action = [LIST_API stringByAppendingString: VENDOR_API];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, filter, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA_, filter, nil];
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
@@ -276,7 +276,7 @@ static NSMutableDictionary * inactiveVendors = nil;
     [objStr appendString:@"}"];
     [objStr appendString:@"}"];
     
-    [params setObject:DATA forKey:objStr];
+    [params setObject:DATA_ forKey:objStr];
     
     __weak Vendor *weakSelf = self;
     
@@ -324,7 +324,7 @@ static NSMutableDictionary * inactiveVendors = nil;
 
 - (void)sendVendorInvite {
     NSString *data = [NSString stringWithFormat:VENDOR_INVITE_DATA, self.objectId, [Util URLEncode:self.email]];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, data, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA_, data, nil];
     
     [APIHandler asyncCallWithAction:VENDOR_INVITE_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
@@ -344,7 +344,7 @@ static NSMutableDictionary * inactiveVendors = nil;
     NSString *act = isActive ? UNDELETE : DELETE;
     NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, act, VENDOR_API];
     NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", _ID, self.objectId];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA_, objStr, nil];
     
     __weak Vendor *weakSelf = self;
     

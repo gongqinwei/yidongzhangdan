@@ -27,8 +27,8 @@
 
 + (void)showSuccessWithStatus:(NSString*)status
 {
-    [[KGStatusBar sharedView] showWithStatus:status barColor:[UIColor whiteColor] textColor:[UIColor colorWithRed:51.0/255.0 green:102.0/255.0 blue:0.0/255.0 alpha:1.0]];
-    [KGStatusBar performSelector:@selector(dismiss) withObject:self afterDelay:3.5 ];
+    [KGStatusBar showWithStatus:status];
+    [KGStatusBar performSelector:@selector(dismiss) withObject:self afterDelay:2.0 ];
 }
 
 + (void)showWithStatus:(NSString*)status {
@@ -37,7 +37,7 @@
 
 + (void)showErrorWithStatus:(NSString*)status {
     [[KGStatusBar sharedView] showWithStatus:status barColor:[UIColor colorWithRed:97.0/255.0 green:4.0/255.0 blue:4.0/255.0 alpha:1.0] textColor:[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0]];
-    [KGStatusBar performSelector:@selector(dismiss) withObject:self afterDelay:4.5 ];
+    [KGStatusBar performSelector:@selector(dismiss) withObject:self afterDelay:2.0 ];
 }
 
 + (void)dismiss {
@@ -77,7 +77,7 @@
     self.stringLabel.hidden = NO;
     self.stringLabel.text = labelText;
     self.stringLabel.textColor = textColor;
-    [UIView animateWithDuration:0.3 animations:^{
+    [UIView animateWithDuration:0.4 animations:^{
         self.stringLabel.alpha = 1.0;
     }];
     [self setNeedsDisplay];
@@ -85,7 +85,7 @@
 
 - (void) dismiss
 {
-    [UIView animateWithDuration:0.7 animations:^{
+    [UIView animateWithDuration:0.4 animations:^{
         self.stringLabel.alpha = 0.0;
     } completion:^(BOOL finished) {
         [topBar removeFromSuperview];
@@ -127,7 +127,9 @@
         stringLabel.textAlignment = NSTextAlignmentCenter;
 #endif
 		stringLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-		stringLabel.font = [UIFont systemFontOfSize:13.0];
+		stringLabel.font = [UIFont boldSystemFontOfSize:14.0];
+		stringLabel.shadowColor = [UIColor blackColor];
+		stringLabel.shadowOffset = CGSizeMake(0, -1);
         stringLabel.numberOfLines = 0;
     }
     

@@ -178,7 +178,7 @@ static id<UserDelegate> UserDelegate = nil;
     
     NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, READ, USER_API];
     NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", _ID, userId];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA_, objStr, nil];
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
@@ -217,7 +217,7 @@ static id<UserDelegate> UserDelegate = nil;
     
     NSString *filter = LIST_PROFILE_FILTER;
     NSString *action = [LIST_API stringByAppendingString: PROFILE_API];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, filter, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA_, filter, nil];
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
@@ -339,7 +339,7 @@ static id<UserDelegate> UserDelegate = nil;
 //        
 //        NSString *filter = LIST_PROFILE_FILTER;
 //        NSString *action = [LIST_API stringByAppendingString: PROFILE_API];
-//        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, filter, nil];
+//        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA_, filter, nil];
 //        
 //        [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
 //            NSInteger response_status;
@@ -400,7 +400,7 @@ static id<UserDelegate> UserDelegate = nil;
 //    
 //    NSString *filter = LIST_ACTIVE_USER_FILTER;
 //    NSString *action = [LIST_API stringByAppendingString: USER_API];
-//    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, filter, nil];
+//    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA_, filter, nil];
 //    
 //    NSString *lowercaseEmail = [email lowercaseString];
 //    

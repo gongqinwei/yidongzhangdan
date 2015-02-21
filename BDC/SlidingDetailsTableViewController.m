@@ -397,6 +397,8 @@ static double animatedDistance = 0;
                 [self downloadDocument:doc forImage:imageView];
                 [self removeTapGesterFromImageView:imageView];
             }
+            
+            [Util track:[NSString stringWithFormat:@"View document of %@", self.busObj.class]];
         }
     }
 }
@@ -452,7 +454,7 @@ static double animatedDistance = 0;
 
 - (void)retrieveDocAttachments {
     NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"%@\" : \"%@\", \"start\" : 0, \"max\" : 999}", _ID, self.busObj.objectId, OBJ_ID, self.busObj.objectId];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA_, objStr, nil];
     
     [APIHandler asyncCallWithAction:RETRIEVE_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
@@ -502,7 +504,7 @@ static double animatedDistance = 0;
                             
                             if ([doc isImageOrPDF]) {
                                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                                    NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?%@=%@&%@=%d&%@=%d&%@=%d", DOMAIN_URL, [self getDocImageAPI], [self getDocIDParam], doc.objectId, PAGE_NUMBER, 1, IMAGE_WIDTH, DOCUMENT_CELL_DIMENTION * 2, IMAGE_HEIGHT, DOCUMENT_CELL_DIMENTION * 2]]];
+                                    NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/is/%@?%@=%@&%@=%d&%@=%d&%@=%d&%@=%@", DOMAIN_URL, [self getDocImageAPI], [self getDocIDParam], doc.objectId, PAGE_NUMBER, 1, IMAGE_WIDTH, DOCUMENT_CELL_DIMENTION * 2, IMAGE_HEIGHT, DOCUMENT_CELL_DIMENTION * 2, SESSION_ID_KEY, [Util getSession]]]];
                                     
                                     if (data != nil) {
                                         doc.thumbnail = data;
@@ -1072,7 +1074,7 @@ static double animatedDistance = 0;
             for (NSString *docId in toBeDeleted) {
                 Document *doc = [self.busObj.attachmentDict objectForKey:docId];
                 NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"objId\" : \"%@\"}", _ID, docId, self.busObj.objectId];
-                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA_, objStr, nil];
                 
                 [APIHandler asyncCallWithAction:([doc getDocType] == kDocument) ? DEL_DOC_API : DEL_ATTACHMENT_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
                     NSInteger response_status;
@@ -1103,7 +1105,7 @@ static double animatedDistance = 0;
             // 3. attach documents
             for (Document *doc in toBeAttached) {
                 NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"name\" : \"%@\", \"objId\" : \"%@\"}", _ID, doc.objectId, doc.name, self.shaddowBusObj.objectId];
-                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA_, objStr, nil];
                 
                 [APIHandler asyncCallWithAction:ASSIGN_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
                     NSInteger response_status;
@@ -1283,7 +1285,7 @@ static double animatedDistance = 0;
             if (doc.objectId && ![EMPTY_ID isEqualToString:doc.objectId]) {
                 if ([doc isImageOrPDF]) {
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                        NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/%@?%@=%@&%@=%d&%@=%d&%@=%d", DOMAIN_URL, [self getDocImageAPI], [self getDocIDParam], doc.objectId, PAGE_NUMBER, 1, IMAGE_WIDTH, DOCUMENT_CELL_DIMENTION * 2, IMAGE_HEIGHT, DOCUMENT_CELL_DIMENTION * 2]]];
+                        NSData * data = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [NSString stringWithFormat:@"%@/is/%@?%@=%@&%@=%d&%@=%d&%@=%d&%@=%@", DOMAIN_URL, [self getDocImageAPI], [self getDocIDParam], doc.objectId, PAGE_NUMBER, 1, IMAGE_WIDTH, DOCUMENT_CELL_DIMENTION * 2, IMAGE_HEIGHT, DOCUMENT_CELL_DIMENTION * 2, SESSION_ID_KEY, [Util getSession]]]];
                         
                         if (data != nil) {
                             doc.thumbnail = data;

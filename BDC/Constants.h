@@ -38,7 +38,7 @@
 #define ORG_ID              @"orgId"
 #define USERNAME            @"userName"
 #define PASSWORD            @"password"
-#define DATA                @"data"
+#define DATA_               @"data"
 #define OBJ                 @"\"obj\""
 #define BILL_ID             @"billId"
 #define DOC_PG_ID           @"dpId"
@@ -67,8 +67,6 @@
 #define LIST_API            @"List/"
 
 #define INV_2_PDF_API       @"Invoice2PdfServlet"
-#define ATTACH_DOWNLOAD_API @"AttachDownload"           // not used any more
-#define DOC_DOWNLOAD_API    @"FileServlet"              // not used any more
 #define DOC_IMAGE_API       @"ImageServlet"
 #define ATTACH_IMAGE_API    @"AttachmentImageServlet"
 #define ORG_LOGO_API        @"InvoiceLogoImage"
@@ -366,7 +364,7 @@ you can use Mobill to scan documents into your Bill.com account! Go mobile. Go M
 #ifdef PROD
 #define APP_KEY_VALUE       @"01VWTMSCMXDIADIVY208"
 #define ERR_DOMAIN          @"PROD"
-#define DOMAIN_URL          @"https://app.bill.com"
+#define DOMAIN_URL          @"https://api.bill.com"
 #define APP_KEY             @"devKey"
 #endif
 

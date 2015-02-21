@@ -165,7 +165,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
 //    [UIAppDelegate incrNetworkActivities];
     
     NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"entity\" : \"Bill\"}", OBJ_ID, objId];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, objStr, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA_, objStr, nil];
     
     [APIHandler asyncCallWithAction:APPROVERS_GET_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
@@ -220,7 +220,7 @@ static id <ApproverListDelegate> ListDelegate = nil;
     }
     
     NSString *dataStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"%@\" : [%@] , \"entity\" : \"Bill\" }", OBJ_ID, objId, APPROVERS, approverList];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, dataStr, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA_, dataStr, nil];
     
     [APIHandler asyncCallWithAction:APPROVERS_SET_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;

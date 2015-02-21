@@ -44,7 +44,7 @@ static int primaryAP = -1;
     
     NSString *filter = LIST_BANK_ACCOUNT_FILTER;
     NSString *action = [LIST_API stringByAppendingString: BANK_ACCOUNT_API];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, filter, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA_, filter, nil];
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;

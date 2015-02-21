@@ -103,7 +103,7 @@ static id <ContactListDelegate> ListDelegate = nil;
     
     NSString *filter = [NSString stringWithFormat:LIST_ACTIVE_FOR_CUSTOMER_FILTER, customerId];
     NSString *action = [LIST_API stringByAppendingString: CONTACT_API];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, filter, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA_, filter, nil];
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
@@ -157,7 +157,7 @@ static id <ContactListDelegate> ListDelegate = nil;
     
     NSString *filter = LIST_ACTIVE_FILTER;
     NSString *action = [LIST_API stringByAppendingString: CONTACT_API];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA, filter, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA_, filter, nil];
     
     [APIHandler asyncCallWithAction:action Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
@@ -234,7 +234,7 @@ static id <ContactListDelegate> ListDelegate = nil;
     [objStr appendString:@"}"];
     [objStr appendString:@"}"];
     
-    [params setObject:DATA forKey:objStr];
+    [params setObject:DATA_ forKey:objStr];
     
     __weak CustomerContact *weakSelf = self;
     
@@ -283,7 +283,7 @@ static id <ContactListDelegate> ListDelegate = nil;
     NSString *act = DELETE; //isActive ? UNDELETE : DELETE;
     NSString *action = [NSString stringWithFormat:@"%@/%@/%@", CRUD, act, CONTACT_API];
     NSString *objStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\"}", _ID, self.objectId];
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA, objStr, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: DATA_, objStr, nil];
     
     __weak CustomerContact *weakSelf = self;
     
