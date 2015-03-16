@@ -69,6 +69,10 @@ typedef enum {
 #define DELETE_INV_ALERT_TAG            1
 #define REMOVE_ATTACHMENT_ALERT_TAG     2
 
+#define PDF_PADDING                     10
+#define PDF_WIDTH                       90
+#define PDF_HEIGHT                      110
+
 
 @interface EditInvoiceViewController () <CustomerSelectDelegate, ItemSelectDelegate, LineItemDelegate, InvoiceMailDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate>
 
@@ -86,6 +90,7 @@ typedef enum {
 
 @property (nonatomic, assign) BOOL pdfReady;
 @property (nonatomic, strong) UIImageView *pdfView;
+@property (nonatomic, strong) NSData *pdfThumbData;
 
 @end
 
@@ -102,6 +107,7 @@ typedef enum {
 @synthesize mailer;
 @synthesize pdfReady;
 @synthesize pdfView;
+@synthesize pdfThumbData;
 
 - (Class)busObjClass {
     return [Invoice class];
@@ -238,12 +244,15 @@ typedef enum {
 }
 
 - (void)addPDFAttachment {
-    UIImage *image = [UIImage imageNamed:@"pdf_icon.png"];
+    UIImage *image;
+    if (self.pdfThumbData) {
+        image = [UIImage imageWithData:self.pdfThumbData];
+    } else {
+        image = [UIImage imageNamed:@"pdf_icon.png"];
+    }
     self.pdfView = [[UIImageView alloc] initWithImage:image];
     
-    CGRect rect = self.pdfView.frame;
-    rect.size.height = IMG_HEIGHT;
-    rect.size.width = IMG_WIDTH - IMG_PADDING;
+    CGRect rect = CGRectMake(PDF_PADDING, PDF_PADDING, PDF_WIDTH, PDF_HEIGHT);
     self.pdfView.frame = rect;
     self.pdfView.tag = 0;
     self.pdfView.layer.cornerRadius = 8.0f;
@@ -255,8 +264,6 @@ typedef enum {
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pdfTapped:)];
     [self.pdfView addGestureRecognizer:tap];
-    
-//    [self.attachmentScrollView addSubview:imageView];
 }
 
 
@@ -408,8 +415,34 @@ typedef enum {
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                self.pdfReady = YES;                               
                                self.crudActions = [@[ACTION_EMAIL] arrayByAddingObjectsFromArray:self.crudActions];
-                               Debug(@"Succeeded! Received %lu bytes of data for PDF", (unsigned long)[self.invoicePDFData length]);
+
+                               Debug(@"Succeeded. Received %lu bytes of data for PDF", (unsigned long)[data length]);
                            }];
+    
+    if (!self.pdfThumbData) {
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@?%@=%@&%@=%@&%@=%@", DOMAIN_URL, INV_2_PDF_API, Id, self.busObj.objectId, PRESENT_TYPE, PNG_TYPE, SESSION_ID_KEY, [Util getSession]]];
+        req = [NSURLRequest  requestWithURL:url
+                                cachePolicy:NSURLRequestUseProtocolCachePolicy
+                            timeoutInterval:API_TIMEOUT];
+        
+        [NSURLConnection sendAsynchronousRequest:req
+                                           queue:[NSOperationQueue mainQueue]
+                               completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                                   self.pdfThumbData = data;
+                                   self.pdfView.alpha = 0.0;
+                                   self.pdfView.image = [UIImage imageWithData:self.pdfThumbData];
+                                   [self.pdfView setNeedsDisplay];
+                                   
+                                   [UIView animateWithDuration:2.0
+                                                    animations:^{
+                                                        self.pdfView.alpha = 1.0;
+                                                    }
+                                                    completion:^ (BOOL finished) {
+                                                    }];
+                                   
+                                   Debug(@"Received %lu bytes of data for PNG", (unsigned long)[data length]);
+                               }];
+    }
 }
 
 - (void)downloadPDF_Deprecated {
@@ -759,7 +792,7 @@ typedef enum {
         return CELL_HEIGHT;
     } else if (indexPath.section == kInvoiceAttachments) {
         if (indexPath.row == 0) {
-            return IMG_HEIGHT + IMG_PADDING;
+            return PDF_HEIGHT + PDF_PADDING * 2;
         } else {
             return IMG_HEIGHT + IMG_PADDING + ATTACHMENT_PV_HEIGHT + (SYSTEM_VERSION_LESS_THAN(@"7.0") ? 0 : 10);
         }
