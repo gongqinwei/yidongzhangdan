@@ -39,6 +39,10 @@ typedef enum {
 - (void)failedToGetVendors;
 @end
 
+@protocol VendorNameDelegate <NSObject>
+- (void)didGetVendorName:(NSString *)name;
+@end
+
 @interface Vendor : BDCBusinessObjectWithAttachmentsAndAddress
 
 @property (nonatomic, strong) NSString *payBy;
@@ -48,6 +52,8 @@ typedef enum {
 + (void)setListDelegate:(id<VendorListDelegate>)listDelegate;
 + (void)resetList;
 + (Vendor *)objectForKey:(NSString *)vendorId;
++ (void)setRetrieveVendorNameDelegate:(id<VendorNameDelegate>)nameDelegate;
++ (void)retrieveVendorName:(NSString *)vendorId;
 
 - (void)sendVendorInvite;
 

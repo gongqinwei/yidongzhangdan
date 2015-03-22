@@ -12,6 +12,7 @@
 
 + (void) asyncCallWithAction:(NSString*)action Info:(NSDictionary*)info AndHandler:(Handler)handler;
 + (void) asyncGetCallWithAction:(NSString*)action Info:(NSDictionary*)info AndHandler:(Handler)handler;
++ (void) asyncGetCallWithAction:(NSString*)action Info:(NSDictionary*)info NeedSession:(BOOL)needSession AndHandler:(Handler)handler;
 + (void) asyncCallWithRequest:(NSMutableURLRequest*)req AndHandler:(Handler)handler;
 
 + (id) getResponse:(NSURLResponse *)response data:(NSData *)data error:(NSError **) err status:(NSInteger *)status;

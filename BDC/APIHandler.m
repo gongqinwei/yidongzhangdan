@@ -17,11 +17,15 @@ static Handler sessionValidatingHandler = nil;
 
 @implementation APIHandler
 
-+ (void) asyncGetCallWithAction:(NSString*)action Info:(NSDictionary*)info AndHandler:(Handler)handler {
++ (void) asyncGetCallWithAction:(NSString*)action Info:(NSDictionary*)info NeedSession:(BOOL)needSession AndHandler:(Handler)handler {
     [UIAppDelegate incrNetworkActivities];
     
     NSMutableString *urlStr = [NSMutableString string];
-    [urlStr appendFormat:@"%@/%@/%@?%@=%@", DOMAIN_URL, API_BASE, action, SESSION_ID_KEY, [Util getSession]];
+    [urlStr appendFormat:@"%@/%@/%@", DOMAIN_URL, API_BASE, action];
+    
+    if (needSession) {
+        [urlStr appendFormat:@"?%@=%@", SESSION_ID_KEY, [Util getSession]];
+    }
     
     // info's dictionary entry stores url param as value=>key to handle multiple param with same key
     for(NSString *value in info) {
@@ -64,7 +68,7 @@ static Handler sessionValidatingHandler = nil;
                         
                         [APIHandler asyncCallWithAction:action Info:info AndHandler:handler];
                     } else {
-//                        [UIHelper showInfo:@"Session timed out! Please sign in again." withStatus:kInfo];
+                        //                        [UIHelper showInfo:@"Session timed out! Please sign in again." withStatus:kInfo];
                         [[RootMenuViewController sharedInstance] performSegueWithIdentifier:MENU_LOGOUT sender:self];
                     }
                 }];
@@ -77,6 +81,10 @@ static Handler sessionValidatingHandler = nil;
     };
     
     [NSURLConnection sendAsynchronousRequest:req queue:[[NSOperationQueue alloc] init] completionHandler:sessionValidatingHandler];
+}
+
++ (void) asyncGetCallWithAction:(NSString*)action Info:(NSDictionary*)info AndHandler:(Handler)handler {
+    [APIHandler asyncGetCallWithAction:action Info:info NeedSession:YES AndHandler:handler];
 }
 
 

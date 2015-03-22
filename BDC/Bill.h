@@ -45,6 +45,7 @@
 #define BILL_AMOUNT_SCHEDULED       @"scheduledAmount"
 #define BILL_APPROVAL_STATUS        @"approvalStatus"
 #define BILL_PAYMENT_STATUS         @"paymentStatus"
+#define BILL_DESC                   @"description"
 #define BILL_LINE_ITEMS             @"billLineItems"
 #define BILL_LINE_ITEM              @"BillLineItem"
 #define BILL_LINE_ITEM_AMOUNT       @"amount"
@@ -59,6 +60,7 @@
                             @"Amount Paid", BILL_AMOUNT_PAID, \
                             @"Approval Status", BILL_APPROVAL_STATUS, \
                             @"Payment Status", BILL_PAYMENT_STATUS, \
+                            @"Description", BILL_DESC, \
                         nil]
 
 
@@ -90,6 +92,7 @@
 @property (nonatomic, strong) NSDecimalNumber *scheduledAmount;
 @property (nonatomic, strong) NSString *approvalStatus;
 @property (nonatomic, strong) NSString *paymentStatus;
+@property (nonatomic, strong) NSString *desc;
 
 @property (nonatomic, strong) NSMutableArray *lineItems;
 @property (nonatomic, weak) id<BusObjectDelegate> detailsDelegate;

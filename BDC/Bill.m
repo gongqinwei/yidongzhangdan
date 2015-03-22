@@ -189,6 +189,8 @@ static NSMutableSet *billsToApproveSet;
     self.dueDate = [Util getDate:[dict objectForKey:BILL_DUE_DATE] format:nil];
     self.approvalStatus = [dict objectForKey:BILL_APPROVAL_STATUS];    
     self.paymentStatus = [dict objectForKey:BILL_PAYMENT_STATUS];
+    NSString *desc = dict[BILL_DESC];
+    self.desc = (desc == (id)[NSNull null]) ? nil : desc;
     self.isActive = [[dict objectForKey:IS_ACTIVE] isEqualToString:@"1"];
     
     self.lineItems = [NSMutableArray array];
@@ -220,6 +222,8 @@ static NSMutableSet *billsToApproveSet;
     [objStr appendFormat:@"\"%@\" : \"%@\", ", BILL_NUMBER, self.invoiceNumber];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", BILL_DATE, [Util formatDate:self.invoiceDate format:@"yyyy-MM-dd"]];
     [objStr appendFormat:@"\"%@\" : \"%@\", ", BILL_DUE_DATE, [Util formatDate:self.dueDate format:@"yyyy-MM-dd"]];
+    [objStr appendFormat:@"\"%@\" : \"%@\", ", BILL_DESC, self.desc ? [[self.desc stringByReplacingOccurrencesOfString:@"\n" withString:@"\\n"] stringByReplacingOccurrencesOfString:@"\r"
+ withString:@"\\r"] : @""];
     [objStr appendFormat:@"\"%@\" : [", BILL_LINE_ITEMS];
     NSInteger total = [self.lineItems count];
     int i = 0;
@@ -285,6 +289,13 @@ static NSMutableSet *billsToApproveSet;
             }
         }
     }];
+    
+    // save to user defaults for smart data
+    if (self.desc) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:self.desc forKey:[NSString stringWithFormat:@"%@:%@", self.vendorId, BILL_DESC]];
+        [defaults synchronize];
+    }
 }
 
 - (void)toggleActive:(Boolean)isActive {
@@ -523,6 +534,7 @@ static NSMutableSet *billsToApproveSet;
     [super clone:source to:target];
     
     target.vendorId = source.vendorId;
+    target.vendorName = source.vendorName;
     target.invoiceNumber = source.invoiceNumber;
     target.invoiceDate = source.invoiceDate;
     target.dueDate = source.dueDate;
@@ -531,6 +543,7 @@ static NSMutableSet *billsToApproveSet;
     target.amount = source.amount;
     target.paidAmount = source.paidAmount;
     target.scheduledAmount = source.scheduledAmount;
+    target.desc = source.desc;
     target.editDelegate = source.editDelegate;
     target.detailsDelegate = source.detailsDelegate;
     

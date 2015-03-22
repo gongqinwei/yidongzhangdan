@@ -1246,6 +1246,49 @@ static double animatedDistance = 0;
     [UIView commitAnimations];
 }
 
+#pragma mark - Text View delegate
+
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+    CGRect textViewRect = [self.view convertRect:textView.bounds fromView:textView];
+    CGRect viewRect = [self.view convertRect:self.view.bounds fromView:self.view];
+    CGFloat midline = textViewRect.origin.y + 0.5 * textViewRect.size.height;
+    CGFloat numerator = midline - viewRect.origin.y - MINIMUM_SCROLL_FRACTION * viewRect.size.height;
+    CGFloat denominator = (MAXIMUM_SCROLL_FRACTION - MINIMUM_SCROLL_FRACTION) * viewRect.size.height;
+    CGFloat heightFraction = numerator / denominator;
+    
+    if (heightFraction < 0.0) {
+        heightFraction = 0.0;
+    }else if (heightFraction > 1.0) {
+        heightFraction = 1.0;
+    }
+    
+    animatedDistance = floor(PORTRAIT_KEYBOARD_HEIGHT * heightFraction);
+    
+    CGRect viewFrame = self.view.frame;
+    viewFrame.origin.y -= animatedDistance;
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];
+    
+    [self.view setFrame:viewFrame];
+    
+    [UIView commitAnimations];
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    CGRect viewFrame = self.view.frame;
+    viewFrame.origin.y += animatedDistance;
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];
+    
+    [self.view setFrame:viewFrame];
+    
+    [UIView commitAnimations];
+}
+
 #pragma mark - Scan View delegate
 
 - (void)didScanPhoto:(NSData *)photoData name:(NSString *)photoName {

@@ -49,7 +49,8 @@ enum InfoType {
     kBillDate,
     kBillDueDate,
     kBillApprovalStatus,
-    kBillPaymentStatus
+    kBillPaymentStatus,
+    kBillDesc
 };
 
 typedef enum {
@@ -74,8 +75,9 @@ typedef enum {
 #define BILL_APPROVAL_COMMENT_6_SEGUE   @"WriteApprovalCommentiOS6"
 
 #define BILL_LABEL_FONT_SIZE            13
-#define BillInfo                 [NSArray arrayWithObjects:@"Vendor", @"Invoice #", @"Inv Date", @"Due Date", @"Approval", @"Payment", nil]
+#define BillInfo                 [NSArray arrayWithObjects:@"Vendor", @"Invoice #", @"Inv Date", @"Due Date", @"Approval", @"Payment", @"Description", nil]
 #define BILL_INFO_INPUT_RECT     CGRectMake(CELL_WIDTH - 190, 5, 190, CELL_HEIGHT - 10)
+#define BILL_DESC_RECT           CGRectMake(CELL_WIDTH - 190, 5, 190, CELL_HEIGHT * 2 - 16)
 #define BILL_ITEM_ACCOUNT_RECT   CGRectMake(cell.viewForBaselineLayout.bounds.origin.x + 46, 6, 150, cell.viewForBaselineLayout.bounds.size.height - 10)
 #define BILL_ITEM_AMOUNT_RECT    CGRectMake(cell.viewForBaselineLayout.bounds.size.width - 115, 6, 100, cell.viewForBaselineLayout.bounds.size.height - 10)
 
@@ -87,7 +89,7 @@ typedef enum {
 #define ACCOUNT_PICKER_TAG              2
 
 
-@interface EditBillViewController () <VendorSelectDelegate, ScannerDelegate, PayBillDelegate, ApproverListDelegate, ApproverSelectDelegate, ApprovalDelegate, UITextFieldDelegate, UIScrollViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
+@interface EditBillViewController () <VendorSelectDelegate, ScannerDelegate, PayBillDelegate, ApproverListDelegate, ApproverSelectDelegate, ApprovalDelegate, VendorNameDelegate, UITextFieldDelegate, UITextViewDelegate, UIScrollViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
 
 @property (nonatomic, strong) NSDecimalNumber *totalAmount;
 @property (nonatomic, strong) UIDatePicker *billDatePicker;
@@ -138,6 +140,9 @@ typedef enum {
 @property (nonatomic, strong) UIBarButtonItem *billItemAmountInputAccessoryTextItem;
 @property (nonatomic, strong) UIBarButtonItem *billItemAmountInputAccessoryPrevItem;
 @property (nonatomic, strong) UIBarButtonItem *billItemAmountInputAccessoryDoneItem;
+
+@property (nonatomic, strong) UITextView *billDescTextView;
+@property (nonatomic, assign) BOOL descExpanded;
 
 @property (nonatomic, strong) NSMutableArray *itemAccountTextFields;
 @property (nonatomic, strong) NSMutableArray *itemAmountTextFields;
@@ -235,6 +240,9 @@ typedef enum {
 
 @synthesize itemAccountTextFields;
 @synthesize itemAmountTextFields;
+
+@synthesize billDescTextView;
+@synthesize descExpanded;
 
 @synthesize userAction;
 
@@ -747,6 +755,18 @@ typedef enum {
     }
     self.billVendorTextField.inputAccessoryView = self.billVendorInputAccessoryView;
     
+    // For approvers can't get vendor object (hence vendor name) right away
+    if (self.mode != kCreateMode && self.mode != kAttachMode) {
+        Bill * bill = (Bill *)self.busObj;
+        Bill *shaddowBill = (Bill *)self.shaddowBusObj;
+        Vendor *vendor = [Vendor objectForKey:shaddowBill.vendorId];
+        if (vendor) {
+            bill.vendorName = shaddowBill.vendorName = vendor.name;
+        } else {
+            [Vendor setRetrieveVendorNameDelegate:self];
+            [Vendor retrieveVendorName:shaddowBill.vendorId];
+        }
+    }
     
     // Invoice Number
     self.billNumTextField = [[UITextField alloc] initWithFrame:BILL_INFO_INPUT_RECT];
@@ -909,6 +929,22 @@ typedef enum {
     
     self.itemAccountTextFields = [NSMutableArray array];
     self.itemAmountTextFields = [NSMutableArray array];
+    
+    self.billDescTextView = [[UITextView alloc] initWithFrame:BILL_DESC_RECT];
+    self.billDescTextView.autocorrectionType = UITextAutocorrectionTypeNo; // no auto correction support
+    self.billDescTextView.autocapitalizationType = UITextAutocapitalizationTypeNone; // no auto capitalization support
+    self.billDescTextView.textAlignment = NSTextAlignmentLeft;
+    self.billDescTextView.editable = YES;
+    self.billDescTextView.layer.cornerRadius = 8.0f;
+    self.billDescTextView.layer.masksToBounds = YES;
+    self.billDescTextView.font = [UIFont fontWithName:APP_FONT size:APP_LABEL_FONT_SIZE];
+    self.billDescTextView.textColor = APP_LABEL_BLUE_COLOR;
+    self.billDescTextView.layer.borderColor = [[UIColor grayColor]CGColor];
+    self.billDescTextView.layer.borderWidth = 0.5f;
+    self.billDescTextView.inputAccessoryView = self.inputAccessoryView;
+    self.billDescTextView.scrollEnabled = YES;
+    self.billDescTextView.tag = kBillDesc * TAG_BASE;
+    self.billDescTextView.delegate = self;
     
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.activityIndicator.hidesWhenStopped = YES;
@@ -1107,10 +1143,11 @@ typedef enum {
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == kBillInfo) {        
-        if (self.mode == kViewMode) {
-            return [BillInfo count];
+        if (self.mode != kCreateMode && self.mode != kUpdateMode && self.mode != kAttachMode) {
+            Bill *bill = (Bill *)self.busObj;
+            return bill.desc && bill.desc.length > 0 ? BillInfo.count : BillInfo.count - 1;
         } else {
-            return [BillInfo count] - 2;
+            return BillInfo.count - 2;
         }
     } else if (section == kBillLineItems) {
         if (!self.firstItemAdded && (self.mode == kCreateMode || self.mode == kAttachMode)) {
@@ -1123,9 +1160,8 @@ typedef enum {
         return self.modifiedApprovers.count;
     } else if (section == kBillDocs) {
         return 1 + (self.mode == kAttachMode && SYSTEM_VERSION_LESS_THAN(@"7.0"));
-    } else {
-        return 0;
     }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1172,7 +1208,7 @@ typedef enum {
                 case kBillVendor:
                     if (self.mode == kViewMode) {
                         if (shaddowBill.vendorId != nil) {
-                            cell.detailTextLabel.text = [Vendor objectForKey:shaddowBill.vendorId].name;
+                            cell.detailTextLabel.text = shaddowBill.vendorName;
                         } else {
                             cell.detailTextLabel.text = nil;
                         }
@@ -1182,7 +1218,7 @@ typedef enum {
                         }
                     } else {
                         if (shaddowBill.vendorId != nil) {
-                            cell.detailTextLabel.text = [Vendor objectForKey:shaddowBill.vendorId].name;
+                            cell.detailTextLabel.text = shaddowBill.vendorName;
                         } else {
                             cell.detailTextLabel.text = SELECT_ONE;
                         }
@@ -1258,31 +1294,65 @@ typedef enum {
                         [cell addSubview:self.billDueDateTextField];
                     }
                     break;
-                case kBillApprovalStatus:
-//                    cell.textLabel.numberOfLines = 2;
-//                    cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
-                    
-                    if (shaddowBill.approvalStatus != nil) {
-                        cell.detailTextLabel.text = [APPROVAL_STATUSES objectForKey:shaddowBill.approvalStatus];
-                    } else {
-                        cell.detailTextLabel.text = @"Unassigned";
+                case 4:
+                    if (self.mode != kCreateMode && self.mode != kUpdateMode && self.mode != kAttachMode) {   // kBillApprovalStatus:
+                        if (shaddowBill.approvalStatus != nil) {
+                            cell.detailTextLabel.text = [APPROVAL_STATUSES objectForKey:shaddowBill.approvalStatus];
+                        } else {
+                            cell.detailTextLabel.text = @"Unassigned";
+                        }
+                        
+                        if (self.modifiedApprovers && self.modifiedApprovers.count) {
+                            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                        }
+                    } else {    // kBillDesc
+                        cell.textLabel.text = @"Description";
+                        if (self.mode == kCreateMode || self.mode == kAttachMode) {
+                            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                            NSString *lastDesc = [defaults stringForKey:[NSString stringWithFormat:@"%@:%@", ((Bill*)self.shaddowBusObj).vendorId, BILL_DESC]];
+                            if (lastDesc) {
+                                self.billDescTextView.text = lastDesc;
+                            }
+                        } else {
+                            if (shaddowBill.desc != nil) {
+                                self.billDescTextView.text = shaddowBill.desc;
+                            }
+                        }
+                        self.billDescTextView.backgroundColor = cell.backgroundColor;
+                        self.billDescTextView.layer.borderWidth = 0.5f;
+                        self.billDescTextView.editable = YES;
+                        [cell addSubview:self.billDescTextView];
                     }
                     
-                    if (self.modifiedApprovers && self.modifiedApprovers.count) {
-                        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    }
                     break;
                 case kBillPaymentStatus:
-//                    cell.textLabel.numberOfLines = 2;
-//                    cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
                     if (shaddowBill.paymentStatus != nil) {
                         cell.detailTextLabel.text = [PAYMENT_STATUSES objectForKey:shaddowBill.paymentStatus];
                     } else {
                         cell.detailTextLabel.text = nil;
                     }
                     break;
-//                case kBillPaidAmount:
-//                    cell.detailTextLabel.text = [Util formatCurrency:self.shaddowBill.paidAmount];
+                case kBillDesc:
+                    if (self.descExpanded) {
+                        cell.detailTextLabel.text = nil;
+                        cell.accessoryType = UITableViewCellAccessoryNone;
+                        
+                        if (shaddowBill.desc != nil) {
+                            self.billDescTextView.text = shaddowBill.desc;
+                        }
+                        self.billDescTextView.backgroundColor = cell.backgroundColor;
+                        self.billDescTextView.layer.borderWidth = 0.0f;
+                        self.billDescTextView.editable = NO;
+                        [cell addSubview:self.billDescTextView];
+                    } else {
+                        cell.detailTextLabel.text = shaddowBill.desc;
+                        cell.detailTextLabel.numberOfLines = 1;
+                        cell.detailTextLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+                        if ([cell.detailTextLabel.text rangeOfString:@"\r\n"].location != NSNotFound || cell.detailTextLabel.text.length > 30) {
+                            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                        }
+                    }
+                    
                     break;
                 default:
                     break;
@@ -1479,6 +1549,14 @@ typedef enum {
         } else {
             return NORMAL_SCREEN_HEIGHT + 30;
         }
+    } else if (indexPath.section == kBillInfo) {
+        if ((self.mode == kCreateMode || self.mode == kUpdateMode || self.mode == kAttachMode) && indexPath.row == 4) {     // Bill Desc) {
+            return CELL_HEIGHT * 2;
+        } else if (indexPath.row == kBillDesc && self.mode != kCreateMode && self.mode != kUpdateMode && self.mode != kAttachMode) {
+            return self.descExpanded ? CELL_HEIGHT * 2 : CELL_HEIGHT;
+        } else {
+            return CELL_HEIGHT;
+        }
     } else {
         return CELL_HEIGHT;
     }
@@ -1506,7 +1584,7 @@ typedef enum {
     if (section == kBillInfo) {
         return nil;
     } else if (section == kBillLineItems) {
-        return [self initializeSectionHeaderViewWithLabel:@"Line Items" needAddButton:(self.mode != kViewMode && (!((Bill *)self.shaddowBusObj).paymentStatus || [((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID])) addAction:@selector(addMoreItems)];
+        return [self initializeSectionHeaderViewWithLabel:@"Expenses" needAddButton:(self.mode != kViewMode && (!((Bill *)self.shaddowBusObj).paymentStatus || [((Bill *)self.shaddowBusObj).paymentStatus isEqualToString:PAYMENT_UNPAID])) addAction:@selector(addMoreItems)];
     } else if (section == kBillApprovers) {
         return [self initializeSectionHeaderViewWithLabel:@"Approvers" needAddButton:(self.mode != kViewMode) addAction:@selector(addMoreApprover)];
     } else if (section == kBillDocs) {
@@ -1659,6 +1737,22 @@ typedef enum {
                         }
                         
                         break;
+                    case kBillDesc:
+                    {
+                        NSIndexPath *path = [NSIndexPath indexPathForRow:kBillDesc inSection:kBillInfo];
+                        if (!self.descExpanded) {
+                            UITableViewCell *descCell = [self.tableView cellForRowAtIndexPath:path];
+                            if ([descCell.detailTextLabel.text rangeOfString:@"\r\n"].location != NSNotFound || descCell.detailTextLabel.text.length > 30) {
+                                self.descExpanded = !self.descExpanded;
+                                [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
+                            }
+                        } else {
+                            self.descExpanded = !self.descExpanded;
+                            [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
+                        }
+                        
+                    }
+                        break;
                     default:
                         break;
                 }
@@ -1766,6 +1860,16 @@ typedef enum {
     return YES;
 }
 
+#pragma mark - Text View delegate
+
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+    [super textViewDidBeginEditing:textView];
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    ((Bill *)self.shaddowBusObj).desc = [Util trim:textView.text];
+    [super textViewDidEndEditing:textView];
+}
 
 #pragma mark - Date Picker target action
 
@@ -1886,7 +1990,7 @@ typedef enum {
     [super doneSaveObject];
     
     // Save Approvers
-    [Approver setList:self.modifiedApprovers forObject:self.shaddowBusObj.objectId];
+    [Approver setList:self.modifiedApprovers forObject:self.shaddowBusObj.objectId andVendor:((Bill *)self.shaddowBusObj).vendorId];
 }
 
 - (void)didReadObject {
@@ -1919,7 +2023,9 @@ typedef enum {
 }
 
 - (void)didSelectVendor:(Vendor *)vendor {
-    ((Bill *)self.shaddowBusObj).vendorId = vendor.objectId;
+    Bill *shaddowBill = (Bill *)self.shaddowBusObj;
+    shaddowBill.vendorId = vendor.objectId;
+    shaddowBill.vendorName = vendor.name;
     self.billVendorInputAccessoryTextField.text = vendor.name;
 
     if (self.mode == kCreateMode || self.mode == kAttachMode) {
@@ -1928,6 +2034,24 @@ typedef enum {
     
     NSIndexPath *path = [NSIndexPath indexPathForRow:kBillVendor inSection:kBillInfo];
     [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    // load smart data from user defaults
+    if (self.mode == kCreateMode || self.mode == kAttachMode) {
+        path = [NSIndexPath indexPathForRow:4 inSection:kBillInfo];
+        [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
+
+        //commented because I'm using smart data from server instead
+//        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//        NSArray *aidArr = [defaults arrayForKey:[NSString stringWithFormat:@"%@:%@", shaddowBill.vendorId, APPROVERS]];
+//        NSMutableArray *approvers = [NSMutableArray array];
+//        if (aidArr) {
+//            for (NSString *aid in aidArr) {
+//                Approver *approver = [Approver objectForKey:aid];
+//                [approvers addObject:approver];
+//            }
+//            [self setApprovers:approvers];
+//        }
+    }
 }
 
 - (void)didSelectItems:(NSArray *)items {
@@ -2059,6 +2183,16 @@ typedef enum {
 
 - (void)failedToProcessApproval {
     
+}
+
+#pragma mark - Vendor Name delegate
+
+- (void)didGetVendorName:(NSString *)name {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        ((Bill*)self.busObj).vendorName = ((Bill*)self.shaddowBusObj).vendorName = name;
+        NSIndexPath *path = [NSIndexPath indexPathForRow:kBillVendor inSection:kBillInfo];
+        [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
+    });
 }
 
 

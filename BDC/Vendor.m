@@ -17,11 +17,13 @@
 
 
 #define VENDOR_INVITE_DATA          @"{ \"vendorId\" : \"%@\", \"email\" : \"%@\"  }"
+#define VENDOR_NAME_DATA            @"{ \"objectId\" : \"%@\"  }"
 
 
 @implementation Vendor
 
 static id <VendorListDelegate> ListDelegate = nil;
+static id<VendorNameDelegate> NameDelegate = nil;
 static NSMutableDictionary * vendors = nil;
 static NSMutableDictionary * inactiveVendors = nil;
 
@@ -376,6 +378,28 @@ static NSMutableDictionary * inactiveVendors = nil;
 
 - (void)updateParentList {
     [ListDelegate didReadObject];
+}
+
++ (void)setRetrieveVendorNameDelegate:(id<VendorNameDelegate>)nameDelegate {
+    NameDelegate = nameDelegate;
+}
+
++ (void)retrieveVendorName:(NSString *)vendorId {
+    NSString *data = [NSString stringWithFormat:VENDOR_NAME_DATA, vendorId];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:DATA_, data, nil];
+    
+    [APIHandler asyncCallWithAction:OBJECT_NAME_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+        NSInteger response_status;
+        NSDictionary *resp = [APIHandler getResponse:response data:data error:&err status:&response_status];
+        
+        if(response_status == RESPONSE_SUCCESS) {
+            [NameDelegate didGetVendorName:resp[@"name"]];
+        } else if (response_status == RESPONSE_TIMEOUT) {
+            [UIHelper showInfo:SysTimeOut withStatus:kError];
+        } else {
+            [UIHelper showInfo:[NSString stringWithFormat:@"Failed to get name of %@! %@", vendorId, [err localizedDescription]] withStatus:kFailure];
+        }
+    }];
 }
 
 

@@ -825,7 +825,7 @@ typedef enum {
     if (section == kInvoiceInfo) {
         return nil;
     } else if (section == kInvoiceLineItems) {
-        return [self initializeSectionHeaderViewWithLabel:@"Line Items" needAddButton:(self.mode != kViewMode) addAction:@selector(addMoreItems)];
+        return [self initializeSectionHeaderViewWithLabel:@"Items" needAddButton:(self.mode != kViewMode) addAction:@selector(addMoreItems)];
         
 //        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 360, 40)];
 //        headerView.backgroundColor = [UIColor clearColor];

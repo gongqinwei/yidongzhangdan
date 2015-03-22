@@ -106,10 +106,10 @@ static id <ApproverListDelegate> ListDelegate = nil;
     
     NSString *action = [NSString stringWithFormat:@"%@?Vendor=%@&type=bill", APPROVER_LIST_API, vendorId];
     
-    [APIHandler asyncGetCallWithAction:action Info:nil AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+    [APIHandler asyncGetCallWithAction:action Info:nil NeedSession:NO AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
         NSInteger response_status;
         id json = [APIHandler getResponse:response data:data error:&err status:&response_status];
-        
+
 //        [UIAppDelegate decrNetworkActivities];
         
         if(response_status == RESPONSE_SUCCESS) {
@@ -127,9 +127,9 @@ static id <ApproverListDelegate> ListDelegate = nil;
                 NSDictionary *dict = (NSDictionary*)item;
                 Approver *approver = [[Approver alloc] init];
                 [approver populateObjectWithInfo:dict];
-                
+
                 [approvers setObject:approver forKey:approver.objectId];
-                
+
                 if (approver.smartDataEntry) {
                     [smartData addObject:approver];
                 }
@@ -206,17 +206,20 @@ static id <ApproverListDelegate> ListDelegate = nil;
     }];
 }
 
-+ (void)setList:(NSArray *)approvers forObject:(NSString *)objId {
++ (void)setList:(NSArray *)approvers forObject:(NSString *)objId andVendor:(NSString *)vendorId {
 //    [UIAppDelegate incrNetworkActivities];
     
+    NSMutableArray *approverIDs = [NSMutableArray array];
     NSMutableString *approverList = [NSMutableString string];
     for (int i = 0; i < approvers.count; i++) {
+        NSString *aid = ((Approver *)approvers[i]).objectId;
         [approverList appendString:@"\""];
-        [approverList appendString:((Approver *)approvers[i]).objectId];
+        [approverList appendString:aid];
         [approverList appendString:@"\""];
         if (i < approvers.count - 1) {
             [approverList appendString:@","];
         }
+        [approverIDs addObject:aid];
     }
     
     NSString *dataStr = [NSString stringWithFormat:@"{\"%@\" : \"%@\", \"%@\" : [%@] , \"entity\" : \"Bill\" }", OBJ_ID, objId, APPROVERS, approverList];
@@ -239,6 +242,11 @@ static id <ApproverListDelegate> ListDelegate = nil;
             Error(@"Failed to save approvers! %@", [err localizedDescription]);
         }
     }];
+    
+    // save to user defaults for smart data
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:approverIDs forKey:[NSString stringWithFormat:@"%@:%@", vendorId, APPROVERS]];
+    [defaults synchronize];
 }
 
 - (void)createWithFirstName:(NSString *)fname lastName:(NSString *)lname andEmail:(NSString *)email {

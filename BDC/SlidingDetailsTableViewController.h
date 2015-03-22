@@ -81,6 +81,9 @@
 - (void)textFieldDidBeginEditing:(UITextField *)textField;
 - (void)textFieldDidEndEditing:(UITextField *)textField;
 
+- (void)textViewDidBeginEditing:(UITextView *)textView;
+- (void)textViewDidEndEditing:(UITextView *)textView;
+
 - (void)quitAttachMode;
 
 - (UIBarButtonItem *)initializeInputAccessoryLabelItem:(NSString *)labelText;

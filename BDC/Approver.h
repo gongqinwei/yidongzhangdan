@@ -67,7 +67,7 @@ typedef enum {
 + (Approver *)objectForKey:(NSString *)approverId;
 + (void)retrieveListForObject:(NSString *)objId;
 + (void)retrieveListForVendor:(NSString *)vendorId andSmartData:(BOOL)smartData;
-+ (void)setList:(NSArray *)approvers forObject:(NSString *)objId;
++ (void)setList:(NSArray *)approvers forObject:(NSString *)objId andVendor:(NSString *)vendorId ;
 - (void)createWithFirstName:(NSString *)fname lastName:(NSString *)lname andEmail:(NSString *)email;
 
 @end
