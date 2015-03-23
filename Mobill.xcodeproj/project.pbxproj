@@ -82,8 +82,6 @@
 		0EC19CA8177FFE0100D5B285 /* LinkedList.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EC19CA7177FFE0100D5B285 /* LinkedList.m */; };
 		0EC49AFB17B9F6950043B37A /* arrow_down_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EC49AF917B9F6940043B37A /* arrow_down_gray.png */; };
 		0EC49AFC17B9F6950043B37A /* arrow_down_blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EC49AFA17B9F6950043B37A /* arrow_down_blue.png */; };
-		0EC49B0217C5E49F0043B37A /* Mobill_logo57.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EC49B0117C5E49E0043B37A /* Mobill_logo57.png */; };
-		0EC49B0417C5E4AF0043B37A /* Mobill_logo114.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EC49B0317C5E4AF0043B37A /* Mobill_logo114.png */; };
 		0EC88C9715F1374900A490EE /* AROverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EC88C9615F1374900A490EE /* AROverViewController.m */; };
 		0EC88C9A15F139C100A490EE /* CustomersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EC88C9915F139C100A490EE /* CustomersTableViewController.m */; };
 		0ECF42B3175BC22A00BA7C7B /* doc_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ECF42B2175BC22A00BA7C7B /* doc_icon.png */; };
@@ -121,7 +119,6 @@
 		7E370EAE17DD89C8005B3538 /* phoneIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EAD17DD89C8005B3538 /* phoneIcon.png */; };
 		7E370EB617DD8E3F005B3538 /* emailIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EB517DD8E3F005B3538 /* emailIcon.png */; };
 		7E370EB817DD90EC005B3538 /* emailIcon1.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EB717DD90EC005B3538 /* emailIcon1.png */; };
-		7E370EBA17E196B2005B3538 /* Mobill_logo120.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E370EB917E196B2005B3538 /* Mobill_logo120.png */; };
 		7E370EBD17E6D56D005B3538 /* EditContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E370EBC17E6D56C005B3538 /* EditContactViewController.m */; };
 		7E370EC217E6D815005B3538 /* CustomerContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E370EC117E6D814005B3538 /* CustomerContact.m */; };
 		7E370EC517E82EE0005B3538 /* ContactsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E370EC417E82EE0005B3538 /* ContactsTableViewController.m */; };
@@ -145,6 +142,7 @@
 		7E7D742818455716009B114C /* ImportAddressBookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E7D742718455716009B114C /* ImportAddressBookViewController.m */; };
 		7E7D742B184561DA009B114C /* ABPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E7D742A184561DA009B114C /* ABPerson.m */; };
 		7E7D742F1846D663009B114C /* ImportABPersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E7D742E1846D663009B114C /* ImportABPersonViewController.m */; };
+		7E81CDAF1ABFDB7100A36549 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7E81CDAE1ABFDB7100A36549 /* Images.xcassets */; };
 		7E8AB35D19D9157F004900D4 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E8AB35C19D9157F004900D4 /* LocalAuthentication.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		7E91E3F015927C15005104AF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E91E3EF15927C15005104AF /* UIKit.framework */; };
 		7E91E3F215927C15005104AF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E91E3F115927C15005104AF /* Foundation.framework */; };
@@ -319,8 +317,6 @@
 		0EC19CA7177FFE0100D5B285 /* LinkedList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkedList.m; sourceTree = "<group>"; };
 		0EC49AF917B9F6940043B37A /* arrow_down_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_down_gray.png; sourceTree = "<group>"; };
 		0EC49AFA17B9F6950043B37A /* arrow_down_blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_down_blue.png; sourceTree = "<group>"; };
-		0EC49B0117C5E49E0043B37A /* Mobill_logo57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill_logo57.png; sourceTree = "<group>"; };
-		0EC49B0317C5E4AF0043B37A /* Mobill_logo114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill_logo114.png; sourceTree = "<group>"; };
 		0EC88C9515F1374900A490EE /* AROverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AROverViewController.h; sourceTree = "<group>"; };
 		0EC88C9615F1374900A490EE /* AROverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AROverViewController.m; sourceTree = "<group>"; };
 		0EC88C9815F139C100A490EE /* CustomersTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomersTableViewController.h; sourceTree = "<group>"; };
@@ -368,7 +364,6 @@
 		7E370EAD17DD89C8005B3538 /* phoneIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phoneIcon.png; sourceTree = "<group>"; };
 		7E370EB517DD8E3F005B3538 /* emailIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailIcon.png; sourceTree = "<group>"; };
 		7E370EB717DD90EC005B3538 /* emailIcon1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailIcon1.png; sourceTree = "<group>"; };
-		7E370EB917E196B2005B3538 /* Mobill_logo120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mobill_logo120.png; sourceTree = "<group>"; };
 		7E370EBB17E6D56B005B3538 /* EditContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditContactViewController.h; sourceTree = "<group>"; };
 		7E370EBC17E6D56C005B3538 /* EditContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditContactViewController.m; sourceTree = "<group>"; };
 		7E370EC017E6D813005B3538 /* CustomerContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerContact.h; sourceTree = "<group>"; };
@@ -406,6 +401,7 @@
 		7E7D742A184561DA009B114C /* ABPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABPerson.m; sourceTree = "<group>"; };
 		7E7D742D1846D663009B114C /* ImportABPersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImportABPersonViewController.h; sourceTree = "<group>"; };
 		7E7D742E1846D663009B114C /* ImportABPersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImportABPersonViewController.m; sourceTree = "<group>"; };
+		7E81CDAE1ABFDB7100A36549 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Mobill/Images.xcassets; sourceTree = "<group>"; };
 		7E8AB35C19D9157F004900D4 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		7E91E3EB15927C15005104AF /* Mobill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mobill.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E91E3EF15927C15005104AF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -939,9 +935,7 @@
 		7E91E3E015927C15005104AF = {
 			isa = PBXGroup;
 			children = (
-				0EC49B0317C5E4AF0043B37A /* Mobill_logo114.png */,
-				0EC49B0117C5E49E0043B37A /* Mobill_logo57.png */,
-				7E370EB917E196B2005B3538 /* Mobill_logo120.png */,
+				7E81CDAE1ABFDB7100A36549 /* Images.xcassets */,
 				0E01C34E172214FF00184702 /* .gitignore */,
 				0EE9B10B160A6D83002A5950 /* Default-568h@2x.png */,
 				7E91E3F515927C15005104AF /* BDC */,
@@ -1184,6 +1178,7 @@
 				0E092B2618164EF200BC6E92 /* ApproveIcon.png in Resources */,
 				0ECF42B7175BC27400BA7C7B /* exe_icon.png in Resources */,
 				0ECF42B9175BC29500BA7C7B /* gif_icon.png in Resources */,
+				7E81CDAF1ABFDB7100A36549 /* Images.xcassets in Resources */,
 				0ECF42BB175BC2C100BA7C7B /* jpg_icon.png in Resources */,
 				0ECF42BD175BC2D600BA7C7B /* jpeg_icon.png in Resources */,
 				7E95223617F8FCBE009823CE /* ActionMenu.png in Resources */,
@@ -1233,9 +1228,7 @@
 				0E927156183EC70900DE0AE6 /* Undelete.png in Resources */,
 				0EC49AFB17B9F6950043B37A /* arrow_down_gray.png in Resources */,
 				0EC49AFC17B9F6950043B37A /* arrow_down_blue.png in Resources */,
-				0EC49B0217C5E49F0043B37A /* Mobill_logo57.png in Resources */,
 				7EEDE3E419FDE0DA0015D525 /* UpgradetoMobillUnlimitedIcon.png in Resources */,
-				0EC49B0417C5E4AF0043B37A /* Mobill_logo114.png in Resources */,
 				0E927138183EB4D900DE0AE6 /* Approve.png in Resources */,
 				7EA5BF3217C98DCE0075EEF3 /* Mobill_logo29.png in Resources */,
 				7EA5BF4A17CC7CCF0075EEF3 /* Mobill50.png in Resources */,
@@ -1245,7 +1238,6 @@
 				7E370EAE17DD89C8005B3538 /* phoneIcon.png in Resources */,
 				7E370EB617DD8E3F005B3538 /* emailIcon.png in Resources */,
 				7E370EB817DD90EC005B3538 /* emailIcon1.png in Resources */,
-				7E370EBA17E196B2005B3538 /* Mobill_logo120.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1490,6 +1482,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8B67ED873E7F2B4F2AE3990 /* Pods.debug.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1515,6 +1509,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C0A4F5D53003425E87D7BEBC /* Pods.release.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Qinwei Gong (DQ29659ZU2)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
