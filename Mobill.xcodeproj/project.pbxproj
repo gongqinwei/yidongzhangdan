@@ -122,6 +122,8 @@
 		7E370EBD17E6D56D005B3538 /* EditContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E370EBC17E6D56C005B3538 /* EditContactViewController.m */; };
 		7E370EC217E6D815005B3538 /* CustomerContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E370EC117E6D814005B3538 /* CustomerContact.m */; };
 		7E370EC517E82EE0005B3538 /* ContactsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E370EC417E82EE0005B3538 /* ContactsTableViewController.m */; };
+		7E39EC6F1CA5C53B0023864D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E39EC6E1CA5C53A0023864D /* FBSDKCoreKit.framework */; };
+		7E39EC711CA5E0520023864D /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E39EC701CA5E0520023864D /* FBSDKShareKit.framework */; };
 		7E3C4E86190793DD0032F869 /* arrow_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E3C4E85190793DD0032F869 /* arrow_up.png */; };
 		7E4A1B6417F76ABA00B3255C /* RootMenu.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E4A1B6317F76ABA00B3255C /* RootMenu.png */; };
 		7E579F5A15A21F1E009D1455 /* Bill.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E579F5915A21F1E009D1455 /* Bill.m */; };
@@ -194,7 +196,6 @@
 		7EE9F93D190F80D2004FFBB5 /* disclosure_grey.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EE9F93C190F80D2004FFBB5 /* disclosure_grey.png */; };
 		7EE9F93F190F8140004FFBB5 /* disclosure_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EE9F93E190F8140004FFBB5 /* disclosure_white.png */; };
 		7EEDE3E419FDE0DA0015D525 /* UpgradetoMobillUnlimitedIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EEDE3E319FDE0DA0015D525 /* UpgradetoMobillUnlimitedIcon.png */; };
-		7EEDE3E71A072E7E0015D525 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EEDE3E61A072E7E0015D525 /* FacebookSDK.framework */; };
 		7EF87EB317F403D300FCE2C8 /* RecorderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF87EB217F403D300FCE2C8 /* RecorderViewController.m */; };
 		7EFA900E1818D9C2001F81E6 /* Background_linen.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7EFA900D1818D9C2001F81E6 /* Background_linen.jpg */; };
 		7EFA901A1834AF24001F81E6 /* iOS7NavBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EFA90191834AF24001F81E6 /* iOS7NavBarBackground.png */; };
@@ -370,6 +371,8 @@
 		7E370EC117E6D814005B3538 /* CustomerContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerContact.m; sourceTree = "<group>"; };
 		7E370EC317E82EE0005B3538 /* ContactsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsTableViewController.h; sourceTree = "<group>"; };
 		7E370EC417E82EE0005B3538 /* ContactsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsTableViewController.m; sourceTree = "<group>"; };
+		7E39EC6E1CA5C53A0023864D /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		7E39EC701CA5E0520023864D /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../../Documents/FacebookSDK/FBSDKShareKit.framework; sourceTree = "<group>"; };
 		7E3C4E85190793DD0032F869 /* arrow_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_up.png; sourceTree = "<group>"; };
 		7E4A1B6317F76ABA00B3255C /* RootMenu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RootMenu.png; sourceTree = "<group>"; };
 		7E579F5815A21F1E009D1455 /* Bill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bill.h; sourceTree = "<group>"; };
@@ -473,7 +476,6 @@
 		7EE9F93C190F80D2004FFBB5 /* disclosure_grey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = disclosure_grey.png; sourceTree = "<group>"; };
 		7EE9F93E190F8140004FFBB5 /* disclosure_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = disclosure_white.png; sourceTree = "<group>"; };
 		7EEDE3E319FDE0DA0015D525 /* UpgradetoMobillUnlimitedIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UpgradetoMobillUnlimitedIcon.png; sourceTree = "<group>"; };
-		7EEDE3E61A072E7E0015D525 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../../Documents/FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		7EF87EB117F403D300FCE2C8 /* RecorderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecorderViewController.h; sourceTree = "<group>"; };
 		7EF87EB217F403D300FCE2C8 /* RecorderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecorderViewController.m; sourceTree = "<group>"; };
 		7EFA900D1818D9C2001F81E6 /* Background_linen.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Background_linen.jpg; sourceTree = "<group>"; };
@@ -491,15 +493,16 @@
 				7ED34DE51A189CE000EC1C24 /* Social.framework in Frameworks */,
 				7ED34DE31A189C8000EC1C24 /* Accounts.framework in Frameworks */,
 				7E8AB35D19D9157F004900D4 /* LocalAuthentication.framework in Frameworks */,
+				7E39EC6F1CA5C53B0023864D /* FBSDKCoreKit.framework in Frameworks */,
 				0E8EADAB189D7D64004FA2DF /* StoreKit.framework in Frameworks */,
 				7E1DF190184E94B70009F0C3 /* AVFoundation.framework in Frameworks */,
+				7E39EC711CA5E0520023864D /* FBSDKShareKit.framework in Frameworks */,
 				7E7D742418455597009B114C /* AddressBook.framework in Frameworks */,
 				7ECE96021A337F1300BF774E /* Crashlytics.framework in Frameworks */,
 				7E7D742518455597009B114C /* AddressBookUI.framework in Frameworks */,
 				7E98A9A317DC5C3100698ED4 /* MapKit.framework in Frameworks */,
 				7E98A9A117DC5C1200698ED4 /* CoreLocation.framework in Frameworks */,
 				0E3A157D17455CA0007F2DC6 /* QuickLook.framework in Frameworks */,
-				7EEDE3E71A072E7E0015D525 /* FacebookSDK.framework in Frameworks */,
 				0E7DCABB16030BD700D0B35E /* Security.framework in Frameworks */,
 				0E56F3F51600047B0066B355 /* MessageUI.framework in Frameworks */,
 				7ECE96031A337F1300BF774E /* Fabric.framework in Frameworks */,
@@ -956,12 +959,13 @@
 		7E91E3EE15927C15005104AF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7E39EC701CA5E0520023864D /* FBSDKShareKit.framework */,
+				7E39EC6E1CA5C53A0023864D /* FBSDKCoreKit.framework */,
 				7ECE96001A337F1300BF774E /* Crashlytics.framework */,
 				7ECE96011A337F1300BF774E /* Fabric.framework */,
 				7ED34DE41A189CE000EC1C24 /* Social.framework */,
 				7ED34DE21A189C8000EC1C24 /* Accounts.framework */,
 				7ED34DE01A189C6500EC1C24 /* Twitter.framework */,
-				7EEDE3E61A072E7E0015D525 /* FacebookSDK.framework */,
 				7E98A9A217DC5C2A00698ED4 /* MapKit.framework */,
 				7E98A9A017DC5C0C00698ED4 /* CoreLocation.framework */,
 				0E3A157C17455CA0007F2DC6 /* QuickLook.framework */,
@@ -1093,6 +1097,7 @@
 				7E91E3E915927C15005104AF /* Resources */,
 				69FE32ACC7E41FAB6502B70E /* Copy Pods Resources */,
 				7ECE95FF1A337C7400BF774E /* ShellScript */,
+				134FEEBB7E4A7FA9B1D54C17 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1244,6 +1249,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		134FEEBB7E4A7FA9B1D54C17 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		69FE32ACC7E41FAB6502B70E /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1484,9 +1504,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/qinwei/Documents/FacebookSDK,
@@ -1497,8 +1517,8 @@
 				INFOPLIST_FILE = "BDC/BDC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = Mobill;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=*]" = "64ff1cee-c1fe-4a52-8128-2c5529824840";
+				PROVISIONING_PROFILE = "b3e4a6b4-b316-41d8-ac9f-255261feba97";
+				"PROVISIONING_PROFILE[sdk=*]" = "b3e4a6b4-b316-41d8-ac9f-255261feba97";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -1511,9 +1531,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Qinwei Gong (DQ29659ZU2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/qinwei/Documents/FacebookSDK,
@@ -1524,9 +1544,9 @@
 				INFOPLIST_FILE = "BDC/BDC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = Mobill;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=*]" = "0a2e6d55-c5f5-4982-ab58-cec93bca15c6";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0a2e6d55-c5f5-4982-ab58-cec93bca15c6";
+				PROVISIONING_PROFILE = "b3e4a6b4-b316-41d8-ac9f-255261feba97";
+				"PROVISIONING_PROFILE[sdk=*]" = "b3e4a6b4-b316-41d8-ac9f-255261feba97";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "b3e4a6b4-b316-41d8-ac9f-255261feba97";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

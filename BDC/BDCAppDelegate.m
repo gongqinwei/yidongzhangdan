@@ -24,7 +24,8 @@
 #import "APIHandler.h"
 #import "Mixpanel.h"
 #import "Branch.h"
-#import <FacebookSDK/FacebookSDK.h>
+//#import <FacebookSDK/FacebookSDK.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 
@@ -253,7 +254,8 @@ static MFMailComposeViewController *globalMailer;
     }
     
     // Logs 'install' and 'app activate' App Events.
-    [FBAppEvents activateApp];
+//    [FBAppEvents activateApp];
+    [FBSDKAppEvents activateApp];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -270,7 +272,12 @@ static MFMailComposeViewController *globalMailer;
     Debug(@"Source app: %@", sourceApplication);
     
     if (![[Branch getInstance] handleDeepLink:url]) {
-        return [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
+//        return [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
+        return [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                       openURL:url
+                                             sourceApplication:sourceApplication
+                                                    annotation:annotation
+         ];
     }
     
     return YES;
