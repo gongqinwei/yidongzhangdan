@@ -1504,9 +1504,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/qinwei/Documents/FacebookSDK,
@@ -1517,8 +1517,8 @@
 				INFOPLIST_FILE = "BDC/BDC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = Mobill;
-				PROVISIONING_PROFILE = "b3e4a6b4-b316-41d8-ac9f-255261feba97";
-				"PROVISIONING_PROFILE[sdk=*]" = "b3e4a6b4-b316-41d8-ac9f-255261feba97";
+				PROVISIONING_PROFILE = "a76000d1-854c-4b92-8230-5df2937204aa";
+				"PROVISIONING_PROFILE[sdk=*]" = "a76000d1-854c-4b92-8230-5df2937204aa";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -1531,9 +1531,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Qinwei Gong (B77F7AKCX2)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/qinwei/Documents/FacebookSDK,
@@ -1544,9 +1544,9 @@
 				INFOPLIST_FILE = "BDC/BDC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = Mobill;
-				PROVISIONING_PROFILE = "b3e4a6b4-b316-41d8-ac9f-255261feba97";
-				"PROVISIONING_PROFILE[sdk=*]" = "b3e4a6b4-b316-41d8-ac9f-255261feba97";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "b3e4a6b4-b316-41d8-ac9f-255261feba97";
+				PROVISIONING_PROFILE = "a76000d1-854c-4b92-8230-5df2937204aa";
+				"PROVISIONING_PROFILE[sdk=*]" = "a76000d1-854c-4b92-8230-5df2937204aa";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "a76000d1-854c-4b92-8230-5df2937204aa";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

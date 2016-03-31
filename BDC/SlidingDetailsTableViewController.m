@@ -1049,11 +1049,12 @@ static double animatedDistance = 0;
         for (Document *doc in toBeAdded) {
             [Uploader uploadFile:doc.name data:doc.data objectId:self.shaddowBusObj.objectId handler:^(NSURLResponse * response, NSData * data, NSError * err) {
                 NSInteger response_status;
-                NSString *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
+                NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
+                NSString *documentUploadedId = info[@"documentUploadedId"];
                 
                 if(response_status == RESPONSE_SUCCESS) {
-                    if (![info isEqualToString:EMPTY_ID]) {
-                        doc.objectId = info;
+                    if (![documentUploadedId isEqualToString:EMPTY_ID]) {
+                        doc.objectId = documentUploadedId;
                         [self.shaddowBusObj.attachmentDict setObject:doc forKey:doc.objectId];
                     }
                     
@@ -1109,11 +1110,12 @@ static double animatedDistance = 0;
                 
                 [APIHandler asyncCallWithAction:ASSIGN_DOCS_API Info:params AndHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
                     NSInteger response_status;
-                    NSString *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
+                    NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&response_status];
+                    NSString *documentUploadedId = info[@"documentUploadedId"];
                     
                     if(response_status == RESPONSE_SUCCESS) {
-                        if (![info isEqualToString:EMPTY_ID]) {
-                            doc.objectId = info;    //could become an attachment id!
+                        if (![documentUploadedId isEqualToString:EMPTY_ID]) {
+                            doc.objectId = documentUploadedId;    //could become an attachment id!
                             [self.shaddowBusObj.attachmentDict setObject:doc forKey:doc.objectId];
                         }
                         

@@ -73,11 +73,12 @@
                 
         [Uploader uploadFile:self.document.name data:self.document.data objectId:nil handler:^(NSURLResponse * response, NSData * data, NSError * err) {
             NSInteger status;
-            NSString *info = [APIHandler getResponse:response data:data error:&err status:&status];
+            NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&status];
+            NSString *documentUploadedId = info[@"documentUploadedId"];
             
             if(status == RESPONSE_SUCCESS) {
-                if (![info isEqualToString:EMPTY_ID]) {
-                    self.document.objectId = info; // at this moment, returned document id is empty, coz there's only a DocumentUploadedObject but no DocumentObject yet
+                if (![documentUploadedId isEqualToString:EMPTY_ID]) {
+                    self.document.objectId = documentUploadedId; // at this moment, returned document id is empty, coz there's only a DocumentUploadedObject but no DocumentObject yet
                 }
                 
                 [Document addToInbox:self.document];

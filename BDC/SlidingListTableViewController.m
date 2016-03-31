@@ -231,11 +231,12 @@
         if (self.document.data && self.document.name) {
             [Uploader uploadFile:self.document.name data:self.document.data objectId:obj.objectId handler:^(NSURLResponse * response, NSData * data, NSError * err) {
                 NSInteger status;
-                NSString *info = [APIHandler getResponse:response data:data error:&err status:&status];
+                NSDictionary *info = [APIHandler getResponse:response data:data error:&err status:&status];
+                NSString *documentUploadedId = info[@"documentUploadedId"];
                 
                 if(status == RESPONSE_SUCCESS) {
-                    if (![info isEqualToString:EMPTY_ID]) {
-                        self.document.objectId = info;
+                    if (![documentUploadedId isEqualToString:EMPTY_ID]) {
+                        self.document.objectId = documentUploadedId;
                     }
                     [obj.attachmentDelegate didUploadDocument:self.document needUI:YES];
                 } else {
